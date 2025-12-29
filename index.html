@@ -1,1 +1,869 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>مكتب المسؤول - سرعة تملك العقار</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Tajawal", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #0f172a;
+      color: #111827;
+      direction: rtl;
+      text-align: center;
+    }
+    .app-shell {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: stretch;
+    }
+    header {
+      background: linear-gradient(135deg, #0f172a, #1d4ed8);
+      color: #e5e7eb;
+      padding: 14px 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+    header .top-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      max-width: 1024px;
+      margin: 0 auto;
+    }
+    .logo {
+      font-weight: 800;
+      font-size: 20px;
+      letter-spacing: 0.03em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .logo-mark {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      border: 2px solid #fbbf24;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      background: rgba(15,23,42,0.4);
+    }
+    .subline {
+      font-size: 11px;
+      color: #bfdbfe;
+    }
+    .datetime {
+      font-size: 12px;
+      text-align: left;
+    }
+    main {
+      flex: 1;
+      padding: 18px 10px 26px;
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+    }
+    .screen {
+      display: none;
+      width: 100%;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .screen.active { display: block; }
 
+    .card {
+      background: #f9fafb;
+      border-radius: 18px;
+      padding: 20px 16px;
+      box-shadow: 0 10px 30px rgba(15,23,42,0.22);
+      border: 1px solid #e5e7eb;
+    }
+
+    .welcome-title {
+      font-size: 26px;
+      margin-bottom: 6px;
+      color: #111827;
+      font-weight: 800;
+    }
+    .welcome-sub {
+      font-size: 15px;
+      color: #6b7280;
+      margin-bottom: 24px;
+    }
+
+    button, .btn {
+      border: none;
+      cursor: pointer;
+      border-radius: 999px;
+      padding: 10px 20px;
+      font-size: 16px;
+      font-weight: 600;
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      text-decoration: none;
+      transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.12s ease;
+    }
+    button:active, .btn:active {
+      transform: scale(0.97);
+      box-shadow: 0 4px 10px rgba(15,23,42,0.25);
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: #fff;
+      box-shadow: 0 10px 25px rgba(37,99,235,0.4);
+    }
+    .btn-secondary {
+      background: #e5e7eb;
+      color: #111827;
+    }
+    .btn-danger {
+      background: #dc2626;
+      color: #fff;
+    }
+    .btn-ghost {
+      background: transparent;
+      color: #6b7280;
+      box-shadow: none;
+    }
+
+    label {
+      display: block;
+      text-align: right;
+      margin-bottom: 4px;
+      font-size: 14px;
+      color: #374151;
+      font-weight: 600;
+    }
+    input[type="text"],
+    input[type="tel"],
+    input[type="password"],
+    input[type="number"],
+    textarea,
+    select {
+      width: 100%;
+      border-radius: 12px;
+      border: 1px solid #d1d5db;
+      padding: 10px 12px;
+      font-family: inherit;
+      font-size: 15px;
+      outline: none;
+      background: #ffffff;
+      transition: border-color 0.1s ease, box-shadow 0.1s ease, background 0.1s ease;
+    }
+    input:focus, textarea:focus, select:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 1px rgba(37,99,235,0.35);
+      background: #f9fafb;
+    }
+    textarea {
+      resize: vertical;
+      min-height: 140px;
+    }
+    .field {
+      margin-bottom: 14px;
+      text-align: right;
+    }
+    .hint {
+      font-size: 12px;
+      color: #6b7280;
+      text-align: right;
+    }
+    .warning {
+      font-size: 13px;
+      color: #b91c1c;
+      background: #fef2f2;
+      border-radius: 12px;
+      padding: 10px 12px;
+      margin-bottom: 14px;
+      border: 1px solid #fecaca;
+      text-align: right;
+    }
+    .screens-actions {
+      margin-top: 16px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .icon-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 14px;
+      margin-top: 10px;
+    }
+    .icon-card {
+      background: #ffffff;
+      border-radius: 22px;
+      padding: 16px 12px;
+      border: 1px solid #e5e7eb;
+      box-shadow: 0 8px 18px rgba(15,23,42,0.12);
+      cursor: pointer;
+      transition: transform 0.1s ease, box-shadow 0.1s ease, border-color 0.1s ease;
+    }
+    .icon-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 26px rgba(15,23,42,0.18);
+      border-color: #bfdbfe;
+    }
+    .icon-emoji {
+      font-size: 30px;
+      margin-bottom: 6px;
+    }
+    .icon-title {
+      font-weight: 700;
+      margin-bottom: 4px;
+      font-size: 16px;
+    }
+    .icon-text {
+      font-size: 13px;
+      color: #6b7280;
+    }
+
+    .letter-wrapper {
+      background: linear-gradient(135deg, #dbeafe, #f9fafb);
+      padding: 14px 8px;
+      border-radius: 16px;
+    }
+    .letter {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 20px 16px;
+      border: 1px solid #e5e7eb;
+      box-shadow: 0 10px 28px rgba(15,23,42,0.14);
+      max-width: 720px;
+      margin: 0 auto;
+      text-align: right;
+    }
+    .letter-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      border-bottom: 1px solid #e5e7eb;
+      padding-bottom: 10px;
+      margin-bottom: 14px;
+    }
+    .letter-logo {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 2px;
+    }
+    .letter-logo-main {
+      font-weight: 800;
+      font-size: 18px;
+    }
+    .letter-logo-sub {
+      font-size: 12px;
+      color: #6b7280;
+    }
+    .letter-meta {
+      font-size: 12px;
+      color: #4b5563;
+      text-align: left;
+    }
+    .letter-body {
+      font-size: 15px;
+      color: #111827;
+      line-height: 1.7;
+      white-space: pre-wrap;
+    }
+    .letter-body strong {
+      font-weight: 700;
+    }
+    .letter-footer {
+      margin-top: 18px;
+      border-top: 1px dashed #e5e7eb;
+      padding-top: 10px;
+      font-size: 12px;
+      color: #6b7280;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .summary-title {
+      font-size: 18px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      color: #111827;
+    }
+    .summary-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: #eff6ff;
+      color: #1d4ed8;
+      font-size: 12px;
+      margin-bottom: 10px;
+    }
+    .summary-grid {
+      display: grid;
+      grid-template-columns: minmax(0,1fr) minmax(0,1fr);
+      gap: 8px 12px;
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+    .summary-label {
+      color: #6b7280;
+    }
+    .summary-value {
+      font-weight: 600;
+      color: #111827;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      font-size: 14px;
+    }
+    th, td {
+      border: 1px solid #e5e7eb;
+      padding: 6px 8px;
+      text-align: center;
+    }
+    th {
+      background: #eff6ff;
+      color: #1f2937;
+      font-weight: 700;
+    }
+
+    .small-note {
+      margin-top: 8px;
+      font-size: 11px;
+      color: #9ca3af;
+      text-align: right;
+    }
+
+    footer {
+      padding: 8px 10px 12px;
+      font-size: 11px;
+      color: #9ca3af;
+      text-align: center;
+    }
+
+    @media (min-width: 768px) {
+      .card { padding: 28px 26px; }
+      .welcome-title { font-size: 30px; }
+      header { padding: 16px 16px 14px; }
+      .letter { padding: 22px 22px 18px; }
+    }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+  <header>
+    <div class="top-row">
+      <div>
+        <div class="logo">
+          <div class="logo-mark">س</div>
+          <div>
+            سرعة تملّك العقار
+            <div class="subline">حلول تمويلية بدون تعقيدات</div>
+          </div>
+        </div>
+      </div>
+      <div class="datetime">
+        <div id="headerDate">--/--/----</div>
+        <div id="headerTime">--:--:--</div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- شاشة الترحيب -->
+    <section id="welcomeScreen" class="screen active">
+      <div class="card">
+        <div class="welcome-title">مرحباً ومسهلاً</div>
+        <div class="welcome-sub">مكتب المسؤول - منصة داخلية لإعداد مذكرات وحسابات العملاء على مطبوعات الشركة.</div>
+        <button class="btn btn-primary" onclick="showScreen('loginScreen')">
+          ابدأ
+        </button>
+      </div>
+    </section>
+
+    <!-- شاشة تسجيل الدخول -->
+    <section id="loginScreen" class="screen">
+      <div class="card">
+        <h2 style="margin-top:0;margin-bottom:6px;font-size:22px;">تسجيل دخول المسؤول</h2>
+        <p class="welcome-sub" style="margin-bottom:14px;">الرجاء إدخال الرمز السري للدخول إلى مكتب المسؤول.</p>
+        <div class="warning">
+          ⚠️ تنبيه مهم: هذا النظام مخصص للأشخاص المصرّح لهم فقط.  
+          أي محاولة دخول غير نظامية قد تُعد تعدياً على خصوصية الشركة وبيانات عملائها.
+        </div>
+        <form onsubmit="handleLogin(event)">
+          <div class="field">
+            <label for="passwordInput">الرمز السري</label>
+            <input id="passwordInput" type="password" autocomplete="off" required placeholder="••••••••" />
+            <div class="hint">الرمز السري الحالي: يكون معروفاً للمسؤول فقط.</div>
+          </div>
+          <div class="screens-actions">
+            <button type="submit" class="btn btn-primary">دخول</button>
+            <button type="button" class="btn btn-ghost" onclick="showScreen('welcomeScreen')">رجوع</button>
+          </div>
+        </form>
+        <div id="loginError" class="warning" style="margin-top:14px;display:none;">
+          تم رفض الدخول: الرمز غير صحيح. يُرجى المحاولة مرة أخرى، وسيتم تسجيل المحاولات داخلياً.
+        </div>
+      </div>
+    </section>
+
+    <!-- شاشة لوحة التحكم -->
+    <section id="dashboardScreen" class="screen">
+      <div class="card">
+        <h2 style="margin:0 0 6px;font-size:22px;">مكتب المسؤول</h2>
+        <p class="welcome-sub" style="margin-bottom:12px;">
+          اختر ما تريد إنجازه:
+        </p>
+        <div class="icon-grid">
+          <div class="icon-card" onclick="openMemo()">
+            <div class="icon-emoji">📝</div>
+            <div class="icon-title">مذكرة</div>
+            <div class="icon-text">اكتب ملاحظة سريعة ليتم تجهيزها على مطبوعات الشركة وحفظها كصورة.</div>
+          </div>
+          <div class="icon-card" onclick="openClientCalc()">
+            <div class="icon-emoji">📊</div>
+            <div class="icon-title">حسبة لعميل</div>
+            <div class="icon-text">إدخال بيانات حسبة العميل وتحويلها مباشرة إلى مطبوعات جاهزة للإرسال.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- شاشة مذكرة - إدخال النص -->
+    <section id="memoInputScreen" class="screen">
+      <div class="card">
+        <h2 style="margin-top:0;margin-bottom:10px;font-size:20px;">مذكرة داخلية</h2>
+        <p class="welcome-sub" style="margin-bottom:14px;">اكتب المضمون الذي تريد وضعه على مطبوعات الشركة.</p>
+        <div class="field">
+          <label for="memoText">نص المذكرة</label>
+          <textarea id="memoText" placeholder="اكتب هنا تفاصيل المذكرة أو الملاحظة التي ترغب في حفظها على مطبوعات الشركة..."></textarea>
+        </div>
+        <div class="screens-actions">
+          <button class="btn btn-primary" onclick="previewMemo()">متابعة</button>
+          <button class="btn btn-ghost" onclick="showScreen('dashboardScreen')">إلغاء</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- شاشة مذكرة - المعاينة -->
+    <section id="memoPreviewScreen" class="screen">
+      <div class="card">
+        <h2 style="margin-top:0;margin-bottom:10px;font-size:20px;">معاينة المذكرة على مطبوعات الشركة</h2>
+        <div class="letter-wrapper">
+          <div id="memoLetter" class="letter">
+            <div class="letter-header">
+              <div class="letter-logo">
+                <div class="letter-logo-main">سرعة تملّك العقار</div>
+                <div class="letter-logo-sub">حلول تمويلية بدون تعقيدات</div>
+              </div>
+              <div class="letter-meta" id="memoMeta"></div>
+            </div>
+            <div class="letter-body" id="memoBody"></div>
+            <div class="letter-footer">
+              <span>هذه المذكرة صادرة من مكتب المسؤول في شركة سرعة تملّك العقار والحلول التمويلية المتكاملة.</span>
+              <span>جوال التواصل: 0506214458 · هذا المستند لأغراض داخلية ولا يُعتبر عرضاً تمويلياً ملزماً.</span>
+            </div>
+          </div>
+        </div>
+        <div class="screens-actions">
+          <button class="btn btn-primary" onclick="downloadAsImage('memoLetter')">حفظ المذكرة كصورة</button>
+          <button class="btn btn-secondary" onclick="showScreen('memoInputScreen')">تعديل المذكرة</button>
+          <button class="btn btn-ghost" onclick="showScreen('dashboardScreen')">رجوع للوحة التحكم</button>
+        </div>
+        <div class="small-note">
+          يمكنك إرسال الصورة الناتجة للعميل عبر الواتساب أو البريد، وكأنها مطبوعات رسمية للشركة.
+        </div>
+      </div>
+    </section>
+
+    <!-- حسبة عميل - بيانات العميل -->
+    <section id="clientInfoScreen" class="screen">
+      <div class="card">
+        <h2 style="margin-top:0;margin-bottom:8px;font-size:20px;">حسبة لعميل</h2>
+        <p class="welcome-sub" style="margin-bottom:16px;">أدخل بيانات العميل الأساسية.</p>
+        <div class="field">
+          <label for="clientName">اسم العميل</label>
+          <input type="text" id="clientName" placeholder="مثال: محمد بن عبدالله" />
+        </div>
+        <div class="field">
+          <label for="clientMobile">رقم جوال العميل</label>
+          <input type="tel" id="clientMobile" placeholder="05xxxxxxxx" />
+        </div>
+        <div class="screens-actions">
+          <button class="btn btn-primary" onclick="goToFinanceType()">التالي</button>
+          <button class="btn btn-ghost" onclick="showScreen('dashboardScreen')">إلغاء</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- حسبة عميل - نوع التمويل -->
+    <section id="financeTypeScreen" class="screen">
+      <div class="card">
+        <h2 style="margin-top:0;margin-bottom:8px;font-size:20px;">نوع التمويل المحتسب</h2>
+        <p class="welcome-sub" style="margin-bottom:16px;">اذكر نوع التمويل الذي تم احتسابه للعميل.</p>
+        <div class="field">
+          <label for="financeType">نوع التمويل</label>
+          <input type="text" id="financeType" placeholder="مثال: تمويل شخصي، تمويل عقاري مدعوم، شراء مديونية..." />
+        </div>
+        <div class="screens-actions">
+          <button class="btn btn-primary" onclick="goToBanks()">التالي</button>
+          <button class="btn btn-ghost" onclick="showScreen('clientInfoScreen')">رجوع</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- حسبة عميل - البنوك -->
+    <section id="banksScreen" class="screen">
+      <div class="card">
+        <h2 style="margin-top:0;margin-bottom:8px;font-size:20px;">البنوك التي تم الاحتساب عليها</h2>
+        <p class="welcome-sub" style="margin-bottom:10px;">اختر البنك وأدخل القسط الشهري المقابل.</p>
+        <div id="banksContainer"></div>
+
+        <div id="anotherBankSection" class="field" style="margin-top:16px;">
+          <label>هل تم احتساب على بنك آخر؟</label>
+          <div style="display:flex;gap:10px;justify-content:flex-start;">
+            <button type="button" class="btn btn-secondary" onclick="addAnotherBank()">نعم، أضف بنكاً آخر</button>
+            <button type="button" class="btn btn-primary" onclick="finishBanks()">لا، اكتفينا</button>
+          </div>
+        </div>
+
+        <div class="small-note">
+          يمكنك إدخال أكثر من بنك، مع القسط الشهري لكل بنك؛ ليظهر للعميل مقارنة واضحة على مطبوعات الشركة.
+        </div>
+
+        <div class="screens-actions">
+          <button class="btn btn-ghost" onclick="showScreen('financeTypeScreen')">رجوع</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- حسبة عميل - الملخص على المطبوعات -->
+    <section id="clientSummaryScreen" class="screen">
+      <div class="card">
+        <h2 style="margin-top:0;margin-bottom:10px;font-size:20px;">معاينة حسبة العميل على مطبوعات الشركة</h2>
+        <div class="letter-wrapper">
+          <div id="clientLetter" class="letter">
+            <div class="letter-header">
+              <div class="letter-logo">
+                <div class="letter-logo-main">سرعة تملّك العقار</div>
+                <div class="letter-logo-sub">حلول تمويلية بدون تعقيدات</div>
+              </div>
+              <div class="letter-meta" id="clientMeta"></div>
+            </div>
+            <div class="letter-body">
+              <div class="summary-title">تفاصيل الحسبة للعميل</div>
+              <div class="summary-pill">
+                <span>📄</span>
+                <span>ملخص غير ملزم - للاطلاع المبدئي فقط</span>
+              </div>
+              <div class="summary-grid">
+                <div class="summary-label">اسم العميل:</div>
+                <div class="summary-value" id="summaryClientName"></div>
+                <div class="summary-label">رقم الجوال:</div>
+                <div class="summary-value" id="summaryClientMobile"></div>
+                <div class="summary-label">نوع التمويل:</div>
+                <div class="summary-value" id="summaryFinanceType"></div>
+                <div class="summary-label">تاريخ الحسبة:</div>
+                <div class="summary-value" id="summaryDate"></div>
+              </div>
+
+              <div style="margin-top:10px;font-weight:700;color:#111827;">
+                مقارنة البنوك والأقساط الشهرية:
+              </div>
+              <div id="banksTableWrapper"></div>
+
+              <div class="small-note" style="margin-top:8px;">
+                الأرقام تقريبية وقابلة للتغيير حسب سياسات البنك والالتزامات الفعلية واعتماد الجهة الممولة.
+              </div>
+            </div>
+            <div class="letter-footer">
+              <span>صادر من مكتب المسؤول - سرعة تملك العقار والحلول التمويلية المتكاملة.</span>
+              <span>جوال التواصل: 0506214458 · البريد: info@hlooleqrr.com</span>
+              <span>هذا المستند للاستئناس فقط ولا يُمثل عرضاً تمويلياً ملزماً لأي طرف.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="screens-actions">
+          <button class="btn btn-primary" onclick="saveClientAndDownload()">حفظ في السجل وتحميل كصورة</button>
+          <button class="btn btn-secondary" onclick="showScreen('banksScreen')">تعديل البيانات</button>
+          <button class="btn btn-ghost" onclick="showScreen('dashboardScreen')">رجوع للوحة التحكم</button>
+        </div>
+        <div class="small-note">
+          يتم حفظ هذه الحسبة داخل متصفحك باسم العميل ورقم جواله والتاريخ، لتتمكن من الرجوع لها مستقبلاً.
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    &copy; <span id="footerYear"></span> سرعة تملّك العقار والحلول التمويلية المتكاملة – جميع الحقوق محفوظة.
+  </footer>
+</div>
+
+<!-- html2canvas لتحويل النتيجة إلى صورة -->
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script>
+  const PASSWORD = "11qq11q@";
+
+  let currentClient = {
+    name: "",
+    mobile: "",
+    financeType: "",
+    banks: []
+  };
+
+  function showScreen(id) {
+    document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function handleLogin(e) {
+    e.preventDefault();
+    const input = document.getElementById("passwordInput");
+    const error = document.getElementById("loginError");
+    if (input.value === PASSWORD) {
+      error.style.display = "none";
+      input.value = "";
+      showScreen("dashboardScreen");
+    } else {
+      error.style.display = "block";
+    }
+  }
+
+  function openMemo() {
+    document.getElementById("memoText").value = "";
+    showScreen("memoInputScreen");
+  }
+
+  function previewMemo() {
+    const text = document.getElementById("memoText").value.trim();
+    if (!text) {
+      alert("الرجاء كتابة نص المذكرة أولاً.");
+      return;
+    }
+    const meta = document.getElementById("memoMeta");
+    const now = new Date();
+    meta.textContent = formatDateTime(now);
+
+    const body = document.getElementById("memoBody");
+    body.textContent = text;
+
+    showScreen("memoPreviewScreen");
+  }
+
+  function openClientCalc() {
+    currentClient = { name: "", mobile: "", financeType: "", banks: [] };
+    document.getElementById("clientName").value = "";
+    document.getElementById("clientMobile").value = "";
+    showScreen("clientInfoScreen");
+  }
+
+  function goToFinanceType() {
+    const name = document.getElementById("clientName").value.trim();
+    const mobile = document.getElementById("clientMobile").value.trim();
+    if (!name || !mobile) {
+      alert("الرجاء إدخال اسم العميل ورقم الجوال.");
+      return;
+    }
+    currentClient.name = name;
+    currentClient.mobile = mobile;
+    showScreen("financeTypeScreen");
+  }
+
+  function goToBanks() {
+    const type = document.getElementById("financeType").value.trim();
+    if (!type) {
+      alert("الرجاء إدخال نوع التمويل الذي تم احتسابه.");
+      return;
+    }
+    currentClient.financeType = type;
+    const container = document.getElementById("banksContainer");
+    container.innerHTML = "";
+    addBankRow();
+    showScreen("banksScreen");
+  }
+
+  const saBanks = [
+    "مصرف الراجحي",
+    "البنك الأهلي السعودي",
+    "بنك الرياض",
+    "بنك البلاد",
+    "بنك الإنماء",
+    "البنك العربي الوطني",
+    "بنك ساب",
+    "البنك السعودي للاستثمار",
+    "بنك الجزيرة",
+    "بنك الخليج الدولي",
+    "بنك الإمارات دبي الوطني",
+    "بنك مسقط",
+    "بنك التنمية الاجتماعية",
+    "شركة التمويل العقاري / شركات التمويل الأخرى"
+  ];
+
+  let bankRowIndex = 0;
+  function addBankRow() {
+    bankRowIndex++;
+    const container = document.getElementById("banksContainer");
+    const row = document.createElement("div");
+    row.className = "card";
+    row.style.padding = "12px 10px";
+    row.style.marginBottom = "10px";
+    row.style.boxShadow = "0 4px 10px rgba(15,23,42,0.08)";
+    row.dataset.index = bankRowIndex;
+
+    const bankFieldId = "bankSelect_" + bankRowIndex;
+    const installmentFieldId = "installment_" + bankRowIndex;
+
+    row.innerHTML = `
+      <div class="field" style="margin-bottom:8px;">
+        <label for="${bankFieldId}">اختر البنك</label>
+        <select id="${bankFieldId}">
+          <option value="">اختر البنك...</option>
+          ${saBanks.map(b => `<option value="${b}">${b}</option>`).join("")}
+        </select>
+      </div>
+      <div class="field" style="margin-bottom:4px;">
+        <label for="${installmentFieldId}">القسط الشهري (ريال)</label>
+        <input type="number" id="${installmentFieldId}" min="0" step="1" placeholder="مثال: 1618" />
+      </div>
+    `;
+    container.appendChild(row);
+  }
+
+  function addAnotherBank() {
+    addBankRow();
+  }
+
+  function finishBanks() {
+    const container = document.getElementById("banksContainer");
+    const rows = Array.from(container.querySelectorAll(".card"));
+    const banks = [];
+    rows.forEach(row => {
+      const idx = row.dataset.index;
+      const bank = document.getElementById("bankSelect_" + idx).value;
+      const inst = document.getElementById("installment_" + idx).value;
+      if (bank && inst) {
+        banks.push({
+          bankName: bank,
+          installment: parseFloat(inst)
+        });
+      }
+    });
+    if (banks.length === 0) {
+      alert("الرجاء إدخال بنك واحد على الأقل مع القسط الشهري.");
+      return;
+    }
+    currentClient.banks = banks;
+    buildClientSummary();
+    showScreen("clientSummaryScreen");
+  }
+
+  function buildClientSummary() {
+    const now = new Date();
+    const meta = document.getElementById("clientMeta");
+    meta.textContent = formatDateTime(now);
+
+    document.getElementById("summaryClientName").textContent = currentClient.name;
+    document.getElementById("summaryClientMobile").textContent = currentClient.mobile;
+    document.getElementById("summaryFinanceType").textContent = currentClient.financeType;
+    document.getElementById("summaryDate").textContent = formatDateTime(now);
+
+    const wrapper = document.getElementById("banksTableWrapper");
+    const table = document.createElement("table");
+    table.innerHTML = `
+      <thead>
+        <tr>
+          <th>م</th>
+          <th>اسم البنك</th>
+          <th>القسط الشهري التقديري (ريال)</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${currentClient.banks.map((b, i) => `
+          <tr>
+            <td>${i + 1}</td>
+            <td>${b.bankName}</td>
+            <td>${b.installment.toLocaleString("ar-SA")}</td>
+          </tr>
+        `).join("")}
+      </tbody>
+    `;
+    wrapper.innerHTML = "";
+    wrapper.appendChild(table);
+  }
+
+  function saveClientAndDownload() {
+    const offersKey = "finoClientOffers";
+    const existing = JSON.parse(localStorage.getItem(offersKey) || "[]");
+    const record = {
+      id: Date.now(),
+      name: currentClient.name,
+      mobile: currentClient.mobile,
+      financeType: currentClient.financeType,
+      banks: currentClient.banks,
+      createdAt: new Date().toISOString()
+    };
+    existing.push(record);
+    localStorage.setItem(offersKey, JSON.stringify(existing));
+    downloadAsImage("clientLetter");
+  }
+
+  function downloadAsImage(elementId) {
+    const element = document.getElementById(elementId);
+    if (!element) return;
+    html2canvas(element, { scale: 2 }).then(canvas => {
+      const link = document.createElement("a");
+      const now = new Date();
+      const fileName = "fino-" + now.toISOString().replace(/[:.]/g, "-") + ".png";
+      link.download = fileName;
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+    }).catch(err => {
+      console.error(err);
+      alert("حدث خطأ أثناء تجهيز الصورة. حاول مرة أخرى.");
+    });
+  }
+
+  function formatDateTime(date) {
+    const optionsDate = { year: "numeric", month: "2-digit", day: "2-digit" };
+    const optionsTime = { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false };
+    const d = date.toLocaleDateString("ar-SA", optionsDate);
+    const t = date.toLocaleTimeString("ar-SA", optionsTime);
+    return d + " - " + t;
+  }
+
+  function updateHeaderClock() {
+    const now = new Date();
+    const optionsDate = { year: "numeric", month: "2-digit", day: "2-digit" };
+    const optionsTime = { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false };
+    document.getElementById("headerDate").textContent = now.toLocaleDateString("ar-SA", optionsDate);
+    document.getElementById("headerTime").textContent = now.toLocaleTimeString("ar-SA", optionsTime);
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    updateHeaderClock();
+    setInterval(updateHeaderClock, 1000);
+    document.getElementById("footerYear").textContent = new Date().getFullYear();
+  });
+</script>
+</body>
+</html>
