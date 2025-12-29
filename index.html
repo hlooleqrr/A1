@@ -5,15 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>مكتب الموظف - سرعة تملك العقار</title>
 
-  <!-- تحسين الخط على الأجهزة -->
   <style>
     *{box-sizing:border-box}
     body{
       margin:0;
       font-family:"Tajawal",system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
-      background: radial-gradient(1200px 600px at 70% -10%, rgba(37,99,235,.35), transparent 60%),
-                  radial-gradient(1000px 600px at 10% 10%, rgba(16,185,129,.18), transparent 55%),
-                  #020617;
+      background:
+        radial-gradient(1200px 600px at 70% -10%, rgba(37,99,235,.35), transparent 60%),
+        radial-gradient(1000px 600px at 10% 10%, rgba(16,185,129,.18), transparent 55%),
+        #020617;
       color:#0f172a;
       direction:rtl;
       text-align:center;
@@ -30,9 +30,7 @@
       max-width:1024px; margin:0 auto;
       display:flex; align-items:center; justify-content:space-between; gap:12px;
     }
-    .brand{
-      display:flex; align-items:center; gap:10px; text-align:right;
-    }
+    .brand{display:flex; align-items:center; gap:10px; text-align:right;}
     .brand img{
       width:44px; height:44px; border-radius:14px; object-fit:contain;
       background:#fff; padding:5px; border:1px solid rgba(255,255,255,.25);
@@ -54,18 +52,10 @@
       box-shadow:0 20px 60px rgba(2,6,23,.35);
       backdrop-filter: blur(8px);
     }
-    @media (min-width:768px){
-      .card{padding:26px 24px}
-    }
+    @media (min-width:768px){ .card{padding:26px 24px} }
 
-    h1,h2,h3{margin:0}
-    .title{
-      font-size:28px; font-weight:900; color:#0f172a; margin-bottom:6px;
-    }
-    .sub{
-      margin:0 0 18px;
-      font-size:15px; color:#6b7280; line-height:1.6;
-    }
+    .title{font-size:28px; font-weight:900; color:#0f172a; margin:0 0 6px}
+    .sub{margin:0 0 18px; font-size:15px; color:#6b7280; line-height:1.6}
 
     .warn{
       text-align:right;
@@ -74,11 +64,15 @@
       padding:10px 12px; border-radius:14px;
       font-size:13px; margin-bottom:14px;
     }
-
-    label{
-      display:block; text-align:right; margin:0 0 6px;
-      font-weight:800; color:#374151; font-size:14px;
+    .ok{
+      text-align:right;
+      background:#ecfdf5; border:1px solid #a7f3d0;
+      color:#065f46;
+      padding:10px 12px; border-radius:14px;
+      font-size:13px; margin-bottom:14px;
     }
+
+    label{display:block; text-align:right; margin:0 0 6px; font-weight:900; color:#374151; font-size:14px}
     input, select, textarea{
       width:100%;
       border-radius:14px;
@@ -95,14 +89,12 @@
       box-shadow:0 0 0 2px rgba(37,99,235,.22);
       background:#f9fafb;
     }
-    textarea{min-height:150px; resize:vertical}
+    textarea{min-height:140px; resize:vertical}
 
     .field{margin-bottom:14px; text-align:right}
     .hint{font-size:12px; color:#6b7280; text-align:right; margin-top:6px}
 
-    .actions{
-      display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:12px
-    }
+    .actions{display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:12px}
     .btn{
       border:none; cursor:pointer;
       border-radius:999px;
@@ -119,19 +111,13 @@
       background: linear-gradient(135deg, #2563eb, #1d4ed8);
       box-shadow:0 16px 34px rgba(37,99,235,.35);
     }
-    .secondary{
-      background:#e5e7eb; color:#111827;
-    }
-    .danger{
-      background:#dc2626; color:#fff;
-    }
-    .ghost{
-      background:transparent; color:#6b7280;
-    }
+    .secondary{background:#e5e7eb; color:#111827}
+    .danger{background:#dc2626; color:#fff}
+    .ghost{background:transparent; color:#6b7280}
 
     .grid{
       display:grid; gap:14px;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       margin-top:10px;
     }
     .tile{
@@ -149,7 +135,6 @@
     .tile .t{font-weight:900; font-size:16px; margin-bottom:4px}
     .tile .d{font-size:13px; color:#6b7280; line-height:1.5}
 
-    /* السجل - بحث أعلى */
     .searchBar{
       display:flex; gap:10px; flex-wrap:wrap;
       align-items:center; justify-content:space-between;
@@ -165,7 +150,6 @@
     .searchBar .left{display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-start}
     .small{font-size:12px; color:#6b7280}
 
-    /* بنك/كرت إدخال */
     .bankCard{
       background:#fff;
       border:1px solid #e5e7eb;
@@ -190,20 +174,13 @@
       font-weight:900;
       font-size:12px;
     }
-    .row2{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:10px;
-    }
-    @media (max-width:520px){
-      .row2{grid-template-columns:1fr}
-    }
 
-    .inlineBtns{
-      display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-start; margin-top:8px
-    }
+    .row2{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+    @media (max-width:520px){ .row2{grid-template-columns:1fr} }
 
-    /* مطبوعات/نتيجة */
+    .inlineBtns{display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-start; margin-top:8px}
+
+    /* الورقة */
     .paperWrap{
       background: linear-gradient(135deg, rgba(219,234,254,.9), rgba(249,250,251,.95));
       border:1px solid rgba(191,219,254,.9);
@@ -216,7 +193,7 @@
       border-radius:20px;
       overflow:hidden;
       box-shadow:0 22px 60px rgba(2,6,23,.18);
-      max-width:760px;
+      max-width:820px;
       margin:0 auto;
       text-align:right;
     }
@@ -226,9 +203,7 @@
       color:#fff;
       display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;
     }
-    .paperHeader .pBrand{
-      display:flex; align-items:center; gap:10px;
-    }
+    .paperHeader .pBrand{display:flex; align-items:center; gap:10px;}
     .paperHeader img{
       width:42px; height:42px; border-radius:14px; object-fit:contain;
       background:#fff; padding:5px;
@@ -254,15 +229,42 @@
       font-size:14px;
       margin-bottom:12px;
     }
-    @media (max-width:520px){
-      .infoGrid{grid-template-columns:1fr}
-    }
-    .k{color:#6b7280; font-weight:800}
+    @media (max-width:520px){ .infoGrid{grid-template-columns:1fr} }
+    .k{color:#6b7280; font-weight:900}
     .v{color:#111827; font-weight:900}
     .hr{height:1px; background:#e5e7eb; margin:10px 0}
+
     table{width:100%; border-collapse:collapse; font-size:14px; margin-top:10px}
     th,td{border:1px solid #e5e7eb; padding:8px 8px; text-align:center}
     th{background:#eff6ff; font-weight:900; color:#111827}
+
+    .sectionBox{
+      border:1px solid #e5e7eb;
+      border-radius:16px;
+      padding:12px;
+      margin-top:12px;
+      background:#fff;
+      box-shadow:0 10px 20px rgba(2,6,23,.06);
+    }
+    .sectionTitle{
+      font-weight:900;
+      color:#111827;
+      display:flex;
+      gap:10px;
+      align-items:center;
+      justify-content:space-between;
+      flex-wrap:wrap;
+    }
+    .badge{
+      display:inline-flex; align-items:center; gap:6px;
+      border-radius:999px;
+      padding:4px 10px;
+      background:#f1f5f9;
+      color:#0f172a;
+      font-weight:900;
+      font-size:12px;
+    }
+
     .foot{
       padding:12px 14px;
       border-top:1px dashed #e5e7eb;
@@ -272,15 +274,21 @@
     }
     .qrBox{display:flex; flex-direction:column; align-items:center; gap:6px}
     .qrBox small{font-size:10px; color:#9ca3af}
-    .disclaimer{
-      font-size:11px; color:#9ca3af; line-height:1.6; text-align:right; margin-top:10px
-    }
 
-    footer{
-      padding:10px 12px 14px;
-      font-size:11px;
-      color:#94a3b8;
-      text-align:center;
+    .disclaimer{
+      font-size:11px; color:#9ca3af; line-height:1.7; text-align:right; margin-top:10px
+    }
+    .strongWarn{
+      margin-top:10px;
+      background:#fff7ed;
+      border:1px solid #fed7aa;
+      color:#9a3412;
+      padding:10px 12px;
+      border-radius:14px;
+      font-size:12px;
+      line-height:1.7;
+      text-align:right;
+      font-weight:900;
     }
 
     .listItem{
@@ -296,23 +304,7 @@
     .listItem .line2{font-size:12px; color:#6b7280; margin-top:2px}
     .listItem .line3{font-size:11px; color:#9ca3af; margin-top:2px}
 
-    .copyBox{
-      display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin-top:12px
-    }
-    .mono{
-      direction:ltr;
-      background:#0b1224;
-      color:#e5e7eb;
-      padding:10px 12px;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.12);
-      font-size:12px;
-      text-align:left;
-      overflow:auto;
-      width:100%;
-      max-width:760px;
-      margin:8px auto 0;
-    }
+    footer{padding:10px 12px 14px; font-size:11px; color:#94a3b8; text-align:center;}
   </style>
 </head>
 <body>
@@ -334,11 +326,14 @@
   </header>
 
   <main>
+
     <!-- شاشة مشاركة QR (تفتح بدون تسجيل دخول) -->
     <section id="shareScreen" class="screen">
       <div class="card">
         <div class="title">مطبوعات الحسبة</div>
-        <p class="sub">هذه الصفحة جاءت من الباركود (QR) وتعرض نفس الحسبة مع إمكانية تحميل الصورة.</p>
+        <p class="sub">هذه الصفحة جاءت من الباركود (QR). تقدر تحمل/تشارك الصورة.</p>
+
+        <div id="shareVerifyBox"></div>
 
         <div class="paperWrap">
           <div id="paperShare" class="paper"></div>
@@ -356,7 +351,7 @@
     <section id="welcome" class="screen active">
       <div class="card">
         <div class="title">مرحباً بك</div>
-        <p class="sub">مكتب الموظف — نظام ذكي لتحويل الحسبة إلى “مطبوعات” جاهزة للعميل كصورة احترافية مع QR.</p>
+        <p class="sub">مكتب الموظف — نظام ذكي لتحويل حسابات العميل إلى “مطبوعات” رسمية كصورة احترافية مع QR.</p>
         <div class="actions">
           <button class="btn primary" onclick="show('login')">ابدأ</button>
         </div>
@@ -386,7 +381,7 @@
         </form>
 
         <div id="loginErr" class="warn" style="display:none;margin-top:12px">
-          الرمز غير صحيح. سيتم تسجيل المحاولة.
+          الرمز غير صحيح. تم تسجيل المحاولة.
         </div>
       </div>
     </section>
@@ -395,34 +390,35 @@
     <section id="dash" class="screen">
       <div class="card">
 
-        <!-- بحث أعلى -->
         <div class="searchBar">
           <div class="right">
-            <div style="font-weight:900;color:#111827;margin-bottom:6px">بحث في السجل برقم الجوال</div>
+            <div style="font-weight:900;color:#111827;margin-bottom:6px">بحث سريع في السجل برقم الجوال</div>
             <input id="dashSearchMobile" type="tel" placeholder="اكتب رقم الجوال ثم اضغط بحث" />
-            <div class="small" style="margin-top:6px">يعرض لك آخر الحسابات المطابقة وتقدر تفتحها وتحمّل صورتها.</div>
+            <div class="small" style="margin-top:6px">يعرض لك آخر الوثائق المطابقة وتقدر تفتحها وتحمّل صورتها.</div>
           </div>
           <div class="left">
             <button class="btn secondary" onclick="dashSearch()">بحث</button>
-            <button class="btn ghost" onclick="openRecords()">فتح السجل</button>
+            <button class="btn ghost" onclick="openRecords()">السجل</button>
           </div>
         </div>
 
         <div class="grid">
-          <div class="tile" onclick="openMemo()">
+          <div class="tile" onclick="openMemoCenter()">
             <div class="ico">📝</div>
-            <div class="t">مذكرة</div>
-            <div class="d">اكتب أي نص وحوله لمطبوعات الشركة ثم احفظه/شاركه كصورة.</div>
+            <div class="t">مركز المذكرات</div>
+            <div class="d">حفظ مذكرات + بحث بأي كلمة داخل المذكرة + طباعة على مطبوعات الشركة.</div>
           </div>
+
           <div class="tile" onclick="startClientFlow()">
             <div class="ico">📊</div>
-            <div class="t">حسبة لعميل</div>
-            <div class="d">إدخال مبلغ التمويل + عدد الأشهر (1–399) + قسط ثابت/متغير مع فترات، وترتيب البنوك تلقائيًا.</div>
+            <div class="t">وثيقة عميل (أكثر من تمويل)</div>
+            <div class="d">عقاري + شخصي + غيره… كل تمويل له بنوكه وتفاصيله، مع قسط ثابت/متغير.</div>
           </div>
+
           <div class="tile" onclick="openRecords()">
             <div class="ico">🗂️</div>
-            <div class="t">السجل الداخلي</div>
-            <div class="d">بحث متقدم في كل الحسابات المحفوظة وفتحها وتحميل صورتها من جديد.</div>
+            <div class="t">السجل الداخلي للوثائق</div>
+            <div class="d">بحث برقم الجوال، فتح أي وثيقة، تحميل/مشاركة من جديد.</div>
           </div>
         </div>
 
@@ -434,11 +430,38 @@
       </div>
     </section>
 
-    <!-- مذكرة إدخال -->
+    <!-- مركز المذكرات -->
+    <section id="memoCenter" class="screen">
+      <div class="card">
+        <div class="title" style="font-size:22px">مركز المذكرات</div>
+        <p class="sub">احفظ مذكرة وابحث بأي كلمة داخلها. وتقدر تطلعها “مطبوعات” كصورة.</p>
+
+        <div class="searchBar">
+          <div class="right">
+            <div style="font-weight:900;color:#111827;margin-bottom:6px">بحث داخل المذكرات</div>
+            <input id="memoSearch" type="text" placeholder="اكتب كلمة… (مثال: راجحي / مرن / سكني)" />
+            <div class="small" style="margin-top:6px">البحث يشمل عنوان المذكرة والنص كامل.</div>
+          </div>
+          <div class="left">
+            <button class="btn secondary" onclick="searchMemos()">بحث</button>
+            <button class="btn primary" onclick="newMemo()">مذكرة جديدة</button>
+            <button class="btn ghost" onclick="show('dash')">رجوع</button>
+          </div>
+        </div>
+
+        <div id="memoList" style="margin-top:14px;text-align:right"></div>
+      </div>
+    </section>
+
+    <!-- إنشاء مذكرة -->
     <section id="memoIn" class="screen">
       <div class="card">
-        <div class="title" style="font-size:22px">مذكرة</div>
-        <p class="sub">اكتب أي نص وسيتم إخراجه على مطبوعات الشركة.</p>
+        <div class="title" style="font-size:22px">مذكرة جديدة</div>
+
+        <div class="field">
+          <label>عنوان المذكرة</label>
+          <input id="memoTitle" type="text" placeholder="مثال: متابعة عميل / ملاحظات بنك / نقاط مهمة" />
+        </div>
 
         <div class="field">
           <label>نص المذكرة</label>
@@ -446,17 +469,17 @@
         </div>
 
         <div class="actions">
-          <button class="btn primary" onclick="memoPreview()">متابعة</button>
-          <button class="btn ghost" onclick="show('dash')">رجوع</button>
+          <button class="btn primary" onclick="saveMemo()">حفظ</button>
+          <button class="btn secondary" onclick="memoPreview()">مطبوعات (معاينة)</button>
+          <button class="btn ghost" onclick="show('memoCenter')">رجوع</button>
         </div>
       </div>
     </section>
 
-    <!-- مذكرة معاينة -->
+    <!-- معاينة مذكرة على مطبوعات -->
     <section id="memoPrev" class="screen">
       <div class="card">
         <div class="title" style="font-size:22px">مذكرة على مطبوعات الشركة</div>
-        <p class="sub">احفظها كصورة أو شاركها مباشرة.</p>
 
         <div class="paperWrap">
           <div id="paperMemo" class="paper"></div>
@@ -466,7 +489,7 @@
           <button class="btn primary" onclick="downloadPaperImage('paperMemo')">تحميل الصورة</button>
           <button class="btn secondary" onclick="sharePaperImage('paperMemo')">مشاركة الصورة</button>
           <button class="btn ghost" onclick="show('memoIn')">تعديل</button>
-          <button class="btn ghost" onclick="show('dash')">رجوع</button>
+          <button class="btn ghost" onclick="show('memoCenter')">رجوع</button>
         </div>
       </div>
     </section>
@@ -474,62 +497,102 @@
     <!-- عميل: بيانات -->
     <section id="c1" class="screen">
       <div class="card">
-        <div class="title" style="font-size:22px">حسبة لعميل</div>
-        <p class="sub">أدخل اسم العميل ورقم جواله.</p>
+        <div class="title" style="font-size:22px">وثيقة عميل</div>
+        <p class="sub">أدخل بيانات العميل + ملاحظات الموظف (اختياري).</p>
 
         <div class="field">
           <label>اسم العميل</label>
           <input id="cName" type="text" placeholder="مثال: محمد بن عبدالله" />
         </div>
+
         <div class="field">
           <label>رقم جوال العميل</label>
           <input id="cMobile" type="tel" placeholder="05xxxxxxxx" />
         </div>
 
+        <div class="field">
+          <label>ملاحظات الموظف (اختياري)</label>
+          <textarea id="cEmpNotes" placeholder="أي ملاحظات تحب تضيفها للملف (لن تظهر إلا إذا رغبت)…"></textarea>
+          <div class="hint">هذه الملاحظات تظهر داخل الوثيقة إذا كتبتها.</div>
+        </div>
+
         <div class="actions">
-          <button class="btn primary" onclick="toC2()">التالي</button>
+          <button class="btn primary" onclick="startNewSection()">التالي: أضف تمويل</button>
           <button class="btn ghost" onclick="show('dash')">إلغاء</button>
         </div>
       </div>
     </section>
 
-    <!-- عميل: نوع التمويل -->
-    <section id="c2" class="screen">
+    <!-- تمويل: معلومات -->
+    <section id="s1" class="screen">
       <div class="card">
-        <div class="title" style="font-size:22px">نوع التمويل</div>
-        <p class="sub">اذكر نوع التمويل الذي تم احتساب الحسبة عليه.</p>
+        <div class="title" style="font-size:22px">إضافة تمويل للعميل</div>
+        <p class="sub">هنا تحدد نوع التمويل وملاحظاته (اختياري).</p>
 
         <div class="field">
           <label>نوع التمويل</label>
-          <input id="cType" type="text" placeholder="مثال: تمويل شخصي مرن / تمويل عقاري / شراء مديونية..." />
+          <input id="sType" type="text" placeholder="مثال: تمويل عقاري / تمويل شخصي / مرن / شراء مديونية..." />
+        </div>
+
+        <div class="row2">
+          <div class="field">
+            <label>النسبة للعميل (اختياري)</label>
+            <input id="sRate" type="text" placeholder="مثال: 3.85%" />
+          </div>
+          <div class="field">
+            <label>الأرباح/الرسوم (اختياري)</label>
+            <input id="sProfit" type="text" placeholder="مثال: الربح 8,882 ريال" />
+          </div>
+        </div>
+
+        <div class="field">
+          <label>ملاحظات هذا التمويل (اختياري)</label>
+          <textarea id="sNotes" placeholder="أي تفاصيل تخص هذا التمويل…"></textarea>
         </div>
 
         <div class="actions">
-          <button class="btn primary" onclick="toC3()">التالي</button>
+          <button class="btn primary" onclick="toSectionBanks()">التالي: البنوك</button>
           <button class="btn ghost" onclick="show('c1')">رجوع</button>
         </div>
       </div>
     </section>
 
-    <!-- عميل: البنوك -->
-    <section id="c3" class="screen">
+    <!-- تمويل: البنوك -->
+    <section id="s2" class="screen">
       <div class="card">
-        <div class="title" style="font-size:22px">البنوك التي تم الاحتساب عليها</div>
-        <p class="sub">أدخل مبلغ التمويل + عدد الأشهر (1–399) + القسط (ثابت أو متغير بفترات).</p>
+        <div class="title" style="font-size:22px">بنوك التمويل</div>
+        <p class="sub">أدخل تفاصيل البنك (مبلغ التمويل + الأشهر 1–399 + القسط ثابت/متغير). وتقدر تضيف ملاحظات/نسبة/أرباح لكل بنك.</p>
 
         <div id="banksWrap"></div>
 
         <div class="field" style="margin-top:14px">
-          <label>هل تم احتساب على بنك آخر؟</label>
+          <label>هل تريد إضافة بنك آخر لهذا التمويل؟</label>
           <div class="inlineBtns">
             <button class="btn secondary" onclick="addBank()">نعم، أضف بنك</button>
-            <button class="btn primary" onclick="finishBanks()">لا، إنهاء</button>
+            <button class="btn primary" onclick="finishSection()">إنهاء هذا التمويل</button>
           </div>
-          <div class="hint">سيتم ترتيب البنوك تلقائيًا من الأعلى تمويلًا للأقل في النتيجة.</div>
+          <div class="hint">داخل هذا التمويل: سيتم ترتيب البنوك من الأعلى تمويلًا إلى الأقل.</div>
         </div>
 
         <div class="actions">
-          <button class="btn ghost" onclick="show('c2')">رجوع</button>
+          <button class="btn ghost" onclick="show('s1')">رجوع</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- قرار: تمويل آخر؟ -->
+    <section id="s3" class="screen">
+      <div class="card">
+        <div class="title" style="font-size:22px">إضافة تمويل آخر؟</div>
+        <p class="sub">هل للعميل تمويل آخر (مثلاً عقاري + شخصي) داخل نفس الوثيقة؟</p>
+
+        <div class="actions">
+          <button class="btn secondary" onclick="startAnotherSection()">نعم، أضف تمويل</button>
+          <button class="btn primary" onclick="buildFinalDocument()">لا، اعرض الوثيقة</button>
+        </div>
+
+        <div class="actions">
+          <button class="btn ghost" onclick="show('s2')">رجوع</button>
         </div>
       </div>
     </section>
@@ -537,8 +600,10 @@
     <!-- النتيجة -->
     <section id="result" class="screen">
       <div class="card">
-        <div class="title" style="font-size:22px">مطبوعات الحسبة</div>
-        <p class="sub">هذه نسخة جاهزة للعميل: شعار ملون + QR + ترتيب البنوك + تفاصيل القسط المتغير.</p>
+        <div class="title" style="font-size:22px">مطبوعات العميل</div>
+        <p class="sub">وثيقة موحدة تشمل أكثر من تمويل + QR حماية + تحميل/مشاركة كصورة.</p>
+
+        <div id="verifyBox"></div>
 
         <div class="paperWrap">
           <div id="paperResult" class="paper"></div>
@@ -547,25 +612,23 @@
         <div class="actions">
           <button class="btn primary" onclick="saveAndDownload()">حفظ بالسجل + تحميل الصورة</button>
           <button class="btn secondary" onclick="sharePaperImage('paperResult')">مشاركة الصورة</button>
-          <button class="btn secondary" onclick="copyShareLink()">نسخ رابط الباركود</button>
-          <button class="btn ghost" onclick="show('c3')">تعديل</button>
+          <button class="btn secondary" onclick="copyShareLink()">نسخ رابط QR</button>
           <button class="btn ghost" onclick="show('dash')">رجوع</button>
         </div>
 
-        <div class="mono" id="shareLinkBox" style="display:none"></div>
+        <div id="shareLinkBox" class="warn" style="display:none"></div>
       </div>
     </section>
 
     <!-- السجل -->
     <section id="records" class="screen">
       <div class="card">
-        <div class="title" style="font-size:22px">السجل الداخلي</div>
-        <p class="sub">ابحث برقم الجوال أو اعرض آخر الحسابات المحفوظة.</p>
+        <div class="title" style="font-size:22px">السجل الداخلي للوثائق</div>
+        <p class="sub">ابحث برقم الجوال أو اعرض آخر الوثائق.</p>
 
         <div class="field">
           <label>بحث برقم الجوال</label>
           <input id="recSearch" type="tel" placeholder="05xxxxxxxx" />
-          <div class="hint">يعرض النتائج المطابقة، وتقدر تفتح أي حسبة.</div>
         </div>
 
         <div class="actions">
@@ -586,17 +649,19 @@
   </footer>
 </div>
 
-<!-- html2canvas لتحويل النتيجة لصورة -->
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-<!-- QR Code -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
 <script>
-  /* =========================
-     إعدادات
-  ========================= */
-  const PASSWORD = "11qq11q@";
-  const STORE_KEY = "FINO_OFFICE_RECORDS_V2";
+  /*****************
+   * إعدادات
+   *****************/
+  const PASSWORD = "11qq11qQ@";
+
+  const DOC_STORE_KEY  = "OFFICE_DOCS_V3";
+  const MEMO_STORE_KEY = "OFFICE_MEMOS_V3";
+
+  // سر التحقق (Tamper-evident) — “حماية” لكشف العبث (ليس تشفير)
+  const VERIFY_SECRET = "FINO_DOC_VERIFY_SECRET_V3_11qq11qQ@";
 
   const SA_BANKS = [
     "مصرف الراجحي",
@@ -613,30 +678,68 @@
     "شركة تمويل / جهة أخرى"
   ];
 
-  /* =========================
-     حالة مؤقتة
-  ========================= */
+  /*****************
+   * حالة
+   *****************/
   let draft = {
     id: null,
     name: "",
     mobile: "",
-    financeType: "",
+    employeeNotes: "",
     createdAt: null,
-    banks: [], // {bankName, amount, months, mode: fixed|variable, fixedInst, schedule:[{inst, months}]}
-    shareUrl: ""
+    sections: [], // [{type, rate, profit, notes, banks:[...]}]
+    shareUrl: "",
+    verifySig: ""
   };
 
+  let currentSection = null;
   let bankIndex = 0;
 
-  /* =========================
-     أدوات مساعدة UTF-8 Base64URL
-  ========================= */
+  /*****************
+   * مساعدات
+   *****************/
+  function show(id){
+    document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+    const el = document.getElementById(id);
+    if(el) el.classList.add("active");
+    window.scrollTo({top:0, behavior:"smooth"});
+  }
+
+  function goHome(){
+    history.replaceState(null, "", location.pathname);
+    show("welcome");
+  }
+
+  function tick(){
+    const now = new Date();
+    document.getElementById("hdrDate").textContent = now.toLocaleDateString("ar-SA", {year:"numeric", month:"2-digit", day:"2-digit"});
+    document.getElementById("hdrTime").textContent = now.toLocaleTimeString("ar-SA", {hour:"2-digit", minute:"2-digit", second:"2-digit", hour12:false});
+  }
+
+  function fmtDateTime(d){
+    const od = {year:"numeric", month:"2-digit", day:"2-digit"};
+    const ot = {hour:"2-digit", minute:"2-digit", second:"2-digit", hour12:false};
+    return d.toLocaleDateString("ar-SA", od) + " - " + d.toLocaleTimeString("ar-SA", ot);
+  }
+
+  function escapeHtml(s){
+    return (s||"").replace(/[&<>"']/g, (c)=>({
+      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+    }[c]));
+  }
+
+  function formatNumber(n){
+    if(n === null || n === undefined || n === "") return "";
+    const x = Number(n);
+    if(Number.isFinite(x)) return x.toLocaleString("ar-SA");
+    return String(n);
+  }
+
   function base64UrlEncodeUtf8(str){
     const bytes = new TextEncoder().encode(str);
     let bin = "";
     bytes.forEach(b => bin += String.fromCharCode(b));
-    const b64 = btoa(bin).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
-    return b64;
+    return btoa(bin).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
   }
   function base64UrlDecodeUtf8(b64url){
     let b64 = b64url.replace(/-/g, "+").replace(/_/g, "/");
@@ -646,39 +749,19 @@
     return new TextDecoder().decode(bytes);
   }
 
-  /* =========================
-     تنقل الشاشات
-  ========================= */
-  function show(id){
-    document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
-    const el = document.getElementById(id);
-    if(el) el.classList.add("active");
-    window.scrollTo({top:0, behavior:"smooth"});
+  async function sha256Hex(str){
+    const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
+    return [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,"0")).join("");
   }
 
-  function goHome(){
-    // تنظيف الهاش ثم العودة
-    history.replaceState(null, "", location.pathname);
-    show("welcome");
+  async function signPayload(payloadObj){
+    const json = JSON.stringify(payloadObj);
+    return await sha256Hex(VERIFY_SECRET + "|" + json);
   }
 
-  /* =========================
-     وقت/تاريخ
-  ========================= */
-  function fmtDateTime(d){
-    const od = {year:"numeric", month:"2-digit", day:"2-digit"};
-    const ot = {hour:"2-digit", minute:"2-digit", second:"2-digit", hour12:false};
-    return d.toLocaleDateString("ar-SA", od) + " - " + d.toLocaleTimeString("ar-SA", ot);
-  }
-  function tick(){
-    const now = new Date();
-    document.getElementById("hdrDate").textContent = now.toLocaleDateString("ar-SA", {year:"numeric", month:"2-digit", day:"2-digit"});
-    document.getElementById("hdrTime").textContent = now.toLocaleTimeString("ar-SA", {hour:"2-digit", minute:"2-digit", second:"2-digit", hour12:false});
-  }
-
-  /* =========================
-     تسجيل الدخول
-  ========================= */
+  /*****************
+   * تسجيل الدخول
+   *****************/
   function login(e){
     e.preventDefault();
     const p = document.getElementById("pass").value;
@@ -692,58 +775,204 @@
     }
   }
 
-  /* =========================
-     مذكرة
-  ========================= */
-  function openMemo(){
+  /*****************
+   * المذكرات
+   *****************/
+  function readMemos(){
+    try { return JSON.parse(localStorage.getItem(MEMO_STORE_KEY) || "[]"); }
+    catch { return []; }
+  }
+  function writeMemos(arr){
+    localStorage.setItem(MEMO_STORE_KEY, JSON.stringify(arr));
+  }
+
+  function openMemoCenter(){
+    document.getElementById("memoSearch").value="";
+    renderMemos(readMemos());
+    show("memoCenter");
+  }
+
+  function newMemo(){
+    document.getElementById("memoTitle").value="";
     document.getElementById("memoText").value="";
     show("memoIn");
   }
-  function memoPreview(){
-    const t = document.getElementById("memoText").value.trim();
-    if(!t){ alert("اكتب نص المذكرة أولاً"); return; }
-    const now = new Date();
-    const paper = buildPaperHTML({
-      kind:"memo",
-      meta: fmtDateTime(now),
-      content: t
+
+  function saveMemo(){
+    const title = (document.getElementById("memoTitle").value || "").trim();
+    const text  = (document.getElementById("memoText").value || "").trim();
+    if(!title && !text){ alert("اكتب عنوان أو نص للمذكرة"); return; }
+
+    const memos = readMemos();
+    const memo = {
+      id: Date.now(),
+      title,
+      text,
+      createdAt: new Date().toISOString()
+    };
+    memos.unshift(memo);
+    writeMemos(memos);
+    alert("تم حفظ المذكرة ✅");
+    renderMemos(memos);
+    show("memoCenter");
+  }
+
+  function searchMemos(){
+    const q = (document.getElementById("memoSearch").value || "").trim().toLowerCase();
+    const memos = readMemos();
+    if(!q){ renderMemos(memos); return; }
+    const filtered = memos.filter(m=>{
+      return (m.title||"").toLowerCase().includes(q) || (m.text||"").toLowerCase().includes(q);
     });
-    document.getElementById("paperMemo").innerHTML = paper;
+    renderMemos(filtered);
+  }
+
+  function renderMemos(list){
+    const box = document.getElementById("memoList");
+    box.innerHTML="";
+    if(!list || list.length === 0){
+      box.innerHTML = `<div class="small">لا توجد مذكرات محفوظة.</div>`;
+      return;
+    }
+
+    list.slice(0,50).forEach(m=>{
+      const item = document.createElement("div");
+      item.className="listItem";
+      item.innerHTML = `
+        <div class="line1">${escapeHtml(m.title || "بدون عنوان")}</div>
+        <div class="line2">${escapeHtml((m.text||"").slice(0,120))}${(m.text||"").length>120?"…":""}</div>
+        <div class="line3">تاريخ: ${fmtDateTime(new Date(m.createdAt))}</div>
+        <div class="actions" style="justify-content:flex-start">
+          <button class="btn secondary" type="button">فتح</button>
+          <button class="btn danger" type="button">حذف</button>
+        </div>
+      `;
+      const btnOpen = item.querySelectorAll("button")[0];
+      const btnDel  = item.querySelectorAll("button")[1];
+
+      btnOpen.onclick = ()=>{
+        document.getElementById("memoTitle").value = m.title || "";
+        document.getElementById("memoText").value  = m.text || "";
+        show("memoIn");
+      };
+
+      btnDel.onclick = ()=>{
+        const ok = confirm("تأكيد حذف المذكرة؟");
+        if(!ok) return;
+        const memos = readMemos().filter(x=>x.id !== m.id);
+        writeMemos(memos);
+        renderMemos(memos);
+      };
+
+      box.appendChild(item);
+    });
+  }
+
+  function memoPreview(){
+    const title = (document.getElementById("memoTitle").value || "").trim();
+    const text  = (document.getElementById("memoText").value || "").trim();
+    if(!title && !text){ alert("اكتب عنوان أو نص للمذكرة"); return; }
+
+    const now = new Date();
+    const html = buildMemoPaperHTML({ title, text, meta: fmtDateTime(now) });
+    document.getElementById("paperMemo").innerHTML = html;
     show("memoPrev");
   }
 
-  /* =========================
-     تدفق العميل
-  ========================= */
+  function buildMemoPaperHTML(p){
+    const content = escapeHtml(p.text || "");
+    const title = escapeHtml(p.title || "مذكرة");
+    return `
+      <div class="paperHeader">
+        <div class="pBrand">
+          <img src="logo.png" alt="logo" />
+          <div>
+            <div class="pName">سرعة تملك العقار</div>
+            <div class="pTag">حلول تمويلية بدون تعقيدات</div>
+          </div>
+        </div>
+        <div class="pMeta">${p.meta}</div>
+      </div>
+      <div class="paperBody">
+        <div class="pillNote">📝 مذكرة — مكتب الموظف</div>
+        <div style="font-weight:900;color:#111827;margin-bottom:8px">${title}</div>
+        <div style="white-space:pre-wrap;line-height:1.85;font-size:15px;color:#111827">${content}</div>
+        <div class="strongWarn">
+          تنبيه: هذه مذكرة داخلية للاستئناس فقط.
+        </div>
+      </div>
+      <div class="foot">
+        <span>جوال التواصل: 0506214458</span>
+        <span>info@hlooleqrr.com</span>
+      </div>
+    `;
+  }
+
+  /*****************
+   * تدفق العميل (أكثر من تمويل)
+   *****************/
   function startClientFlow(){
-    draft = { id:null, name:"", mobile:"", financeType:"", createdAt:null, banks:[], shareUrl:"" };
+    draft = { id:null, name:"", mobile:"", employeeNotes:"", createdAt:null, sections:[], shareUrl:"", verifySig:"" };
+    currentSection = null;
     bankIndex = 0;
+
     document.getElementById("cName").value="";
     document.getElementById("cMobile").value="";
-    document.getElementById("cType").value="";
+    document.getElementById("cEmpNotes").value="";
+    document.getElementById("sType").value="";
+    document.getElementById("sRate").value="";
+    document.getElementById("sProfit").value="";
+    document.getElementById("sNotes").value="";
     document.getElementById("banksWrap").innerHTML="";
+
     show("c1");
   }
 
-  function toC2(){
-    const name = document.getElementById("cName").value.trim();
-    const mobile = document.getElementById("cMobile").value.trim();
-    if(!name || !mobile){ alert("أدخل اسم العميل ورقم الجوال"); return; }
+  function startNewSection(){
+    const name = (document.getElementById("cName").value || "").trim();
+    const mobile = (document.getElementById("cMobile").value || "").trim();
+    if(!name || !mobile){ alert("أدخل اسم العميل ورقم جواله"); return; }
+
     draft.name = name;
     draft.mobile = mobile;
-    show("c2");
+    draft.employeeNotes = (document.getElementById("cEmpNotes").value || "").trim();
+
+    // جهّز القسم الجديد
+    currentSection = { type:"", rate:"", profit:"", notes:"", banks:[] };
+    document.getElementById("sType").value="";
+    document.getElementById("sRate").value="";
+    document.getElementById("sProfit").value="";
+    document.getElementById("sNotes").value="";
+    document.getElementById("banksWrap").innerHTML="";
+    bankIndex = 0;
+
+    show("s1");
   }
 
-  function toC3(){
-    const type = document.getElementById("cType").value.trim();
-    if(!type){ alert("أدخل نوع التمويل"); return; }
-    draft.financeType = type;
+  function startAnotherSection(){
+    currentSection = { type:"", rate:"", profit:"", notes:"", banks:[] };
+    document.getElementById("sType").value="";
+    document.getElementById("sRate").value="";
+    document.getElementById("sProfit").value="";
+    document.getElementById("sNotes").value="";
+    document.getElementById("banksWrap").innerHTML="";
+    bankIndex = 0;
+    show("s1");
+  }
 
-    // أول بنك
+  function toSectionBanks(){
+    const t = (document.getElementById("sType").value || "").trim();
+    if(!t){ alert("أدخل نوع التمويل"); return; }
+
+    currentSection.type = t;
+    currentSection.rate = (document.getElementById("sRate").value || "").trim();
+    currentSection.profit = (document.getElementById("sProfit").value || "").trim();
+    currentSection.notes = (document.getElementById("sNotes").value || "").trim();
+
     document.getElementById("banksWrap").innerHTML="";
     bankIndex = 0;
     addBank();
-    show("c3");
+    show("s2");
   }
 
   function addBank(){
@@ -757,7 +986,7 @@
 
     div.innerHTML = `
       <div class="bankTop">
-        <div class="chip">البنك رقم ${idx}</div>
+        <div class="chip">بنك رقم ${idx}</div>
         <button class="btn ghost" type="button" style="padding:6px 10px;font-size:13px" onclick="removeBank(${idx})">حذف</button>
       </div>
 
@@ -780,13 +1009,29 @@
         </div>
       </div>
 
+      <div class="row2">
+        <div class="field">
+          <label>النسبة (اختياري)</label>
+          <input id="rate_${idx}" type="text" placeholder="مثال: 3.85%" />
+        </div>
+        <div class="field">
+          <label>الأرباح/الرسوم (اختياري)</label>
+          <input id="profit_${idx}" type="text" placeholder="مثال: الربح 8,882 ريال" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label>ملاحظات البنك (اختياري)</label>
+        <input id="bnotes_${idx}" type="text" placeholder="أي ملاحظة تخص هذا البنك…" />
+      </div>
+
       <div class="field">
         <label>هل القسط متغيّر؟</label>
         <select id="mode_${idx}" onchange="toggleMode(${idx})">
           <option value="fixed">لا، القسط ثابت</option>
           <option value="variable">نعم، القسط متغيّر</option>
         </select>
-        <div class="hint">إذا اخترت متغيّر: ستضيف (قسط + مدة) وتكرر “باقي قسط؟”</div>
+        <div class="hint">المتغيّر: أضف (قسط + مدة) وكرر لين تخلص.</div>
       </div>
 
       <div id="fixedWrap_${idx}" class="field">
@@ -799,46 +1044,34 @@
         <div id="varList_${idx}" style="display:flex;flex-direction:column;gap:8px"></div>
 
         <div class="inlineBtns" style="margin-top:8px">
-          <button class="btn secondary" type="button" onclick="addVarRow(${idx}, true)">أضف قسط + مدة</button>
-          <button class="btn primary" type="button" onclick="doneVar(${idx})">انتهيت من الأقساط</button>
+          <button class="btn secondary" type="button" onclick="addVarRow(${idx}, true)">باقي قسط؟ نعم (أضف)</button>
+          <button class="btn primary" type="button" onclick="doneVar(${idx})">باقي قسط؟ لا (إنهاء)</button>
         </div>
-
-        <div class="hint">كل مرة تضيف: النظام يسألك “باقي قسط؟” (بنفس المعنى) عبر زر الإضافة.</div>
       </div>
     `;
 
     wrap.appendChild(div);
-
-    // لو اختار متغير، نضيف أول صف تلقائيًا
     addVarRow(idx, false);
   }
 
   function removeBank(idx){
-    const el = document.querySelector(`.bankCard[data-idx="${idx}"]`);
+    const el = document.querySelector(\`.bankCard[data-idx="\${idx}"]\`);
     if(el) el.remove();
   }
 
   function toggleMode(idx){
-    const mode = document.getElementById(`mode_${idx}`).value;
-    const fw = document.getElementById(`fixedWrap_${idx}`);
-    const vw = document.getElementById(`varWrap_${idx}`);
-    if(mode === "fixed"){
-      fw.style.display = "block";
-      vw.style.display = "none";
-    } else {
-      fw.style.display = "none";
-      vw.style.display = "block";
-      // إذا ما فيه صفوف متغير، أضف واحد
-      const list = document.getElementById(`varList_${idx}`);
-      if(list && list.children.length === 0) addVarRow(idx, false);
-    }
+    const mode = document.getElementById(\`mode_\${idx}\`).value;
+    const fw = document.getElementById(\`fixedWrap_\${idx}\`);
+    const vw = document.getElementById(\`varWrap_\${idx}\`);
+    if(mode === "fixed"){ fw.style.display="block"; vw.style.display="none"; }
+    else { fw.style.display="none"; vw.style.display="block"; }
   }
 
   function addVarRow(idx, focus){
-    const list = document.getElementById(`varList_${idx}`);
+    const list = document.getElementById(\`varList_\${idx}\`);
     if(!list) return;
-
     const count = list.children.length + 1;
+
     const row = document.createElement("div");
     row.style.display="grid";
     row.style.gridTemplateColumns="1fr 1fr auto";
@@ -853,148 +1086,190 @@
     list.appendChild(row);
 
     if(focus){
-      setTimeout(()=> {
-        const i = document.getElementById(`vInst_${idx}_${count}`);
-        if(i) i.focus();
-      }, 50);
+      setTimeout(()=>{ const i=document.getElementById(\`vInst_${idx}_${count}\`); if(i) i.focus(); }, 50);
     }
   }
 
   function doneVar(idx){
-    // فقط تحقق بسيط
-    const list = document.getElementById(`varList_${idx}`);
+    const list = document.getElementById(\`varList_\${idx}\`);
     if(!list || list.children.length === 0){
       alert("أضف قسط + مدة أولاً");
       return;
     }
-    alert("تم — الآن تقدر تكمل إضافة بنوك أخرى أو إنهاء.");
+    alert("تم إنهاء الأقساط المتغيرة لهذا البنك ✅");
   }
 
-  function finishBanks(){
-    // جمع البنوك
+  function finishSection(){
     const bankCards = Array.from(document.querySelectorAll(".bankCard"));
     const banks = [];
 
     for(const card of bankCards){
       const idx = card.dataset.idx;
 
-      const bankName = (document.getElementById(`bank_${idx}`)?.value || "").trim();
-      const amount = parseFloat(document.getElementById(`amount_${idx}`)?.value || "0");
-      const months = parseInt(document.getElementById(`months_${idx}`)?.value || "0", 10);
-      const mode = document.getElementById(`mode_${idx}`)?.value || "fixed";
+      const bankName = (document.getElementById(\`bank_\${idx}\`)?.value || "").trim();
+      const amount = parseFloat(document.getElementById(\`amount_\${idx}\`)?.value || "0");
+      const months = parseInt(document.getElementById(\`months_\${idx}\`)?.value || "0", 10);
 
-      if(!bankName || !amount || !months){
-        continue;
-      }
-      if(months < 1 || months > 399){
-        continue;
-      }
+      const rate = (document.getElementById(\`rate_\${idx}\`)?.value || "").trim();
+      const profit = (document.getElementById(\`profit_\${idx}\`)?.value || "").trim();
+      const notes = (document.getElementById(\`bnotes_\${idx}\`)?.value || "").trim();
+
+      const mode = document.getElementById(\`mode_\${idx}\`)?.value || "fixed";
+
+      if(!bankName || !amount || !months) continue;
+      if(months < 1 || months > 399) continue;
 
       if(mode === "fixed"){
-        const fixedInst = parseFloat(document.getElementById(`fixedInst_${idx}`)?.value || "0");
+        const fixedInst = parseFloat(document.getElementById(\`fixedInst_\${idx}\`)?.value || "0");
         if(!fixedInst) continue;
-
-        banks.push({ bankName, amount, months, mode:"fixed", fixedInst, schedule:[] });
+        banks.push({ bankName, amount, months, mode:"fixed", fixedInst, schedule:[], rate, profit, notes });
 
       } else {
-        const list = document.getElementById(`varList_${idx}`);
+        const list = document.getElementById(\`varList_\${idx}\`);
         const schedule = [];
         if(list){
           const rows = Array.from(list.children);
           rows.forEach((r, k0)=>{
             const k = k0 + 1;
-            const inst = parseFloat(document.getElementById(`vInst_${idx}_${k}`)?.value || "0");
-            const m = parseInt(document.getElementById(`vMon_${idx}_${k}`)?.value || "0", 10);
+            const inst = parseFloat(document.getElementById(\`vInst_\${idx}_\${k}\`)?.value || "0");
+            const m = parseInt(document.getElementById(\`vMon_\${idx}_\${k}\`)?.value || "0", 10);
             if(inst && m) schedule.push({inst, months:m});
           });
         }
         if(schedule.length === 0) continue;
-
-        banks.push({ bankName, amount, months, mode:"variable", fixedInst:null, schedule });
+        banks.push({ bankName, amount, months, mode:"variable", fixedInst:null, schedule, rate, profit, notes });
       }
     }
 
     if(banks.length === 0){
-      alert("لازم تدخل بنك واحد على الأقل كامل (البنك + مبلغ التمويل + عدد الأشهر + القسط).");
+      alert("لازم تدخل بنك واحد كامل على الأقل (اسم البنك + مبلغ التمويل + الأشهر + القسط).");
       return;
     }
 
-    // ترتيب من الأكثر تمويلاً إلى الأقل
+    // ترتيب البنوك داخل التمويل
     banks.sort((a,b)=> b.amount - a.amount);
+    currentSection.banks = banks;
 
-    draft.banks = banks;
-    draft.createdAt = new Date().toISOString();
+    // حفظ التمويل داخل الوثيقة
+    draft.sections.push(currentSection);
 
-    renderResultPaper();
-    show("result");
+    // انتقل لسؤال: تمويل آخر؟
+    show("s3");
   }
 
-  /* =========================
-     بناء مطبوعات
-  ========================= */
+  /*****************
+   * بناء الوثيقة + QR حماية
+   *****************/
   function buildPaperHTML(payload){
-    // payload.kind = memo | result
     const meta = payload.meta || fmtDateTime(new Date());
-
-    if(payload.kind === "memo"){
-      const content = escapeHtml(payload.content || "");
-      return `
-        <div class="paperHeader">
-          <div class="pBrand">
-            <img src="logo.png" alt="logo" />
-            <div>
-              <div class="pName">سرعة تملك العقار</div>
-              <div class="pTag">حلول تمويلية بدون تعقيدات</div>
-            </div>
-          </div>
-          <div class="pMeta">${meta}</div>
-        </div>
-        <div class="paperBody">
-          <div class="pillNote">📝 مذكرة داخلية — مطبوعات الشركة</div>
-          <div style="font-weight:900;color:#111827;margin-bottom:10px">المحتوى:</div>
-          <div style="white-space:pre-wrap;line-height:1.85;font-size:15px;color:#111827">${content}</div>
-          <div class="disclaimer">
-            هذه المذكرة صادرة من مكتب الشركة لأغراض داخلية فقط ولا تعتبر عرضاً تمويلياً ملزماً.
-          </div>
-        </div>
-        <div class="foot">
-          <span>جوال التواصل: 0506214458</span>
-          <span>info@hlooleqrr.com</span>
-        </div>
-      `;
-    }
-
-    // result
     const d = payload.data;
-    const created = new Date(d.createdAt);
-    const createdTxt = fmtDateTime(created);
 
-    // جدول البنوك
-    const rows = d.banks.map((b, i)=>{
-      const instTxt = (b.mode === "fixed")
-        ? `${formatNumber(b.fixedInst)}`
-        : `متغيّر`;
+    // حالة التحقق
+    const verifyBadge = payload.verified
+      ? `<span class="badge" style="background:#ecfdf5;color:#065f46;border:1px solid #a7f3d0">✅ وثيقة موثّقة</span>`
+      : `<span class="badge" style="background:#fef2f2;color:#991b1b;border:1px solid #fecaca">⚠️ غير موثّقة (تم تعديل البيانات)</span>`;
+
+    const createdTxt = fmtDateTime(new Date(d.createdAt));
+
+    // أقسام التمويل
+    const sectionsHtml = d.sections.map((s, si)=>{
+      // جدول البنوك
+      const rows = (s.banks||[]).map((b, i)=>{
+        const instTxt = (b.mode === "fixed")
+          ? `${formatNumber(b.fixedInst)}`
+          : `متغيّر`;
+        const rateTxt = escapeHtml(b.rate || s.rate || "");
+        const profitTxt = escapeHtml(b.profit || s.profit || "");
+        return `
+          <tr>
+            <td>${i+1}</td>
+            <td>${escapeHtml(b.bankName)}</td>
+            <td>${formatNumber(b.amount)}</td>
+            <td>${b.months}</td>
+            <td>${instTxt}</td>
+            <td>${rateTxt}</td>
+            <td>${profitTxt}</td>
+          </tr>
+        `;
+      }).join("");
+
+      // تفاصيل القسط المتغير
+      let varDetails = "";
+      (s.banks||[]).forEach((b)=>{
+        if(b.mode === "variable"){
+          varDetails += `<div style="margin-top:8px"><b>${escapeHtml(b.bankName)}:</b></div>`;
+          b.schedule.forEach((x)=>{
+            varDetails += `<div style="color:#111827">- قسط ${formatNumber(x.inst)} ريال لمدة ${x.months} شهر</div>`;
+          });
+        }
+      });
+
+      // ملاحظات التمويل
+      const secNotes = (s.notes||"").trim()
+        ? `<div class="hr"></div><div style="font-weight:900;color:#111827">ملاحظات التمويل:</div><div style="margin-top:6px;white-space:pre-wrap;line-height:1.7;color:#111827">${escapeHtml(s.notes)}</div>`
+        : "";
+
+      // ملاحظات البنوك (اختياري)
+      let bankNotes = "";
+      (s.banks||[]).forEach((b)=>{
+        if((b.notes||"").trim()){
+          bankNotes += `<div style="margin-top:6px">- <b>${escapeHtml(b.bankName)}:</b> ${escapeHtml(b.notes)}</div>`;
+        }
+      });
+      if(bankNotes){
+        bankNotes = `<div class="hr"></div><div style="font-weight:900;color:#111827">ملاحظات على البنوك:</div><div style="font-size:14px;line-height:1.7;color:#111827">${bankNotes}</div>`;
+      }
+
       return `
-        <tr>
-          <td>${i+1}</td>
-          <td>${escapeHtml(b.bankName)}</td>
-          <td>${formatNumber(b.amount)}</td>
-          <td>${b.months}</td>
-          <td>${instTxt}</td>
-        </tr>
+        <div class="sectionBox">
+          <div class="sectionTitle">
+            <div>تمويل ${si+1}: ${escapeHtml(s.type)}</div>
+            <span class="badge">📌 داخل التمويل: البنوك مرتبة أعلى تمويل → أقل</span>
+          </div>
+
+          <div class="infoGrid" style="margin-top:10px">
+            <div class="k">النسبة:</div><div class="v">${escapeHtml(s.rate||"—")}</div>
+            <div class="k">الأرباح/الرسوم:</div><div class="v">${escapeHtml(s.profit||"—")}</div>
+          </div>
+
+          <div style="font-weight:900;color:#111827;margin-top:6px">تفاصيل البنوك:</div>
+          <table>
+            <thead>
+              <tr>
+                <th>م</th>
+                <th>اسم البنك</th>
+                <th>مبلغ التمويل (ريال)</th>
+                <th>عدد الأشهر</th>
+                <th>القسط</th>
+                <th>النسبة</th>
+                <th>الأرباح</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+
+          ${varDetails ? `
+            <div class="hr"></div>
+            <div style="font-weight:900;color:#111827">تفاصيل القسط المتغيّر:</div>
+            <div style="font-size:14px;line-height:1.75;margin-top:6px">${varDetails}</div>
+          ` : ""}
+
+          ${secNotes}
+          ${bankNotes}
+        </div>
       `;
     }).join("");
 
-    // تفاصيل المتغير
-    let varDetails = "";
-    d.banks.forEach((b, i)=>{
-      if(b.mode === "variable"){
-        varDetails += `<div style="margin-top:8px"><b>${i+1}- ${escapeHtml(b.bankName)}:</b></div>`;
-        b.schedule.forEach((s)=>{
-          varDetails += `<div style="color:#111827">- قسط ${formatNumber(s.inst)} ريال لمدة ${s.months} شهر</div>`;
-        });
-      }
-    });
+    const empNotes = (d.employeeNotes||"").trim()
+      ? `<div class="sectionBox" style="margin-top:12px">
+           <div class="sectionTitle"><div>ملاحظات الموظف</div><span class="badge">اختياري</span></div>
+           <div style="margin-top:8px;white-space:pre-wrap;line-height:1.7;color:#111827">${escapeHtml(d.employeeNotes)}</div>
+         </div>`
+      : "";
+
+    const qrImg = payload.qrUrl
+      ? `<img alt="QR" src="${payload.qrUrl}" width="96" height="96" style="border-radius:14px;border:1px solid #e5e7eb;background:#fff;padding:6px" />`
+      : `<div style="width:96px;height:96px;border-radius:14px;border:1px solid #e5e7eb;background:#fff;display:flex;align-items:center;justify-content:center">QR</div>`;
 
     return `
       <div class="paperHeader">
@@ -1009,42 +1284,25 @@
       </div>
 
       <div class="paperBody">
-        <div class="pillNote">📄 مطبوعات الحسبة — للاطلاع المبدئي</div>
+        <div class="pillNote">📄 مطبوعات العميل — ${verifyBadge}</div>
 
         <div class="infoGrid">
           <div class="k">اسم العميل:</div><div class="v">${escapeHtml(d.name)}</div>
           <div class="k">رقم الجوال:</div><div class="v">${escapeHtml(d.mobile)}</div>
-          <div class="k">نوع التمويل:</div><div class="v">${escapeHtml(d.financeType)}</div>
-          <div class="k">تاريخ الحسبة:</div><div class="v">${createdTxt}</div>
+          <div class="k">رقم الوثيقة:</div><div class="v">${escapeHtml(d.id)}</div>
+          <div class="k">تاريخ الإصدار:</div><div class="v">${createdTxt}</div>
         </div>
 
-        <div class="hr"></div>
+        ${sectionsHtml}
+        ${empNotes}
 
-        <div style="font-weight:900;color:#111827;margin-top:6px">
-          مقارنة البنوك (مرتبة من الأعلى تمويلاً إلى الأقل):
+        <div class="strongWarn">
+          تنبيه مهم: هذه الحسبة مبدئية بناءً على معلومات العميل وقد تتغير عند التقييم النهائي.  
+          نحن لسنا جهة تمويلية، ولا يمثل هذا المستند عرضاً تمويلياً ملزماً.
         </div>
-
-        <table>
-          <thead>
-            <tr>
-              <th>م</th>
-              <th>اسم البنك</th>
-              <th>مبلغ التمويل (ريال)</th>
-              <th>عدد الأشهر</th>
-              <th>القسط</th>
-            </tr>
-          </thead>
-          <tbody>${rows}</tbody>
-        </table>
-
-        ${varDetails ? `
-          <div class="hr"></div>
-          <div style="font-weight:900;color:#111827">تفاصيل القسط المتغيّر:</div>
-          <div style="font-size:14px;line-height:1.75;margin-top:6px">${varDetails}</div>
-        ` : ""}
 
         <div class="disclaimer">
-          * الأرقام تقريبية وتخضع لسياسات البنك والاعتماد النهائي والالتزامات الفعلية. هذا المستند للاستئناس فقط ولا يمثل عرضاً تمويلياً ملزماً.
+          حماية الوثيقة: QR يتحقق من صحة البيانات — أي تعديل في بيانات الرابط يجعل الوثيقة “غير موثّقة”.
         </div>
       </div>
 
@@ -1052,97 +1310,99 @@
         <span>صادر من مكتب الموظف — سرعة تملك العقار</span>
         <span>0506214458 · info@hlooleqrr.com</span>
         <div class="qrBox">
-          <div id="qrHere"></div>
-          <small>امسح QR لفتح نفس الحسبة وتحميل الصورة</small>
+          ${qrImg}
+          <small>امسح QR لفتح نفس الوثيقة وتحميل صورتها</small>
         </div>
       </div>
     `;
   }
 
-  function renderResultPaper(){
-    const meta = fmtDateTime(new Date());
-
-    // جهز رابط مشاركة يحمل بيانات الحسبة نفسها داخل الرابط
-    const shareData = {
-      name: draft.name,
-      mobile: draft.mobile,
-      financeType: draft.financeType,
-      createdAt: draft.createdAt,
-      banks: draft.banks
-    };
-    const encoded = base64UrlEncodeUtf8(JSON.stringify(shareData));
-    // الرابط النهائي (نفس موقعك) + هاش
-    const shareUrl = `${location.origin}${location.pathname}#share=${encoded}`;
-    draft.shareUrl = shareUrl;
-
-    const html = buildPaperHTML({
-      kind:"result",
-      meta,
-      data: shareData
-    });
-
-    const paper = document.getElementById("paperResult");
-    paper.innerHTML = html;
-
-    // رسم QR داخل الورقة
-    const qrContainer = paper.querySelector("#qrHere");
-    if(qrContainer){
-      qrContainer.innerHTML = "";
-      new QRCode(qrContainer, { text: shareUrl, width: 78, height: 78 });
+  async function buildFinalDocument(){
+    if(draft.sections.length === 0){
+      alert("لا يوجد تمويل مضاف للوثيقة.");
+      return;
     }
 
-    // صندوق رابط
-    document.getElementById("shareLinkBox").style.display = "none";
-    document.getElementById("shareLinkBox").textContent = "";
-  }
+    draft.createdAt = new Date().toISOString();
+    draft.id = String(Date.now());
 
-  function copyShareLink(){
-    if(!draft.shareUrl){ alert("لا يوجد رابط مشاركة"); return; }
-    navigator.clipboard?.writeText(draft.shareUrl).then(()=>{
-      const box = document.getElementById("shareLinkBox");
-      box.style.display = "block";
-      box.textContent = draft.shareUrl;
-      alert("تم نسخ رابط الباركود ✅");
-    }).catch(()=>{
-      const box = document.getElementById("shareLinkBox");
-      box.style.display = "block";
-      box.textContent = draft.shareUrl;
-      alert("انسخ الرابط يدويًا من الصندوق أسفل.");
-    });
-  }
-
-  /* =========================
-     حفظ بالسجل والبحث
-  ========================= */
-  function readRecords(){
-    try { return JSON.parse(localStorage.getItem(STORE_KEY) || "[]"); }
-    catch { return []; }
-  }
-  function writeRecords(arr){
-    localStorage.setItem(STORE_KEY, JSON.stringify(arr));
-  }
-
-  function saveAndDownload(){
-    const records = readRecords();
-    const rec = {
-      id: draft.id || Date.now(),
+    const payload = {
+      id: draft.id,
       name: draft.name,
       mobile: draft.mobile,
-      financeType: draft.financeType,
+      employeeNotes: draft.employeeNotes,
       createdAt: draft.createdAt,
-      banks: draft.banks,
-      shareUrl: draft.shareUrl
+      sections: draft.sections
     };
-    draft.id = rec.id;
 
-    // استبدال إذا نفس id
-    const filtered = records.filter(r => r.id !== rec.id);
-    filtered.push(rec);
-    // ترتيب أحدث أول
-    filtered.sort((a,b)=> new Date(b.createdAt) - new Date(a.createdAt));
-    writeRecords(filtered);
+    const sig = await signPayload(payload);
+    draft.verifySig = sig;
 
-    downloadPaperImage("paperResult");
+    const packed = { p: payload, s: sig };
+    const token = base64UrlEncodeUtf8(JSON.stringify(packed));
+
+    const shareUrl = `${location.origin}${location.pathname}#doc=${token}`;
+    draft.shareUrl = shareUrl;
+
+    // QR عبر صورة (مضمون)
+    const qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=" + encodeURIComponent(shareUrl);
+
+    // رندر النتيجة
+    const html = buildPaperHTML({
+      meta: fmtDateTime(new Date()),
+      data: payload,
+      verified: true,
+      qrUrl
+    });
+    document.getElementById("paperResult").innerHTML = html;
+
+    document.getElementById("verifyBox").innerHTML = `<div class="ok">✅ الوثيقة موثّقة — QR للحماية وفتح نفس الوثيقة.</div>`;
+    document.getElementById("shareLinkBox").style.display="none";
+    document.getElementById("shareLinkBox").textContent="";
+
+    show("result");
+  }
+
+  function startAnotherSection(){
+    currentSection = { type:"", rate:"", profit:"", notes:"", banks:[] };
+    document.getElementById("sType").value="";
+    document.getElementById("sRate").value="";
+    document.getElementById("sProfit").value="";
+    document.getElementById("sNotes").value="";
+    document.getElementById("banksWrap").innerHTML="";
+    bankIndex = 0;
+    show("s1");
+  }
+
+  /*****************
+   * حفظ الوثائق والسجل
+   *****************/
+  function readDocs(){
+    try { return JSON.parse(localStorage.getItem(DOC_STORE_KEY) || "[]"); }
+    catch { return []; }
+  }
+  function writeDocs(arr){
+    localStorage.setItem(DOC_STORE_KEY, JSON.stringify(arr));
+  }
+
+  async function saveAndDownload(){
+    // حفظ
+    const rec = {
+      id: draft.id,
+      name: draft.name,
+      mobile: draft.mobile,
+      employeeNotes: draft.employeeNotes,
+      createdAt: draft.createdAt,
+      sections: draft.sections,
+      shareUrl: draft.shareUrl,
+      verifySig: draft.verifySig
+    };
+    const docs = readDocs().filter(x=>x.id !== rec.id);
+    docs.unshift(rec);
+    writeDocs(docs);
+
+    // تحميل
+    await downloadPaperImage("paperResult");
   }
 
   function openRecords(){
@@ -1152,21 +1412,23 @@
   }
 
   function renderRecords(list){
-    const records = list || readRecords();
+    const docs = list || readDocs();
     const box = document.getElementById("recordsList");
     box.innerHTML = "";
-    if(records.length === 0){
-      box.innerHTML = `<div class="small">لا يوجد سجل محفوظ على هذا الجهاز.</div>`;
+
+    if(!docs || docs.length===0){
+      box.innerHTML = `<div class="small">لا يوجد وثائق محفوظة على هذا الجهاز.</div>`;
       return;
     }
-    records.slice(0, 30).forEach(r=>{
+
+    docs.slice(0,30).forEach(d=>{
       const item = document.createElement("div");
       item.className = "listItem";
       item.innerHTML = `
-        <div class="line1">${escapeHtml(r.name)} — ${escapeHtml(r.mobile)}</div>
-        <div class="line2">${escapeHtml(r.financeType)}</div>
-        <div class="line3">تاريخ: ${fmtDateTime(new Date(r.createdAt))}</div>
-        <div class="copyBox">
+        <div class="line1">${escapeHtml(d.name)} — ${escapeHtml(d.mobile)}</div>
+        <div class="line2">عدد التمويلات داخل الوثيقة: ${(d.sections||[]).length}</div>
+        <div class="line3">تاريخ: ${fmtDateTime(new Date(d.createdAt))}</div>
+        <div class="actions" style="justify-content:flex-start">
           <button class="btn secondary" type="button">فتح</button>
           <button class="btn secondary" type="button">نسخ رابط QR</button>
         </div>
@@ -1174,37 +1436,38 @@
       const btnOpen = item.querySelectorAll("button")[0];
       const btnCopy = item.querySelectorAll("button")[1];
 
-      btnOpen.onclick = ()=>{
-        // حمل للعرض
-        const shareData = {
-          name: r.name, mobile: r.mobile, financeType: r.financeType,
-          createdAt: r.createdAt, banks: r.banks
+      btnOpen.onclick = async ()=>{
+        const payload = {
+          id: d.id, name:d.name, mobile:d.mobile,
+          employeeNotes:d.employeeNotes, createdAt:d.createdAt,
+          sections:d.sections
         };
-        const meta = fmtDateTime(new Date());
-        document.getElementById("paperResult").innerHTML = buildPaperHTML({kind:"result", meta, data: shareData});
+        const sig = await signPayload(payload);
+        const isOk = (sig === d.verifySig);
 
-        // توليد QR من رابط السجل (لو موجود)
-        draft.shareUrl = r.shareUrl || "";
-        const paper = document.getElementById("paperResult");
-        const qrContainer = paper.querySelector("#qrHere");
-        if(qrContainer){
-          qrContainer.innerHTML = "";
-          if(r.shareUrl){
-            new QRCode(qrContainer, { text: r.shareUrl, width: 78, height: 78 });
-          } else {
-            qrContainer.innerHTML = "<small style='color:#fff'>لا يوجد رابط</small>";
-          }
-        }
+        const qrUrl = d.shareUrl
+          ? "https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=" + encodeURIComponent(d.shareUrl)
+          : "";
 
-        draft = { ...draft, ...r };
+        document.getElementById("paperResult").innerHTML = buildPaperHTML({
+          meta: fmtDateTime(new Date()),
+          data: payload,
+          verified: isOk,
+          qrUrl
+        });
+
+        document.getElementById("verifyBox").innerHTML = isOk
+          ? `<div class="ok">✅ الوثيقة موثّقة.</div>`
+          : `<div class="warn">⚠️ هذه الوثيقة غير موثّقة (تم تعديل البيانات أو تغيّرت).</div>`;
+
+        draft = { ...draft, ...d };
         show("result");
       };
 
       btnCopy.onclick = ()=>{
-        if(!r.shareUrl){ alert("لا يوجد رابط QR محفوظ لهذه الحسبة"); return; }
-        navigator.clipboard?.writeText(r.shareUrl).then(()=> alert("تم نسخ رابط QR ✅")).catch(()=>{
-          alert("لم يتم النسخ تلقائيًا. افتح الحسبة ثم انسخ الرابط.");
-        });
+        if(!d.shareUrl){ alert("لا يوجد رابط QR محفوظ."); return; }
+        navigator.clipboard?.writeText(d.shareUrl).then(()=> alert("تم نسخ رابط QR ✅"))
+          .catch(()=> alert("انسخ الرابط يدويًا من فتح الوثيقة."));
       };
 
       box.appendChild(item);
@@ -1212,25 +1475,26 @@
   }
 
   function doRecordsSearch(){
-    const q = document.getElementById("recSearch").value.trim();
-    const records = readRecords();
-    const matches = q ? records.filter(r => (r.mobile||"").includes(q)) : records;
+    const q = (document.getElementById("recSearch").value || "").trim();
+    const docs = readDocs();
+    const matches = q ? docs.filter(d => (d.mobile||"").includes(q)) : docs;
     renderRecords(matches);
   }
 
   function clearRecords(){
     const ok = confirm("تأكيد: مسح السجل على هذا الجهاز فقط؟");
     if(!ok) return;
-    localStorage.removeItem(STORE_KEY);
+    localStorage.removeItem(DOC_STORE_KEY);
     renderRecords([]);
   }
 
   function dashSearch(){
-    const q = document.getElementById("dashSearchMobile").value.trim();
-    const records = readRecords();
-    const matches = q ? records.filter(r => (r.mobile||"").includes(q)) : [];
+    const q = (document.getElementById("dashSearchMobile").value || "").trim();
+    const docs = readDocs();
+    const matches = q ? docs.filter(d => (d.mobile||"").includes(q)) : [];
     const box = document.getElementById("dashQuickResults");
     box.innerHTML = "";
+
     if(!q){
       box.innerHTML = `<div class="small">اكتب رقم الجوال ثم اضغط بحث.</div>`;
       return;
@@ -1239,44 +1503,112 @@
       box.innerHTML = `<div class="small">لا توجد نتائج مطابقة.</div>`;
       return;
     }
-    matches.slice(0,5).forEach(r=>{
+
+    matches.slice(0,5).forEach(d=>{
       const item = document.createElement("div");
       item.className="listItem";
       item.innerHTML = `
-        <div class="line1">${escapeHtml(r.name)} — ${escapeHtml(r.mobile)}</div>
-        <div class="line2">${escapeHtml(r.financeType)}</div>
-        <div class="line3">تاريخ: ${fmtDateTime(new Date(r.createdAt))}</div>
+        <div class="line1">${escapeHtml(d.name)} — ${escapeHtml(d.mobile)}</div>
+        <div class="line2">عدد التمويلات: ${(d.sections||[]).length}</div>
+        <div class="line3">تاريخ: ${fmtDateTime(new Date(d.createdAt))}</div>
         <div class="actions" style="justify-content:flex-start">
           <button class="btn secondary" type="button">فتح</button>
         </div>
       `;
-      item.querySelector("button").onclick = ()=>{
-        const shareData = {name:r.name, mobile:r.mobile, financeType:r.financeType, createdAt:r.createdAt, banks:r.banks};
-        const meta = fmtDateTime(new Date());
-        document.getElementById("paperResult").innerHTML = buildPaperHTML({kind:"result", meta, data: shareData});
+      item.querySelector("button").onclick = async ()=>{
+        const payload = {
+          id:d.id, name:d.name, mobile:d.mobile,
+          employeeNotes:d.employeeNotes, createdAt:d.createdAt,
+          sections:d.sections
+        };
+        const sig = await signPayload(payload);
+        const isOk = (sig === d.verifySig);
 
-        const paper = document.getElementById("paperResult");
-        const qrContainer = paper.querySelector("#qrHere");
-        if(qrContainer){
-          qrContainer.innerHTML="";
-          if(r.shareUrl){
-            new QRCode(qrContainer, { text: r.shareUrl, width:78, height:78 });
-          }
-        }
-        draft = { ...draft, ...r };
+        const qrUrl = d.shareUrl
+          ? "https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=" + encodeURIComponent(d.shareUrl)
+          : "";
+
+        document.getElementById("paperResult").innerHTML = buildPaperHTML({
+          meta: fmtDateTime(new Date()),
+          data: payload,
+          verified: isOk,
+          qrUrl
+        });
+
+        document.getElementById("verifyBox").innerHTML = isOk
+          ? `<div class="ok">✅ الوثيقة موثّقة.</div>`
+          : `<div class="warn">⚠️ هذه الوثيقة غير موثّقة.</div>`;
+
+        draft = { ...draft, ...d };
         show("result");
       };
       box.appendChild(item);
     });
   }
 
-  /* =========================
-     تصدير صورة بجودة عالية
-  ========================= */
+  /*****************
+   * QR مشاركة + التحقق
+   *****************/
+  async function handleDocHash(){
+    const hash = location.hash || "";
+    if(!hash.startsWith("#doc=")) return false;
+
+    const token = hash.replace("#doc=","").trim();
+    if(!token) return false;
+
+    try{
+      const json = base64UrlDecodeUtf8(token);
+      const packed = JSON.parse(json);
+
+      const payload = packed.p;
+      const sig = packed.s;
+
+      const calc = await signPayload(payload);
+      const verified = (calc === sig);
+
+      const shareUrl = `${location.origin}${location.pathname}#doc=${token}`;
+      const qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=" + encodeURIComponent(shareUrl);
+
+      document.getElementById("paperShare").innerHTML = buildPaperHTML({
+        meta: fmtDateTime(new Date()),
+        data: payload,
+        verified,
+        qrUrl
+      });
+
+      document.getElementById("shareVerifyBox").innerHTML = verified
+        ? `<div class="ok">✅ الوثيقة موثّقة — QR للحماية.</div>`
+        : `<div class="warn">⚠️ الوثيقة غير موثّقة (تم تعديل البيانات).</div>`;
+
+      show("shareScreen");
+      return true;
+    }catch(e){
+      console.error(e);
+      return false;
+    }
+  }
+
+  function copyShareLink(){
+    if(!draft.shareUrl){ alert("لا يوجد رابط QR"); return; }
+    navigator.clipboard?.writeText(draft.shareUrl).then(()=>{
+      const box = document.getElementById("shareLinkBox");
+      box.style.display="block";
+      box.textContent = "تم نسخ رابط QR:\n" + draft.shareUrl;
+      alert("تم النسخ ✅");
+    }).catch(()=>{
+      const box = document.getElementById("shareLinkBox");
+      box.style.display="block";
+      box.textContent = draft.shareUrl;
+      alert("انسخ الرابط يدويًا من الصندوق.");
+    });
+  }
+
+  /*****************
+   * تصدير صورة (جودة)
+   *****************/
   async function makeCanvas(elementId){
     const el = document.getElementById(elementId);
     if(!el) throw new Error("عنصر غير موجود");
-    // scale أعلى = جودة أعلى
     const canvas = await html2canvas(el, {
       scale: 3,
       backgroundColor: null,
@@ -1289,13 +1621,13 @@
     try{
       const canvas = await makeCanvas(elementId);
       const a = document.createElement("a");
-      const name = "offer-" + new Date().toISOString().replace(/[:.]/g,"-") + ".png";
+      const name = "doc-" + new Date().toISOString().replace(/[:.]/g,"-") + ".png";
       a.download = name;
       a.href = canvas.toDataURL("image/png", 1.0);
       a.click();
     }catch(e){
       console.error(e);
-      alert("تعذر إنشاء الصورة. تأكد أن شعارك موجود (logo.png) وحاول مرة أخرى.");
+      alert("تعذر إنشاء الصورة. تأكد أن الشعار موجود باسم logo.png ثم حاول.");
     }
   }
 
@@ -1304,91 +1636,29 @@
       const canvas = await makeCanvas(elementId);
       const blob = await new Promise(res=> canvas.toBlob(res, "image/png", 1.0));
       if(!blob){ alert("تعذر تجهيز الصورة."); return; }
+      const file = new File([blob], "document.png", {type:"image/png"});
 
-      const file = new File([blob], "offer.png", {type:"image/png"});
-
-      // مشاركة ملف (iOS يدعمها غالبًا)
       if(navigator.canShare && navigator.canShare({files:[file]})){
-        await navigator.share({ files:[file], title:"مطبوعات الحسبة" });
+        await navigator.share({ files:[file], title:"مطبوعات العميل" });
         return;
       }
-
-      // بديل: مشاركة رابط QR
-      if(draft.shareUrl && navigator.share){
-        await navigator.share({ url: draft.shareUrl, title: "رابط الحسبة" });
-        return;
-      }
-
-      // بديل: تحميل
+      // بديل
       await downloadPaperImage(elementId);
     }catch(e){
       console.error(e);
-      alert("تعذر المشاركة على جهازك. تم تفعيل خيار التحميل كبديل.");
       await downloadPaperImage(elementId);
     }
   }
 
-  /* =========================
-     شاشة مشاركة QR
-  ========================= */
-  function handleShareHash(){
-    const hash = location.hash || "";
-    if(!hash.startsWith("#share=")) return false;
-
-    const token = hash.replace("#share=","").trim();
-    if(!token) return false;
-
-    try{
-      const json = base64UrlDecodeUtf8(token);
-      const data = JSON.parse(json);
-
-      // رندر على share paper
-      const meta = fmtDateTime(new Date());
-      const html = buildPaperHTML({kind:"result", meta, data});
-      const el = document.getElementById("paperShare");
-      el.innerHTML = html;
-
-      // QR داخل الورقة: نفس الرابط
-      const qrContainer = el.querySelector("#qrHere");
-      if(qrContainer){
-        qrContainer.innerHTML = "";
-        new QRCode(qrContainer, { text: `${location.origin}${location.pathname}#share=${token}`, width:78, height:78 });
-      }
-
-      show("shareScreen");
-      return true;
-    }catch(e){
-      console.error(e);
-      // لو فشل، نرجع للرئيسية
-      return false;
-    }
-  }
-
-  /* =========================
-     حماية HTML
-  ========================= */
-  function escapeHtml(s){
-    return (s||"").replace(/[&<>"']/g, (c)=>({
-      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
-    }[c]));
-  }
-  function formatNumber(n){
-    try{ return Number(n).toLocaleString("ar-SA"); }
-    catch{ return n; }
-  }
-
-  /* =========================
-     تشغيل
-  ========================= */
-  document.addEventListener("DOMContentLoaded", ()=>{
+  /*****************
+   * تشغيل
+   *****************/
+  document.addEventListener("DOMContentLoaded", async ()=>{
     document.getElementById("yr").textContent = new Date().getFullYear();
     tick(); setInterval(tick, 1000);
 
-    // لو جاي من QR
-    const ok = handleShareHash();
-    if(!ok){
-      show("welcome");
-    }
+    const ok = await handleDocHash();
+    if(!ok) show("welcome");
   });
 </script>
 </body>
