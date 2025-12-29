@@ -1,1698 +1,1127 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>مكتب الموظف - سرعة تملك العقار</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>مكتب الموظف | منصة الترشيح والوثائق</title>
 
-  <!-- Tajawal -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <!-- خط Tajawal -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;600;700;800&display=swap" rel="stylesheet">
 
-  <!-- QR محلي -->
-  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
-
-  <!-- ضغط الرابط عشان QR يشتغل مع وثائق طويلة -->
-  <script src="https://cdn.jsdelivr.net/npm/lz-string@1.5.0/libs/lz-string.min.js"></script>
-
-  <!-- تصدير صورة ممتاز على iPhone -->
-  <script src="https://cdn.jsdelivr.net/npm/dom-to-image-more@3.5.0/dist/dom-to-image-more.min.js"></script>
+  <!-- QR + html2canvas (CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
   <style>
-    *{box-sizing:border-box}
     :root{
-      --bg:#020617;
-      --card: rgba(249,250,251,.965);
-      --text:#0f172a;
+      --bg:#f3f4f6;
+      --card:#ffffff;
+      --ink:#111827;
       --muted:#6b7280;
+      --primary:#1e3a8a;
+      --primary2:#0f172a;
+      --danger:#b91c1c;
+      --ok:#065f46;
       --line:#e5e7eb;
-      --blue:#1d4ed8;
-      --blue2:#2563eb;
-      --okbg:#ecfdf5; --okbd:#a7f3d0; --oktx:#065f46;
-      --wrbg:#fef2f2; --wrbd:#fecaca; --wrtx:#991b1b;
+      --soft:#eef2ff;
+      --shadow: 0 10px 30px rgba(0,0,0,.08);
+      --radius: 18px;
     }
-
+    *{box-sizing:border-box}
     body{
       margin:0;
-      font-family:"Tajawal",system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
-      background:
-        radial-gradient(1200px 700px at 70% -10%, rgba(37,99,235,.35), transparent 60%),
-        radial-gradient(1000px 700px at 15% 15%, rgba(16,185,129,.18), transparent 55%),
-        var(--bg);
-      color:var(--text);
-      direction:rtl;
-      text-align:center;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
+      font-family:'Tajawal', system-ui, -apple-system, Segoe UI, Arial, sans-serif;
+      background:var(--bg);
+      color:var(--ink);
+      font-size:18px;
+      line-height:1.6;
     }
-
-    .app{min-height:100vh; display:flex; flex-direction:column}
-
-    header{
+    a{color:inherit}
+    .topbar{
       position:sticky; top:0; z-index:50;
+      background: linear-gradient(135deg, var(--primary2), var(--primary));
+      color:#fff;
       padding:14px 12px;
-      background: linear-gradient(135deg, #0b1224, var(--blue));
-      box-shadow:0 10px 30px rgba(0,0,0,.35);
-      color:#e5e7eb;
+      box-shadow: 0 6px 18px rgba(0,0,0,.14);
     }
-    .top{
-      max-width:1024px; margin:0 auto;
-      display:flex; align-items:center; justify-content:space-between; gap:12px;
+    .topbar .row{
+      max-width:1100px; margin:0 auto;
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
     }
     .brand{
-      display:flex; align-items:center; gap:10px; text-align:right;
+      display:flex; flex-direction:column; gap:2px;
     }
-    .brand img{
-      width:44px; height:44px; border-radius:14px; object-fit:contain;
-      background:#fff; padding:5px; border:1px solid rgba(255,255,255,.25);
-      box-shadow:0 8px 22px rgba(0,0,0,.25);
+    .brand b{font-size:20px; letter-spacing:.2px}
+    .brand small{opacity:.9}
+    .chip{
+      background: rgba(255,255,255,.14);
+      border:1px solid rgba(255,255,255,.25);
+      padding:8px 10px;
+      border-radius:999px;
+      display:flex; align-items:center; gap:8px;
+      font-weight:700;
+      user-select:none;
     }
-    .brand .name{font-weight:900; letter-spacing:.02em; font-size:18px}
-    .brand .tag{font-size:11px; color:#bfdbfe}
-    .dt{font-size:12px; text-align:left; opacity:.95}
-
-    main{flex:1; padding:18px 10px 28px; display:flex; justify-content:center}
-    .screen{display:none; width:100%; max-width:980px; margin:0 auto}
-    .screen.active{display:block}
-
+    .container{max-width:1100px; margin:18px auto; padding:0 12px 26px}
+    .grid{
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap:14px;
+    }
+    @media (max-width: 980px){
+      .grid{grid-template-columns:1fr}
+    }
     .card{
-      background: var(--card);
-      border:1px solid rgba(229,231,235,.95);
-      border-radius:20px;
-      padding:18px 14px;
-      box-shadow:0 20px 60px rgba(2,6,23,.35);
-      backdrop-filter: blur(8px);
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
     }
-    @media (min-width:768px){ .card{padding:26px 24px} }
-
-    .title{font-size:28px; font-weight:900; color:var(--text); margin:0 0 6px}
-    .sub{margin:0 0 18px; font-size:15px; color:var(--muted); line-height:1.65}
-
-    .warn{
-      text-align:right;
-      background:var(--wrbg); border:1px solid var(--wrbd);
-      color:var(--wrtx);
-      padding:10px 12px; border-radius:14px;
-      font-size:13px; margin-bottom:14px; line-height:1.75;
-      font-weight:900;
+    .card .head{
+      padding:14px 14px 10px;
+      border-bottom:1px solid var(--line);
+      background: linear-gradient(180deg, #fff, #fafafa);
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
     }
-    .ok{
-      text-align:right;
-      background:var(--okbg); border:1px solid var(--okbd);
-      color:var(--oktx);
-      padding:10px 12px; border-radius:14px;
-      font-size:13px; margin-bottom:14px; line-height:1.75;
-      font-weight:900;
+    .card .head h2{
+      margin:0; font-size:18px;
     }
-
-    label{display:block; text-align:right; margin:0 0 6px; font-weight:900; color:#374151; font-size:14px}
-    input, select, textarea{
-      width:100%;
+    .card .body{padding:14px}
+    .muted{color:var(--muted)}
+    .btn{
+      border:0;
       border-radius:14px;
-      border:1px solid #d1d5db;
+      padding:12px 14px;
+      font-weight:800;
+      font-size:18px;
+      cursor:pointer;
+      display:inline-flex; align-items:center; justify-content:center; gap:8px;
+      transition: transform .05s ease, opacity .2s ease;
+      user-select:none;
+      text-decoration:none;
+    }
+    .btn:active{transform:scale(.99)}
+    .btn.primary{background:var(--primary); color:#fff}
+    .btn.dark{background:var(--primary2); color:#fff}
+    .btn.soft{background:var(--soft); color:var(--primary); border:1px solid #dbeafe}
+    .btn.danger{background:var(--danger); color:#fff}
+    .btn.ok{background:var(--ok); color:#fff}
+    .btn.ghost{background:transparent; border:1px solid var(--line); color:var(--ink)}
+    .btn.small{padding:9px 10px; border-radius:12px; font-size:16px; font-weight:800}
+    .btn.full{width:100%}
+    .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+    .field{
+      display:flex; flex-direction:column; gap:6px;
+      margin-bottom:12px;
+    }
+    .field label{font-weight:800; font-size:16px}
+    .field input, .field select, .field textarea{
+      width:100%;
+      border:1px solid var(--line);
+      border-radius:14px;
       padding:12px 12px;
-      font-size:16px;
-      font-family:inherit;
+      font-size:18px;
       outline:none;
       background:#fff;
-      transition:.12s;
     }
-    input:focus, select:focus, textarea:focus{
-      border-color:var(--blue2);
-      box-shadow:0 0 0 2px rgba(37,99,235,.22);
+    .field textarea{min-height:110px; resize:vertical}
+    .hint{font-size:14px; color:var(--muted)}
+    .hr{height:1px; background:var(--line); margin:14px 0}
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
       background:#f9fafb;
+      border:1px solid var(--line);
+      padding:8px 10px; border-radius:999px; font-weight:800;
+      font-size:15px;
     }
-    textarea{min-height:140px; resize:vertical}
-
-    .field{margin-bottom:14px; text-align:right}
-    .hint{font-size:12px; color:var(--muted); text-align:right; margin-top:6px}
-
-    .actions{display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:12px}
-    .btn{
-      border:none; cursor:pointer;
-      border-radius:999px;
-      padding:11px 18px;
-      font-weight:900;
+    .tag{
+      display:inline-flex; align-items:center;
+      padding:6px 10px; border-radius:999px;
+      font-size:14px; font-weight:900;
+      background:#eef2ff; color:var(--primary);
+      border:1px solid #dbeafe;
+    }
+    .table{
+      width:100%;
+      border-collapse:separate;
+      border-spacing:0;
+      overflow:hidden;
+      border:1px solid var(--line);
+      border-radius:14px;
+    }
+    .table th, .table td{
+      padding:10px 10px;
+      border-bottom:1px solid var(--line);
+      vertical-align:top;
       font-size:16px;
-      font-family:inherit;
-      display:inline-flex; align-items:center; justify-content:center; gap:8px;
-      transition: transform .08s, box-shadow .12s, filter .12s;
     }
-    .btn:active{transform:scale(.98)}
-    .primary{
-      color:#fff;
-      background: linear-gradient(135deg, var(--blue2), var(--blue));
-      box-shadow:0 16px 34px rgba(37,99,235,.35);
+    .table th{
+      background:#f9fafb;
+      font-weight:900;
+      text-align:right;
     }
-    .secondary{background:#e5e7eb; color:#111827}
-    .danger{background:#dc2626; color:#fff}
-    .ghost{background:transparent; color:#6b7280}
+    .table tr:last-child td{border-bottom:none}
+    .finance-item{
+      border:1px dashed #d1d5db;
+      border-radius:16px;
+      padding:12px;
+      margin-bottom:12px;
+      background:#fff;
+    }
+    .finance-item .top{
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      margin-bottom:10px;
+    }
+    .finance-item .top b{font-size:16px}
+    .two{
+      display:grid; grid-template-columns: 1fr 1fr; gap:10px;
+    }
+    @media (max-width: 680px){ .two{grid-template-columns:1fr} }
 
-    .grid{
-      display:grid; gap:14px;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      margin-top:10px;
+    /* Viewer */
+    .viewer-wrap{
+      max-width:900px;
+      margin:18px auto 30px;
+      padding:0 12px;
     }
-    .tile{
+    .doc{
       background:#fff;
       border:1px solid var(--line);
       border-radius:22px;
-      padding:16px 14px;
-      box-shadow:0 12px 28px rgba(2,6,23,.12);
-      cursor:pointer;
-      transition:.12s;
-      text-align:right;
-    }
-    .tile:hover{
-      transform:translateY(-3px);
-      border-color:#bfdbfe;
-      box-shadow:0 20px 40px rgba(2,6,23,.16)
-    }
-    .tile .ico{font-size:30px; margin-bottom:6px}
-    .tile .t{font-weight:900; font-size:16px; margin-bottom:4px}
-    .tile .d{font-size:13px; color:var(--muted); line-height:1.6}
-
-    .searchBar{
-      display:flex; gap:10px; flex-wrap:wrap;
-      align-items:center; justify-content:space-between;
-      margin-bottom:12px;
-      background:#fff;
-      border:1px solid var(--line);
-      border-radius:18px;
-      padding:10px;
-      box-shadow:0 10px 20px rgba(2,6,23,.08);
-      text-align:right;
-    }
-    .searchBar .right{flex:1; min-width:220px}
-    .searchBar .left{display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-start}
-    .small{font-size:12px; color:var(--muted)}
-
-    .bankCard{
-      background:#fff;
-      border:1px solid var(--line);
-      border-radius:18px;
-      padding:12px 12px;
-      box-shadow:0 10px 20px rgba(2,6,23,.08);
-      text-align:right;
-      margin-bottom:12px;
-    }
-    .bankTop{
-      display:flex; align-items:center; justify-content:space-between; gap:10px;
-      border-bottom:1px dashed var(--line);
-      padding-bottom:10px;
-      margin-bottom:10px;
-    }
-    .chip{
-      display:inline-flex; align-items:center; gap:6px;
-      border-radius:999px;
-      padding:4px 10px;
-      background:#eff6ff;
-      color:var(--blue);
-      font-weight:900;
-      font-size:12px;
-    }
-
-    .row2{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
-    @media (max-width:520px){ .row2{grid-template-columns:1fr} }
-
-    .inlineBtns{display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-start; margin-top:8px}
-
-    /* الورقة */
-    .paperWrap{
-      background: linear-gradient(135deg, rgba(219,234,254,.9), rgba(249,250,251,.95));
-      border:1px solid rgba(191,219,254,.9);
-      border-radius:18px;
-      padding:12px;
-    }
-    .paper{
-      background:#fff;
-      border:1px solid var(--line);
-      border-radius:20px;
+      box-shadow:var(--shadow);
       overflow:hidden;
-      box-shadow:0 22px 60px rgba(2,6,23,.18);
-      max-width:820px;
-      margin:0 auto;
-      text-align:right;
-
-      direction: rtl;
-      unicode-bidi: plaintext;
-      letter-spacing: normal !important;
-      word-spacing: normal !important;
-      font-feature-settings: "liga" 1, "calt" 1;
     }
-    .paperHeader{
-      padding:14px 14px;
-      background: linear-gradient(135deg, #0b1224, var(--blue));
+    .doc .docHead{
+      padding:16px 16px 12px;
       color:#fff;
-      display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;
+      background: linear-gradient(135deg, var(--primary2), var(--primary));
     }
-    .paperHeader .pBrand{display:flex; align-items:center; gap:10px;}
-    .paperHeader img{
-      width:42px; height:42px; border-radius:14px; object-fit:contain;
-      background:#fff; padding:5px;
+    .doc .docHead .title{
+      font-size:20px; font-weight:900; margin:0;
     }
-    .paperHeader .pName{font-weight:900; font-size:17px}
-    .paperHeader .pTag{font-size:11px; color:#bfdbfe}
-    .paperHeader .pMeta{font-size:12px; opacity:.95; text-align:left}
-
-    .paperBody{padding:16px 14px}
-    .pillNote{
-      display:inline-flex; align-items:center; gap:8px;
-      background:#ecfeff; color:#0f766e;
-      border:1px solid #a7f3d0;
-      border-radius:999px;
-      padding:5px 10px;
-      font-size:12px;
-      font-weight:900;
-      margin-bottom:12px;
+    .doc .docHead .meta{
+      margin-top:6px; opacity:.95; font-size:14px;
+      display:flex; gap:10px; flex-wrap:wrap;
     }
-    .infoGrid{
-      display:grid; gap:8px 12px;
-      grid-template-columns: 1fr 1fr;
-      font-size:14px;
-      margin-bottom:12px;
-    }
-    @media (max-width:520px){ .infoGrid{grid-template-columns:1fr} }
-    .k{color:var(--muted); font-weight:900}
-    .v{color:#111827; font-weight:900}
-    .hr{height:1px; background:var(--line); margin:10px 0}
-
-    table{width:100%; border-collapse:collapse; font-size:14px; margin-top:10px}
-    th,td{border:1px solid var(--line); padding:8px 8px; text-align:center}
-    th{background:#eff6ff; font-weight:900; color:#111827}
-
-    .sectionBox{
-      border:1px solid var(--line);
+    .doc .docBody{padding:16px}
+    .notice{
+      border:1px solid #fde68a;
+      background:#fffbeb;
       border-radius:16px;
       padding:12px;
-      margin-top:12px;
-      background:#fff;
-      box-shadow:0 10px 20px rgba(2,6,23,.06);
+      font-weight:800;
+      color:#92400e;
+      margin:10px 0;
     }
-    .sectionTitle{
+    .warn{
+      border:1px solid #fecaca;
+      background:#fef2f2;
+      border-radius:16px;
+      padding:12px;
       font-weight:900;
-      color:#111827;
+      color:var(--danger);
+      margin:10px 0;
+    }
+    .okbox{
+      border:1px solid #bbf7d0;
+      background:#f0fdf4;
+      border-radius:16px;
+      padding:12px;
+      font-weight:900;
+      color:var(--ok);
+      margin:10px 0;
+    }
+    .footerNote{
+      margin-top:12px;
+      padding-top:12px;
+      border-top:1px dashed #e5e7eb;
+      color:#374151;
+      font-size:14px;
+    }
+    .qrRow{
       display:flex;
-      gap:10px;
       align-items:center;
       justify-content:space-between;
+      gap:12px;
       flex-wrap:wrap;
+      margin-top:12px;
+      padding-top:12px;
+      border-top:1px solid var(--line);
     }
-    .badge{
-      display:inline-flex; align-items:center; gap:6px;
-      border-radius:999px;
-      padding:4px 10px;
-      background:#f1f5f9;
-      color:#0f172a;
-      font-weight:900;
-      font-size:12px;
+    .qrBox{
+      display:flex; align-items:center; gap:12px;
     }
-
-    .foot{
-      padding:12px 14px;
-      border-top:1px dashed var(--line);
-      display:flex; align-items:flex-end; justify-content:space-between; gap:10px; flex-wrap:wrap;
-      color:var(--muted);
-      font-size:12px;
-    }
-    .qrBox{display:flex; flex-direction:column; align-items:center; gap:6px}
-    .qrBox small{font-size:10px; color:#9ca3af; text-align:center}
-
-    .strongWarn{
-      margin-top:10px;
-      background:#fff7ed;
-      border:1px solid #fed7aa;
-      color:#9a3412;
-      padding:10px 12px;
-      border-radius:14px;
-      font-size:12px;
-      line-height:1.8;
-      text-align:right;
-      font-weight:900;
-    }
-    .disclaimer{
-      font-size:11px; color:#9ca3af; line-height:1.75; text-align:right; margin-top:10px
-    }
-
-    .listItem{
-      text-align:right;
-      background:#fff;
+    .qrBox #qr{
+      width:108px; height:108px;
       border:1px solid var(--line);
-      border-radius:16px;
-      padding:12px 12px;
-      margin-bottom:10px;
-      box-shadow:0 10px 20px rgba(2,6,23,.08);
+      border-radius:14px;
+      padding:8px;
+      background:#fff;
     }
-    .listItem .line1{font-weight:900; color:#111827}
-    .listItem .line2{font-size:12px; color:var(--muted); margin-top:2px}
-    .listItem .line3{font-size:11px; color:#9ca3af; margin-top:2px}
-
-    footer{padding:10px 12px 14px; font-size:11px; color:#94a3b8; text-align:center;}
+    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;}
+    .hide{display:none !important}
   </style>
 </head>
 
 <body>
-<div class="app">
-  <header>
-    <div class="top">
+  <div class="topbar">
+    <div class="row">
       <div class="brand">
-        <img src="logo.png" alt="شعار الشركة"
-             onerror="this.style.display='none';" />
-        <div>
-          <div class="name">سرعة تملك العقار</div>
-          <div class="tag">حلول تمويلية بدون تعقيدات</div>
+        <b>موقع مكتب الموظف</b>
+        <small>إنشاء وثائق التمويل + ملاحظات الموظف + مشاركة للعميل + QR للتحقق</small>
+      </div>
+      <div class="chip" id="modeChip">🧾 وضع الموظف</div>
+    </div>
+  </div>
+
+  <!-- Employee App -->
+  <div class="container" id="app">
+    <div class="grid">
+      <!-- Left: Create Document -->
+      <div class="card">
+        <div class="head">
+          <h2>إنشاء وثيقة عميل</h2>
+          <span class="tag" id="dbStatus">محفوظ محليًا</span>
+        </div>
+        <div class="body">
+          <div class="two">
+            <div class="field">
+              <label>اسم الموظف (اختياري)</label>
+              <input id="employeeName" placeholder="مثال: نايف" />
+            </div>
+            <div class="field">
+              <label>تاريخ الوثيقة</label>
+              <input id="docDate" disabled />
+              <div class="hint">يتحدث تلقائيًا</div>
+            </div>
+          </div>
+
+          <div class="hr"></div>
+
+          <div class="two">
+            <div class="field">
+              <label>اسم العميل</label>
+              <input id="clientName" placeholder="مثال: محمد" />
+            </div>
+            <div class="field">
+              <label>رقم الجوال</label>
+              <input id="clientPhone" inputmode="tel" placeholder="05xxxxxxxx" />
+            </div>
+          </div>
+
+          <div class="two">
+            <div class="field">
+              <label>رقم الهوية (اختياري)</label>
+              <input id="clientId" inputmode="numeric" placeholder="10 أرقام" />
+            </div>
+            <div class="field">
+              <label>ملاحظات الموظف للعميل (تُحفظ + قابلة للبحث)</label>
+              <input id="clientShortNote" placeholder="مثال: العميل يفضّل بنك معيّن / يبي قسط منخفض..." />
+            </div>
+          </div>
+
+          <div class="hr"></div>
+
+          <div class="row" style="justify-content:space-between">
+            <b>تفاصيل التمويلات (تقدر تضيف أكثر من تمويل)</b>
+            <button class="btn soft small" id="addFinanceBtn">➕ إضافة تمويل</button>
+          </div>
+
+          <div id="financesWrap" style="margin-top:12px;"></div>
+
+          <div class="hr"></div>
+
+          <div class="field">
+            <label>مذكرة الموظف الداخلية (تُحفظ + البحث داخلها)</label>
+            <textarea id="employeeMemo" placeholder="اكتب أي ملاحظات داخلية… (تقدر تبحث عنها لاحقًا بأي كلمة)"></textarea>
+          </div>
+
+          <div class="row">
+            <button class="btn primary full" id="generateDocBtn">✅ إنشاء الوثيقة + توليد رابط + QR</button>
+          </div>
+
+          <div class="hint" style="margin-top:10px">
+            ✅ مشاركة العميل تكون عبر رابط يحتوي بيانات الوثيقة داخل الرابط نفسه (بدون سيرفر) — مناسب لـ GitHub Pages.
+          </div>
         </div>
       </div>
-      <div class="dt">
-        <div id="hdrDate">--/--/----</div>
-        <div id="hdrTime">--:--:--</div>
+
+      <!-- Right: Search & Saved -->
+      <div class="card">
+        <div class="head">
+          <h2>المحفوظات + البحث</h2>
+          <span class="pill" id="countPill">0 وثيقة</span>
+        </div>
+        <div class="body">
+          <div class="field">
+            <label>ابحث بكلمة (في المذكرة / اسم العميل / البنك / نوع التمويل…)</label>
+            <input id="searchBox" placeholder="مثال: الراجحي / مديونية / عميل محمد / قسط متغير..." />
+          </div>
+          <div class="row">
+            <button class="btn ghost small" id="exportBtn">⬇️ تصدير نسخة احتياطية (JSON)</button>
+            <label class="btn ghost small" for="importFile" style="cursor:pointer">⬆️ استيراد نسخة (JSON)</label>
+            <input id="importFile" type="file" accept="application/json" class="hide" />
+          </div>
+
+          <div class="hr"></div>
+
+          <div id="savedList"></div>
+
+          <div class="hr"></div>
+
+          <button class="btn danger full" id="wipeBtn">🧹 مسح كل المحفوظات (محليًا)</button>
+          <div class="hint" style="margin-top:8px">
+            * الحفظ محلي في جهازك (LocalStorage). إذا تبي مشاركة عبر الأجهزة استخدم “تصدير/استيراد”.
+          </div>
+        </div>
       </div>
     </div>
-  </header>
+  </div>
 
-  <main>
+  <!-- Viewer -->
+  <div class="viewer-wrap hide" id="viewer">
+    <div class="row" style="justify-content:space-between; margin-bottom:12px">
+      <a class="btn ghost" href="#" id="backToApp">⬅️ رجوع لمكتب الموظف</a>
+      <div class="row">
+        <button class="btn soft" id="copyLinkBtn">🔗 نسخ رابط المشاركة</button>
+        <button class="btn ok" id="saveImageBtn">🖼️ حفظ كصورة</button>
+      </div>
+    </div>
 
-    <!-- شاشة QR (تفتح بدون تسجيل دخول) -->
-    <section id="shareScreen" class="screen">
-      <div class="card">
-        <div class="title">مطبوعات الحسبة</div>
-        <p class="sub">هذه الصفحة جاءت من الباركود (QR). تقدر تحمل/تشارك الصورة.</p>
-
-        <div id="shareVerifyBox"></div>
-
-        <div class="paperWrap">
-          <div id="paperShare" class="paper"></div>
-        </div>
-
-        <div class="actions">
-          <button class="btn primary" onclick="downloadPaperImage('paperShare')">تحميل الصورة</button>
-          <button class="btn secondary" onclick="sharePaperImage('paperShare')">مشاركة الصورة</button>
-          <button class="btn ghost" onclick="goHome()">العودة للرئيسية</button>
+    <div class="doc" id="docCanvas">
+      <div class="docHead">
+        <p class="title" id="docTitle">وثيقة عميل</p>
+        <div class="meta">
+          <span>📅 <span id="docMetaDate"></span></span>
+          <span>🧑‍💼 <span id="docMetaEmp"></span></span>
+          <span class="mono">ID: <span id="docMetaId"></span></span>
         </div>
       </div>
-    </section>
 
-    <!-- ترحيب -->
-    <section id="welcome" class="screen active">
-      <div class="card">
-        <div class="title">مرحباً بك</div>
-        <p class="sub">مكتب الموظف — نظام ذكي لتحويل حسابات العميل إلى “مطبوعات” رسمية كصورة احترافية مع QR وحفظ بالسجل.</p>
-        <div class="actions">
-          <button class="btn primary" onclick="show('login')">ابدأ</button>
-        </div>
-      </div>
-    </section>
+      <div class="docBody">
+        <div class="okbox" id="validBox">✅ هذه الوثيقة “متحقق منها” عبر QR وتوقيع البيانات.</div>
+        <div class="warn hide" id="invalidBox">⚠️ تحذير: هذه الوثيقة غير متحققة/قد تكون معدلة أو الرابط غير مكتمل.</div>
 
-    <!-- دخول -->
-    <section id="login" class="screen">
-      <div class="card">
-        <div class="title" style="font-size:22px">تسجيل دخول مكتب الموظف</div>
-        <p class="sub">أدخل الرمز السري للموظف المصرّح له.</p>
-
-        <div class="warn">
-          ⚠️ تحذير شديد: هذا النظام خاص بمكتب الشركة وبيانات العملاء.
-          أي محاولة دخول غير مصرح بها تعتبر مخالفة وسيتم التعامل معها بصرامة.
+        <div class="notice">
+          ⚠️ الحسبة مبدئية بناءً على معلومات العميل، وقد تختلف النتائج بعد التقييم النهائي من الجهة التمويلية.
         </div>
 
-        <form onsubmit="login(event)">
-          <div class="field">
-            <label>الرمز السري</label>
-            <input id="pass" type="password" autocomplete="off" placeholder="••••••••" required />
-          </div>
-          <div class="actions">
-            <button class="btn primary" type="submit">دخول</button>
-            <button class="btn ghost" type="button" onclick="show('welcome')">رجوع</button>
-          </div>
-        </form>
-
-        <div id="loginErr" class="warn" style="display:none;margin-top:12px">
-          الرمز غير صحيح. تم تسجيل المحاولة.
-        </div>
-      </div>
-    </section>
-
-    <!-- لوحة التحكم -->
-    <section id="dash" class="screen">
-      <div class="card">
-
-        <div class="searchBar">
-          <div class="right">
-            <div style="font-weight:900;color:#111827;margin-bottom:6px">بحث سريع في السجل برقم الجوال</div>
-            <input id="dashSearchMobile" type="tel" placeholder="اكتب رقم الجوال ثم اضغط بحث" />
-            <div class="small" style="margin-top:6px">يعرض آخر الوثائق المطابقة وتقدر تفتحها وتحمّل صورتها.</div>
-          </div>
-          <div class="left">
-            <button class="btn secondary" onclick="dashSearch()">بحث</button>
-            <button class="btn ghost" onclick="openRecords()">السجل</button>
-          </div>
+        <div class="notice">
+          تنبيه: نحن لسنا جهة تمويلية، ونقوم بالترشيح والمتابعة فقط.
         </div>
 
-        <div class="grid">
-          <div class="tile" onclick="openMemoCenter()">
-            <div class="ico">📝</div>
-            <div class="t">مركز المذكرات</div>
-            <div class="d">حفظ مذكرات + بحث بأي كلمة داخل المذكرة + طباعة على مطبوعات الشركة.</div>
-          </div>
+        <div class="hr"></div>
 
-          <div class="tile" onclick="startClientFlow()">
-            <div class="ico">📊</div>
-            <div class="t">وثيقة عميل (أكثر من تمويل)</div>
-            <div class="d">عقاري + شخصي + غيره… كل تمويل له بنوكه وتفاصيله، مع قسط ثابت/متغير.</div>
-          </div>
-
-          <div class="tile" onclick="openRecords()">
-            <div class="ico">🗂️</div>
-            <div class="t">السجل الداخلي للوثائق</div>
-            <div class="d">بحث برقم الجوال، فتح أي وثيقة، تحميل/مشاركة من جديد.</div>
-          </div>
-        </div>
-
-        <div id="dashQuickResults" style="margin-top:14px;text-align:right"></div>
-
-        <div class="actions" style="margin-top:16px">
-          <button class="btn ghost" onclick="show('welcome')">خروج</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- مركز المذكرات -->
-    <section id="memoCenter" class="screen">
-      <div class="card">
-        <div class="title" style="font-size:22px">مركز المذكرات</div>
-        <p class="sub">احفظ مذكرة وابحث بأي كلمة داخلها. وتقدر تطلعها “مطبوعات” كصورة.</p>
-
-        <div class="searchBar">
-          <div class="right">
-            <div style="font-weight:900;color:#111827;margin-bottom:6px">بحث داخل المذكرات</div>
-            <input id="memoSearch" type="text" placeholder="اكتب كلمة… (مثال: راجحي / مرن / سكني)" />
-            <div class="small" style="margin-top:6px">البحث يشمل عنوان المذكرة والنص كامل.</div>
-          </div>
-          <div class="left">
-            <button class="btn secondary" onclick="searchMemos()">بحث</button>
-            <button class="btn primary" onclick="newMemo()">مذكرة جديدة</button>
-            <button class="btn ghost" onclick="show('dash')">رجوع</button>
-          </div>
-        </div>
-
-        <div id="memoList" style="margin-top:14px;text-align:right"></div>
-      </div>
-    </section>
-
-    <!-- إنشاء مذكرة -->
-    <section id="memoIn" class="screen">
-      <div class="card">
-        <div class="title" style="font-size:22px">مذكرة جديدة</div>
-
-        <div class="field">
-          <label>عنوان المذكرة</label>
-          <input id="memoTitle" type="text" placeholder="مثال: متابعة عميل / ملاحظات بنك / نقاط مهمة" />
-        </div>
-
-        <div class="field">
-          <label>نص المذكرة</label>
-          <textarea id="memoText" placeholder="اكتب هنا..."></textarea>
-        </div>
-
-        <div class="actions">
-          <button class="btn primary" onclick="saveMemo()">حفظ</button>
-          <button class="btn secondary" onclick="memoPreview()">مطبوعات (معاينة)</button>
-          <button class="btn ghost" onclick="show('memoCenter')">رجوع</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- معاينة مذكرة -->
-    <section id="memoPrev" class="screen">
-      <div class="card">
-        <div class="title" style="font-size:22px">مذكرة على مطبوعات الشركة</div>
-
-        <div class="paperWrap">
-          <div id="paperMemo" class="paper"></div>
-        </div>
-
-        <div class="actions">
-          <button class="btn primary" onclick="downloadPaperImage('paperMemo')">تحميل الصورة</button>
-          <button class="btn secondary" onclick="sharePaperImage('paperMemo')">مشاركة الصورة</button>
-          <button class="btn ghost" onclick="show('memoIn')">تعديل</button>
-          <button class="btn ghost" onclick="show('memoCenter')">رجوع</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- عميل: بيانات -->
-    <section id="c1" class="screen">
-      <div class="card">
-        <div class="title" style="font-size:22px">وثيقة عميل</div>
-        <p class="sub">أدخل بيانات العميل + ملاحظات الموظف (اختياري).</p>
-
-        <div class="field">
-          <label>اسم العميل</label>
-          <input id="cName" type="text" placeholder="مثال: محمد بن عبدالله" />
-        </div>
-
-        <div class="field">
-          <label>رقم جوال العميل</label>
-          <input id="cMobile" type="tel" placeholder="05xxxxxxxx" />
-        </div>
-
-        <div class="field">
-          <label>ملاحظات الموظف (اختياري)</label>
-          <textarea id="cEmpNotes" placeholder="أي ملاحظات تحب تضيفها للملف…"></textarea>
-          <div class="hint">هذه الملاحظات تظهر داخل الوثيقة إذا كتبتها.</div>
-        </div>
-
-        <div class="actions">
-          <button class="btn primary" onclick="startNewSection()">التالي: أضف تمويل</button>
-          <button class="btn ghost" onclick="show('dash')">إلغاء</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- تمويل: معلومات -->
-    <section id="s1" class="screen">
-      <div class="card">
-        <div class="title" style="font-size:22px">إضافة تمويل للعميل</div>
-        <p class="sub">حدد نوع التمويل + تفاصيل عامة (اختياري).</p>
-
-        <div class="field">
-          <label>نوع التمويل</label>
-          <input id="sType" type="text" placeholder="مثال: تمويل عقاري / تمويل شخصي / مرن / شراء مديونية..." />
-        </div>
-
-        <div class="row2">
-          <div class="field">
-            <label>النسبة للعميل (اختياري)</label>
-            <input id="sRate" type="text" placeholder="مثال: 3.85%" />
-          </div>
-          <div class="field">
-            <label>الأرباح/الرسوم (اختياري)</label>
-            <input id="sProfit" type="text" placeholder="مثال: الربح 8,882 ريال" />
-          </div>
-        </div>
-
-        <div class="field">
-          <label>ملاحظات هذا التمويل (اختياري)</label>
-          <textarea id="sNotes" placeholder="أي تفاصيل تخص هذا التمويل…"></textarea>
-        </div>
-
-        <div class="actions">
-          <button class="btn primary" onclick="toSectionBanks()">التالي: البنوك</button>
-          <button class="btn ghost" onclick="show('c1')">رجوع</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- تمويل: البنوك -->
-    <section id="s2" class="screen">
-      <div class="card">
-        <div class="title" style="font-size:22px">بنوك التمويل</div>
-        <p class="sub">أدخل تفاصيل البنك: مبلغ التمويل + الأشهر (1–399) + القسط ثابت/متغير + ملاحظات/نسبة/أرباح.</p>
-
-        <div id="banksWrap"></div>
-
-        <div class="field" style="margin-top:14px">
-          <label>هل تريد إضافة بنك آخر لهذا التمويل؟</label>
-          <div class="inlineBtns">
-            <button class="btn secondary" onclick="addBank()">نعم، أضف بنك</button>
-            <button class="btn primary" onclick="finishSection()">إنهاء هذا التمويل</button>
-          </div>
-          <div class="hint">سيتم ترتيب البنوك من الأعلى تمويلًا إلى الأقل تلقائيًا.</div>
-        </div>
-
-        <div class="actions">
-          <button class="btn ghost" onclick="show('s1')">رجوع</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- تمويل آخر؟ -->
-    <section id="s3" class="screen">
-      <div class="card">
-        <div class="title" style="font-size:22px">إضافة تمويل آخر؟</div>
-        <p class="sub">هل للعميل تمويل آخر داخل نفس الوثيقة؟</p>
-
-        <div class="actions">
-          <button class="btn secondary" onclick="startAnotherSection()">نعم، أضف تمويل</button>
-          <button class="btn primary" onclick="buildFinalDocument()">لا، اعرض الوثيقة</button>
-        </div>
-
-        <div class="actions">
-          <button class="btn ghost" onclick="show('s2')">رجوع</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- النتيجة -->
-    <section id="result" class="screen">
-      <div class="card">
-        <div class="title" style="font-size:22px">مطبوعات العميل</div>
-        <p class="sub">وثيقة موحدة تشمل أكثر من تمويل + QR حماية + تحميل/مشاركة كصورة.</p>
-
-        <div id="verifyBox"></div>
-
-        <div class="paperWrap">
-          <div id="paperResult" class="paper"></div>
-        </div>
-
-        <div class="actions">
-          <button class="btn primary" onclick="saveAndDownload()">حفظ بالسجل + تحميل الصورة</button>
-          <button class="btn secondary" onclick="sharePaperImage('paperResult')">مشاركة الصورة</button>
-          <button class="btn secondary" onclick="copyShareLink()">نسخ رابط QR</button>
-          <button class="btn ghost" onclick="show('dash')">رجوع</button>
-        </div>
-
-        <div id="shareLinkBox" class="warn" style="display:none; white-space:pre-wrap"></div>
-      </div>
-    </section>
-
-    <!-- السجل -->
-    <section id="records" class="screen">
-      <div class="card">
-        <div class="title" style="font-size:22px">السجل الداخلي للوثائق</div>
-        <p class="sub">ابحث برقم الجوال أو اعرض آخر الوثائق.</p>
-
-        <div class="field">
-          <label>بحث برقم الجوال</label>
-          <input id="recSearch" type="tel" placeholder="05xxxxxxxx" />
-        </div>
-
-        <div class="actions">
-          <button class="btn primary" onclick="doRecordsSearch()">بحث</button>
-          <button class="btn secondary" onclick="renderRecords()">عرض آخر السجل</button>
-          <button class="btn danger" onclick="clearRecords()">مسح السجل (على هذا الجهاز)</button>
-          <button class="btn ghost" onclick="show('dash')">رجوع</button>
-        </div>
-
-        <div id="recordsList" style="margin-top:14px;text-align:right"></div>
-      </div>
-    </section>
-
-  </main>
-
-  <footer>
-    © <span id="yr"></span> سرعة تملك العقار والحلول التمويلية المتكاملة — جميع الحقوق محفوظة.
-  </footer>
-</div>
-
-<script>
-  /*****************
-   * إعدادات
-   *****************/
-  const PASSWORD = "11qq11qQ@";
-
-  const DOC_STORE_KEY  = "OFFICE_DOCS_V5";
-  const MEMO_STORE_KEY = "OFFICE_MEMOS_V5";
-
-  // حماية العبث (Tamper-evident)
-  const VERIFY_SECRET = "FINO_DOC_VERIFY_SECRET_V5_11qq11qQ@";
-
-  // ترتيب البنوك (تقدر تعدله لاحقاً بسهولة)
-  const SA_BANKS = [
-    "مصرف الراجحي",
-    "البنك الأهلي السعودي",
-    "بنك الرياض",
-    "بنك الإنماء",
-    "بنك البلاد",
-    "البنك العربي الوطني",
-    "بنك ساب",
-    "بنك الجزيرة",
-    "البنك السعودي للاستثمار",
-    "بنك الخليج الدولي",
-    "بنك الإمارات دبي الوطني",
-    "شركة تمويل / جهة أخرى"
-  ];
-
-  /*****************
-   * حالة
-   *****************/
-  let draft = {
-    id: null,
-    name: "",
-    mobile: "",
-    employeeNotes: "",
-    createdAt: null,
-    sections: [],
-    shareUrl: "",
-    verifySig: ""
-  };
-
-  let currentSection = null;
-  let bankIndex = 0;
-
-  /*****************
-   * مساعدات
-   *****************/
-  function show(id){
-    document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
-    const el = document.getElementById(id);
-    if(el) el.classList.add("active");
-    window.scrollTo({top:0, behavior:"smooth"});
-  }
-
-  function goHome(){
-    history.replaceState(null, "", location.pathname);
-    show("welcome");
-  }
-
-  function tick(){
-    const now = new Date();
-    document.getElementById("hdrDate").textContent = now.toLocaleDateString("ar-SA", {year:"numeric", month:"2-digit", day:"2-digit"});
-    document.getElementById("hdrTime").textContent = now.toLocaleTimeString("ar-SA", {hour:"2-digit", minute:"2-digit", second:"2-digit", hour12:false});
-  }
-
-  function fmtDateTime(d){
-    const od = {year:"numeric", month:"2-digit", day:"2-digit"};
-    const ot = {hour:"2-digit", minute:"2-digit", second:"2-digit", hour12:false};
-    return d.toLocaleDateString("ar-SA", od) + " - " + d.toLocaleTimeString("ar-SA", ot);
-  }
-
-  function escapeHtml(s){
-    return (s||"").replace(/[&<>"']/g, (c)=>({
-      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
-    }[c]));
-  }
-
-  function formatNumber(n){
-    if(n === null || n === undefined || n === "") return "";
-    const x = Number(n);
-    if(Number.isFinite(x)) return x.toLocaleString("ar-SA");
-    return String(n);
-  }
-
-  async function sha256Hex(str){
-    const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
-    return [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,"0")).join("");
-  }
-
-  async function signPayload(payloadObj){
-    const json = JSON.stringify(payloadObj);
-    return await sha256Hex(VERIFY_SECRET + "|" + json);
-  }
-
-  async function makeQrDataUrl(text){
-    return await QRCode.toDataURL(text, { width: 220, margin: 1 });
-  }
-
-  async function waitFontsReady(){
-    if (document.fonts && document.fonts.ready) await document.fonts.ready;
-    await new Promise(r => setTimeout(r, 200));
-  }
-
-  async function waitImagesReady(root){
-    const imgs = Array.from(root.querySelectorAll("img"));
-    await Promise.all(imgs.map(img=>{
-      return new Promise((resolve)=>{
-        if(img.complete && img.naturalWidth > 0) return resolve();
-        const done = ()=>resolve();
-        img.addEventListener("load", done, {once:true});
-        img.addEventListener("error", done, {once:true});
-        setTimeout(done, 1400);
-      });
-    }));
-    await new Promise(r=>setTimeout(r,150));
-  }
-
-  /*****************
-   * تصدير صورة (بدون قص + ينتظر الخط والصور)
-   *****************/
-  async function makeBlobFromNode(elementId){
-    await waitFontsReady();
-    const node = document.getElementById(elementId);
-    if(!node) throw new Error("عنصر غير موجود");
-    await waitImagesReady(node);
-
-    const rect = node.getBoundingClientRect();
-    const width  = Math.ceil(rect.width);
-    const height = Math.ceil(node.scrollHeight);
-
-    return await domtoimage.toBlob(node, {
-      cacheBust: true,
-      bgcolor: "#ffffff",
-      width,
-      height,
-      style: {
-        transform: "none",
-        transformOrigin: "top right"
-      }
-    });
-  }
-
-  async function downloadPaperImage(elementId){
-    try{
-      const blob = await makeBlobFromNode(elementId);
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "document.png";
-      a.click();
-      setTimeout(()=>URL.revokeObjectURL(url), 1500);
-    }catch(e){
-      console.error(e);
-      alert("تعذر حفظ الصورة. تأكد أن logo.png موجود داخل المستودع ثم جرّب مرة ثانية.");
-    }
-  }
-
-  async function sharePaperImage(elementId){
-    try{
-      const blob = await makeBlobFromNode(elementId);
-      const file = new File([blob], "document.png", {type:"image/png"});
-
-      if(navigator.canShare && navigator.canShare({files:[file]})){
-        await navigator.share({ files:[file], title:"مطبوعات العميل" });
-        return;
-      }
-      await downloadPaperImage(elementId);
-    }catch(e){
-      console.error(e);
-      await downloadPaperImage(elementId);
-    }
-  }
-
-  /*****************
-   * تسجيل الدخول
-   *****************/
-  function login(e){
-    e.preventDefault();
-    const p = document.getElementById("pass").value;
-    const err = document.getElementById("loginErr");
-    if(p === PASSWORD){
-      err.style.display="none";
-      document.getElementById("pass").value="";
-      show("dash");
-    } else {
-      err.style.display="block";
-    }
-  }
-
-  /*****************
-   * المذكرات
-   *****************/
-  function readMemos(){
-    try { return JSON.parse(localStorage.getItem(MEMO_STORE_KEY) || "[]"); }
-    catch { return []; }
-  }
-  function writeMemos(arr){
-    localStorage.setItem(MEMO_STORE_KEY, JSON.stringify(arr));
-  }
-
-  function openMemoCenter(){
-    document.getElementById("memoSearch").value="";
-    renderMemos(readMemos());
-    show("memoCenter");
-  }
-
-  function newMemo(){
-    document.getElementById("memoTitle").value="";
-    document.getElementById("memoText").value="";
-    show("memoIn");
-  }
-
-  function saveMemo(){
-    const title = (document.getElementById("memoTitle").value || "").trim();
-    const text  = (document.getElementById("memoText").value || "").trim();
-    if(!title && !text){ alert("اكتب عنوان أو نص للمذكرة"); return; }
-
-    const memos = readMemos();
-    const memo = { id: String(Date.now()), title, text, createdAt: new Date().toISOString() };
-    memos.unshift(memo);
-    writeMemos(memos);
-    alert("تم حفظ المذكرة ✅");
-    renderMemos(memos);
-    show("memoCenter");
-  }
-
-  function searchMemos(){
-    const q = (document.getElementById("memoSearch").value || "").trim().toLowerCase();
-    const memos = readMemos();
-    if(!q){ renderMemos(memos); return; }
-    const filtered = memos.filter(m=>{
-      return (m.title||"").toLowerCase().includes(q) || (m.text||"").toLowerCase().includes(q);
-    });
-    renderMemos(filtered);
-  }
-
-  function renderMemos(list){
-    const box = document.getElementById("memoList");
-    box.innerHTML="";
-    if(!list || list.length === 0){
-      box.innerHTML = `<div class="small">لا توجد مذكرات محفوظة.</div>`;
-      return;
-    }
-
-    list.slice(0,80).forEach(m=>{
-      const item = document.createElement("div");
-      item.className="listItem";
-      item.innerHTML = `
-        <div class="line1">${escapeHtml(m.title || "بدون عنوان")}</div>
-        <div class="line2">${escapeHtml((m.text||"").slice(0,140))}${(m.text||"").length>140?"…":""}</div>
-        <div class="line3">تاريخ: ${fmtDateTime(new Date(m.createdAt))}</div>
-        <div class="actions" style="justify-content:flex-start">
-          <button class="btn secondary" type="button">فتح</button>
-          <button class="btn secondary" type="button">مطبوعات</button>
-          <button class="btn danger" type="button">حذف</button>
-        </div>
-      `;
-      const btnOpen = item.querySelectorAll("button")[0];
-      const btnPrint= item.querySelectorAll("button")[1];
-      const btnDel = item.querySelectorAll("button")[2];
-
-      btnOpen.onclick = ()=>{
-        document.getElementById("memoTitle").value = m.title || "";
-        document.getElementById("memoText").value  = m.text || "";
-        show("memoIn");
-      };
-
-      btnPrint.onclick = ()=>{
-        document.getElementById("memoTitle").value = m.title || "";
-        document.getElementById("memoText").value  = m.text || "";
-        memoPreview();
-      };
-
-      btnDel.onclick = ()=>{
-        const ok = confirm("تأكيد حذف المذكرة؟");
-        if(!ok) return;
-        const memos = readMemos().filter(x=>x.id !== m.id);
-        writeMemos(memos);
-        renderMemos(memos);
-      };
-
-      box.appendChild(item);
-    });
-  }
-
-  function buildMemoPaperHTML(p){
-    const content = escapeHtml(p.text || "");
-    const title = escapeHtml(p.title || "مذكرة");
-    return `
-      <div class="paperHeader">
-        <div class="pBrand">
-          <img src="logo.png" alt="logo" onerror="this.style.display='none';" />
+        <div class="two">
           <div>
-            <div class="pName">سرعة تملك العقار</div>
-            <div class="pTag">حلول تمويلية بدون تعقيدات</div>
+            <b>بيانات العميل</b>
+            <div class="muted" style="margin-top:6px">
+              الاسم: <b id="vClientName"></b><br/>
+              الجوال: <b id="vClientPhone"></b><br/>
+              الهوية: <b id="vClientId"></b><br/>
+              ملاحظة: <b id="vClientShortNote"></b>
+            </div>
+          </div>
+          <div>
+            <b>ملخص التمويلات</b>
+            <div class="muted" style="margin-top:6px" id="vSummary"></div>
           </div>
         </div>
-        <div class="pMeta">${p.meta}</div>
-      </div>
-      <div class="paperBody">
-        <div class="pillNote">📝 مذكرة — مكتب الموظف</div>
-        <div style="font-weight:900;color:#111827;margin-bottom:8px">${title}</div>
-        <div style="white-space:pre-wrap;line-height:1.9;font-size:15px;color:#111827">${content}</div>
-        <div class="strongWarn">تنبيه: هذه مذكرة داخلية للاستئناس فقط.</div>
-      </div>
-      <div class="foot">
-        <span>جوال التواصل: 0506214458</span>
-        <span>info@hlooleqrr.com</span>
-        <div class="qrBox">
-          <small>صادر من مكتب الموظف</small>
-        </div>
-      </div>
-    `;
-  }
 
-  function memoPreview(){
-    const title = (document.getElementById("memoTitle").value || "").trim();
-    const text  = (document.getElementById("memoText").value || "").trim();
-    if(!title && !text){ alert("اكتب عنوان أو نص للمذكرة"); return; }
+        <div class="hr"></div>
 
-    const now = new Date();
-    document.getElementById("paperMemo").innerHTML = buildMemoPaperHTML({ title, text, meta: fmtDateTime(now) });
-    show("memoPrev");
-  }
-
-  /*****************
-   * تدفق العميل
-   *****************/
-  function startClientFlow(){
-    draft = { id:null, name:"", mobile:"", employeeNotes:"", createdAt:null, sections:[], shareUrl:"", verifySig:"" };
-    currentSection = null;
-    bankIndex = 0;
-
-    document.getElementById("cName").value="";
-    document.getElementById("cMobile").value="";
-    document.getElementById("cEmpNotes").value="";
-    document.getElementById("sType").value="";
-    document.getElementById("sRate").value="";
-    document.getElementById("sProfit").value="";
-    document.getElementById("sNotes").value="";
-    document.getElementById("banksWrap").innerHTML="";
-    show("c1");
-  }
-
-  function startNewSection(){
-    const name = (document.getElementById("cName").value || "").trim();
-    const mobile = (document.getElementById("cMobile").value || "").trim();
-    if(!name || !mobile){ alert("أدخل اسم العميل ورقم جواله"); return; }
-
-    draft.name = name;
-    draft.mobile = mobile;
-    draft.employeeNotes = (document.getElementById("cEmpNotes").value || "").trim();
-
-    currentSection = { type:"", rate:"", profit:"", notes:"", banks:[] };
-    document.getElementById("sType").value="";
-    document.getElementById("sRate").value="";
-    document.getElementById("sProfit").value="";
-    document.getElementById("sNotes").value="";
-    document.getElementById("banksWrap").innerHTML="";
-    bankIndex = 0;
-
-    show("s1");
-  }
-
-  function startAnotherSection(){
-    currentSection = { type:"", rate:"", profit:"", notes:"", banks:[] };
-    document.getElementById("sType").value="";
-    document.getElementById("sRate").value="";
-    document.getElementById("sProfit").value="";
-    document.getElementById("sNotes").value="";
-    document.getElementById("banksWrap").innerHTML="";
-    bankIndex = 0;
-    show("s1");
-  }
-
-  function toSectionBanks(){
-    const t = (document.getElementById("sType").value || "").trim();
-    if(!t){ alert("أدخل نوع التمويل"); return; }
-
-    currentSection.type = t;
-    currentSection.rate = (document.getElementById("sRate").value || "").trim();
-    currentSection.profit = (document.getElementById("sProfit").value || "").trim();
-    currentSection.notes = (document.getElementById("sNotes").value || "").trim();
-
-    document.getElementById("banksWrap").innerHTML="";
-    bankIndex = 0;
-    addBank();
-    show("s2");
-  }
-
-  function addBank(){
-    bankIndex++;
-    const idx = bankIndex;
-
-    const wrap = document.getElementById("banksWrap");
-    const div = document.createElement("div");
-    div.className = "bankCard";
-    div.dataset.idx = idx;
-
-    div.innerHTML = `
-      <div class="bankTop">
-        <div class="chip">بنك رقم ${idx}</div>
-        <button class="btn ghost" type="button" style="padding:6px 10px;font-size:13px" onclick="removeBank(${idx})">حذف</button>
-      </div>
-
-      <div class="field">
-        <label>اختر البنك</label>
-        <select id="bank_${idx}">
-          <option value="">اختر...</option>
-          ${SA_BANKS.map(b=>`<option value="${b}">${b}</option>`).join("")}
-        </select>
-      </div>
-
-      <div class="row2">
-        <div class="field">
-          <label>مبلغ التمويل (ريال)</label>
-          <input id="amount_${idx}" type="number" min="0" step="1" placeholder="مثال: 80000" />
-        </div>
-        <div class="field">
-          <label>عدد الأشهر (1 إلى 399)</label>
-          <input id="months_${idx}" type="number" min="1" max="399" step="1" placeholder="مثال: 58" />
-        </div>
-      </div>
-
-      <div class="row2">
-        <div class="field">
-          <label>النسبة (اختياري)</label>
-          <input id="rate_${idx}" type="text" placeholder="مثال: 3.85%" />
-        </div>
-        <div class="field">
-          <label>الأرباح/الرسوم (اختياري)</label>
-          <input id="profit_${idx}" type="text" placeholder="مثال: الربح 8,882 ريال" />
-        </div>
-      </div>
-
-      <div class="field">
-        <label>ملاحظات البنك (اختياري)</label>
-        <input id="bnotes_${idx}" type="text" placeholder="أي ملاحظة تخص هذا البنك…" />
-      </div>
-
-      <div class="field">
-        <label>هل القسط متغيّر؟</label>
-        <select id="mode_${idx}" onchange="toggleMode(${idx})">
-          <option value="fixed">لا، القسط ثابت</option>
-          <option value="variable">نعم، القسط متغيّر</option>
-        </select>
-      </div>
-
-      <div id="fixedWrap_${idx}" class="field">
-        <label>القسط الشهري الثابت (ريال)</label>
-        <input id="fixedInst_${idx}" type="number" min="0" step="1" placeholder="مثال: 1618" />
-      </div>
-
-      <div id="varWrap_${idx}" class="field" style="display:none">
-        <label>الأقساط المتغيرة (قسط + مدة)</label>
-        <div id="varList_${idx}" style="display:flex;flex-direction:column;gap:8px"></div>
-
-        <div class="inlineBtns" style="margin-top:8px">
-          <button class="btn secondary" type="button" onclick="addVarRow(${idx}, true)">باقي قسط؟ نعم (أضف)</button>
-          <button class="btn primary" type="button" onclick="doneVar(${idx})">باقي قسط؟ لا (إنهاء)</button>
-        </div>
-      </div>
-    `;
-    wrap.appendChild(div);
-    addVarRow(idx, false);
-  }
-
-  function removeBank(idx){
-    const el = document.querySelector(\`.bankCard[data-idx="\${idx}"]\`);
-    if(el) el.remove();
-  }
-
-  function toggleMode(idx){
-    const mode = document.getElementById(\`mode_\${idx}\`).value;
-    const fw = document.getElementById(\`fixedWrap_\${idx}\`);
-    const vw = document.getElementById(\`varWrap_\${idx}\`);
-    if(mode === "fixed"){ fw.style.display="block"; vw.style.display="none"; }
-    else { fw.style.display="none"; vw.style.display="block"; }
-  }
-
-  function addVarRow(idx, focus){
-    const list = document.getElementById(\`varList_\${idx}\`);
-    if(!list) return;
-    const count = list.children.length + 1;
-
-    const row = document.createElement("div");
-    row.style.display="grid";
-    row.style.gridTemplateColumns="1fr 1fr auto";
-    row.style.gap="8px";
-    row.style.alignItems="center";
-
-    row.innerHTML = \`
-      <input id="vInst_\${idx}_\${count}" type="number" min="0" step="1" placeholder="القسط (ريال)" />
-      <input id="vMon_\${idx}_\${count}" type="number" min="1" max="399" step="1" placeholder="المدة (شهر)" />
-      <button class="btn ghost" type="button" style="padding:8px 10px;font-size:13px" onclick="this.parentElement.remove()">حذف</button>
-    \`;
-    list.appendChild(row);
-
-    if(focus){
-      setTimeout(()=>{ const i=document.getElementById(\`vInst_\${idx}_\${count}\`); if(i) i.focus(); }, 60);
-    }
-  }
-
-  function doneVar(idx){
-    const list = document.getElementById(\`varList_\${idx}\`);
-    if(!list || list.children.length === 0){
-      alert("أضف قسط + مدة أولاً");
-      return;
-    }
-    alert("تم إنهاء الأقساط المتغيرة لهذا البنك ✅");
-  }
-
-  function finishSection(){
-    const bankCards = Array.from(document.querySelectorAll(".bankCard"));
-    const banks = [];
-
-    for(const card of bankCards){
-      const idx = card.dataset.idx;
-
-      const bankName = (document.getElementById(\`bank_\${idx}\`)?.value || "").trim();
-      const amount = parseFloat(document.getElementById(\`amount_\${idx}\`)?.value || "0");
-      const months = parseInt(document.getElementById(\`months_\${idx}\`)?.value || "0", 10);
-
-      const rate = (document.getElementById(\`rate_\${idx}\`)?.value || "").trim();
-      const profit = (document.getElementById(\`profit_\${idx}\`)?.value || "").trim();
-      const notes = (document.getElementById(\`bnotes_\${idx}\`)?.value || "").trim();
-
-      const mode = document.getElementById(\`mode_\${idx}\`)?.value || "fixed";
-
-      if(!bankName || !amount || !months) continue;
-      if(months < 1 || months > 399) continue;
-
-      if(mode === "fixed"){
-        const fixedInst = parseFloat(document.getElementById(\`fixedInst_\${idx}\`)?.value || "0");
-        if(!fixedInst) continue;
-        banks.push({ bankName, amount, months, mode:"fixed", fixedInst, schedule:[], rate, profit, notes });
-
-      } else {
-        const list = document.getElementById(\`varList_\${idx}\`);
-        const schedule = [];
-        if(list){
-          const rows = Array.from(list.children);
-          rows.forEach((r, k0)=>{
-            const k = k0 + 1;
-            const inst = parseFloat(document.getElementById(\`vInst_\${idx}_\${k}\`)?.value || "0");
-            const m = parseInt(document.getElementById(\`vMon_\${idx}_\${k}\`)?.value || "0", 10);
-            if(inst && m) schedule.push({inst, months:m});
-          });
-        }
-        if(schedule.length === 0) continue;
-        banks.push({ bankName, amount, months, mode:"variable", fixedInst:null, schedule, rate, profit, notes });
-      }
-    }
-
-    if(banks.length === 0){
-      alert("لازم تدخل بنك واحد كامل على الأقل (اسم البنك + مبلغ التمويل + الأشهر + القسط).");
-      return;
-    }
-
-    // ترتيب من الأعلى تمويلًا للأقل
-    banks.sort((a,b)=> b.amount - a.amount);
-    currentSection.banks = banks;
-
-    draft.sections.push(currentSection);
-    show("s3");
-  }
-
-  /*****************
-   * بناء الوثيقة + QR حماية + رابط مضغوط (#d=)
-   *****************/
-  function buildPaperHTML(payload){
-    const meta = payload.meta || fmtDateTime(new Date());
-    const d = payload.data;
-
-    const verifyBadge = payload.verified
-      ? `<span class="badge" style="background:var(--okbg);color:var(--oktx);border:1px solid var(--okbd)">✅ وثيقة موثّقة</span>`
-      : `<span class="badge" style="background:var(--wrbg);color:var(--wrtx);border:1px solid var(--wrbd)">⚠️ غير موثّقة (تم تعديل البيانات)</span>`;
-
-    const createdTxt = fmtDateTime(new Date(d.createdAt));
-
-    const sectionsHtml = d.sections.map((s, si)=>{
-      const rows = (s.banks||[]).map((b, i)=>{
-        const instTxt = (b.mode === "fixed") ? `${formatNumber(b.fixedInst)}` : `متغيّر`;
-        const rateTxt = escapeHtml(b.rate || s.rate || "");
-        const profitTxt = escapeHtml(b.profit || s.profit || "");
-        return `
-          <tr>
-            <td>${i+1}</td>
-            <td>${escapeHtml(b.bankName)}</td>
-            <td>${formatNumber(b.amount)}</td>
-            <td>${b.months}</td>
-            <td>${instTxt}</td>
-            <td>${rateTxt}</td>
-            <td>${profitTxt}</td>
-          </tr>
-        `;
-      }).join("");
-
-      let varDetails = "";
-      (s.banks||[]).forEach((b)=>{
-        if(b.mode === "variable"){
-          varDetails += `<div style="margin-top:10px"><b>${escapeHtml(b.bankName)}:</b></div>`;
-          b.schedule.forEach((x)=>{
-            varDetails += `<div style="color:#111827;line-height:1.8">- قسط ${formatNumber(x.inst)} ريال لمدة ${x.months} شهر</div>`;
-          });
-        }
-      });
-
-      const secNotes = (s.notes||"").trim()
-        ? `<div class="hr"></div><div style="font-weight:900;color:#111827">ملاحظات التمويل:</div><div style="margin-top:6px;white-space:pre-wrap;line-height:1.85;color:#111827">${escapeHtml(s.notes)}</div>`
-        : "";
-
-      let bankNotes = "";
-      (s.banks||[]).forEach((b)=>{
-        if((b.notes||"").trim()){
-          bankNotes += `<div style="margin-top:6px;line-height:1.8">- <b>${escapeHtml(b.bankName)}:</b> ${escapeHtml(b.notes)}</div>`;
-        }
-      });
-      if(bankNotes){
-        bankNotes = `<div class="hr"></div><div style="font-weight:900;color:#111827">ملاحظات على البنوك:</div><div style="font-size:14px;line-height:1.85;color:#111827">${bankNotes}</div>`;
-      }
-
-      return `
-        <div class="sectionBox">
-          <div class="sectionTitle">
-            <div>تمويل ${si+1}: ${escapeHtml(s.type)}</div>
-            <span class="badge">📌 البنوك مرتبة أعلى تمويل → أقل</span>
-          </div>
-
-          <div class="infoGrid" style="margin-top:10px">
-            <div class="k">النسبة:</div><div class="v">${escapeHtml(s.rate||"—")}</div>
-            <div class="k">الأرباح/الرسوم:</div><div class="v">${escapeHtml(s.profit||"—")}</div>
-          </div>
-
-          <div style="font-weight:900;color:#111827;margin-top:6px">تفاصيل البنوك:</div>
-          <table>
+        <b>تفاصيل التمويلات</b>
+        <div style="margin-top:10px; overflow:auto">
+          <table class="table" id="vTable">
             <thead>
               <tr>
-                <th>م</th>
+                <th>نوع التمويل</th>
                 <th>اسم البنك</th>
-                <th>مبلغ التمويل (ريال)</th>
-                <th>عدد الأشهر</th>
+                <th>مبلغ التمويل</th>
                 <th>القسط</th>
-                <th>النسبة</th>
-                <th>الأرباح</th>
+                <th>المدة (شهر)</th>
+                <th>النسبة (اختياري)</th>
+                <th>تفاصيل إضافية</th>
               </tr>
             </thead>
-            <tbody>${rows}</tbody>
+            <tbody id="vTbody"></tbody>
           </table>
-
-          ${varDetails ? `
-            <div class="hr"></div>
-            <div style="font-weight:900;color:#111827">تفاصيل القسط المتغيّر:</div>
-            <div style="font-size:14px;line-height:1.9;margin-top:6px">${varDetails}</div>
-          ` : ""}
-
-          ${secNotes}
-          ${bankNotes}
         </div>
-      `;
-    }).join("");
 
-    const empNotes = (d.employeeNotes||"").trim()
-      ? `<div class="sectionBox" style="margin-top:12px">
-           <div class="sectionTitle"><div>ملاحظات الموظف</div><span class="badge">اختياري</span></div>
-           <div style="margin-top:8px;white-space:pre-wrap;line-height:1.85;color:#111827">${escapeHtml(d.employeeNotes)}</div>
-         </div>`
-      : "";
+        <div class="hr"></div>
 
-    const qrImg = payload.qrDataUrl
-      ? `<img alt="QR" src="${payload.qrDataUrl}" width="96" height="96"
-              style="border-radius:14px;border:1px solid var(--line);background:#fff;padding:6px" />`
-      : `<div style="width:96px;height:96px;border-radius:14px;border:1px solid var(--line);background:#fff;display:flex;align-items:center;justify-content:center">QR</div>`;
+        <b>مذكرة الموظف</b>
+        <div class="muted" id="vMemo" style="margin-top:8px; white-space:pre-wrap"></div>
 
-    return `
-      <div class="paperHeader">
-        <div class="pBrand">
-          <img src="logo.png" alt="logo" onerror="this.style.display='none';" />
-          <div>
-            <div class="pName">سرعة تملك العقار</div>
-            <div class="pTag">حلول تمويلية بدون تعقيدات</div>
+        <div class="qrRow">
+          <div class="qrBox">
+            <div id="qr"></div>
+            <div>
+              <b>باركود التحقق (QR)</b><br/>
+              <span class="muted">يُستخدم للتحقق من تطابق بيانات الوثيقة.</span><br/>
+              <span class="muted mono" id="vSig"></span>
+            </div>
+          </div>
+          <div class="muted" style="max-width:380px">
+            <div class="footerNote">
+              في حال تعذر قراءة الباركود، أعد فتح الرابط الأصلي المرسل من الموظف.
+            </div>
           </div>
         </div>
-        <div class="pMeta">${meta}</div>
-      </div>
 
-      <div class="paperBody">
-        <div class="pillNote">📄 مطبوعات العميل — ${verifyBadge}</div>
-
-        <div class="infoGrid">
-          <div class="k">اسم العميل:</div><div class="v">${escapeHtml(d.name)}</div>
-          <div class="k">رقم الجوال:</div><div class="v">${escapeHtml(d.mobile)}</div>
-          <div class="k">رقم الوثيقة:</div><div class="v">${escapeHtml(d.id)}</div>
-          <div class="k">تاريخ الإصدار:</div><div class="v">${createdTxt}</div>
-        </div>
-
-        ${sectionsHtml}
-        ${empNotes}
-
-        <div class="strongWarn">
-          تنبيه مهم: هذه الحسبة مبدئية بناءً على معلومات العميل وقد تتغير عند التقييم النهائي.
-          نحن لسنا جهة تمويلية، ولا يمثل هذا المستند عرضاً تمويلياً ملزماً.
-        </div>
-
-        <div class="disclaimer">
-          حماية الوثيقة: QR يتحقق من صحة البيانات — أي تعديل في بيانات الرابط يجعل الوثيقة “غير موثّقة”.
+        <div class="footerNote">
+          © مكتب الموظف — نسخة للعرض والمشاركة.
         </div>
       </div>
+    </div>
+  </div>
 
-      <div class="foot">
-        <span>صادر من مكتب الموظف — سرعة تملك العقار</span>
-        <span>0506214458 · info@hlooleqrr.com</span>
-        <div class="qrBox">
-          ${qrImg}
-          <small>امسح QR لفتح نفس الوثيقة وتحميل صورتها</small>
+<script>
+/* =========================
+   أدوات مساعدة
+========================= */
+const $ = (id)=>document.getElementById(id);
+
+function nowKSA(){
+  // Asia/Riyadh
+  const d = new Date();
+  const fmt = new Intl.DateTimeFormat('ar-SA', { dateStyle:'full', timeStyle:'medium', timeZone:'Asia/Riyadh' });
+  return fmt.format(d);
+}
+
+function clampStr(s){ return (s ?? '').toString().trim(); }
+
+function moneyFmt(v){
+  const n = Number(String(v).replace(/[^\d.]/g,''));
+  if(!isFinite(n)) return '';
+  return new Intl.NumberFormat('ar-SA').format(Math.round(n)) + ' ريال';
+}
+
+function base64UrlEncode(str){
+  const b64 = btoa(unescape(encodeURIComponent(str)));
+  return b64.replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+}
+function base64UrlDecode(b64url){
+  const b64 = b64url.replace(/-/g,'+').replace(/_/g,'/');
+  const pad = b64.length % 4 ? '='.repeat(4 - (b64.length % 4)) : '';
+  const s = atob(b64 + pad);
+  return decodeURIComponent(escape(s));
+}
+
+async function sha256Hex(text){
+  const enc = new TextEncoder().encode(text);
+  const hash = await crypto.subtle.digest('SHA-256', enc);
+  const arr = Array.from(new Uint8Array(hash));
+  return arr.map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+function uid(){
+  return 'DOC-' + Math.random().toString(16).slice(2,10).toUpperCase() + '-' + Date.now().toString(36).toUpperCase();
+}
+
+/* =========================
+   قاعدة بيانات محلية
+========================= */
+const DB_KEY = 'EMP_OFFICE_DB_V1';
+function loadDB(){
+  try{
+    const raw = localStorage.getItem(DB_KEY);
+    if(!raw) return {docs:[]};
+    const db = JSON.parse(raw);
+    if(!db.docs) db.docs=[];
+    return db;
+  }catch(e){
+    return {docs:[]};
+  }
+}
+function saveDB(db){
+  localStorage.setItem(DB_KEY, JSON.stringify(db));
+}
+
+function updateCounts(){
+  const db = loadDB();
+  $('countPill').textContent = `${db.docs.length} وثيقة`;
+}
+
+/* =========================
+   UI: التمويلات
+========================= */
+const financeTypes = [
+  'تمويل عقاري',
+  'تمويل شخصي',
+  'تمويل استهلاكي',
+  'شراء مديونية (شخصي)',
+  'شراء مديونية (عقاري)',
+  'تمويل سيارة',
+  'تمويل آخر'
+];
+
+function financeTemplate(index){
+  const wrap = document.createElement('div');
+  wrap.className = 'finance-item';
+  wrap.dataset.index = index;
+
+  wrap.innerHTML = `
+    <div class="top">
+      <b>تمويل #${index+1}</b>
+      <button class="btn danger small" type="button" onclick="removeFinance(${index})">🗑️ حذف</button>
+    </div>
+
+    <div class="two">
+      <div class="field">
+        <label>نوع التمويل</label>
+        <select class="fType">
+          ${financeTypes.map(t=>`<option value="${t}">${t}</option>`).join('')}
+        </select>
+      </div>
+      <div class="field">
+        <label>اسم البنك</label>
+        <input class="fBank" placeholder="مثال: الراجحي / الأهلي..." />
+      </div>
+    </div>
+
+    <div class="two">
+      <div class="field">
+        <label>مبلغ التمويل</label>
+        <input class="fAmount" inputmode="numeric" placeholder="مثال: 500000" />
+      </div>
+      <div class="field">
+        <label>المدة (بالشهور)</label>
+        <input class="fMonths" inputmode="numeric" placeholder="مثال: 240" />
+      </div>
+    </div>
+
+    <div class="two">
+      <div class="field">
+        <label>القسط الشهري</label>
+        <input class="fInstall" inputmode="numeric" placeholder="مثال: 3200" />
+        <div class="hint">إذا القسط متغير اختر “قسط متغير” أدناه</div>
+      </div>
+      <div class="field">
+        <label>النسبة (اختياري)</label>
+        <input class="fRate" inputmode="decimal" placeholder="مثال: 4.15%" />
+      </div>
+    </div>
+
+    <div class="field">
+      <label>هل القسط متغير؟</label>
+      <select class="fVarMode" onchange="toggleVar(${index})">
+        <option value="fixed">لا - ثابت</option>
+        <option value="var2">نعم - فترتين</option>
+      </select>
+      <div class="hint">مثال: من 1 إلى 24 = 0 ريال، ثم من 25 إلى 60 = 1800 ريال</div>
+    </div>
+
+    <div class="two fVarBox hide">
+      <div class="field">
+        <label>الفترة الأولى (عدد الشهور)</label>
+        <input class="fV1M" inputmode="numeric" placeholder="مثال: 24" />
+      </div>
+      <div class="field">
+        <label>قسط الفترة الأولى</label>
+        <input class="fV1I" inputmode="numeric" placeholder="مثال: 0" />
+      </div>
+      <div class="field">
+        <label>الفترة الثانية (عدد الشهور)</label>
+        <input class="fV2M" inputmode="numeric" placeholder="مثال: 36" />
+      </div>
+      <div class="field">
+        <label>قسط الفترة الثانية</label>
+        <input class="fV2I" inputmode="numeric" placeholder="مثال: 1800" />
+      </div>
+    </div>
+
+    <div class="field">
+      <label>تفاصيل/ملاحظات التمويل (اختياري)</label>
+      <input class="fMore" placeholder="مثال: قسط متغير + رسوم إدارية + تأمين..." />
+    </div>
+  `;
+  return wrap;
+}
+
+function rebuildFinances(){
+  const container = $('financesWrap');
+  const items = Array.from(container.children);
+  container.innerHTML = '';
+  items.forEach((_,i)=>{
+    container.appendChild(financeTemplate(i));
+  });
+}
+
+window.removeFinance = function(i){
+  const container = $('financesWrap');
+  const kids = Array.from(container.children);
+  if(kids[i]) kids[i].remove();
+  rebuildFinances();
+};
+
+window.toggleVar = function(i){
+  const container = $('financesWrap');
+  const item = container.children[i];
+  if(!item) return;
+  const mode = item.querySelector('.fVarMode').value;
+  const box = item.querySelector('.fVarBox');
+  if(mode === 'var2') box.classList.remove('hide');
+  else box.classList.add('hide');
+};
+
+function addFinance(){
+  const container = $('financesWrap');
+  const idx = container.children.length;
+  container.appendChild(financeTemplate(idx));
+}
+
+function readFinances(){
+  const container = $('financesWrap');
+  const list = [];
+  Array.from(container.children).forEach(item=>{
+    const type = clampStr(item.querySelector('.fType').value);
+    const bank = clampStr(item.querySelector('.fBank').value);
+    const amount = clampStr(item.querySelector('.fAmount').value);
+    const months = clampStr(item.querySelector('.fMonths').value);
+    const install = clampStr(item.querySelector('.fInstall').value);
+    const rate = clampStr(item.querySelector('.fRate').value);
+    const more = clampStr(item.querySelector('.fMore').value);
+
+    const varMode = item.querySelector('.fVarMode').value;
+    let variable = null;
+    if(varMode === 'var2'){
+      variable = {
+        v1m: clampStr(item.querySelector('.fV1M').value),
+        v1i: clampStr(item.querySelector('.fV1I').value),
+        v2m: clampStr(item.querySelector('.fV2M').value),
+        v2i: clampStr(item.querySelector('.fV2I').value),
+      };
+    }
+
+    list.push({type, bank, amount, months, install, rate, more, variable});
+  });
+  return list;
+}
+
+/* =========================
+   إنشاء الوثيقة + الرابط + التوقيع
+========================= */
+function canonicalDocPayload(doc){
+  // نحذف الحقول المتغيرة التي ما نبيها في التوقيع (لو احتجت)
+  const copy = JSON.parse(JSON.stringify(doc));
+  delete copy.checksum;
+  return JSON.stringify(copy);
+}
+
+async function buildDoc(){
+  const doc = {
+    id: uid(),
+    createdAt: new Date().toISOString(),
+    createdAtHuman: nowKSA(),
+    employeeName: clampStr($('employeeName').value) || '—',
+    client: {
+      name: clampStr($('clientName').value) || '—',
+      phone: clampStr($('clientPhone').value) || '—',
+      id: clampStr($('clientId').value) || '—',
+      shortNote: clampStr($('clientShortNote').value) || '—'
+    },
+    financings: readFinances(),
+    memo: clampStr($('employeeMemo').value) || '—'
+  };
+
+  const payloadStr = canonicalDocPayload(doc);
+  doc.checksum = await sha256Hex(payloadStr);
+
+  return doc;
+}
+
+function buildShareLink(doc){
+  // نخزن البيانات داخل الرابط (hash) عشان تشتغل للعميل بدون سيرفر
+  const payload = {
+    doc: doc,
+    sig: doc.checksum
+  };
+  const packed = base64UrlEncode(JSON.stringify(payload));
+  const url = `${location.origin}${location.pathname}#pack=${packed}`;
+  return url;
+}
+
+async function verifyPacked(packed){
+  try{
+    const decoded = base64UrlDecode(packed);
+    const payload = JSON.parse(decoded);
+    if(!payload?.doc?.checksum || !payload?.sig) return {ok:false, reason:'missing'};
+    // نتحقق: sig لازم يطابق doc.checksum، ثم نعيد حساب checksum
+    if(payload.sig !== payload.doc.checksum) return {ok:false, reason:'sigMismatch'};
+    const payloadStr = canonicalDocPayload(payload.doc);
+    const re = await sha256Hex(payloadStr);
+    if(re !== payload.doc.checksum) return {ok:false, reason:'hashMismatch'};
+    return {ok:true, doc: payload.doc};
+  }catch(e){
+    return {ok:false, reason:'parseError'};
+  }
+}
+
+/* =========================
+   حفظ / عرض / قائمة
+========================= */
+function upsertDocToDB(doc){
+  const db = loadDB();
+  const idx = db.docs.findIndex(d => d.id === doc.id);
+  if(idx >= 0) db.docs[idx] = doc;
+  else db.docs.unshift(doc);
+  saveDB(db);
+  updateCounts();
+}
+
+function docMatches(doc, q){
+  const hay = [
+    doc.id,
+    doc.employeeName,
+    doc.createdAtHuman,
+    doc.client?.name,
+    doc.client?.phone,
+    doc.client?.id,
+    doc.client?.shortNote,
+    doc.memo,
+    ...(doc.financings||[]).flatMap(f=>[
+      f.type, f.bank, f.amount, f.months, f.install, f.rate, f.more,
+      f.variable ? JSON.stringify(f.variable) : ''
+    ])
+  ].join(' ').toLowerCase();
+  return hay.includes(q);
+}
+
+function renderSavedList(){
+  const db = loadDB();
+  const q = clampStr($('searchBox').value).toLowerCase();
+  const list = db.docs.filter(d => !q || docMatches(d, q));
+
+  $('savedList').innerHTML = list.length ? '' : `<div class="muted">لا توجد نتائج.</div>`;
+
+  list.slice(0, 40).forEach(d=>{
+    const card = document.createElement('div');
+    card.style.border = '1px solid var(--line)';
+    card.style.borderRadius = '16px';
+    card.style.padding = '12px';
+    card.style.marginBottom = '10px';
+    card.style.background = '#fff';
+
+    const finCount = (d.financings||[]).length;
+    const banks = (d.financings||[]).map(x=>x.bank).filter(Boolean).slice(0,3).join('، ') || '—';
+    const link = buildShareLink(d);
+
+    card.innerHTML = `
+      <div class="row" style="justify-content:space-between">
+        <div>
+          <b>${d.client?.name || '—'}</b>
+          <div class="muted" style="font-size:14px">
+            ${d.createdAtHuman || ''} • ${finCount} تمويل • بنوك: ${banks}
+          </div>
+          <div class="muted mono" style="font-size:12px; margin-top:4px">${d.id}</div>
         </div>
+        <span class="tag">محفوظ</span>
+      </div>
+      <div class="row" style="margin-top:10px">
+        <button class="btn soft small" type="button" data-act="open">👁️ عرض</button>
+        <button class="btn ghost small" type="button" data-act="copy">🔗 نسخ رابط</button>
+        <button class="btn danger small" type="button" data-act="del">🗑️ حذف</button>
       </div>
     `;
-  }
 
-  async function buildFinalDocument(){
-    if(draft.sections.length === 0){
-      alert("لا يوجد تمويل مضاف للوثيقة.");
-      return;
-    }
-
-    draft.createdAt = new Date().toISOString();
-    draft.id = String(Date.now());
-
-    const payload = {
-      id: draft.id,
-      name: draft.name,
-      mobile: draft.mobile,
-      employeeNotes: draft.employeeNotes,
-      createdAt: draft.createdAt,
-      sections: draft.sections
+    card.querySelector('[data-act="open"]').onclick = ()=> openViewerFromDoc(d);
+    card.querySelector('[data-act="copy"]').onclick = async ()=>{
+      await navigator.clipboard.writeText(link);
+      alert('✅ تم نسخ رابط المشاركة');
+    };
+    card.querySelector('[data-act="del"]').onclick = ()=>{
+      if(!confirm('متأكد تحذف الوثيقة؟')) return;
+      const db2 = loadDB();
+      db2.docs = db2.docs.filter(x=>x.id !== d.id);
+      saveDB(db2);
+      updateCounts();
+      renderSavedList();
     };
 
-    const sig = await signPayload(payload);
-    draft.verifySig = sig;
-
-    // ضغط الرابط (قصير جداً للـ QR)
-    const packed = { p: payload, s: sig };
-    const token = LZString.compressToEncodedURIComponent(JSON.stringify(packed));
-    const shareUrl = `${location.origin}${location.pathname}#d=${token}`;
-    draft.shareUrl = shareUrl;
-
-    const qrDataUrl = await makeQrDataUrl(shareUrl);
-
-    document.getElementById("paperResult").innerHTML = buildPaperHTML({
-      meta: fmtDateTime(new Date()),
-      data: payload,
-      verified: true,
-      qrDataUrl
-    });
-
-    document.getElementById("verifyBox").innerHTML = `<div class="ok">✅ الوثيقة موثّقة — QR للحماية وفتح نفس الوثيقة.</div>`;
-    document.getElementById("shareLinkBox").style.display="none";
-    document.getElementById("shareLinkBox").textContent="";
-    show("result");
-  }
-
-  /*****************
-   * حفظ الوثائق والسجل
-   *****************/
-  function readDocs(){
-    try { return JSON.parse(localStorage.getItem(DOC_STORE_KEY) || "[]"); }
-    catch { return []; }
-  }
-  function writeDocs(arr){
-    localStorage.setItem(DOC_STORE_KEY, JSON.stringify(arr));
-  }
-
-  async function saveAndDownload(){
-    const rec = {
-      id: draft.id,
-      name: draft.name,
-      mobile: draft.mobile,
-      employeeNotes: draft.employeeNotes,
-      createdAt: draft.createdAt,
-      sections: draft.sections,
-      shareUrl: draft.shareUrl,
-      verifySig: draft.verifySig
-    };
-    const docs = readDocs().filter(x=>x.id !== rec.id);
-    docs.unshift(rec);
-    writeDocs(docs);
-
-    await downloadPaperImage("paperResult");
-  }
-
-  function openRecords(){
-    document.getElementById("recSearch").value="";
-    renderRecords();
-    show("records");
-  }
-
-  async function renderRecords(list){
-    const docs = list || readDocs();
-    const box = document.getElementById("recordsList");
-    box.innerHTML = "";
-
-    if(!docs || docs.length===0){
-      box.innerHTML = `<div class="small">لا يوجد وثائق محفوظة على هذا الجهاز.</div>`;
-      return;
-    }
-
-    for(const d of docs.slice(0,40)){
-      const item = document.createElement("div");
-      item.className = "listItem";
-      item.innerHTML = `
-        <div class="line1">${escapeHtml(d.name)} — ${escapeHtml(d.mobile)}</div>
-        <div class="line2">عدد التمويلات داخل الوثيقة: ${(d.sections||[]).length}</div>
-        <div class="line3">تاريخ: ${fmtDateTime(new Date(d.createdAt))}</div>
-        <div class="actions" style="justify-content:flex-start">
-          <button class="btn secondary" type="button">فتح</button>
-          <button class="btn secondary" type="button">نسخ رابط QR</button>
-        </div>
-      `;
-
-      const btnOpen = item.querySelectorAll("button")[0];
-      const btnCopy = item.querySelectorAll("button")[1];
-
-      btnOpen.onclick = async ()=>{
-        const payload = {
-          id: d.id, name:d.name, mobile:d.mobile,
-          employeeNotes:d.employeeNotes, createdAt:d.createdAt,
-          sections:d.sections
-        };
-        const sig = await signPayload(payload);
-        const isOk = (sig === d.verifySig);
-
-        const qrDataUrl = d.shareUrl ? await makeQrDataUrl(d.shareUrl) : "";
-
-        document.getElementById("paperResult").innerHTML = buildPaperHTML({
-          meta: fmtDateTime(new Date()),
-          data: payload,
-          verified: isOk,
-          qrDataUrl
-        });
-
-        document.getElementById("verifyBox").innerHTML = isOk
-          ? `<div class="ok">✅ الوثيقة موثّقة.</div>`
-          : `<div class="warn">⚠️ هذه الوثيقة غير موثّقة (تم تعديل البيانات أو تغيّرت).</div>`;
-
-        draft = { ...draft, ...d };
-        show("result");
-      };
-
-      btnCopy.onclick = ()=>{
-        if(!d.shareUrl){ alert("لا يوجد رابط QR محفوظ."); return; }
-        navigator.clipboard?.writeText(d.shareUrl).then(()=> alert("تم نسخ رابط QR ✅"))
-          .catch(()=> alert("انسخ الرابط يدويًا من فتح الوثيقة."));
-      };
-
-      box.appendChild(item);
-    }
-  }
-
-  async function doRecordsSearch(){
-    const q = (document.getElementById("recSearch").value || "").trim();
-    const docs = readDocs();
-    const matches = q ? docs.filter(d => (d.mobile||"").includes(q)) : docs;
-    await renderRecords(matches);
-  }
-
-  function clearRecords(){
-    const ok = confirm("تأكيد: مسح السجل على هذا الجهاز فقط؟");
-    if(!ok) return;
-    localStorage.removeItem(DOC_STORE_KEY);
-    renderRecords([]);
-  }
-
-  async function dashSearch(){
-    const q = (document.getElementById("dashSearchMobile").value || "").trim();
-    const docs = readDocs();
-    const matches = q ? docs.filter(d => (d.mobile||"").includes(q)) : [];
-    const box = document.getElementById("dashQuickResults");
-    box.innerHTML = "";
-
-    if(!q){
-      box.innerHTML = `<div class="small">اكتب رقم الجوال ثم اضغط بحث.</div>`;
-      return;
-    }
-    if(matches.length === 0){
-      box.innerHTML = `<div class="small">لا توجد نتائج مطابقة.</div>`;
-      return;
-    }
-
-    for(const d of matches.slice(0,6)){
-      const item = document.createElement("div");
-      item.className="listItem";
-      item.innerHTML = `
-        <div class="line1">${escapeHtml(d.name)} — ${escapeHtml(d.mobile)}</div>
-        <div class="line2">عدد التمويلات: ${(d.sections||[]).length}</div>
-        <div class="line3">تاريخ: ${fmtDateTime(new Date(d.createdAt))}</div>
-        <div class="actions" style="justify-content:flex-start">
-          <button class="btn secondary" type="button">فتح</button>
-        </div>
-      `;
-      item.querySelector("button").onclick = async ()=>{
-        const payload = {
-          id:d.id, name:d.name, mobile:d.mobile,
-          employeeNotes:d.employeeNotes, createdAt:d.createdAt,
-          sections:d.sections
-        };
-        const sig = await signPayload(payload);
-        const isOk = (sig === d.verifySig);
-        const qrDataUrl = d.shareUrl ? await makeQrDataUrl(d.shareUrl) : "";
-
-        document.getElementById("paperResult").innerHTML = buildPaperHTML({
-          meta: fmtDateTime(new Date()),
-          data: payload,
-          verified: isOk,
-          qrDataUrl
-        });
-
-        document.getElementById("verifyBox").innerHTML = isOk
-          ? `<div class="ok">✅ الوثيقة موثّقة.</div>`
-          : `<div class="warn">⚠️ هذه الوثيقة غير موثّقة.</div>`;
-
-        draft = { ...draft, ...d };
-        show("result");
-      };
-      box.appendChild(item);
-    }
-  }
-
-  /*****************
-   * QR مشاركة + التحقق (بدون دخول)
-   *****************/
-  async function handleDocHash(){
-    const hash = location.hash || "";
-    if(!hash.startsWith("#d=")) return false;
-
-    const token = hash.replace("#d=","").trim();
-    if(!token) return false;
-
-    try{
-      const json = LZString.decompressFromEncodedURIComponent(token);
-      if(!json) throw new Error("bad token");
-
-      const packed = JSON.parse(json);
-      const payload = packed.p;
-      const sig = packed.s;
-
-      const calc = await signPayload(payload);
-      const verified = (calc === sig);
-
-      const shareUrl = `${location.origin}${location.pathname}#d=${token}`;
-      const qrDataUrl = await makeQrDataUrl(shareUrl);
-
-      document.getElementById("paperShare").innerHTML = buildPaperHTML({
-        meta: fmtDateTime(new Date()),
-        data: payload,
-        verified,
-        qrDataUrl
-      });
-
-      document.getElementById("shareVerifyBox").innerHTML = verified
-        ? `<div class="ok">✅ الوثيقة موثّقة — QR للحماية.</div>`
-        : `<div class="warn">⚠️ الوثيقة غير موثّقة (تم تعديل البيانات).</div>`;
-
-      show("shareScreen");
-      return true;
-    }catch(e){
-      console.error(e);
-      alert("تعذر فتح الوثيقة من الرابط. قد يكون الرابط غير كامل أو تم تغييره.");
-      return false;
-    }
-  }
-
-  function copyShareLink(){
-    if(!draft.shareUrl){ alert("لا يوجد رابط QR"); return; }
-    navigator.clipboard?.writeText(draft.shareUrl).then(()=>{
-      const box = document.getElementById("shareLinkBox");
-      box.style.display="block";
-      box.textContent = "تم نسخ رابط QR:\n" + draft.shareUrl;
-      alert("تم النسخ ✅");
-    }).catch(()=>{
-      const box = document.getElementById("shareLinkBox");
-      box.style.display="block";
-      box.textContent = draft.shareUrl;
-      alert("انسخ الرابط يدويًا من الصندوق.");
-    });
-  }
-
-  /*****************
-   * تشغيل
-   *****************/
-  document.addEventListener("DOMContentLoaded", async ()=>{
-    document.getElementById("yr").textContent = new Date().getFullYear();
-    tick(); setInterval(tick, 1000);
-
-    const ok = await handleDocHash();
-    if(!ok) show("welcome");
+    $('savedList').appendChild(card);
   });
+
+  updateCounts();
+}
+
+/* =========================
+   Viewer
+========================= */
+let currentShareLink = '';
+
+async function openViewerFromPacked(packed){
+  const res = await verifyPacked(packed);
+  if(!res.ok){
+    // عرض وثيقة لكن بحالة غير متحققة
+    $('validBox').classList.add('hide');
+    $('invalidBox').classList.remove('hide');
+    // محاولة عرض شيء إن أمكن
+    try{
+      const decoded = base64UrlDecode(packed);
+      const payload = JSON.parse(decoded);
+      if(payload?.doc) renderViewer(payload.doc, false);
+      else throw new Error('no doc');
+    }catch(e){
+      alert('⚠️ الرابط غير صالح أو ناقص.');
+      backToApp();
+      return;
+    }
+  }else{
+    $('invalidBox').classList.add('hide');
+    $('validBox').classList.remove('hide');
+    renderViewer(res.doc, true);
+  }
+}
+
+function openViewerFromDoc(doc){
+  $('invalidBox').classList.add('hide');
+  $('validBox').classList.remove('hide');
+  renderViewer(doc, true);
+}
+
+function renderViewer(doc, verified){
+  // mode switch
+  $('app').classList.add('hide');
+  $('viewer').classList.remove('hide');
+  $('modeChip').textContent = '👁️ وضع عرض الوثيقة';
+  currentShareLink = buildShareLink(doc);
+
+  $('docTitle').textContent = `وثيقة عميل: ${doc.client?.name || '—'}`;
+  $('docMetaDate').textContent = doc.createdAtHuman || '—';
+  $('docMetaEmp').textContent = doc.employeeName || '—';
+  $('docMetaId').textContent = doc.id || '—';
+
+  $('vClientName').textContent = doc.client?.name || '—';
+  $('vClientPhone').textContent = doc.client?.phone || '—';
+  $('vClientId').textContent = doc.client?.id || '—';
+  $('vClientShortNote').textContent = doc.client?.shortNote || '—';
+
+  const fin = doc.financings || [];
+  $('vSummary').innerHTML = `
+    عدد التمويلات: <b>${fin.length}</b><br/>
+    البنوك: <b>${fin.map(x=>x.bank).filter(Boolean).join('، ') || '—'}</b>
+  `;
+
+  // table
+  const tb = $('vTbody');
+  tb.innerHTML = '';
+  fin.forEach(f=>{
+    const tr = document.createElement('tr');
+
+    let installText = moneyFmt(f.install);
+    let extra = clampStr(f.more);
+
+    if(f.variable){
+      const v1m = Number(f.variable.v1m||0);
+      const v2m = Number(f.variable.v2m||0);
+      const v1i = moneyFmt(f.variable.v1i);
+      const v2i = moneyFmt(f.variable.v2i);
+      installText = `متغير: (1→${v1m}) = ${v1i} ، ثم (${v1m+1}→${v1m+v2m}) = ${v2i}`;
+      extra = extra ? (extra + ' • ') : '';
+      extra += 'قسط متغير (فترتين)';
+    }
+
+    tr.innerHTML = `
+      <td><b>${clampStr(f.type)||'—'}</b></td>
+      <td>${clampStr(f.bank)||'—'}</td>
+      <td>${moneyFmt(f.amount) || '—'}</td>
+      <td>${installText || '—'}</td>
+      <td>${clampStr(f.months)||'—'}</td>
+      <td>${clampStr(f.rate)||'—'}</td>
+      <td>${extra || '—'}</td>
+    `;
+    tb.appendChild(tr);
+  });
+
+  $('vMemo').textContent = doc.memo || '—';
+
+  // signature
+  const sigShort = (doc.checksum||'').slice(0, 14) + '…' + (doc.checksum||'').slice(-10);
+  $('vSig').textContent = `SIG: ${sigShort}`;
+
+  // QR
+  const qrEl = $('qr');
+  qrEl.innerHTML = '';
+  const qrData = currentShareLink; // QR يحمل نفس رابط المشاركة
+  try{
+    new QRCode(qrEl, {
+      text: qrData,
+      width: 92,
+      height: 92,
+      correctLevel: QRCode.CorrectLevel.M
+    });
+  }catch(e){
+    qrEl.innerHTML = '<div class="muted">تعذر توليد QR (تحقق من الاتصال بالإنترنت/CDN)</div>';
+  }
+
+  if(!verified){
+    $('validBox').classList.add('hide');
+    $('invalidBox').classList.remove('hide');
+  }else{
+    $('invalidBox').classList.add('hide');
+    $('validBox').classList.remove('hide');
+  }
+}
+
+function backToApp(){
+  $('viewer').classList.add('hide');
+  $('app').classList.remove('hide');
+  $('modeChip').textContent = '🧾 وضع الموظف';
+  currentShareLink = '';
+  // نحذف hash حتى ما يبقى وضع العرض
+  if(location.hash) history.replaceState(null,'', location.pathname);
+}
+
+/* =========================
+   حفظ كصورة (مع معالجة الخط)
+========================= */
+async function saveDocAsImage(){
+  const el = $('docCanvas');
+
+  // انتظر تحميل الخطوط قبل التصوير لتقليل “تلخبط الخط”
+  try{
+    if(document.fonts && document.fonts.ready) await document.fonts.ready;
+  }catch(e){}
+
+  const scale = Math.min(2, window.devicePixelRatio || 1.5);
+
+  const canvas = await html2canvas(el, {
+    backgroundColor: '#ffffff',
+    scale,
+    useCORS: true,
+    allowTaint: true,
+    logging: false
+  });
+
+  const a = document.createElement('a');
+  a.href = canvas.toDataURL('image/png');
+  a.download = 'وثيقة-العميل.png';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
+
+/* =========================
+   Export / Import
+========================= */
+function exportDB(){
+  const db = loadDB();
+  const blob = new Blob([JSON.stringify(db, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'EMP_OFFICE_BACKUP.json';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url), 1000);
+}
+function importDB(file){
+  const reader = new FileReader();
+  reader.onload = ()=>{
+    try{
+      const obj = JSON.parse(reader.result);
+      if(!obj || !Array.isArray(obj.docs)) throw new Error('bad');
+      saveDB({docs: obj.docs});
+      updateCounts();
+      renderSavedList();
+      alert('✅ تم الاستيراد بنجاح');
+    }catch(e){
+      alert('⚠️ ملف غير صالح');
+    }
+  };
+  reader.readAsText(file);
+}
+
+/* =========================
+   Events
+========================= */
+(function init(){
+  $('docDate').value = nowKSA();
+  setInterval(()=> $('docDate').value = nowKSA(), 1000);
+
+  $('addFinanceBtn').addEventListener('click', addFinance);
+
+  $('generateDocBtn').addEventListener('click', async ()=>{
+    // 최소 تحقق بسيط
+    if(!$('financesWrap').children.length){
+      addFinance();
+      alert('أضفت لك تمويل واحد — عبّه ثم اضغط إنشاء الوثيقة.');
+      return;
+    }
+
+    const doc = await buildDoc();
+
+    // حفظ
+    upsertDocToDB(doc);
+    renderSavedList();
+
+    // افتح العرض مباشرة
+    openViewerFromDoc(doc);
+
+    // ضع الرابط في hash للعرض/المشاركة
+    const link = buildShareLink(doc);
+    // فقط لتحويل الصفحة لوضع العرض بنفس الرابط
+    location.hash = 'pack=' + link.split('#pack=')[1];
+  });
+
+  $('searchBox').addEventListener('input', renderSavedList);
+
+  $('wipeBtn').addEventListener('click', ()=>{
+    if(!confirm('متأكد تبغى مسح كل المحفوظات؟')) return;
+    localStorage.removeItem(DB_KEY);
+    updateCounts();
+    renderSavedList();
+    alert('تم المسح.');
+  });
+
+  $('exportBtn').addEventListener('click', exportDB);
+  $('importFile').addEventListener('change', (e)=>{
+    const f = e.target.files?.[0];
+    if(f) importDB(f);
+    e.target.value = '';
+  });
+
+  $('backToApp').addEventListener('click', (e)=>{
+    e.preventDefault();
+    backToApp();
+  });
+
+  $('copyLinkBtn').addEventListener('click', async ()=>{
+    if(!currentShareLink) return;
+    await navigator.clipboard.writeText(currentShareLink);
+    alert('✅ تم نسخ رابط المشاركة');
+  });
+
+  $('saveImageBtn').addEventListener('click', async ()=>{
+    try{
+      await saveDocAsImage();
+    }catch(e){
+      alert('⚠️ تعذر حفظ الصورة. تأكد من الاتصال بالإنترنت (html2canvas).');
+    }
+  });
+
+  // إنشاء تمويل افتراضي واحد
+  addFinance();
+
+  // تحميل قائمة
+  updateCounts();
+  renderSavedList();
+
+  // إذا فيه رابط مشاركة في الـ hash افتح وضع العرض
+  const hash = location.hash || '';
+  const m = hash.match(/pack=([^&]+)/);
+  if(m && m[1]){
+    $('app').classList.add('hide');
+    $('viewer').classList.remove('hide');
+    $('modeChip').textContent = '👁️ وضع عرض الوثيقة';
+    openViewerFromPacked(m[1]);
+  }
+})();
 </script>
 </body>
 </html>
