@@ -182,17 +182,24 @@
     .inlineBtns{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-start;margin-top:7px}
 
     .paperWrap{
-      background:linear-gradient(135deg,rgba(219,234,254,.95),rgba(248,250,252,.97));
-      border-radius:18px;padding:10px;border:1px solid rgba(191,219,254,.95);
+      background:#e5f0ff;
+      border-radius:18px;
+      padding:10px;
+      border:1px solid rgba(191,219,254,.95);
+      display:flex;
+      justify-content:center;
     }
     .paper{
       background:#fff;border-radius:20px;
       border:1px solid var(--line);
       overflow:hidden;
-      max-width:820px;margin:0 auto;
+      width:100%;
+      max-width:520px;  /* عرض مناسب للجوال */
+      margin:0 auto;
       box-shadow:0 22px 60px rgba(2,6,23,.20);
       text-align:right;
-      direction:rtl;unicode-bidi:plaintext;
+      direction:rtl;
+      font-family:"Tahoma","Tajawal",system-ui,-apple-system,BlinkMacSystemFont,sans-serif; /* لتثبيت العربية */
     }
     .paperHeader{
       padding:13px 13px;
@@ -206,7 +213,11 @@
     .pTag{font-size:11px;color:#bfdbfe}
     .pMeta{font-size:12px;opacity:.95;text-align:left}
 
-    .paperBody{padding:14px 13px}
+    .paperBody{
+      padding:14px 13px;
+      font-size:14px;
+      line-height:1.9; /* زيادة المسافة بين السطور لتجنب التداخل */
+    }
     .pillNote{
       display:inline-flex;align-items:center;gap:6px;
       background:#ecfeff;color:#0f766e;border-radius:999px;
@@ -224,7 +235,7 @@
     .hr{height:1px;background:var(--line);margin:8px 0}
 
     table{width:100%;border-collapse:collapse;font-size:13px;margin-top:7px}
-    th,td{border:1px solid var(--line);padding:6px 5px;text-align:center}
+    th,td{border:1px solid var(--line);padding:6px 5px;text-align:center;white-space:nowrap;}
     th{background:#eff6ff;font-weight:900;color:#111827}
 
     .sectionBox{
@@ -1017,14 +1028,14 @@
         if(b.mode==="variable"){
           varDetails+=`<div style="margin-top:6px"><b>${escapeHtml(b.bankName)}:</b></div>`;
           b.schedule.forEach(x=>{
-            varDetails+=`<div style="line-height:1.7">- قسط ${formatNumber(x.inst)} ريال لمدة ${x.months} شهر</div>`;
+            varDetails+=`<div style="line-height:1.9">- قسط ${formatNumber(x.inst)} ريال لمدة ${x.months} شهر</div>`;
           });
         }
       });
 
       const secNotes=(s.notes||"").trim()
         ? `<div class="hr"></div><div style="font-weight:900;color:#111827">ملاحظات التمويل:</div>
-           <div style="margin-top:5px;white-space:pre-wrap;line-height:1.8;color:#111827">
+           <div style="margin-top:5px;white-space:pre-wrap;line-height:1.9;color:#111827">
             ${escapeHtml(s.notes)}
            </div>`
         : "";
@@ -1032,7 +1043,7 @@
       let bankNotes="";
       (s.banks||[]).forEach(b=>{
         if((b.notes||"").trim()){
-          bankNotes+=`<div style="margin-top:4px;line-height:1.7">- <b>${escapeHtml(b.bankName)}:</b> ${escapeHtml(b.notes)}</div>`;
+          bankNotes+=`<div style="margin-top:4px;line-height:1.9">- <b>${escapeHtml(b.bankName)}:</b> ${escapeHtml(b.notes)}</div>`;
         }
       });
       if(bankNotes){
@@ -1076,7 +1087,7 @@
     const empNotes=(d.employeeNotes||"").trim()
       ? `<div class="sectionBox" style="margin-top:10px">
            <div class="sectionTitle"><div>ملاحظات الموظف</div><span class="badge">اختياري</span></div>
-           <div style="margin-top:6px;white-space:pre-wrap;line-height:1.8;color:#111827">
+           <div style="margin-top:6px;white-space:pre-wrap;line-height:1.9;color:#111827">
              ${escapeHtml(d.employeeNotes)}
            </div>
          </div>`
@@ -1267,9 +1278,15 @@
     const node=document.getElementById(elementId);
     if(!node)throw new Error("عنصر غير موجود");
     await waitImagesReady(node);
-    const dpr=window.devicePixelRatio||2;
-    const scale=Math.min(4,Math.max(2.5,dpr*1.3));
-    const canvas=await html2canvas(node,{backgroundColor:"#ffffff",scale,useCORS:true,allowTaint:true,logging:false});
+    const canvas=await html2canvas(node,{
+      backgroundColor:"#ffffff",
+      scale:3.2,          // دقّة عالية وواضحة
+      useCORS:true,
+      allowTaint:true,
+      logging:false,
+      windowWidth: node.scrollWidth,
+      windowHeight: node.scrollHeight
+    });
     return await new Promise(res=>canvas.toBlob(b=>res(b),"image/png",1));
   }
 
