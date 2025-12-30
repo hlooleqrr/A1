@@ -5,34 +5,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>مكتب الموظف - سرعة تملك العقار</title>
 
-  <!-- Tajawal -->
+  <!-- خط Tajawal -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800;900&display=swap" rel="stylesheet">
 
-  <!-- QR -->
+  <!-- مكتبة QR -->
   <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
-
-  <!-- ضغط الرابط عشان QR يشتغل حتى مع وثيقة طويلة -->
-  <script src="https://cdn.jsdelivr.net/npm/lz-string@1.5.0/libs/lz-string.min.js"></script>
-
-  <!-- تصدير صورة ممتاز وواضح (بديل dom-to-image) -->
+  <!-- مكتبة تحويل العنصر لصورة -->
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
   <style>
     *{box-sizing:border-box}
     :root{
       --bg:#020617;
-      --card: rgba(249,250,251,.965);
+      --card:rgba(249,250,251,.97);
       --text:#0f172a;
       --muted:#6b7280;
       --line:#e5e7eb;
       --blue:#1d4ed8;
       --blue2:#2563eb;
-      --okbg:#ecfdf5; --okbd:#a7f3d0; --oktx:#065f46;
-      --wrbg:#fef2f2; --wrbd:#fecaca; --wrtx:#991b1b;
+      --okbg:#ecfdf5;--okbd:#a7f3d0;--oktx:#065f46;
+      --wrbg:#fef2f2;--wrbd:#fecaca;--wrtx:#991b1b;
     }
-
     body{
       margin:0;
       font-family:"Tajawal",system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
@@ -43,322 +38,248 @@
       color:var(--text);
       direction:rtl;
       text-align:center;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
+      -webkit-font-smoothing:antialiased;
     }
-
-    .app{min-height:100vh; display:flex; flex-direction:column}
-
+    .app{min-height:100vh;display:flex;flex-direction:column}
     header{
-      position:sticky; top:0; z-index:50;
+      position:sticky;top:0;z-index:50;
       padding:14px 12px;
-      background: linear-gradient(135deg, #0b1224, var(--blue));
-      box-shadow:0 10px 30px rgba(0,0,0,.35);
+      background:linear-gradient(135deg,#0b1224,var(--blue));
+      box-shadow:0 14px 40px rgba(0,0,0,.45);
       color:#e5e7eb;
     }
     .top{
-      max-width:1024px; margin:0 auto;
-      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      max-width:1024px;margin:0 auto;
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
     }
-    .brand{
-      display:flex; align-items:center; gap:10px; text-align:right;
-    }
+    .brand{display:flex;align-items:center;gap:10px;text-align:right;}
     .brand img{
-      width:44px; height:44px; border-radius:14px; object-fit:contain;
-      background:#fff; padding:5px; border:1px solid rgba(255,255,255,.25);
-      box-shadow:0 8px 22px rgba(0,0,0,.25);
+      width:44px;height:44px;border-radius:14px;
+      object-fit:contain;background:#fff;padding:5px;
+      border:1px solid rgba(255,255,255,.28);
+      box-shadow:0 10px 30px rgba(0,0,0,.35);
     }
-    .brand .name{font-weight:900; letter-spacing:.02em; font-size:18px}
-    .brand .tag{font-size:11px; color:#bfdbfe}
-    .dt{font-size:12px; text-align:left; opacity:.95}
+    .brand .name{font-weight:900;font-size:18px;letter-spacing:.02em}
+    .brand .tag{font-size:11px;color:#bfdbfe}
+    .dt{font-size:12px;text-align:left;opacity:.95}
 
-    main{flex:1; padding:18px 10px 28px; display:flex; justify-content:center}
-    .screen{display:none; width:100%; max-width:980px; margin:0 auto}
+    main{flex:1;padding:18px 10px 26px;display:flex;justify-content:center}
+    .screen{display:none;width:100%;max-width:980px;margin:0 auto}
     .screen.active{display:block}
 
     .card{
-      background: var(--card);
-      border:1px solid rgba(229,231,235,.95);
+      background:var(--card);
       border-radius:20px;
-      padding:18px 14px;
-      box-shadow:0 20px 60px rgba(2,6,23,.35);
-      backdrop-filter: blur(8px);
+      padding:20px 14px;
+      border:1px solid rgba(229,231,235,.98);
+      box-shadow:0 22px 60px rgba(2,6,23,.40);
+      backdrop-filter:blur(8px);
     }
-    @media (min-width:768px){ .card{padding:26px 24px} }
+    @media(min-width:768px){.card{padding:26px 22px}}
 
-    .title{font-size:28px; font-weight:900; color:var(--text); margin:0 0 6px}
-    .sub{margin:0 0 18px; font-size:15px; color:var(--muted); line-height:1.65}
+    .title{font-size:26px;font-weight:900;color:var(--text);margin:0 0 6px}
+    .sub{margin:0 0 18px;font-size:15px;color:var(--muted);line-height:1.7}
 
     .warn{
       text-align:right;
-      background:var(--wrbg); border:1px solid var(--wrbd);
+      background:var(--wrbg);border:1px solid var(--wrbd);
       color:var(--wrtx);
-      padding:10px 12px; border-radius:14px;
-      font-size:13px; margin-bottom:14px; line-height:1.75;
-      font-weight:900;
-      white-space:pre-wrap;
+      padding:9px 11px;border-radius:14px;
+      font-size:13px;margin-bottom:10px;line-height:1.7;font-weight:900;
     }
     .ok{
       text-align:right;
-      background:var(--okbg); border:1px solid var(--okbd);
+      background:var(--okbg);border:1px solid var(--okbd);
       color:var(--oktx);
-      padding:10px 12px; border-radius:14px;
-      font-size:13px; margin-bottom:14px; line-height:1.75;
-      font-weight:900;
-      white-space:pre-wrap;
+      padding:9px 11px;border-radius:14px;
+      font-size:13px;margin-bottom:10px;line-height:1.7;font-weight:900;
     }
 
-    label{display:block; text-align:right; margin:0 0 6px; font-weight:900; color:#374151; font-size:14px}
-    input, select, textarea{
-      width:100%;
-      border-radius:14px;
+    label{display:block;text-align:right;margin:0 0 5px;font-weight:900;color:#374151;font-size:14px}
+    input,select,textarea{
+      width:100%;border-radius:14px;
       border:1px solid #d1d5db;
-      padding:12px 12px;
-      font-size:16px;
-      font-family:inherit;
-      outline:none;
-      background:#fff;
-      transition:.12s;
+      padding:11px 11px;font-size:16px;font-family:inherit;
+      outline:none;background:#fff;transition:.12s;
     }
-    input:focus, select:focus, textarea:focus{
+    input:focus,select:focus,textarea:focus{
       border-color:var(--blue2);
       box-shadow:0 0 0 2px rgba(37,99,235,.22);
       background:#f9fafb;
     }
-    textarea{min-height:140px; resize:vertical}
+    textarea{min-height:130px;resize:vertical}
+    .field{margin-bottom:13px;text-align:right}
+    .hint{font-size:12px;color:var(--muted);text-align:right;margin-top:4px}
 
-    .field{margin-bottom:14px; text-align:right}
-    .hint{font-size:12px; color:var(--muted); text-align:right; margin-top:6px}
-
-    .actions{display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:12px}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:12px}
     .btn{
-      border:none; cursor:pointer;
-      border-radius:999px;
-      padding:11px 18px;
-      font-weight:900;
-      font-size:16px;
-      font-family:inherit;
-      display:inline-flex; align-items:center; justify-content:center; gap:8px;
-      transition: transform .08s, box-shadow .12s, filter .12s;
+      border:none;cursor:pointer;border-radius:999px;
+      padding:10px 18px;font-weight:900;font-size:15px;
+      font-family:inherit;display:inline-flex;align-items:center;justify-content:center;gap:6px;
+      transition:.08s transform,.12s box-shadow,.12s filter;
     }
-    .btn:active{transform:scale(.98)}
+    .btn:active{transform:scale(.97)}
     .primary{
       color:#fff;
-      background: linear-gradient(135deg, var(--blue2), var(--blue));
-      box-shadow:0 16px 34px rgba(37,99,235,.35);
+      background:linear-gradient(135deg,var(--blue2),var(--blue));
+      box-shadow:0 18px 36px rgba(37,99,235,.40);
     }
-    .secondary{background:#e5e7eb; color:#111827}
-    .danger{background:#dc2626; color:#fff}
-    .ghost{background:transparent; color:#6b7280}
+    .secondary{background:#e5e7eb;color:#111827}
+    .ghost{background:transparent;color:#6b7280}
+    .danger{background:#dc2626;color:#fff}
 
     .grid{
-      display:grid; gap:14px;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      display:grid;gap:14px;
+      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
       margin-top:10px;
     }
     .tile{
-      background:#fff;
+      background:#fff;border-radius:22px;padding:15px 13px;
       border:1px solid var(--line);
-      border-radius:22px;
-      padding:16px 14px;
-      box-shadow:0 12px 28px rgba(2,6,23,.12);
-      cursor:pointer;
-      transition:.12s;
-      text-align:right;
+      box-shadow:0 14px 30px rgba(2,6,23,.12);
+      text-align:right;cursor:pointer;transition:.12s;
     }
     .tile:hover{
       transform:translateY(-3px);
       border-color:#bfdbfe;
-      box-shadow:0 20px 40px rgba(2,6,23,.16)
+      box-shadow:0 22px 44px rgba(2,6,23,.18);
     }
-    .tile .ico{font-size:30px; margin-bottom:6px}
-    .tile .t{font-weight:900; font-size:16px; margin-bottom:4px}
-    .tile .d{font-size:13px; color:var(--muted); line-height:1.6}
+    .tile .ico{font-size:28px;margin-bottom:5px}
+    .tile .t{font-weight:900;font-size:16px;margin-bottom:4px}
+    .tile .d{font-size:13px;color:var(--muted);line-height:1.6}
 
     .searchBar{
-      display:flex; gap:10px; flex-wrap:wrap;
-      align-items:center; justify-content:space-between;
-      margin-bottom:12px;
-      background:#fff;
+      display:flex;gap:10px;flex-wrap:wrap;
+      align-items:center;justify-content:space-between;
+      margin-bottom:12px;background:#fff;border-radius:18px;
+      padding:9px 10px;
       border:1px solid var(--line);
-      border-radius:18px;
-      padding:10px;
-      box-shadow:0 10px 20px rgba(2,6,23,.08);
+      box-shadow:0 10px 22px rgba(2,6,23,.10);
       text-align:right;
     }
-    .searchBar .right{flex:1; min-width:220px}
-    .searchBar .left{display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-start}
-    .small{font-size:12px; color:var(--muted)}
+    .searchBar .right{flex:1;min-width:220px}
+    .searchBar .left{display:flex;gap:8px;flex-wrap:wrap}
+    .small{font-size:12px;color:var(--muted)}
 
     .bankCard{
-      background:#fff;
+      background:#fff;border-radius:18px;padding:11px 11px;
       border:1px solid var(--line);
-      border-radius:18px;
-      padding:12px 12px;
-      box-shadow:0 10px 20px rgba(2,6,23,.08);
-      text-align:right;
-      margin-bottom:12px;
+      box-shadow:0 10px 22px rgba(2,6,23,.10);
+      text-align:right;margin-bottom:10px;
     }
-    .bankTop{
-      display:flex; align-items:center; justify-content:space-between; gap:10px;
-      border-bottom:1px dashed var(--line);
-      padding-bottom:10px;
-      margin-bottom:10px;
-    }
+    .bankTop{display:flex;align-items:center;justify-content:space-between;gap:10px;
+      padding-bottom:7px;margin-bottom:7px;border-bottom:1px dashed var(--line);}
     .chip{
-      display:inline-flex; align-items:center; gap:6px;
-      border-radius:999px;
-      padding:4px 10px;
-      background:#eff6ff;
-      color:var(--blue);
-      font-weight:900;
-      font-size:12px;
+      display:inline-flex;align-items:center;gap:6px;
+      border-radius:999px;padding:4px 10px;
+      background:#eff6ff;color:var(--blue);
+      font-weight:900;font-size:12px;
     }
 
-    .row2{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
-    @media (max-width:520px){ .row2{grid-template-columns:1fr} }
+    .row2{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+    @media(max-width:520px){.row2{grid-template-columns:1fr}}
 
-    .inlineBtns{display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-start; margin-top:8px}
+    .inlineBtns{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-start;margin-top:7px}
 
     .paperWrap{
-      background: linear-gradient(135deg, rgba(219,234,254,.9), rgba(249,250,251,.95));
-      border:1px solid rgba(191,219,254,.9);
-      border-radius:18px;
-      padding:12px;
+      background:linear-gradient(135deg,rgba(219,234,254,.95),rgba(248,250,252,.97));
+      border-radius:18px;padding:10px;border:1px solid rgba(191,219,254,.95);
     }
     .paper{
-      background:#fff;
+      background:#fff;border-radius:20px;
       border:1px solid var(--line);
-      border-radius:20px;
       overflow:hidden;
-      box-shadow:0 22px 60px rgba(2,6,23,.18);
-      max-width:820px;
-      margin:0 auto;
+      max-width:820px;margin:0 auto;
+      box-shadow:0 22px 60px rgba(2,6,23,.20);
       text-align:right;
-      direction: rtl;
-      unicode-bidi: plaintext;
-      letter-spacing: normal !important;
-      word-spacing: normal !important;
-      font-feature-settings: "liga" 1, "calt" 1;
+      direction:rtl;unicode-bidi:plaintext;
     }
     .paperHeader{
-      padding:14px 14px;
-      background: linear-gradient(135deg, #0b1224, var(--blue));
+      padding:13px 13px;
+      background:linear-gradient(135deg,#0b1224,var(--blue));
       color:#fff;
-      display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;
+      display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
     }
-    .paperHeader .pBrand{display:flex; align-items:center; gap:10px;}
-    .paperHeader img{
-      width:42px; height:42px; border-radius:14px; object-fit:contain;
-      background:#fff; padding:5px;
-    }
-    .paperHeader .pName{font-weight:900; font-size:17px}
-    .paperHeader .pTag{font-size:11px; color:#bfdbfe}
-    .paperHeader .pMeta{font-size:12px; opacity:.95; text-align:left}
+    .pBrand{display:flex;align-items:center;gap:9px}
+    .pBrand img{width:40px;height:40px;border-radius:14px;background:#fff;padding:4px;object-fit:contain}
+    .pName{font-weight:900;font-size:16px}
+    .pTag{font-size:11px;color:#bfdbfe}
+    .pMeta{font-size:12px;opacity:.95;text-align:left}
 
-    .paperBody{padding:16px 14px}
+    .paperBody{padding:14px 13px}
     .pillNote{
-      display:inline-flex; align-items:center; gap:8px;
-      background:#ecfeff; color:#0f766e;
-      border:1px solid #a7f3d0;
-      border-radius:999px;
-      padding:5px 10px;
-      font-size:12px;
-      font-weight:900;
-      margin-bottom:12px;
+      display:inline-flex;align-items:center;gap:6px;
+      background:#ecfeff;color:#0f766e;border-radius:999px;
+      border:1px solid #a7f3d0;padding:4px 10px;
+      font-size:12px;font-weight:900;margin-bottom:10px;
     }
     .infoGrid{
-      display:grid; gap:8px 12px;
-      grid-template-columns: 1fr 1fr;
-      font-size:14px;
-      margin-bottom:12px;
+      display:grid;gap:6px 12px;
+      grid-template-columns:1fr 1fr;
+      font-size:14px;margin-bottom:10px;
     }
-    @media (max-width:520px){ .infoGrid{grid-template-columns:1fr} }
-    .k{color:var(--muted); font-weight:900}
-    .v{color:#111827; font-weight:900}
-    .hr{height:1px; background:var(--line); margin:10px 0}
+    @media(max-width:520px){.infoGrid{grid-template-columns:1fr}}
+    .k{color:var(--muted);font-weight:900}
+    .v{color:#111827;font-weight:900}
+    .hr{height:1px;background:var(--line);margin:8px 0}
 
-    table{width:100%; border-collapse:collapse; font-size:14px; margin-top:10px}
-    th,td{border:1px solid var(--line); padding:8px 8px; text-align:center}
-    th{background:#eff6ff; font-weight:900; color:#111827}
+    table{width:100%;border-collapse:collapse;font-size:13px;margin-top:7px}
+    th,td{border:1px solid var(--line);padding:6px 5px;text-align:center}
+    th{background:#eff6ff;font-weight:900;color:#111827}
 
     .sectionBox{
+      border-radius:16px;padding:10px 10px;
       border:1px solid var(--line);
-      border-radius:16px;
-      padding:12px;
-      margin-top:12px;
       background:#fff;
       box-shadow:0 10px 20px rgba(2,6,23,.06);
+      margin-top:10px;
     }
     .sectionTitle{
-      font-weight:900;
-      color:#111827;
-      display:flex;
-      gap:10px;
-      align-items:center;
-      justify-content:space-between;
-      flex-wrap:wrap;
+      display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;
+      font-weight:900;color:#111827;
     }
     .badge{
-      display:inline-flex; align-items:center; gap:6px;
-      border-radius:999px;
-      padding:4px 10px;
-      background:#f1f5f9;
-      color:#0f172a;
-      font-weight:900;
-      font-size:12px;
+      display:inline-flex;align-items:center;gap:5px;
+      border-radius:999px;padding:4px 9px;
+      background:#f1f5f9;color:#0f172a;
+      font-weight:900;font-size:11px;
     }
-
-    .foot{
-      padding:12px 14px;
-      border-top:1px dashed var(--line);
-      display:flex; align-items:flex-end; justify-content:space-between; gap:10px; flex-wrap:wrap;
-      color:var(--muted);
-      font-size:12px;
-    }
-    .qrBox{display:flex; flex-direction:column; align-items:center; gap:6px}
-    .qrBox small{font-size:10px; color:#9ca3af; text-align:center}
 
     .strongWarn{
-      margin-top:10px;
-      background:#fff7ed;
-      border:1px solid #fed7aa;
-      color:#9a3412;
-      padding:10px 12px;
-      border-radius:14px;
-      font-size:12px;
-      line-height:1.8;
-      text-align:right;
-      font-weight:900;
+      margin-top:9px;
+      background:#fff7ed;border:1px solid #fed7aa;
+      color:#9a3412;padding:8px 10px;border-radius:14px;
+      font-size:12px;line-height:1.8;text-align:right;font-weight:900;
     }
-    .disclaimer{
-      font-size:11px; color:#9ca3af; line-height:1.75; text-align:right; margin-top:10px
+    .disclaimer{font-size:11px;color:#9ca3af;line-height:1.7;text-align:right;margin-top:8px}
+
+    .foot{
+      padding:10px 13px;
+      border-top:1px dashed var(--line);
+      display:flex;align-items:flex-end;justify-content:space-between;gap:8px;flex-wrap:wrap;
+      color:var(--muted);font-size:11px;
     }
+    .qrBox{display:flex;flex-direction:column;align-items:center;gap:4px}
+    .qrBox small{font-size:9px;color:#9ca3af;text-align:center}
 
     .listItem{
-      text-align:right;
-      background:#fff;
-      border:1px solid var(--line);
-      border-radius:16px;
-      padding:12px 12px;
-      margin-bottom:10px;
-      box-shadow:0 10px 20px rgba(2,6,23,.08);
+      text-align:right;background:#fff;border-radius:16px;
+      padding:11px 11px;margin-bottom:9px;
+      border:1px solid var(--line);box-shadow:0 10px 20px rgba(2,6,23,.10);
     }
-    .listItem .line1{font-weight:900; color:#111827}
-    .listItem .line2{font-size:12px; color:var(--muted); margin-top:2px}
-    .listItem .line3{font-size:11px; color:#9ca3af; margin-top:2px}
+    .listItem .line1{font-weight:900;color:#111827}
+    .listItem .line2{font-size:12px;color:var(--muted);margin-top:3px}
+    .listItem .line3{font-size:11px;color:#9ca3af;margin-top:2px}
 
-    footer{padding:10px 12px 14px; font-size:11px; color:#94a3b8; text-align:center;}
+    footer{padding:8px 12px 13px;font-size:11px;color:#94a3b8;text-align:center;}
   </style>
 </head>
-
 <body>
 <div class="app">
   <header>
     <div class="top">
       <div class="brand">
-        <img src="logo.png" alt="شعار الشركة"
-             onerror="this.style.display='none';" />
+        <img src="logo.png" alt="logo" onerror="this.style.display='none';">
         <div>
           <div class="name">سرعة تملك العقار</div>
           <div class="tag">حلول تمويلية بدون تعقيدات</div>
@@ -372,32 +293,14 @@
   </header>
 
   <main>
-
-    <!-- شاشة QR -->
-    <section id="shareScreen" class="screen">
-      <div class="card">
-        <div class="title">مطبوعات الحسبة</div>
-        <p class="sub">هذه الصفحة جاءت من الباركود (QR). تقدر تحمل/تشارك الصورة.</p>
-
-        <div id="shareVerifyBox"></div>
-
-        <div class="paperWrap">
-          <div id="paperShare" class="paper"></div>
-        </div>
-
-        <div class="actions">
-          <button class="btn primary" onclick="downloadPaperImage('paperShare')">تحميل الصورة</button>
-          <button class="btn secondary" onclick="sharePaperImage('paperShare')">مشاركة الصورة</button>
-          <button class="btn ghost" onclick="goHome()">العودة للرئيسية</button>
-        </div>
-      </div>
-    </section>
-
     <!-- ترحيب -->
     <section id="welcome" class="screen active">
       <div class="card">
         <div class="title">مرحباً بك</div>
-        <p class="sub">مكتب الموظف — نظام ذكي لتحويل حسابات العميل إلى “مطبوعات” رسمية كصورة احترافية مع QR وحفظ بالسجل.</p>
+        <p class="sub">
+          مكتب الموظف — تحويل حسابات العميل إلى مطبوعات رسمية كصورة احترافية،
+          مع سجل داخلي للمذكرات والوثائق.
+        </p>
         <div class="actions">
           <button class="btn primary" onclick="show('login')">ابدأ</button>
         </div>
@@ -408,25 +311,24 @@
     <section id="login" class="screen">
       <div class="card">
         <div class="title" style="font-size:22px">تسجيل دخول مكتب الموظف</div>
-        <p class="sub">أدخل الرمز السري للموظف المصرّح له.</p>
+        <p class="sub">أدخل الرمز السري للموظف المصرّح له فقط.</p>
 
         <div class="warn">
-⚠️ تحذير شديد: هذا النظام خاص بمكتب الشركة وبيانات العملاء.
-أي محاولة دخول غير مصرح بها تعتبر مخالفة وسيتم التعامل معها بصرامة.
+⚠️ تحذير: هذا النظام خاص بمكتب الشركة. أي محاولة دخول لغير المصرح لهم تعتبر مخالفة.
         </div>
 
         <form onsubmit="login(event)">
           <div class="field">
             <label>الرمز السري</label>
-            <input id="pass" type="password" autocomplete="off" placeholder="••••••••" required />
+            <input id="pass" type="password" autocomplete="off" placeholder="••••••••" required>
           </div>
           <div class="actions">
-            <button class="btn primary" type="submit">دخول</button>
-            <button class="btn ghost" type="button" onclick="show('welcome')">رجوع</button>
+            <button type="submit" class="btn primary">دخول</button>
+            <button type="button" class="btn ghost" onclick="show('welcome')">رجوع</button>
           </div>
         </form>
 
-        <div id="loginErr" class="warn" style="display:none;margin-top:12px">
+        <div id="loginErr" class="warn" style="display:none;margin-top:10px">
           الرمز غير صحيح. تم تسجيل المحاولة.
         </div>
       </div>
@@ -435,12 +337,15 @@
     <!-- لوحة التحكم -->
     <section id="dash" class="screen">
       <div class="card">
-
         <div class="searchBar">
           <div class="right">
-            <div style="font-weight:900;color:#111827;margin-bottom:6px">بحث سريع في السجل برقم الجوال</div>
-            <input id="dashSearchMobile" type="tel" placeholder="اكتب رقم الجوال ثم اضغط بحث" />
-            <div class="small" style="margin-top:6px">يعرض آخر الوثائق المطابقة وتقدر تفتحها وتحمّل صورتها.</div>
+            <div style="font-weight:900;color:#111827;margin-bottom:4px">
+              بحث سريع في السجل برقم الجوال
+            </div>
+            <input id="dashSearchMobile" type="tel" placeholder="اكتب رقم الجوال ثم اضغط بحث">
+            <div class="small" style="margin-top:5px">
+              يعرض أحدث الوثائق المطابقة وتقدر تفتحها مباشرة.
+            </div>
           </div>
           <div class="left">
             <button class="btn secondary" onclick="dashSearch()">بحث</button>
@@ -452,23 +357,23 @@
           <div class="tile" onclick="openMemoCenter()">
             <div class="ico">📝</div>
             <div class="t">مركز المذكرات</div>
-            <div class="d">حفظ مذكرات + بحث بأي كلمة داخل المذكرة + طباعة على مطبوعات الشركة.</div>
+            <div class="d">احفظ مذكرات داخلية وابحث بأي كلمة، واطبعها على مطبوعات الشركة.</div>
           </div>
 
           <div class="tile" onclick="startClientFlow()">
             <div class="ico">📊</div>
-            <div class="t">وثيقة عميل (أكثر من تمويل)</div>
-            <div class="d">عقاري + شخصي + غيره… كل تمويل له بنوكه وتفاصيله، مع قسط ثابت/متغير.</div>
+            <div class="t">وثيقة عميل (عدة تمويلات)</div>
+            <div class="d">إدخال أكثر من تمويل وبنوك لكل تمويل، مع قسط ثابت أو متغيّر.</div>
           </div>
 
           <div class="tile" onclick="openRecords()">
             <div class="ico">🗂️</div>
             <div class="t">السجل الداخلي للوثائق</div>
-            <div class="d">بحث برقم الجوال، فتح أي وثيقة، تحميل/مشاركة من جديد.</div>
+            <div class="d">رجوع لأي وثيقة محفوظة حسب رقم جوال العميل.</div>
           </div>
         </div>
 
-        <div id="dashQuickResults" style="margin-top:14px;text-align:right"></div>
+        <div id="dashQuickResults" style="margin-top:12px;text-align:right"></div>
 
         <div class="actions" style="margin-top:16px">
           <button class="btn ghost" onclick="show('welcome')">خروج</button>
@@ -480,13 +385,12 @@
     <section id="memoCenter" class="screen">
       <div class="card">
         <div class="title" style="font-size:22px">مركز المذكرات</div>
-        <p class="sub">احفظ مذكرة وابحث بأي كلمة داخلها. وتقدر تطلعها “مطبوعات” كصورة.</p>
+        <p class="sub">حفظ مذكرات داخلية والبحث فيها وطباعة مذكّرة على مطبوعات الشركة.</p>
 
         <div class="searchBar">
           <div class="right">
-            <div style="font-weight:900;color:#111827;margin-bottom:6px">بحث داخل المذكرات</div>
-            <input id="memoSearch" type="text" placeholder="اكتب كلمة… (مثال: راجحي / مرن / سكني)" />
-            <div class="small" style="margin-top:6px">البحث يشمل عنوان المذكرة والنص كامل.</div>
+            <div style="font-weight:900;color:#111827;margin-bottom:4px">بحث داخل المذكرات</div>
+            <input id="memoSearch" type="text" placeholder="اكتب كلمة (مثال: مرن / راجحي / سكني)">
           </div>
           <div class="left">
             <button class="btn secondary" onclick="searchMemos()">بحث</button>
@@ -495,7 +399,7 @@
           </div>
         </div>
 
-        <div id="memoList" style="margin-top:14px;text-align:right"></div>
+        <div id="memoList" style="margin-top:12px;text-align:right"></div>
       </div>
     </section>
 
@@ -506,17 +410,17 @@
 
         <div class="field">
           <label>عنوان المذكرة</label>
-          <input id="memoTitle" type="text" placeholder="مثال: متابعة عميل / ملاحظات بنك / نقاط مهمة" />
+          <input id="memoTitle" type="text" placeholder="مثال: ملاحظات عميل / متابعة بنك">
         </div>
 
         <div class="field">
           <label>نص المذكرة</label>
-          <textarea id="memoText" placeholder="اكتب هنا..."></textarea>
+          <textarea id="memoText" placeholder="اكتب هنا…"></textarea>
         </div>
 
         <div class="actions">
           <button class="btn primary" onclick="saveMemo()">حفظ</button>
-          <button class="btn secondary" onclick="memoPreview()">مطبوعات (معاينة)</button>
+          <button class="btn secondary" onclick="memoPreview()">معاينة كمطبوعات</button>
           <button class="btn ghost" onclick="show('memoCenter')">رجوع</button>
         </div>
       </div>
@@ -544,22 +448,21 @@
     <section id="c1" class="screen">
       <div class="card">
         <div class="title" style="font-size:22px">وثيقة عميل</div>
-        <p class="sub">أدخل بيانات العميل + ملاحظات الموظف (اختياري).</p>
+        <p class="sub">أدخل بيانات العميل وملاحظاتك الداخلية.</p>
 
         <div class="field">
           <label>اسم العميل</label>
-          <input id="cName" type="text" placeholder="مثال: محمد بن عبدالله" />
+          <input id="cName" type="text" placeholder="مثال: محمد بن عبدالله">
         </div>
 
         <div class="field">
           <label>رقم جوال العميل</label>
-          <input id="cMobile" type="tel" placeholder="05xxxxxxxx" />
+          <input id="cMobile" type="tel" placeholder="05xxxxxxxx">
         </div>
 
         <div class="field">
           <label>ملاحظات الموظف (اختياري)</label>
-          <textarea id="cEmpNotes" placeholder="أي ملاحظات تحب تضيفها للملف…"></textarea>
-          <div class="hint">هذه الملاحظات تظهر داخل الوثيقة إذا كتبتها.</div>
+          <textarea id="cEmpNotes" placeholder="أي نقاط تحب تدوينها…"></textarea>
         </div>
 
         <div class="actions">
@@ -569,31 +472,31 @@
       </div>
     </section>
 
-    <!-- تمويل: معلومات -->
+    <!-- تمويل: نوع التمويل -->
     <section id="s1" class="screen">
       <div class="card">
         <div class="title" style="font-size:22px">إضافة تمويل للعميل</div>
-        <p class="sub">حدد نوع التمويل + تفاصيل عامة (اختياري).</p>
+        <p class="sub">حدد نوع التمويل ومعلوماته العامة.</p>
 
         <div class="field">
           <label>نوع التمويل</label>
-          <input id="sType" type="text" placeholder="مثال: تمويل عقاري / تمويل شخصي / مرن / شراء مديونية..." />
+          <input id="sType" type="text" placeholder="تمويل عقاري / تمويل شخصي / مرن / شراء مديونية…">
         </div>
 
         <div class="row2">
           <div class="field">
-            <label>النسبة للعميل (اختياري)</label>
-            <input id="sRate" type="text" placeholder="مثال: 3.85%" />
+            <label>النسبة (اختياري)</label>
+            <input id="sRate" type="text" placeholder="مثال: 3.85%">
           </div>
           <div class="field">
             <label>الأرباح/الرسوم (اختياري)</label>
-            <input id="sProfit" type="text" placeholder="مثال: الربح 8,882 ريال" />
+            <input id="sProfit" type="text" placeholder="مثال: الربح 8,882 ريال">
           </div>
         </div>
 
         <div class="field">
-          <label>ملاحظات هذا التمويل (اختياري)</label>
-          <textarea id="sNotes" placeholder="أي تفاصيل تخص هذا التمويل…"></textarea>
+          <label>ملاحظات حول هذا التمويل (اختياري)</label>
+          <textarea id="sNotes" placeholder="أي تفاصيل مهمة للعميل أو للموظف…"></textarea>
         </div>
 
         <div class="actions">
@@ -606,18 +509,21 @@
     <!-- تمويل: البنوك -->
     <section id="s2" class="screen">
       <div class="card">
-        <div class="title" style="font-size:22px">بنوك التمويل</div>
-        <p class="sub">أدخل تفاصيل البنك: مبلغ التمويل + الأشهر (1–399) + القسط ثابت/متغير.</p>
+        <div class="title" style="font-size:22px">بنوك هذا التمويل</div>
+        <p class="sub">
+          أضف بنكًا أو أكثر: مبلغ التمويل، عدد الأشهر (١–٣٩٩)، وهل القسط ثابت أو متغيّر.
+          إذا كان متغيّر يتم إدخال (قسط + مدة) ويعود لك سؤال “باقي قسط؟”.
+        </p>
 
         <div id="banksWrap"></div>
 
-        <div class="field" style="margin-top:14px">
-          <label>هل تريد إضافة بنك آخر لهذا التمويل؟</label>
+        <div class="field" style="margin-top:10px">
+          <label>هل تريد إضافة بنك آخر؟</label>
           <div class="inlineBtns">
-            <button class="btn secondary" onclick="addBank()">نعم، أضف بنك</button>
-            <button class="btn primary" onclick="finishSection()">إنهاء هذا التمويل</button>
+            <button class="btn secondary" type="button" onclick="addBank()">نعم، أضف بنك</button>
+            <button class="btn primary" type="button" onclick="finishSection()">إنهاء هذا التمويل</button>
           </div>
-          <div class="hint">سيتم ترتيب البنوك من الأعلى تمويلًا إلى الأقل تلقائيًا.</div>
+          <div class="hint">سيتم ترتيب البنوك من الأعلى تمويلًا إلى الأقل.</div>
         </div>
 
         <div class="actions">
@@ -630,18 +536,18 @@
     <section id="s3" class="screen">
       <div class="card">
         <div class="title" style="font-size:22px">إضافة تمويل آخر؟</div>
-        <p class="sub">هل للعميل تمويل آخر داخل نفس الوثيقة؟</p>
+        <p class="sub">هل للعميل تمويل إضافي داخل نفس الوثيقة؟</p>
 
         <div class="actions">
           <button class="btn secondary" onclick="startAnotherSection()">نعم، أضف تمويل</button>
-          <button class="btn primary" onclick="safeBuildFinalDocument()">لا، اعرض الوثيقة</button>
+          <button class="btn primary" onclick="buildFinalDocument()">لا، اعرض الوثيقة</button>
         </div>
 
         <div class="actions">
           <button class="btn ghost" onclick="show('s2')">رجوع</button>
         </div>
 
-        <div id="docErrBox" class="warn" style="display:none;margin-top:12px"></div>
+        <div id="docErrBox" class="warn" style="display:none;margin-top:10px"></div>
       </div>
     </section>
 
@@ -649,22 +555,22 @@
     <section id="result" class="screen">
       <div class="card">
         <div class="title" style="font-size:22px">مطبوعات العميل</div>
-        <p class="sub">وثيقة موحدة تشمل أكثر من تمويل + QR حماية + تحميل/مشاركة كصورة.</p>
+        <p class="sub">وثيقة موحدة تشمل جميع التمويلات، ويمكن تحميلها أو مشاركتها كصورة واضحة.</p>
 
-        <div id="verifyBox"></div>
+        <div class="ok">
+          الباركود في أسفل الوثيقة يفتح موقع الشركة للحفظ فقط،
+          ولا يعتبر حماية كاملة للوثيقة.
+        </div>
 
         <div class="paperWrap">
           <div id="paperResult" class="paper"></div>
         </div>
 
         <div class="actions">
-          <button class="btn primary" onclick="saveAndDownload()">حفظ بالسجل + تحميل الصورة</button>
+          <button class="btn primary" onclick="saveAndDownload()">حفظ في السجل + تحميل الصورة</button>
           <button class="btn secondary" onclick="sharePaperImage('paperResult')">مشاركة الصورة</button>
-          <button class="btn secondary" onclick="copyShareLink()">نسخ رابط QR</button>
           <button class="btn ghost" onclick="show('dash')">رجوع</button>
         </div>
-
-        <div id="shareLinkBox" class="warn" style="display:none; white-space:pre-wrap"></div>
       </div>
     </section>
 
@@ -672,11 +578,11 @@
     <section id="records" class="screen">
       <div class="card">
         <div class="title" style="font-size:22px">السجل الداخلي للوثائق</div>
-        <p class="sub">ابحث برقم الجوال أو اعرض آخر الوثائق.</p>
+        <p class="sub">بحث برقم الجوال أو عرض آخر الوثائق المحفوظة على هذا الجهاز.</p>
 
         <div class="field">
           <label>بحث برقم الجوال</label>
-          <input id="recSearch" type="tel" placeholder="05xxxxxxxx" />
+          <input id="recSearch" type="tel" placeholder="05xxxxxxxx">
         </div>
 
         <div class="actions">
@@ -686,7 +592,7 @@
           <button class="btn ghost" onclick="show('dash')">رجوع</button>
         </div>
 
-        <div id="recordsList" style="margin-top:14px;text-align:right"></div>
+        <div id="recordsList" style="margin-top:12px;text-align:right"></div>
       </div>
     </section>
 
@@ -698,13 +604,9 @@
 </div>
 
 <script>
-  /*****************
-   * إعدادات
-   *****************/
   const PASSWORD = "11qq11qQ@";
-  const DOC_STORE_KEY  = "OFFICE_DOCS_V6";
-  const MEMO_STORE_KEY = "OFFICE_MEMOS_V6";
-  const VERIFY_SECRET = "FINO_DOC_VERIFY_SECRET_V6_11qq11qQ@";
+  const DOC_STORE_KEY  = "OFFICE_DOCS_SIMPLE_V1";
+  const MEMO_STORE_KEY = "OFFICE_MEMOS_SIMPLE_V1";
 
   const SA_BANKS = [
     "مصرف الراجحي",
@@ -721,178 +623,58 @@
     "شركة تمويل / جهة أخرى"
   ];
 
-  let draft = {
-    id: null,
-    name: "",
-    mobile: "",
-    employeeNotes: "",
-    createdAt: null,
-    sections: [],
-    shareUrl: "",
-    verifySig: ""
-  };
-
+  let draft = { id:null, name:"", mobile:"", employeeNotes:"", createdAt:null, sections:[] };
   let currentSection = null;
   let bankIndex = 0;
 
   function show(id){
-    document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+    document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
     const el = document.getElementById(id);
     if(el) el.classList.add("active");
-    window.scrollTo({top:0, behavior:"smooth"});
-  }
-
-  function goHome(){
-    history.replaceState(null, "", location.pathname);
-    show("welcome");
+    window.scrollTo({top:0,behavior:"smooth"});
   }
 
   function tick(){
     const now = new Date();
-    document.getElementById("hdrDate").textContent = now.toLocaleDateString("ar-SA", {year:"numeric", month:"2-digit", day:"2-digit"});
-    document.getElementById("hdrTime").textContent = now.toLocaleTimeString("ar-SA", {hour:"2-digit", minute:"2-digit", second:"2-digit", hour12:false});
+    document.getElementById("hdrDate").textContent =
+      now.toLocaleDateString("ar-SA",{year:"numeric",month:"2-digit",day:"2-digit"});
+    document.getElementById("hdrTime").textContent =
+      now.toLocaleTimeString("ar-SA",{hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false});
   }
 
   function fmtDateTime(d){
-    const od = {year:"numeric", month:"2-digit", day:"2-digit"};
-    const ot = {hour:"2-digit", minute:"2-digit", second:"2-digit", hour12:false};
-    return d.toLocaleDateString("ar-SA", od) + " - " + d.toLocaleTimeString("ar-SA", ot);
+    const od = {year:"numeric",month:"2-digit",day:"2-digit"};
+    const ot = {hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false};
+    return d.toLocaleDateString("ar-SA",od)+" - "+d.toLocaleTimeString("ar-SA",ot);
   }
 
   function escapeHtml(s){
-    return (s||"").replace(/[&<>"']/g, (c)=>({
-      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
-    }[c]));
+    return (s||"").replace(/[&<>\"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
   }
-
   function formatNumber(n){
-    if(n === null || n === undefined || n === "") return "";
-    const x = Number(n);
-    if(Number.isFinite(x)) return x.toLocaleString("ar-SA");
-    return String(n);
-  }
-
-  async function sha256Hex(str){
-    try{
-      const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
-      return [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,"0")).join("");
-    }catch(e){
-      // fallback بسيط إذا المتصفح منع crypto
-      let h = 2166136261;
-      for (let i=0;i<str.length;i++){
-        h ^= str.charCodeAt(i);
-        h = Math.imul(h, 16777619);
-      }
-      return ("00000000"+(h>>>0).toString(16)).slice(-8);
-    }
-  }
-
-  async function signPayload(payloadObj){
-    const json = JSON.stringify(payloadObj);
-    return await sha256Hex(VERIFY_SECRET + "|" + json);
-  }
-
-  async function makeQrDataUrl(text){
-    return await QRCode.toDataURL(text, { width: 240, margin: 1 });
-  }
-
-  async function waitFontsReady(){
-    if (document.fonts && document.fonts.ready) await document.fonts.ready;
-    await new Promise(r => setTimeout(r, 220));
-  }
-
-  async function waitImagesReady(root){
-    const imgs = Array.from(root.querySelectorAll("img"));
-    await Promise.all(imgs.map(img=>{
-      return new Promise((resolve)=>{
-        if(img.complete && img.naturalWidth > 0) return resolve();
-        const done = ()=>resolve();
-        img.addEventListener("load", done, {once:true});
-        img.addEventListener("error", done, {once:true});
-        setTimeout(done, 1600);
-      });
-    }));
-    await new Promise(r=>setTimeout(r,180));
-  }
-
-  // ✅ تصوير عالي الجودة (يحافظ على اللون والخط)
-  async function makeBlobFromNode(elementId){
-    await waitFontsReady();
-    const node = document.getElementById(elementId);
-    if(!node) throw new Error("عنصر غير موجود");
-    await waitImagesReady(node);
-
-    // scale عالي عشان ما تصير باهته/مغبّشة
-    const dpr = window.devicePixelRatio || 2;
-    const scale = Math.min(4, Math.max(2.6, dpr * 1.4));
-
-    const canvas = await html2canvas(node, {
-      backgroundColor: "#ffffff",
-      scale,
-      useCORS: true,
-      allowTaint: true,
-      logging: false
-    });
-
-    return await new Promise((resolve)=>{
-      canvas.toBlob((b)=>resolve(b), "image/png", 1);
-    });
-  }
-
-  async function downloadPaperImage(elementId){
-    try{
-      const blob = await makeBlobFromNode(elementId);
-      if(!blob) throw new Error("فشل إنشاء الصورة");
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "document.png";
-      a.click();
-      setTimeout(()=>URL.revokeObjectURL(url), 1500);
-    }catch(e){
-      console.error(e);
-      alert("تعذر حفظ الصورة. تأكد أن logo.png موجود داخل المستودع ثم جرّب مرة ثانية.");
-    }
-  }
-
-  async function sharePaperImage(elementId){
-    try{
-      const blob = await makeBlobFromNode(elementId);
-      if(!blob) throw new Error("فشل إنشاء الصورة");
-      const file = new File([blob], "document.png", {type:"image/png"});
-
-      if(navigator.canShare && navigator.canShare({files:[file]})){
-        await navigator.share({ files:[file], title:"مطبوعات العميل" });
-        return;
-      }
-      await downloadPaperImage(elementId);
-    }catch(e){
-      console.error(e);
-      await downloadPaperImage(elementId);
-    }
+    if(n===null||n===undefined||n==="")return"";
+    const x=Number(n);if(Number.isFinite(x))return x.toLocaleString("ar-SA");return String(n);
   }
 
   function login(e){
     e.preventDefault();
-    const p = document.getElementById("pass").value;
-    const err = document.getElementById("loginErr");
-    if(p === PASSWORD){
+    const p=document.getElementById("pass").value;
+    const err=document.getElementById("loginErr");
+    if(p===PASSWORD){
       err.style.display="none";
       document.getElementById("pass").value="";
       show("dash");
-    } else {
+    }else{
       err.style.display="block";
     }
   }
 
-  /* ===== المذكرات ===== */
+  /* ==== مذكرات ==== */
   function readMemos(){
-    try { return JSON.parse(localStorage.getItem(MEMO_STORE_KEY) || "[]"); }
-    catch { return []; }
+    try{return JSON.parse(localStorage.getItem(MEMO_STORE_KEY)||"[]");}
+    catch{return[];}
   }
-  function writeMemos(arr){
-    localStorage.setItem(MEMO_STORE_KEY, JSON.stringify(arr));
-  }
+  function writeMemos(a){localStorage.setItem(MEMO_STORE_KEY,JSON.stringify(a));}
 
   function openMemoCenter(){
     document.getElementById("memoSearch").value="";
@@ -907,13 +689,11 @@
   }
 
   function saveMemo(){
-    const title = (document.getElementById("memoTitle").value || "").trim();
-    const text  = (document.getElementById("memoText").value || "").trim();
-    if(!title && !text){ alert("اكتب عنوان أو نص للمذكرة"); return; }
-
-    const memos = readMemos();
-    const memo = { id: String(Date.now()), title, text, createdAt: new Date().toISOString() };
-    memos.unshift(memo);
+    const title=(document.getElementById("memoTitle").value||"").trim();
+    const text =(document.getElementById("memoText").value||"").trim();
+    if(!title && !text){alert("اكتب عنوان أو نص للمذكرة");return;}
+    const memos=readMemos();
+    memos.unshift({id:String(Date.now()),title,text,createdAt:new Date().toISOString()});
     writeMemos(memos);
     alert("تم حفظ المذكرة ✅");
     renderMemos(memos);
@@ -921,110 +701,97 @@
   }
 
   function searchMemos(){
-    const q = (document.getElementById("memoSearch").value || "").trim().toLowerCase();
-    const memos = readMemos();
-    if(!q){ renderMemos(memos); return; }
-    const filtered = memos.filter(m=>{
-      return (m.title||"").toLowerCase().includes(q) || (m.text||"").toLowerCase().includes(q);
-    });
-    renderMemos(filtered);
+    const q=(document.getElementById("memoSearch").value||"").trim().toLowerCase();
+    const memos=readMemos();
+    if(!q){renderMemos(memos);return;}
+    const f=memos.filter(m=>(m.title||"").toLowerCase().includes(q)||(m.text||"").toLowerCase().includes(q));
+    renderMemos(f);
   }
 
   function renderMemos(list){
-    const box = document.getElementById("memoList");
+    const box=document.getElementById("memoList");
     box.innerHTML="";
-    if(!list || list.length === 0){
-      box.innerHTML = `<div class="small">لا توجد مذكرات محفوظة.</div>`;
-      return;
+    if(!list||list.length===0){
+      box.innerHTML=`<div class="small">لا توجد مذكرات محفوظة.</div>`;return;
     }
-
     list.slice(0,80).forEach(m=>{
-      const item = document.createElement("div");
-      item.className="listItem";
-      item.innerHTML = `
-        <div class="line1">${escapeHtml(m.title || "بدون عنوان")}</div>
+      const div=document.createElement("div");
+      div.className="listItem";
+      div.innerHTML=`
+        <div class="line1">${escapeHtml(m.title||"بدون عنوان")}</div>
         <div class="line2">${escapeHtml((m.text||"").slice(0,140))}${(m.text||"").length>140?"…":""}</div>
         <div class="line3">تاريخ: ${fmtDateTime(new Date(m.createdAt))}</div>
         <div class="actions" style="justify-content:flex-start">
           <button class="btn secondary" type="button">فتح</button>
           <button class="btn secondary" type="button">مطبوعات</button>
-          <button class="btn danger" type="button">حذف</button>
+          <button class="btn danger"    type="button">حذف</button>
         </div>
       `;
-      const btnOpen = item.querySelectorAll("button")[0];
-      const btnPrint= item.querySelectorAll("button")[1];
-      const btnDel = item.querySelectorAll("button")[2];
-
-      btnOpen.onclick = ()=>{
-        document.getElementById("memoTitle").value = m.title || "";
-        document.getElementById("memoText").value  = m.text || "";
+      const [bOpen,bPrint,bDel]=div.querySelectorAll("button");
+      bOpen.onclick=()=>{
+        document.getElementById("memoTitle").value=m.title||"";
+        document.getElementById("memoText").value=m.text||"";
         show("memoIn");
       };
-
-      btnPrint.onclick = ()=>{
-        document.getElementById("memoTitle").value = m.title || "";
-        document.getElementById("memoText").value  = m.text || "";
+      bPrint.onclick=()=>{
+        document.getElementById("memoTitle").value=m.title||"";
+        document.getElementById("memoText").value=m.text||"";
         memoPreview();
       };
-
-      btnDel.onclick = ()=>{
-        const ok = confirm("تأكيد حذف المذكرة؟");
-        if(!ok) return;
-        const memos = readMemos().filter(x=>x.id !== m.id);
-        writeMemos(memos);
-        renderMemos(memos);
+      bDel.onclick=()=>{
+        if(!confirm("تأكيد حذف المذكرة؟"))return;
+        const memos=readMemos().filter(x=>x.id!==m.id);
+        writeMemos(memos);renderMemos(memos);
       };
-
-      box.appendChild(item);
+      box.appendChild(div);
     });
   }
 
-  function buildMemoPaperHTML(p){
-    const content = escapeHtml(p.text || "");
-    const title = escapeHtml(p.title || "مذكرة");
+  function buildMemoPaperHTML(title,text){
+    const now=new Date();
     return `
       <div class="paperHeader">
         <div class="pBrand">
-          <img src="logo.png" alt="logo" onerror="this.style.display='none';" />
+          <img src="logo.png" alt="logo" onerror="this.style.display='none';">
           <div>
             <div class="pName">سرعة تملك العقار</div>
             <div class="pTag">حلول تمويلية بدون تعقيدات</div>
           </div>
         </div>
-        <div class="pMeta">${p.meta}</div>
+        <div class="pMeta">${fmtDateTime(now)}</div>
       </div>
       <div class="paperBody">
         <div class="pillNote">📝 مذكرة — مكتب الموظف</div>
-        <div style="font-weight:900;color:#111827;margin-bottom:8px">${title}</div>
-        <div style="white-space:pre-wrap;line-height:1.9;font-size:15px;color:#111827">${content}</div>
-        <div class="strongWarn">تنبيه: هذه مذكرة داخلية للاستئناس فقط.</div>
+        <div style="font-weight:900;color:#111827;margin-bottom:6px">${escapeHtml(title||"مذكرة")}</div>
+        <div style="white-space:pre-wrap;line-height:1.9;font-size:15px;color:#111827">
+          ${escapeHtml(text||"")}
+        </div>
+        <div class="strongWarn">تنبيه: هذه مذكرة داخلية للاستئناس فقط ولا تمثل عرضًا تمويليًا.</div>
       </div>
       <div class="foot">
-        <span>جوال التواصل: 0506214458</span>
-        <span>info@hlooleqrr.com</span>
+        <span>جوال التواصل: 0506214458 · info@hlooleqrr.com</span>
         <div class="qrBox">
-          <small>صادر من مكتب الموظف</small>
+          <div id="memoQr"></div>
+          <small>الباركود يفتح موقع الشركة للحفظ فقط</small>
         </div>
       </div>
     `;
   }
 
   function memoPreview(){
-    const title = (document.getElementById("memoTitle").value || "").trim();
-    const text  = (document.getElementById("memoText").value || "").trim();
-    if(!title && !text){ alert("اكتب عنوان أو نص للمذكرة"); return; }
-
-    const now = new Date();
-    document.getElementById("paperMemo").innerHTML = buildMemoPaperHTML({ title, text, meta: fmtDateTime(now) });
+    const title=(document.getElementById("memoTitle").value||"").trim();
+    const text =(document.getElementById("memoText").value||"").trim();
+    if(!title && !text){alert("اكتب عنوان أو نص للمذكرة");return;}
+    const box=document.getElementById("paperMemo");
+    box.innerHTML=buildMemoPaperHTML(title,text);
+    makeQr("memoQr",location.origin+location.pathname);
     show("memoPrev");
   }
 
-  /* ===== تدفق العميل ===== */
+  /* ==== تدفق العميل ==== */
   function startClientFlow(){
-    draft = { id:null, name:"", mobile:"", employeeNotes:"", createdAt:null, sections:[], shareUrl:"", verifySig:"" };
-    currentSection = null;
-    bankIndex = 0;
-
+    draft={id:null,name:"",mobile:"",employeeNotes:"",createdAt:null,sections:[]};
+    currentSection=null;bankIndex=0;
     document.getElementById("cName").value="";
     document.getElementById("cMobile").value="";
     document.getElementById("cEmpNotes").value="";
@@ -1037,66 +804,56 @@
   }
 
   function startNewSection(){
-    const name = (document.getElementById("cName").value || "").trim();
-    const mobile = (document.getElementById("cMobile").value || "").trim();
-    if(!name || !mobile){ alert("أدخل اسم العميل ورقم جواله"); return; }
-
-    draft.name = name;
-    draft.mobile = mobile;
-    draft.employeeNotes = (document.getElementById("cEmpNotes").value || "").trim();
-
-    currentSection = { type:"", rate:"", profit:"", notes:"", banks:[] };
+    const name=(document.getElementById("cName").value||"").trim();
+    const mob =(document.getElementById("cMobile").value||"").trim();
+    if(!name || !mob){alert("أدخل اسم العميل ورقم جواله");return;}
+    draft.name=name;draft.mobile=mob;
+    draft.employeeNotes=(document.getElementById("cEmpNotes").value||"").trim();
+    currentSection={type:"",rate:"",profit:"",notes:"",banks:[]};
     document.getElementById("sType").value="";
     document.getElementById("sRate").value="";
     document.getElementById("sProfit").value="";
     document.getElementById("sNotes").value="";
     document.getElementById("banksWrap").innerHTML="";
-    bankIndex = 0;
-
+    bankIndex=0;
     show("s1");
   }
 
   function startAnotherSection(){
-    currentSection = { type:"", rate:"", profit:"", notes:"", banks:[] };
+    currentSection={type:"",rate:"",profit:"",notes:"",banks:[]};
     document.getElementById("sType").value="";
     document.getElementById("sRate").value="";
     document.getElementById("sProfit").value="";
     document.getElementById("sNotes").value="";
     document.getElementById("banksWrap").innerHTML="";
-    bankIndex = 0;
+    bankIndex=0;
     show("s1");
   }
 
   function toSectionBanks(){
-    const t = (document.getElementById("sType").value || "").trim();
-    if(!t){ alert("أدخل نوع التمويل"); return; }
-
-    currentSection.type = t;
-    currentSection.rate = (document.getElementById("sRate").value || "").trim();
-    currentSection.profit = (document.getElementById("sProfit").value || "").trim();
-    currentSection.notes = (document.getElementById("sNotes").value || "").trim();
-
+    const t=(document.getElementById("sType").value||"").trim();
+    if(!t){alert("أدخل نوع التمويل");return;}
+    currentSection.type=t;
+    currentSection.rate  =(document.getElementById("sRate").value||"").trim();
+    currentSection.profit=(document.getElementById("sProfit").value||"").trim();
+    currentSection.notes =(document.getElementById("sNotes").value||"").trim();
     document.getElementById("banksWrap").innerHTML="";
-    bankIndex = 0;
+    bankIndex=0;
     addBank();
     show("s2");
   }
 
   function addBank(){
     bankIndex++;
-    const idx = bankIndex;
-
-    const wrap = document.getElementById("banksWrap");
-    const div = document.createElement("div");
-    div.className = "bankCard";
-    div.dataset.idx = idx;
-
-    div.innerHTML = `
+    const idx=bankIndex;
+    const wrap=document.getElementById("banksWrap");
+    const div=document.createElement("div");
+    div.className="bankCard";div.dataset.idx=idx;
+    div.innerHTML=`
       <div class="bankTop">
         <div class="chip">بنك رقم ${idx}</div>
-        <button class="btn ghost" type="button" style="padding:6px 10px;font-size:13px" onclick="removeBank(${idx})">حذف</button>
+        <button class="btn ghost" type="button" style="padding:5px 9px;font-size:12px" onclick="removeBank(${idx})">حذف</button>
       </div>
-
       <div class="field">
         <label>اختر البنك</label>
         <select id="bank_${idx}">
@@ -1104,34 +861,30 @@
           ${SA_BANKS.map(b=>`<option value="${b}">${b}</option>`).join("")}
         </select>
       </div>
-
       <div class="row2">
         <div class="field">
           <label>مبلغ التمويل (ريال)</label>
-          <input id="amount_${idx}" type="number" min="0" step="1" placeholder="مثال: 80000" />
+          <input id="amount_${idx}" type="number" min="0" step="1" placeholder="مثال: 80000">
         </div>
         <div class="field">
-          <label>عدد الأشهر (1 إلى 399)</label>
-          <input id="months_${idx}" type="number" min="1" max="399" step="1" placeholder="مثال: 58" />
+          <label>عدد الأشهر (1–399)</label>
+          <input id="months_${idx}" type="number" min="1" max="399" step="1" placeholder="مثال: 58">
         </div>
       </div>
-
       <div class="row2">
         <div class="field">
           <label>النسبة (اختياري)</label>
-          <input id="rate_${idx}" type="text" placeholder="مثال: 3.85%" />
+          <input id="rate_${idx}" type="text" placeholder="مثال: 3.85%">
         </div>
         <div class="field">
           <label>الأرباح/الرسوم (اختياري)</label>
-          <input id="profit_${idx}" type="text" placeholder="مثال: الربح 8,882 ريال" />
+          <input id="profit_${idx}" type="text" placeholder="مثال: الربح 8,882 ريال">
         </div>
       </div>
-
       <div class="field">
         <label>ملاحظات البنك (اختياري)</label>
-        <input id="bnotes_${idx}" type="text" placeholder="أي ملاحظة تخص هذا البنك…" />
+        <input id="bnotes_${idx}" type="text" placeholder="أي ملاحظة تخص هذا البنك…">
       </div>
-
       <div class="field">
         <label>هل القسط متغيّر؟</label>
         <select id="mode_${idx}" onchange="toggleMode(${idx})">
@@ -1139,143 +892,113 @@
           <option value="variable">نعم، القسط متغيّر</option>
         </select>
       </div>
-
       <div id="fixedWrap_${idx}" class="field">
         <label>القسط الشهري الثابت (ريال)</label>
-        <input id="fixedInst_${idx}" type="number" min="0" step="1" placeholder="مثال: 1618" />
+        <input id="fixedInst_${idx}" type="number" min="0" step="1" placeholder="مثال: 1618">
       </div>
-
       <div id="varWrap_${idx}" class="field" style="display:none">
-        <label>الأقساط المتغيرة (قسط + مدة)</label>
-        <div id="varList_${idx}" style="display:flex;flex-direction:column;gap:8px"></div>
-
-        <div class="inlineBtns" style="margin-top:8px">
-          <button class="btn secondary" type="button" onclick="addVarRow(${idx}, true)">باقي قسط؟ نعم (أضف)</button>
+        <label>الأقساط المتغيّرة (قسط + مدة)</label>
+        <div id="varList_${idx}" style="display:flex;flex-direction:column;gap:7px"></div>
+        <div class="inlineBtns" style="margin-top:7px">
+          <button class="btn secondary" type="button" onclick="addVarRow(${idx},true)">باقي قسط؟ نعم (أضف)</button>
           <button class="btn primary" type="button" onclick="doneVar(${idx})">باقي قسط؟ لا (إنهاء)</button>
         </div>
       </div>
     `;
     wrap.appendChild(div);
-    addVarRow(idx, false);
+    addVarRow(idx,false);
   }
 
   function removeBank(idx){
-    const el = document.querySelector(\`.bankCard[data-idx="\${idx}"]\`);
-    if(el) el.remove();
+    const el=document.querySelector('.bankCard[data-idx="'+idx+'"]');
+    if(el)el.remove();
   }
-
   function toggleMode(idx){
-    const mode = document.getElementById(\`mode_\${idx}\`).value;
-    const fw = document.getElementById(\`fixedWrap_\${idx}\`);
-    const vw = document.getElementById(\`varWrap_\${idx}\`);
-    if(mode === "fixed"){ fw.style.display="block"; vw.style.display="none"; }
-    else { fw.style.display="none"; vw.style.display="block"; }
+    const m=document.getElementById("mode_"+idx).value;
+    document.getElementById("fixedWrap_"+idx).style.display=(m==="fixed")?"block":"none";
+    document.getElementById("varWrap_"+idx).style.display =(m==="variable")?"block":"none";
   }
 
-  function addVarRow(idx, focus){
-    const list = document.getElementById(\`varList_\${idx}\`);
-    if(!list) return;
-    const count = list.children.length + 1;
-
-    const row = document.createElement("div");
+  function addVarRow(idx,focus){
+    const list=document.getElementById("varList_"+idx);
+    if(!list)return;
+    const count=list.children.length+1;
+    const row=document.createElement("div");
     row.style.display="grid";
     row.style.gridTemplateColumns="1fr 1fr auto";
-    row.style.gap="8px";
+    row.style.gap="6px";
     row.style.alignItems="center";
-
-    row.innerHTML = `
-      <input id="vInst_${idx}_${count}" type="number" min="0" step="1" placeholder="القسط (ريال)" />
-      <input id="vMon_${idx}_${count}" type="number" min="1" max="399" step="1" placeholder="المدة (شهر)" />
-      <button class="btn ghost" type="button" style="padding:8px 10px;font-size:13px" onclick="this.parentElement.remove()">حذف</button>
+    row.innerHTML=`
+      <input id="vInst_${idx}_${count}" type="number" min="0" step="1" placeholder="القسط (ريال)">
+      <input id="vMon_${idx}_${count}" type="number" min="1" max="399" step="1" placeholder="المدة (شهر)">
+      <button class="btn ghost" type="button" style="padding:6px 8px;font-size:12px" onclick="this.parentElement.remove()">حذف</button>
     `;
     list.appendChild(row);
-
     if(focus){
       setTimeout(()=>{
-        const i=document.getElementById(\`vInst_${idx}_${count}\`);
-        if(i) i.focus();
-      }, 60);
+        const i=document.getElementById("vInst_"+idx+"_"+count);
+        if(i)i.focus();
+      },60);
     }
   }
 
   function doneVar(idx){
-    const list = document.getElementById(\`varList_\${idx}\`);
-    if(!list || list.children.length === 0){
-      alert("أضف قسط + مدة أولاً");
-      return;
-    }
-    alert("تم إنهاء الأقساط المتغيرة لهذا البنك ✅");
+    const list=document.getElementById("varList_"+idx);
+    if(!list||list.children.length===0){alert("أضف قسط + مدة أولاً");return;}
+    alert("تم إنهاء الأقساط المتغيّرة لهذا البنك ✅");
   }
 
   function finishSection(){
-    const bankCards = Array.from(document.querySelectorAll(".bankCard"));
-    const banks = [];
+    const cards=Array.from(document.querySelectorAll(".bankCard"));
+    const banks=[];
+    for(const card of cards){
+      const idx=card.dataset.idx;
+      const bankName=(document.getElementById("bank_"+idx)?.value||"").trim();
+      const amount=parseFloat(document.getElementById("amount_"+idx)?.value||"0");
+      const months=parseInt(document.getElementById("months_"+idx)?.value||"0",10);
+      const rate=(document.getElementById("rate_"+idx)?.value||"").trim();
+      const profit=(document.getElementById("profit_"+idx)?.value||"").trim();
+      const notes=(document.getElementById("bnotes_"+idx)?.value||"").trim();
+      const mode=document.getElementById("mode_"+idx)?.value||"fixed";
+      if(!bankName || !amount || !months)continue;
+      if(months<1 || months>399)continue;
 
-    for(const card of bankCards){
-      const idx = card.dataset.idx;
-
-      const bankName = (document.getElementById(\`bank_\${idx}\`)?.value || "").trim();
-      const amount = parseFloat(document.getElementById(\`amount_\${idx}\`)?.value || "0");
-      const months = parseInt(document.getElementById(\`months_\${idx}\`)?.value || "0", 10);
-
-      const rate = (document.getElementById(\`rate_\${idx}\`)?.value || "").trim();
-      const profit = (document.getElementById(\`profit_\${idx}\`)?.value || "").trim();
-      const notes = (document.getElementById(\`bnotes_\${idx}\`)?.value || "").trim();
-
-      const mode = document.getElementById(\`mode_\${idx}\`)?.value || "fixed";
-
-      if(!bankName || !amount || !months) continue;
-      if(months < 1 || months > 399) continue;
-
-      if(mode === "fixed"){
-        const fixedInst = parseFloat(document.getElementById(\`fixedInst_\${idx}\`)?.value || "0");
-        if(!fixedInst) continue;
-        banks.push({ bankName, amount, months, mode:"fixed", fixedInst, schedule:[], rate, profit, notes });
-
-      } else {
-        const list = document.getElementById(\`varList_\${idx}\`);
-        const schedule = [];
+      if(mode==="fixed"){
+        const fixedInst=parseFloat(document.getElementById("fixedInst_"+idx)?.value||"0");
+        if(!fixedInst)continue;
+        banks.push({bankName,amount,months,mode:"fixed",fixedInst,schedule:[],rate,profit,notes});
+      }else{
+        const list=document.getElementById("varList_"+idx);
+        const schedule=[];
         if(list){
-          const rows = Array.from(list.children);
-          rows.forEach((r, k0)=>{
-            const k = k0 + 1;
-            const inst = parseFloat(document.getElementById(\`vInst_\${idx}_\${k}\`)?.value || "0");
-            const m = parseInt(document.getElementById(\`vMon_\${idx}_\${k}\`)?.value || "0", 10);
-            if(inst && m) schedule.push({inst, months:m});
+          const rows=Array.from(list.children);
+          rows.forEach((r,k0)=>{
+            const k=k0+1;
+            const inst=parseFloat(document.getElementById("vInst_"+idx+"_"+k)?.value||"0");
+            const m=parseInt(document.getElementById("vMon_"+idx+"_"+k)?.value||"0",10);
+            if(inst && m)schedule.push({inst,months:m});
           });
         }
-        if(schedule.length === 0) continue;
-        banks.push({ bankName, amount, months, mode:"variable", fixedInst:null, schedule, rate, profit, notes });
+        if(schedule.length===0)continue;
+        banks.push({bankName,amount,months,mode:"variable",fixedInst:null,schedule,rate,profit,notes});
       }
     }
-
-    if(banks.length === 0){
-      alert("لازم تدخل بنك واحد كامل على الأقل (اسم البنك + مبلغ التمويل + الأشهر + القسط).");
-      return;
+    if(banks.length===0){
+      alert("أدخل بنك واحد على الأقل مكتمل البيانات.");return;
     }
-
-    banks.sort((a,b)=> b.amount - a.amount);
-    currentSection.banks = banks;
-
+    banks.sort((a,b)=>b.amount-a.amount);
+    currentSection.banks=banks;
     draft.sections.push(currentSection);
     show("s3");
   }
 
-  function buildPaperHTML(payload){
-    const meta = payload.meta || fmtDateTime(new Date());
-    const d = payload.data;
-
-    const verifyBadge = payload.verified
-      ? `<span class="badge" style="background:var(--okbg);color:var(--oktx);border:1px solid var(--okbd)">✅ وثيقة موثّقة</span>`
-      : `<span class="badge" style="background:var(--wrbg);color:var(--wrtx);border:1px solid var(--wrbd)">⚠️ غير موثّقة (تم تعديل البيانات)</span>`;
-
-    const createdTxt = fmtDateTime(new Date(d.createdAt));
-
-    const sectionsHtml = d.sections.map((s, si)=>{
-      const rows = (s.banks||[]).map((b, i)=>{
-        const instTxt = (b.mode === "fixed") ? `${formatNumber(b.fixedInst)}` : `متغيّر`;
-        const rateTxt = escapeHtml(b.rate || s.rate || "");
-        const profitTxt = escapeHtml(b.profit || s.profit || "");
+  function buildPaperHTML(d){
+    const meta=fmtDateTime(new Date(d.createdAt));
+    const sectionsHtml=d.sections.map((s,si)=>{
+      const rows=(s.banks||[]).map((b,i)=>{
+        const instTxt=(b.mode==="fixed")?formatNumber(b.fixedInst):"متغيّر";
+        const rateTxt=escapeHtml(b.rate || s.rate || "");
+        const profitTxt=escapeHtml(b.profit || s.profit || "");
         return `
           <tr>
             <td>${i+1}</td>
@@ -1289,43 +1012,45 @@
         `;
       }).join("");
 
-      let varDetails = "";
-      (s.banks||[]).forEach((b)=>{
-        if(b.mode === "variable"){
-          varDetails += `<div style="margin-top:10px"><b>${escapeHtml(b.bankName)}:</b></div>`;
-          b.schedule.forEach((x)=>{
-            varDetails += `<div style="color:#111827;line-height:1.8">- قسط ${formatNumber(x.inst)} ريال لمدة ${x.months} شهر</div>`;
+      let varDetails="";
+      (s.banks||[]).forEach(b=>{
+        if(b.mode==="variable"){
+          varDetails+=`<div style="margin-top:6px"><b>${escapeHtml(b.bankName)}:</b></div>`;
+          b.schedule.forEach(x=>{
+            varDetails+=`<div style="line-height:1.7">- قسط ${formatNumber(x.inst)} ريال لمدة ${x.months} شهر</div>`;
           });
         }
       });
 
-      const secNotes = (s.notes||"").trim()
-        ? `<div class="hr"></div><div style="font-weight:900;color:#111827">ملاحظات التمويل:</div><div style="margin-top:6px;white-space:pre-wrap;line-height:1.85;color:#111827">${escapeHtml(s.notes)}</div>`
+      const secNotes=(s.notes||"").trim()
+        ? `<div class="hr"></div><div style="font-weight:900;color:#111827">ملاحظات التمويل:</div>
+           <div style="margin-top:5px;white-space:pre-wrap;line-height:1.8;color:#111827">
+            ${escapeHtml(s.notes)}
+           </div>`
         : "";
 
-      let bankNotes = "";
-      (s.banks||[]).forEach((b)=>{
+      let bankNotes="";
+      (s.banks||[]).forEach(b=>{
         if((b.notes||"").trim()){
-          bankNotes += `<div style="margin-top:6px;line-height:1.8">- <b>${escapeHtml(b.bankName)}:</b> ${escapeHtml(b.notes)}</div>`;
+          bankNotes+=`<div style="margin-top:4px;line-height:1.7">- <b>${escapeHtml(b.bankName)}:</b> ${escapeHtml(b.notes)}</div>`;
         }
       });
       if(bankNotes){
-        bankNotes = `<div class="hr"></div><div style="font-weight:900;color:#111827">ملاحظات على البنوك:</div><div style="font-size:14px;line-height:1.85;color:#111827">${bankNotes}</div>`;
+        bankNotes=`<div class="hr"></div><div style="font-weight:900;color:#111827">ملاحظات على البنوك:</div>
+                   <div style="font-size:13px;color:#111827">${bankNotes}</div>`;
       }
 
       return `
         <div class="sectionBox">
           <div class="sectionTitle">
             <div>تمويل ${si+1}: ${escapeHtml(s.type)}</div>
-            <span class="badge">📌 البنوك مرتبة أعلى تمويل → أقل</span>
+            <span class="badge">البنوك مرتبة من الأعلى تمويلًا للأقل</span>
           </div>
-
-          <div class="infoGrid" style="margin-top:10px">
+          <div class="infoGrid" style="margin-top:6px">
             <div class="k">النسبة:</div><div class="v">${escapeHtml(s.rate||"—")}</div>
             <div class="k">الأرباح/الرسوم:</div><div class="v">${escapeHtml(s.profit||"—")}</div>
           </div>
-
-          <div style="font-weight:900;color:#111827;margin-top:6px">تفاصيل البنوك:</div>
+          <div style="font-weight:900;color:#111827;margin-top:4px">تفاصيل البنوك:</div>
           <table>
             <thead>
               <tr>
@@ -1340,35 +1065,27 @@
             </thead>
             <tbody>${rows}</tbody>
           </table>
-
-          ${varDetails ? `
-            <div class="hr"></div>
+          ${varDetails?`<div class="hr"></div>
             <div style="font-weight:900;color:#111827">تفاصيل القسط المتغيّر:</div>
-            <div style="font-size:14px;line-height:1.9;margin-top:6px">${varDetails}</div>
-          ` : ""}
-
-          ${secNotes}
-          ${bankNotes}
+            <div style="font-size:13px;margin-top:5px">${varDetails}</div>`:""}
+          ${secNotes}${bankNotes}
         </div>
       `;
     }).join("");
 
-    const empNotes = (d.employeeNotes||"").trim()
-      ? `<div class="sectionBox" style="margin-top:12px">
+    const empNotes=(d.employeeNotes||"").trim()
+      ? `<div class="sectionBox" style="margin-top:10px">
            <div class="sectionTitle"><div>ملاحظات الموظف</div><span class="badge">اختياري</span></div>
-           <div style="margin-top:8px;white-space:pre-wrap;line-height:1.85;color:#111827">${escapeHtml(d.employeeNotes)}</div>
+           <div style="margin-top:6px;white-space:pre-wrap;line-height:1.8;color:#111827">
+             ${escapeHtml(d.employeeNotes)}
+           </div>
          </div>`
       : "";
-
-    const qrImg = payload.qrDataUrl
-      ? `<img alt="QR" src="${payload.qrDataUrl}" width="100" height="100"
-              style="border-radius:14px;border:1px solid var(--line);background:#fff;padding:6px" />`
-      : `<div style="width:100px;height:100px;border-radius:14px;border:1px solid var(--line);background:#fff;display:flex;align-items:center;justify-content:center">QR</div>`;
 
     return `
       <div class="paperHeader">
         <div class="pBrand">
-          <img src="logo.png" alt="logo" onerror="this.style.display='none';" />
+          <img src="logo.png" alt="logo" onerror="this.style.display='none';">
           <div>
             <div class="pName">سرعة تملك العقار</div>
             <div class="pTag">حلول تمويلية بدون تعقيدات</div>
@@ -1376,122 +1093,60 @@
         </div>
         <div class="pMeta">${meta}</div>
       </div>
-
       <div class="paperBody">
-        <div class="pillNote">📄 مطبوعات العميل — ${verifyBadge}</div>
-
+        <div class="pillNote">📄 مطبوعات العميل</div>
         <div class="infoGrid">
           <div class="k">اسم العميل:</div><div class="v">${escapeHtml(d.name)}</div>
           <div class="k">رقم الجوال:</div><div class="v">${escapeHtml(d.mobile)}</div>
           <div class="k">رقم الوثيقة:</div><div class="v">${escapeHtml(d.id)}</div>
-          <div class="k">تاريخ الإصدار:</div><div class="v">${createdTxt}</div>
+          <div class="k">تاريخ الإصدار:</div><div class="v">${fmtDateTime(new Date(d.createdAt))}</div>
         </div>
-
         ${sectionsHtml}
         ${empNotes}
-
         <div class="strongWarn">
-          تنبيه مهم: هذه الحسبة مبدئية بناءً على معلومات العميل وقد تتغير عند التقييم النهائي.
-          نحن لسنا جهة تمويلية، ولا يمثل هذا المستند عرضاً تمويلياً ملزماً.
+          هذه الحسبة مبدئية بناءً على معلومات العميل وقد تتغير عند التقييم النهائي.
+          نحن لسنا جهة تمويلية، ولا يعتبر هذا المستند عرضًا تمويليًا ملزمًا.
         </div>
-
         <div class="disclaimer">
-          حماية الوثيقة: QR يتحقق من صحة البيانات — أي تعديل في بيانات الرابط يجعل الوثيقة “غير موثّقة”.
+          الباركود أسفل الصفحة يفتح موقع الشركة فقط للحفظ والرجوع، ولا يمثل حماية كاملة للوثيقة.
         </div>
       </div>
-
       <div class="foot">
         <span>صادر من مكتب الموظف — سرعة تملك العقار</span>
-        <span>0506214458 · info@hlooleqrr.com</span>
         <div class="qrBox">
-          ${qrImg}
-          <small>امسح QR لفتح نفس الوثيقة وتحميل صورتها</small>
+          <div id="docQr"></div>
+          <small>امسح الباركود لفتح موقع الشركة</small>
         </div>
       </div>
     `;
   }
 
-  async function safeBuildFinalDocument(){
-    const errBox = document.getElementById("docErrBox");
-    errBox.style.display="none";
-    errBox.textContent="";
+  function buildFinalDocument(){
+    const err=document.getElementById("docErrBox");
+    err.style.display="none";err.textContent="";
     try{
-      await buildFinalDocument();
+      if(draft.sections.length===0){alert("لا يوجد تمويل مضاف للوثيقة.");return;}
+      draft.createdAt=new Date().toISOString();
+      draft.id=String(Date.now());
+      const box=document.getElementById("paperResult");
+      box.innerHTML=buildPaperHTML(draft);
+      makeQr("docQr",location.origin+location.pathname);
+      show("result");
     }catch(e){
       console.error(e);
-      errBox.style.display="block";
-      errBox.textContent =
-        "صار خطأ ومنع عرض الوثيقة.\n\n" +
-        "أشهر سببين:\n" +
-        "1) ما رفعت logo.png داخل المستودع.\n" +
-        "2) المتصفح منع crypto (نادر).\n\n" +
-        "تفاصيل الخطأ:\n" + (e?.message || e);
+      err.style.display="block";
+      err.textContent="صار خطأ أثناء إنشاء الوثيقة. جرّب تقفل الصفحة وتفتحها من جديد.";
     }
   }
 
-  async function buildFinalDocument(){
-    if(draft.sections.length === 0){
-      alert("لا يوجد تمويل مضاف للوثيقة.");
-      return;
-    }
-
-    draft.createdAt = new Date().toISOString();
-    draft.id = String(Date.now());
-
-    const payload = {
-      id: draft.id,
-      name: draft.name,
-      mobile: draft.mobile,
-      employeeNotes: draft.employeeNotes,
-      createdAt: draft.createdAt,
-      sections: draft.sections
-    };
-
-    const sig = await signPayload(payload);
-    draft.verifySig = sig;
-
-    const packed = { p: payload, s: sig };
-    const token = LZString.compressToEncodedURIComponent(JSON.stringify(packed));
-    const shareUrl = `${location.origin}${location.pathname}#d=${token}`;
-    draft.shareUrl = shareUrl;
-
-    const qrDataUrl = await makeQrDataUrl(shareUrl);
-
-    document.getElementById("paperResult").innerHTML = buildPaperHTML({
-      meta: fmtDateTime(new Date()),
-      data: payload,
-      verified: true,
-      qrDataUrl
-    });
-
-    document.getElementById("verifyBox").innerHTML = `<div class="ok">✅ الوثيقة موثّقة — QR للحماية وفتح نفس الوثيقة.</div>`;
-    document.getElementById("shareLinkBox").style.display="none";
-    document.getElementById("shareLinkBox").textContent="";
-    show("result");
-  }
-
-  function readDocs(){
-    try { return JSON.parse(localStorage.getItem(DOC_STORE_KEY) || "[]"); }
-    catch { return []; }
-  }
-  function writeDocs(arr){
-    localStorage.setItem(DOC_STORE_KEY, JSON.stringify(arr));
-  }
+  /* ==== السجل ==== */
+  function readDocs(){try{return JSON.parse(localStorage.getItem(DOC_STORE_KEY)||"[]");}catch{return[];}}
+  function writeDocs(a){localStorage.setItem(DOC_STORE_KEY,JSON.stringify(a));}
 
   async function saveAndDownload(){
-    const rec = {
-      id: draft.id,
-      name: draft.name,
-      mobile: draft.mobile,
-      employeeNotes: draft.employeeNotes,
-      createdAt: draft.createdAt,
-      sections: draft.sections,
-      shareUrl: draft.shareUrl,
-      verifySig: draft.verifySig
-    };
-    const docs = readDocs().filter(x=>x.id !== rec.id);
-    docs.unshift(rec);
-    writeDocs(docs);
+    const rec={...draft};
+    const docs=readDocs().filter(x=>x.id!==rec.id);
+    docs.unshift(rec);writeDocs(docs);
     await downloadPaperImage("paperResult");
   }
 
@@ -1502,101 +1157,61 @@
   }
 
   async function renderRecords(list){
-    const docs = list || readDocs();
-    const box = document.getElementById("recordsList");
-    box.innerHTML = "";
-
-    if(!docs || docs.length===0){
-      box.innerHTML = `<div class="small">لا يوجد وثائق محفوظة على هذا الجهاز.</div>`;
-      return;
+    const docs=list||readDocs();
+    const box=document.getElementById("recordsList");
+    box.innerHTML="";
+    if(!docs||docs.length===0){
+      box.innerHTML=`<div class="small">لا يوجد وثائق محفوظة على هذا الجهاز.</div>`;return;
     }
-
-    for(const d of docs.slice(0,40)){
-      const item = document.createElement("div");
-      item.className = "listItem";
-      item.innerHTML = `
+    docs.slice(0,40).forEach(d=>{
+      const div=document.createElement("div");
+      div.className="listItem";
+      div.innerHTML=`
         <div class="line1">${escapeHtml(d.name)} — ${escapeHtml(d.mobile)}</div>
         <div class="line2">عدد التمويلات داخل الوثيقة: ${(d.sections||[]).length}</div>
         <div class="line3">تاريخ: ${fmtDateTime(new Date(d.createdAt))}</div>
         <div class="actions" style="justify-content:flex-start">
           <button class="btn secondary" type="button">فتح</button>
-          <button class="btn secondary" type="button">نسخ رابط QR</button>
         </div>
       `;
-
-      const btnOpen = item.querySelectorAll("button")[0];
-      const btnCopy = item.querySelectorAll("button")[1];
-
-      btnOpen.onclick = async ()=>{
-        const payload = {
-          id: d.id, name:d.name, mobile:d.mobile,
-          employeeNotes:d.employeeNotes, createdAt:d.createdAt,
-          sections:d.sections
-        };
-        const sig = await signPayload(payload);
-        const isOk = (sig === d.verifySig);
-
-        const qrDataUrl = d.shareUrl ? await makeQrDataUrl(d.shareUrl) : "";
-
-        document.getElementById("paperResult").innerHTML = buildPaperHTML({
-          meta: fmtDateTime(new Date()),
-          data: payload,
-          verified: isOk,
-          qrDataUrl
-        });
-
-        document.getElementById("verifyBox").innerHTML = isOk
-          ? `<div class="ok">✅ الوثيقة موثّقة.</div>`
-          : `<div class="warn">⚠️ هذه الوثيقة غير موثّقة (تم تعديل البيانات أو تغيّرت).</div>`;
-
-        draft = { ...draft, ...d };
+      div.querySelector("button").onclick=()=>{
+        draft={...d};
+        document.getElementById("paperResult").innerHTML=buildPaperHTML(draft);
+        makeQr("docQr",location.origin+location.pathname);
         show("result");
       };
-
-      btnCopy.onclick = ()=>{
-        if(!d.shareUrl){ alert("لا يوجد رابط QR محفوظ."); return; }
-        navigator.clipboard?.writeText(d.shareUrl).then(()=> alert("تم نسخ رابط QR ✅"))
-          .catch(()=> alert("انسخ الرابط يدويًا من فتح الوثيقة."));
-      };
-
-      box.appendChild(item);
-    }
+      box.appendChild(div);
+    });
   }
 
-  async function doRecordsSearch(){
-    const q = (document.getElementById("recSearch").value || "").trim();
-    const docs = readDocs();
-    const matches = q ? docs.filter(d => (d.mobile||"").includes(q)) : docs;
-    await renderRecords(matches);
+  function doRecordsSearch(){
+    const q=(document.getElementById("recSearch").value||"").trim();
+    const docs=readDocs();
+    const f=q?docs.filter(d=>(d.mobile||"").includes(q)):docs;
+    renderRecords(f);
   }
 
   function clearRecords(){
-    const ok = confirm("تأكيد: مسح السجل على هذا الجهاز فقط؟");
-    if(!ok) return;
+    if(!confirm("تأكيد مسح السجل (على هذا الجهاز فقط)؟"))return;
     localStorage.removeItem(DOC_STORE_KEY);
     renderRecords([]);
   }
 
+  /* ==== بحث سريع في لوحة التحكم ==== */
   async function dashSearch(){
-    const q = (document.getElementById("dashSearchMobile").value || "").trim();
-    const docs = readDocs();
-    const matches = q ? docs.filter(d => (d.mobile||"").includes(q)) : [];
-    const box = document.getElementById("dashQuickResults");
-    box.innerHTML = "";
-
-    if(!q){
-      box.innerHTML = `<div class="small">اكتب رقم الجوال ثم اضغط بحث.</div>`;
-      return;
+    const q=(document.getElementById("dashSearchMobile").value||"").trim();
+    const docs=readDocs();
+    const box=document.getElementById("dashQuickResults");
+    box.innerHTML="";
+    if(!q){box.innerHTML=`<div class="small">اكتب رقم الجوال ثم اضغط بحث.</div>`;return;}
+    const matches=docs.filter(d=>(d.mobile||"").includes(q));
+    if(matches.length===0){
+      box.innerHTML=`<div class="small">لا توجد نتائج مطابقة.</div>`;return;
     }
-    if(matches.length === 0){
-      box.innerHTML = `<div class="small">لا توجد نتائج مطابقة.</div>`;
-      return;
-    }
-
-    for(const d of matches.slice(0,6)){
-      const item = document.createElement("div");
-      item.className="listItem";
-      item.innerHTML = `
+    matches.slice(0,6).forEach(d=>{
+      const div=document.createElement("div");
+      div.className="listItem";
+      div.innerHTML=`
         <div class="line1">${escapeHtml(d.name)} — ${escapeHtml(d.mobile)}</div>
         <div class="line2">عدد التمويلات: ${(d.sections||[]).length}</div>
         <div class="line3">تاريخ: ${fmtDateTime(new Date(d.createdAt))}</div>
@@ -1604,96 +1219,93 @@
           <button class="btn secondary" type="button">فتح</button>
         </div>
       `;
-      item.querySelector("button").onclick = async ()=>{
-        const payload = {
-          id:d.id, name:d.name, mobile:d.mobile,
-          employeeNotes:d.employeeNotes, createdAt:d.createdAt,
-          sections:d.sections
-        };
-        const sig = await signPayload(payload);
-        const isOk = (sig === d.verifySig);
-        const qrDataUrl = d.shareUrl ? await makeQrDataUrl(d.shareUrl) : "";
-
-        document.getElementById("paperResult").innerHTML = buildPaperHTML({
-          meta: fmtDateTime(new Date()),
-          data: payload,
-          verified: isOk,
-          qrDataUrl
-        });
-
-        document.getElementById("verifyBox").innerHTML = isOk
-          ? `<div class="ok">✅ الوثيقة موثّقة.</div>`
-          : `<div class="warn">⚠️ هذه الوثيقة غير موثّقة.</div>`;
-
-        draft = { ...draft, ...d };
+      div.querySelector("button").onclick=()=>{
+        draft={...d};
+        document.getElementById("paperResult").innerHTML=buildPaperHTML(draft);
+        makeQr("docQr",location.origin+location.pathname);
         show("result");
       };
-      box.appendChild(item);
-    }
-  }
-
-  async function handleDocHash(){
-    const hash = location.hash || "";
-    if(!hash.startsWith("#d=")) return false;
-
-    const token = hash.replace("#d=","").trim();
-    if(!token) return false;
-
-    try{
-      const json = LZString.decompressFromEncodedURIComponent(token);
-      if(!json) throw new Error("bad token");
-
-      const packed = JSON.parse(json);
-      const payload = packed.p;
-      const sig = packed.s;
-
-      const calc = await signPayload(payload);
-      const verified = (calc === sig);
-
-      const shareUrl = `${location.origin}${location.pathname}#d=${token}`;
-      const qrDataUrl = await makeQrDataUrl(shareUrl);
-
-      document.getElementById("paperShare").innerHTML = buildPaperHTML({
-        meta: fmtDateTime(new Date()),
-        data: payload,
-        verified,
-        qrDataUrl
-      });
-
-      document.getElementById("shareVerifyBox").innerHTML = verified
-        ? `<div class="ok">✅ الوثيقة موثّقة — QR للحماية.</div>`
-        : `<div class="warn">⚠️ الوثيقة غير موثّقة (تم تعديل البيانات).</div>`;
-
-      show("shareScreen");
-      return true;
-    }catch(e){
-      console.error(e);
-      alert("تعذر فتح الوثيقة من الرابط. قد يكون الرابط غير كامل أو تم تغييره.");
-      return false;
-    }
-  }
-
-  function copyShareLink(){
-    if(!draft.shareUrl){ alert("لا يوجد رابط QR"); return; }
-    navigator.clipboard?.writeText(draft.shareUrl).then(()=>{
-      const box = document.getElementById("shareLinkBox");
-      box.style.display="block";
-      box.textContent = "تم نسخ رابط QR:\n" + draft.shareUrl;
-      alert("تم النسخ ✅");
-    }).catch(()=>{
-      const box = document.getElementById("shareLinkBox");
-      box.style.display="block";
-      box.textContent = draft.shareUrl;
-      alert("انسخ الرابط يدويًا من الصندوق.");
+      box.appendChild(div);
     });
   }
 
-  document.addEventListener("DOMContentLoaded", async ()=>{
-    document.getElementById("yr").textContent = new Date().getFullYear();
-    tick(); setInterval(tick, 1000);
+  /* ==== QR + صورة ==== */
+  function makeQr(containerId,text){
+    const el=document.getElementById(containerId);
+    if(!el)return;
+    el.innerHTML="";
+    if(!window.QRCode){el.textContent="QR";return;}
+    QRCode.toDataURL(text,{width:180,margin:1},(err,url)=>{
+      if(err){console.error(err);el.textContent="QR";return;}
+      const img=new Image();img.src=url;img.alt="QR";
+      img.style.width="90px";img.style.height="90px";
+      img.style.borderRadius="14px";
+      img.style.border="1px solid #e5e7eb";
+      img.style.background="#fff";
+      img.style.padding="6px";
+      el.appendChild(img);
+    });
+  }
 
-    const ok = await handleDocHash();
-    if(!ok) show("welcome");
+  async function waitFontsReady(){
+    if(document.fonts && document.fonts.ready)await document.fonts.ready;
+    await new Promise(r=>setTimeout(r,180));
+  }
+  async function waitImagesReady(root){
+    const imgs=Array.from(root.querySelectorAll("img"));
+    await Promise.all(imgs.map(img=>new Promise(res=>{
+      if(img.complete && img.naturalWidth>0)return res();
+      const done=()=>res();
+      img.addEventListener("load",done,{once:true});
+      img.addEventListener("error",done,{once:true});
+      setTimeout(done,1200);
+    })));
+  }
+
+  async function makeBlobFromNode(elementId){
+    await waitFontsReady();
+    const node=document.getElementById(elementId);
+    if(!node)throw new Error("عنصر غير موجود");
+    await waitImagesReady(node);
+    const dpr=window.devicePixelRatio||2;
+    const scale=Math.min(4,Math.max(2.5,dpr*1.3));
+    const canvas=await html2canvas(node,{backgroundColor:"#ffffff",scale,useCORS:true,allowTaint:true,logging:false});
+    return await new Promise(res=>canvas.toBlob(b=>res(b),"image/png",1));
+  }
+
+  async function downloadPaperImage(elementId){
+    try{
+      const blob=await makeBlobFromNode(elementId);
+      if(!blob)throw new Error("فشل إنشاء الصورة");
+      const url=URL.createObjectURL(blob);
+      const a=document.createElement("a");
+      a.href=url;a.download="document.png";a.click();
+      setTimeout(()=>URL.revokeObjectURL(url),1500);
+    }catch(e){
+      console.error(e);
+      alert("تعذر حفظ الصورة. تأكد من اتصالك بالإنترنت ثم جرّب مرة ثانية.");
+    }
+  }
+
+  async function sharePaperImage(elementId){
+    try{
+      const blob=await makeBlobFromNode(elementId);
+      if(!blob)throw new Error("فشل إنشاء الصورة");
+      const file=new File([blob],"document.png",{type:"image/png"});
+      if(navigator.canShare && navigator.canShare({files:[file]})){
+        await navigator.share({files:[file],title:"مطبوعات العميل"});
+      }else{
+        await downloadPaperImage(elementId);
+      }
+    }catch(e){
+      console.error(e);
+      await downloadPaperImage(elementId);
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded",()=>{
+    document.getElementById("yr").textContent=new Date().getFullYear();
+    tick();setInterval(tick,1000);
   });
 </script>
 </body>
