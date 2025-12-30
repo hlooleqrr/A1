@@ -16,8 +16,8 @@
   <!-- ضغط الرابط عشان QR يشتغل حتى مع وثيقة طويلة -->
   <script src="https://cdn.jsdelivr.net/npm/lz-string@1.5.0/libs/lz-string.min.js"></script>
 
-  <!-- تصدير صورة ممتاز على iPhone -->
-  <script src="https://cdn.jsdelivr.net/npm/dom-to-image-more@3.5.0/dist/dom-to-image-more.min.js"></script>
+  <!-- تصدير صورة ممتاز وواضح (بديل dom-to-image) -->
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
   <style>
     *{box-sizing:border-box}
@@ -96,6 +96,7 @@
       padding:10px 12px; border-radius:14px;
       font-size:13px; margin-bottom:14px; line-height:1.75;
       font-weight:900;
+      white-space:pre-wrap;
     }
     .ok{
       text-align:right;
@@ -104,6 +105,7 @@
       padding:10px 12px; border-radius:14px;
       font-size:13px; margin-bottom:14px; line-height:1.75;
       font-weight:900;
+      white-space:pre-wrap;
     }
 
     label{display:block; text-align:right; margin:0 0 6px; font-weight:900; color:#374151; font-size:14px}
@@ -409,8 +411,8 @@
         <p class="sub">أدخل الرمز السري للموظف المصرّح له.</p>
 
         <div class="warn">
-          ⚠️ تحذير شديد: هذا النظام خاص بمكتب الشركة وبيانات العملاء.
-          أي محاولة دخول غير مصرح بها تعتبر مخالفة وسيتم التعامل معها بصرامة.
+⚠️ تحذير شديد: هذا النظام خاص بمكتب الشركة وبيانات العملاء.
+أي محاولة دخول غير مصرح بها تعتبر مخالفة وسيتم التعامل معها بصرامة.
         </div>
 
         <form onsubmit="login(event)">
@@ -605,7 +607,7 @@
     <section id="s2" class="screen">
       <div class="card">
         <div class="title" style="font-size:22px">بنوك التمويل</div>
-        <p class="sub">أدخل تفاصيل البنك: مبلغ التمويل + الأشهر (1–399) + القسط ثابت/متغير + ملاحظات/نسبة/أرباح.</p>
+        <p class="sub">أدخل تفاصيل البنك: مبلغ التمويل + الأشهر (1–399) + القسط ثابت/متغير.</p>
 
         <div id="banksWrap"></div>
 
@@ -632,12 +634,14 @@
 
         <div class="actions">
           <button class="btn secondary" onclick="startAnotherSection()">نعم، أضف تمويل</button>
-          <button class="btn primary" onclick="buildFinalDocument()">لا، اعرض الوثيقة</button>
+          <button class="btn primary" onclick="safeBuildFinalDocument()">لا، اعرض الوثيقة</button>
         </div>
 
         <div class="actions">
           <button class="btn ghost" onclick="show('s2')">رجوع</button>
         </div>
+
+        <div id="docErrBox" class="warn" style="display:none;margin-top:12px"></div>
       </div>
     </section>
 
@@ -698,9 +702,9 @@
    * إعدادات
    *****************/
   const PASSWORD = "11qq11qQ@";
-  const DOC_STORE_KEY  = "OFFICE_DOCS_V5";
-  const MEMO_STORE_KEY = "OFFICE_MEMOS_V5";
-  const VERIFY_SECRET = "FINO_DOC_VERIFY_SECRET_V5_11qq11qQ@";
+  const DOC_STORE_KEY  = "OFFICE_DOCS_V6";
+  const MEMO_STORE_KEY = "OFFICE_MEMOS_V6";
+  const VERIFY_SECRET = "FINO_DOC_VERIFY_SECRET_V6_11qq11qQ@";
 
   const SA_BANKS = [
     "مصرف الراجحي",
@@ -769,8 +773,18 @@
   }
 
   async function sha256Hex(str){
-    const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
-    return [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,"0")).join("");
+    try{
+      const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
+      return [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,"0")).join("");
+    }catch(e){
+      // fallback بسيط إذا المتصفح منع crypto
+      let h = 2166136261;
+      for (let i=0;i<str.length;i++){
+        h ^= str.charCodeAt(i);
+        h = Math.imul(h, 16777619);
+      }
+      return ("00000000"+(h>>>0).toString(16)).slice(-8);
+    }
   }
 
   async function signPayload(payloadObj){
@@ -779,12 +793,12 @@
   }
 
   async function makeQrDataUrl(text){
-    return await QRCode.toDataURL(text, { width: 220, margin: 1 });
+    return await QRCode.toDataURL(text, { width: 240, margin: 1 });
   }
 
   async function waitFontsReady(){
     if (document.fonts && document.fonts.ready) await document.fonts.ready;
-    await new Promise(r => setTimeout(r, 200));
+    await new Promise(r => setTimeout(r, 220));
   }
 
   async function waitImagesReady(root){
@@ -795,37 +809,40 @@
         const done = ()=>resolve();
         img.addEventListener("load", done, {once:true});
         img.addEventListener("error", done, {once:true});
-        setTimeout(done, 1400);
+        setTimeout(done, 1600);
       });
     }));
-    await new Promise(r=>setTimeout(r,150));
+    await new Promise(r=>setTimeout(r,180));
   }
 
+  // ✅ تصوير عالي الجودة (يحافظ على اللون والخط)
   async function makeBlobFromNode(elementId){
     await waitFontsReady();
     const node = document.getElementById(elementId);
     if(!node) throw new Error("عنصر غير موجود");
     await waitImagesReady(node);
 
-    const rect = node.getBoundingClientRect();
-    const width  = Math.ceil(rect.width);
-    const height = Math.ceil(node.scrollHeight);
+    // scale عالي عشان ما تصير باهته/مغبّشة
+    const dpr = window.devicePixelRatio || 2;
+    const scale = Math.min(4, Math.max(2.6, dpr * 1.4));
 
-    return await domtoimage.toBlob(node, {
-      cacheBust: true,
-      bgcolor: "#ffffff",
-      width,
-      height,
-      style: {
-        transform: "none",
-        transformOrigin: "top right"
-      }
+    const canvas = await html2canvas(node, {
+      backgroundColor: "#ffffff",
+      scale,
+      useCORS: true,
+      allowTaint: true,
+      logging: false
+    });
+
+    return await new Promise((resolve)=>{
+      canvas.toBlob((b)=>resolve(b), "image/png", 1);
     });
   }
 
   async function downloadPaperImage(elementId){
     try{
       const blob = await makeBlobFromNode(elementId);
+      if(!blob) throw new Error("فشل إنشاء الصورة");
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
@@ -841,6 +858,7 @@
   async function sharePaperImage(elementId){
     try{
       const blob = await makeBlobFromNode(elementId);
+      if(!blob) throw new Error("فشل إنشاء الصورة");
       const file = new File([blob], "document.png", {type:"image/png"});
 
       if(navigator.canShare && navigator.canShare({files:[file]})){
@@ -1142,20 +1160,20 @@
   }
 
   function removeBank(idx){
-    const el = document.querySelector(`.bankCard[data-idx="${idx}"]`);
+    const el = document.querySelector(\`.bankCard[data-idx="\${idx}"]\`);
     if(el) el.remove();
   }
 
   function toggleMode(idx){
-    const mode = document.getElementById(`mode_${idx}`).value;
-    const fw = document.getElementById(`fixedWrap_${idx}`);
-    const vw = document.getElementById(`varWrap_${idx}`);
+    const mode = document.getElementById(\`mode_\${idx}\`).value;
+    const fw = document.getElementById(\`fixedWrap_\${idx}\`);
+    const vw = document.getElementById(\`varWrap_\${idx}\`);
     if(mode === "fixed"){ fw.style.display="block"; vw.style.display="none"; }
     else { fw.style.display="none"; vw.style.display="block"; }
   }
 
   function addVarRow(idx, focus){
-    const list = document.getElementById(`varList_${idx}`);
+    const list = document.getElementById(\`varList_\${idx}\`);
     if(!list) return;
     const count = list.children.length + 1;
 
@@ -1174,14 +1192,14 @@
 
     if(focus){
       setTimeout(()=>{
-        const i=document.getElementById(`vInst_${idx}_${count}`);
+        const i=document.getElementById(\`vInst_${idx}_${count}\`);
         if(i) i.focus();
       }, 60);
     }
   }
 
   function doneVar(idx){
-    const list = document.getElementById(`varList_${idx}`);
+    const list = document.getElementById(\`varList_\${idx}\`);
     if(!list || list.children.length === 0){
       alert("أضف قسط + مدة أولاً");
       return;
@@ -1196,33 +1214,33 @@
     for(const card of bankCards){
       const idx = card.dataset.idx;
 
-      const bankName = (document.getElementById(`bank_${idx}`)?.value || "").trim();
-      const amount = parseFloat(document.getElementById(`amount_${idx}`)?.value || "0");
-      const months = parseInt(document.getElementById(`months_${idx}`)?.value || "0", 10);
+      const bankName = (document.getElementById(\`bank_\${idx}\`)?.value || "").trim();
+      const amount = parseFloat(document.getElementById(\`amount_\${idx}\`)?.value || "0");
+      const months = parseInt(document.getElementById(\`months_\${idx}\`)?.value || "0", 10);
 
-      const rate = (document.getElementById(`rate_${idx}`)?.value || "").trim();
-      const profit = (document.getElementById(`profit_${idx}`)?.value || "").trim();
-      const notes = (document.getElementById(`bnotes_${idx}`)?.value || "").trim();
+      const rate = (document.getElementById(\`rate_\${idx}\`)?.value || "").trim();
+      const profit = (document.getElementById(\`profit_\${idx}\`)?.value || "").trim();
+      const notes = (document.getElementById(\`bnotes_\${idx}\`)?.value || "").trim();
 
-      const mode = document.getElementById(`mode_${idx}`)?.value || "fixed";
+      const mode = document.getElementById(\`mode_\${idx}\`)?.value || "fixed";
 
       if(!bankName || !amount || !months) continue;
       if(months < 1 || months > 399) continue;
 
       if(mode === "fixed"){
-        const fixedInst = parseFloat(document.getElementById(`fixedInst_${idx}`)?.value || "0");
+        const fixedInst = parseFloat(document.getElementById(\`fixedInst_\${idx}\`)?.value || "0");
         if(!fixedInst) continue;
         banks.push({ bankName, amount, months, mode:"fixed", fixedInst, schedule:[], rate, profit, notes });
 
       } else {
-        const list = document.getElementById(`varList_${idx}`);
+        const list = document.getElementById(\`varList_\${idx}\`);
         const schedule = [];
         if(list){
           const rows = Array.from(list.children);
           rows.forEach((r, k0)=>{
             const k = k0 + 1;
-            const inst = parseFloat(document.getElementById(`vInst_${idx}_${k}`)?.value || "0");
-            const m = parseInt(document.getElementById(`vMon_${idx}_${k}`)?.value || "0", 10);
+            const inst = parseFloat(document.getElementById(\`vInst_\${idx}_\${k}\`)?.value || "0");
+            const m = parseInt(document.getElementById(\`vMon_\${idx}_\${k}\`)?.value || "0", 10);
             if(inst && m) schedule.push({inst, months:m});
           });
         }
@@ -1343,9 +1361,9 @@
       : "";
 
     const qrImg = payload.qrDataUrl
-      ? `<img alt="QR" src="${payload.qrDataUrl}" width="96" height="96"
+      ? `<img alt="QR" src="${payload.qrDataUrl}" width="100" height="100"
               style="border-radius:14px;border:1px solid var(--line);background:#fff;padding:6px" />`
-      : `<div style="width:96px;height:96px;border-radius:14px;border:1px solid var(--line);background:#fff;display:flex;align-items:center;justify-content:center">QR</div>`;
+      : `<div style="width:100px;height:100px;border-radius:14px;border:1px solid var(--line);background:#fff;display:flex;align-items:center;justify-content:center">QR</div>`;
 
     return `
       <div class="paperHeader">
@@ -1391,6 +1409,24 @@
         </div>
       </div>
     `;
+  }
+
+  async function safeBuildFinalDocument(){
+    const errBox = document.getElementById("docErrBox");
+    errBox.style.display="none";
+    errBox.textContent="";
+    try{
+      await buildFinalDocument();
+    }catch(e){
+      console.error(e);
+      errBox.style.display="block";
+      errBox.textContent =
+        "صار خطأ ومنع عرض الوثيقة.\n\n" +
+        "أشهر سببين:\n" +
+        "1) ما رفعت logo.png داخل المستودع.\n" +
+        "2) المتصفح منع crypto (نادر).\n\n" +
+        "تفاصيل الخطأ:\n" + (e?.message || e);
+    }
   }
 
   async function buildFinalDocument(){
