@@ -516,7 +516,7 @@
 
       <!-- أيقونة دخول المسؤول في الصفحة الأولى فقط -->
       <div style="margin-top:16px; display:flex; justify-content:center;">
-        <div id="adminIcon" title="لوحة المشرفين  " onclick="showPage('adminLogin')">
+        <div id="adminIcon" title="لوحة المشرفين" onclick="showPage('adminLogin')">
           ❕ <span style="font-size:12px;"></span>
         </div>
       </div>
@@ -545,8 +545,6 @@
     <div class="card fade-in" id="resultCard">
       <!-- تعبئة من الجافاسكربت -->
     </div>
-
-    <!-- (تم إزالة زر "النتيجة للعميل" من هنا حسب طلبك، وصار ▫️ تحت الفوتر) -->
 
     <div style="margin-top:10px; display:flex; justify-content:space-between; gap:8px; flex-wrap:wrap;">
       <button class="secondary small" onclick="backToLanding()">🏠 رجوع للرئيسية</button>
@@ -1186,7 +1184,6 @@
     if (pin === ADMIN_PIN) {
       err.style.display = 'none';
       showPage('adminHub');
-      // تحديث الأرشيف أيضاً
       renderArchiveTable();
     } else {
       err.style.display = 'block';
@@ -1258,7 +1255,6 @@
       return;
     }
 
-    // لو فيه "نتيجة للعميل" تم إنشاؤها، نخزنها كذلك
     const clientText = (document.getElementById('clientResultText') && document.getElementById('clientResultText').value.trim())
       ? document.getElementById('clientResultText').value.trim()
       : (lc._lastClientText || '');
@@ -1329,7 +1325,6 @@
     const rec = filtered[indexFiltered];
     if(!rec) return;
 
-    // نعرضها داخل نافذة "نتيجة للعميل" + نضع النص المرسل إن وجد
     const lc = rec.real;
     answers._lastCalc = lc;
 
@@ -1341,7 +1336,6 @@
         _clientResultTextCache = rec.clientText;
         renderClientPreviewFromText(rec.clientText);
       } else {
-        // إذا ما فيه نص مرسل، ننشئ من النتيجة الحقيقة
         generateClientResultText();
       }
     }, 200);
@@ -1504,7 +1498,6 @@
     return parts.join(" و ") + " ريال";
   }
 
-  // دعم سكني شهري حسب الجدول (20 سنة = 240 شهر)
   function getHousingSupportMonthlyBySalary(salary){
     const s = Number(salary || 0);
     if (s <= 3000) return 1350;
@@ -1515,7 +1508,7 @@
     if (s <= 8000) return 757;
     if (s <= 9000) return 673;
     if (s <= 10000) return 599;
-    return 416; // أكثر من 10,000
+    return 416;
   }
 
   function fmtMoney(n){
@@ -1632,6 +1625,9 @@
           sel.innerHTML += `<option value="${opt}">${opt}</option>`;
         });
       }
+      if(q.default){
+        setTimeout(()=>{ sel.value = String(q.default); }, 0);
+      }
       div.appendChild(sel);
     } else {
       div.innerHTML += `<input type="${q.type}" id="${q.id}" ${q.default ? `value="${q.default}"` : ''}>`;
@@ -1697,7 +1693,7 @@
     showQuestion();
   }
 
-  // ====== الحسبة ======
+  // ====== الحسبة (كما هي عندك) ======
   function calculate(){
     const salary = parseFloat(answers.salary),
           months = parseInt(answers.months),
@@ -1731,7 +1727,7 @@
     const ss = String(now.getSeconds()).padStart(2,'0');
     const calcDateTimeStr = `${dayName} ${y}-${m}-${d} ${hh}:${mm}:${ss}`;
 
-    // ==== التمويل الاستهلاكي (موجود كما هو) ====
+    // ==== التمويل الاستهلاكي ====
     if (isConsumer) {
       const consumerInst = salary * 0.1167;
       const totalCommits = (answers.commitments || []).reduce((s,c)=> s + (c.amount || 0), 0);
@@ -2061,7 +2057,6 @@
           </div>
         `;
       } else {
-        // تقديري كما كان
         const sup = salary < 10000 ? 150000 : 100000;
         housingSupportLumpSum = sup;
         supportSakaniAdded = sup;
@@ -2109,13 +2104,11 @@
     let mainShownValue = Number(finalNetFixed);
     let mainShownLabel = 'التمويل الصافي';
 
-    // (1) العقاري:   = صافي التمويل + الدعم (سكني/اعتزاز/كلاهما)
     if(isMortgage){
       mainShownValue = Number(finalNetFixed) + supportTotalAdded;
       mainShownLabel = 'صافي التمويل مضاف له الدعم';
     }
 
-    // (2) شراء المديونية الشخصي:  = ما يصفي للعميل
     if(isBuyoutPersonal && buyoutAmount > 0){
       mainShownValue = Number(netAfterBuyout.toFixed(0));
       mainShownLabel = 'ما يصفي للعميل بعد سداد التمويل القديم';
@@ -2156,14 +2149,12 @@
       html += `<div class="alert-error">نعتذر منك، حسب البيانات المدخلة لا يمكنك الحصول على تمويل.</div>`;
     }
 
-    // ====== كتلة النتيجة الأساسية ( ) ======
     html += `
       <div class="result-main-block">
         <div class="result-main-title">⭐ ${mainShownLabel} ( )</div>
         <div class="result-amount-main">${fmtMoney(mainShownValue).replace(' ريال','')} ريال</div>
     `;
 
-    // تفصيل دعم العقاري تحت بخط أصغر (حسب طلبك)
     if(isMortgage){
       const base = Number(finalNetFixed);
       html += `
@@ -2188,10 +2179,8 @@
       html += `<div class="result-amount-sub">التمويل الصافي بعد خصم الرسوم الإدارية والضريبة ${addCommodityFee ? 'ورسوم السلع' : ''}.</div>`;
     }
 
-    // دعم تفصيلي (لو موجود) يبقى داخل النتيجة
     if(supportText) html += supportText;
 
-    // مربعات الصافي التفصيلية (تبقى)
     html += `
         <div class="dual-main-grid">
           <div class="dual-box">
@@ -2215,7 +2204,6 @@
       </div>
     `;
 
-    // الأقساط  
     html += `
       <div class="result-section-title">تفاصيل القسط المتوقع حسب الفترات</div>
       <div class="result-section-box">
@@ -2242,7 +2230,6 @@
       html += `</ul></div>`;
     }
 
-    // الرسوم والربح
     html += `
       <div class="result-section-title">ملخص الأرباح والرسوم</div>
       <div class="result-section-box">
@@ -2271,7 +2258,6 @@
       </div>
     `;
 
-    // تنبيه للقطاع الخاص (غير مدني وغير عسكري)
     if (answers.jobType && !['مدني (قطاع حكومي)','عسكري'].includes(answers.jobType)) {
       html += `
         <div class="notice-soft">
@@ -2280,7 +2266,6 @@
       `;
     }
 
-    // تنبيه اعتزاز (طلبك)
     if (answers.isEtezaaz === 'نعم') {
       html += `
         <div class="notice-soft">
@@ -2297,7 +2282,6 @@
 
     resultCard.innerHTML = html;
 
-    // حفظ آخر نتيجة (لاستخدام "النتيجة للعميل" + الأرشيف)
     answers._lastCalc = {
       calcDateTimeStr,
       clientName: name,
@@ -2393,7 +2377,6 @@
       alert('لا توجد نتيجة حالياً. احسب أولاً ثم افتح "النتيجة للعميل".');
       return;
     }
-    // لازم يكون من المسؤول (بعد تحقق ▫️) أو من لوحة المسؤول
     if(fromAdmin !== true && _miniAdminVerified !== true){
       alert('هذه الميزة خاصة بالمسؤول.');
       return;
@@ -2415,6 +2398,14 @@
     document.getElementById('clientResultModal').style.display = 'none';
   }
 
+  function renderClientPreviewFromText(text){
+    const box = document.getElementById('clientPreviewCard');
+    if(!box) return;
+    const safe = escapeHtml(text).replace(/\n/g,'<br>');
+    box.innerHTML = `<div class="h">نتيجة الحسبة (التقريبية)</div>
+      <div style="font-size:13px; color:#111827; font-weight:700; line-height:1.8;">${safe}</div>`;
+  }
+
   function generateClientResultText(){
     const lc = answers._lastCalc;
     if(!lc){ alert('لا توجد نتيجة.'); return; }
@@ -2423,22 +2414,16 @@
     const instOv = safeNum(document.getElementById('clientInstOverride').value);
     const note  = (document.getElementById('clientNoteOverride').value || '').trim();
 
-    // الصافي للعميل: إذا كتبته اعتمده، وإلا نعتمد  للنوع:
     let usedNet = (netOv !== null) ? netOv : lc.finalNet;
 
-    // في العقاري: العميل غالباً يبي "الصافي + الدعم" كقيمة مرسلة
     let usedNetWithSupport = usedNet;
     if(lc.financeType === 'تمويل عقاري' && lc.supportTotalAdded){
       usedNetWithSupport = usedNet + lc.supportTotalAdded;
     }
 
-    // في شراء المديونية الشخصي: لو موجود buyout ضمن النص نستخرج من lc.mainShownValue إن كان واضح
-    // (النتيجة الحقيقة ما عندها buyout داخل lc إلا كقيمة محسوبة سابقاً، لذلك نكتفي بـ usedNet)
     const hasMultiPhases = Array.isArray(lc.phases) && lc.phases.length > 1;
     const singlePhaseInst = (!hasMultiPhases && Array.isArray(lc.phases) && lc.phases[0]) ? Number(lc.phases[0].inst) : null;
     const usedInst = (instOv !== null) ? instOv : (singlePhaseInst !== null ? singlePhaseInst : null);
-
-    const overrideUsed = (netOv !== null) || (instOv !== null);
 
     const totalPaid = (usedInst !== null)
       ? (usedInst * lc.months)
@@ -2446,7 +2431,6 @@
 
     const computedProfit = totalPaid - usedNet;
 
-    // دعم
     let supportLines = '';
     if(lc.supportSakaniAdded){
       if(lc.housingSupportMonthly > 0){
@@ -2455,121 +2439,100 @@
       } else {
         supportLines += `- دعم سكني المضاف: ${fmtMoney(lc.supportSakaniAdded)}\n`;
       }
-    }
-    if(lc.supportEtezaazAdded){
-      supportLines += `- دعم اعتزاز: ${fmtMoney(lc.supportEtezaazAdded)} (دعم إضافي مستقل)\n`;
-      supportLines += `- تنبيه اعتزاز: يبدأ بعد سنتين ولا تتوفر لدينا تفاصيل دقيقة للقسط — تواصل مع جهة عملك.\n`;
-    }
-
-    let instBlock = '';
-    if (usedInst !== null) {
-      instBlock = `القسط الشهري: ${fmtMoney(usedInst)}\n`;
-    } else if (hasMultiPhases) {
-      instBlock = `الأقساط حسب الفترات:\n`;
-      lc.phases.forEach(p=>{
-        instBlock += `- من الشهر ${p.from} إلى ${p.to}: ${fmtMoney(p.inst)}\n`;
-      });
     } else {
-      instBlock = `القسط الشهري: غير محدد\n`;
+      // لا شيء
     }
 
-    const feesBlock =
-`تفاصيل الرسوم :
-- الرسوم الإدارية: ${fmtMoney(lc.adminFee)}
-- (ضريبة القيمة المضافة لرسوم الادارية): ${fmtMoney(lc.vat)}${lc.commodityFee ? `\n- رسوم السلع: ${fmtMoney(lc.commodityFee)}` : ''}\n`;
+    if(lc.supportEtezaazAdded){
+      supportLines += `- دعم اعتزاز (وزارة الدفاع): ${fmtMoney(lc.supportEtezaazAdded)}\n`;
+    }
 
-    const profitBlock = overrideUsed
-      ? `الربح ${fmtMoney(computedProfit)}\n`
-      : `الربح مع الرسوم ${fmtMoney(lc.totalInst - lc.finalNet)}\n`;
+    let phasesText = '';
+    if(Array.isArray(lc.phases) && lc.phases.length){
+      phasesText = lc.phases.map(p=>{
+        return `- القسط من الشهر ${p.from} إلى ${p.to}: ${fmtMoney(p.inst)}`;
+      }).join('\n');
+    }
 
-    const contact = `\nللاستفسار والتقديم: 0506214458\nسرعة تملك العقار والحلول التمويلية\n`;
+    const clientName = lc.clientName || 'عميلنا';
+    const bankName = lc.recommendedBankName ? `\n🏦 البنك/الجهة المرشحة: ${lc.recommendedBankName}` : '';
 
-    const privateNotice = (answers.jobType && !['مدني (قطاع حكومي)','عسكري'].includes(answers.jobType))
-      ? `\nتنبيه: القطاع الخاص بجميع أنواعه لابد اعتماده من الجهة الممولة وقد تختلف الشروط.\n`
+    let mainNetLine = '';
+    if(lc.financeType === 'تمويل عقاري' && (lc.supportSakaniAdded || lc.supportEtezaazAdded)){
+      mainNetLine = `⭐ صافي التمويل مضاف له الدعم: ${fmtMoney(usedNetWithSupport)}\n`;
+    } else {
+      mainNetLine = `⭐ التمويل الصافي: ${fmtMoney(usedNet)}\n`;
+    }
+
+    const instLine = (usedInst !== null)
+      ? `⭐ القسط الشهري: ${fmtMoney(usedInst)}\n`
       : '';
 
-    // نص العميل
-    let text =
-`نتيجة الحسبة (التقريبية)
-تاريخ ووقت الحسبة: ${lc.calcDateTimeStr}
-مرحباً ومسهلا يا ${lc.clientName}
-نوع التمويل: ${lc.financeType}
-مدة التمويل: ${lc.durationText}
-اسم البنك/الشركة المرشحة: ${lc.recommendedBankName}
+    const noteLine = note ? `📝 ملاحظة: ${note}\n` : '';
 
-التمويل الصافي: ${fmtMoney(usedNet)}
-`;
-
-    if(lc.financeType === 'تمويل عقاري' && (lc.supportSakaniAdded || lc.supportEtezaazAdded)){
-      text += `صافي التمويل مضاف له الدعم: ${fmtMoney(usedNetWithSupport)}\n`;
-      text += `تفاصيل الدعم:\n${supportLines || '- لا يوجد\n'}`;
+    let privateWarn = '';
+    // نفس تنبيه النتيجة: أي نوع وظيفة غير (مدني/عسكري)
+    // (هنا نعتمد من answers الحالية إن وجدت)
+    if (answers.jobType && !['مدني (قطاع حكومي)','عسكري'].includes(answers.jobType)) {
+      privateWarn = `\n⚠️ تنبيه: حالات القطاع الخاص تخضع لاعتماد الجهة الممولة وقد تختلف الشروط حسب سياسة كل جهة.`;
     }
 
-    text += `
-${instBlock}
-${profitBlock}
-${feesBlock}
-${note ? `ملاحظة: ${note}\n` : ''}${privateNotice}
-⚠️ هذه الحسبة تقريبية، والاعتماد النهائي حسب سياسات الجهة الممولة وقت التقديم. 🔺تنوية/نحن لسنا جهة تمويلية، ودورنا يقتصر على الوساطة وترشيح العروض عبر البنوك وشركات التمويل المرخّصة.. 
-${contact}`.trim();
+    let etezaazWarn = '';
+    if (answers.isEtezaaz === 'نعم') {
+      etezaazWarn = `\n⚠️ تنبيه اعتزاز: دعم وزارة الدفاع يبدأ بعد سنتين، ولا تتوفر لدينا تفاصيل دقيقة لقيمة القسط — يرجى التواصل مع جهة عملك لمعرفة التفاصيل الكاملة.`;
+    }
 
-    _clientResultTextCache = text;
-    lc._lastClientText = text;
+    const text =
+`مرحباً ومسهلا يا ${clientName}
+${mainNetLine}${instLine}${bankName}
+
+مدة التمويل: ${lc.durationText || (lc.months ? describeMonths(lc.months) : '')}
+
+${supportLines ? `الدعم المضاف:\n${supportLines}\n` : ''}${phasesText ? `تفاصيل الأقساط حسب الفترات:\n${phasesText}\n\n` : ''}الربح (تقريبي): ${fmtMoney(computedProfit)}
+
+${noteLine}⚠️ هذه الحسبة تقريبية، والاعتماد النهائي حسب سياسة الجهة الممولة وقت تقديم الطلب.
+تواصل معنا: 0506214458${privateWarn}${etezaazWarn}`;
 
     document.getElementById('clientResultText').value = text;
-    renderClientPreviewFromText(text);
-  }
+    _clientResultTextCache = text;
 
-  function renderClientPreviewFromText(text){
-    const lines = String(text||'').split('\n').map(l=>l.trim()).filter(Boolean);
-    if(!lines.length){
-      document.getElementById('clientPreviewCard').innerHTML = `<div class="h">نتيجة الحسبة (التقريبية)</div>`;
-      return;
+    // نخزن آخر نص مرسل داخل آخر نتيجة للأرشفة
+    if(answers._lastCalc){
+      answers._lastCalc._lastClientText = text;
     }
-    let html = `<div class="h">${escapeHtml(lines[0])}</div>`;
-    html += `<div class="hr"></div>`;
-    for(let i=1;i<lines.length;i++){
-      const l = lines[i];
-      // تمييز بعض السطور
-      if(l.includes(':')){
-        const parts = l.split(':');
-        const k = parts.shift();
-        const v = parts.join(':').trim();
-        html += `<div><span class="k">${escapeHtml(k)}:</span> <span class="v">${escapeHtml(v)}</span></div>`;
-      } else {
-        html += `<div>${escapeHtml(l)}</div>`;
-      }
-      if(i===5) html += `<div class="hr"></div>`;
-    }
-    document.getElementById('clientPreviewCard').innerHTML = html;
+
+    renderClientPreviewFromText(text);
   }
 
   function copyClientResultText(){
     const ta = document.getElementById('clientResultText');
-    if(!ta.value){ alert('أنشئ النتيجة أولاً.'); return; }
-    ta.select();
-    ta.setSelectionRange(0, 999999);
-    document.execCommand('copy');
-    alert('تم نسخ النتيجة ✅');
+    if(!ta) return;
+    const txt = ta.value || '';
+    if(!txt){ alert('لا يوجد نص لنسخه.'); return; }
+
+    navigator.clipboard.writeText(txt).then(()=>{
+      alert('تم النسخ ✅');
+    }).catch(()=>{
+      ta.select();
+      document.execCommand('copy');
+      alert('تم النسخ ✅');
+    });
   }
 
   function shareClientResultOnWhatsApp(){
     const ta = document.getElementById('clientResultText');
-    const text = (ta && ta.value) ? ta.value : _clientResultTextCache;
-    if(!text){ alert('أنشئ النتيجة أولاً.'); return; }
-    window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
+    if(!ta){ alert('لا يوجد نص.'); return; }
+    const txt = ta.value || '';
+    if(!txt){ alert('أنشئ النتيجة المختصرة أولاً.'); return; }
+    const url = 'https://wa.me/?text=' + encodeURIComponent(txt);
+    window.open(url, '_blank');
   }
 
-  // حفظ "نتيجة العميل" كصورة JPG
   function saveClientResultAsImage(){
-    const preview = document.getElementById('clientPreviewCard');
-    const ta = document.getElementById('clientResultText');
-    if(!ta.value){
-      alert('أنشئ النتيجة المختصرة أولاً.');
-      return;
-    }
+    const box = document.getElementById('clientPreviewCard');
+    if(!box){ alert('لا توجد معاينة للحفظ.'); return; }
 
-    html2canvas(preview, { scale: 2, backgroundColor:'#ffffff', useCORS:true }).then(canvas=>{
+    html2canvas(box, { scale: 2, backgroundColor: '#ffffff', useCORS: true }).then(canvas => {
       const MAX_W = 1400;
       let outCanvas = canvas;
 
@@ -2593,20 +2556,16 @@ ${contact}`.trim();
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-    }).catch(err=>{
+    }).catch(err => {
       console.error(err);
-      alert('تعذر حفظ نتيجة العميل كصورة.');
+      alert('تعذر حفظ النتيجة كصورة.');
     });
   }
 
-  // ====== تشغيل ======
-  document.addEventListener('DOMContentLoaded', () => {
-    showPage('landing');
-    loadBankConfigs();
-    renderArchiveTable();
-    updateDateTime();
-    setInterval(updateDateTime, 1000);
-  });
+  // تشغيل المنصة
+  loadBankConfigs();
+  updateDateTime();
+  setInterval(updateDateTime, 1000);
 </script>
 
 </body>
