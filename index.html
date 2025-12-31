@@ -1186,7 +1186,6 @@
     if (pin === ADMIN_PIN) {
       err.style.display = 'none';
       showPage('adminHub');
-      // تحديث الأرشيف أيضاً
       renderArchiveTable();
     } else {
       err.style.display = 'block';
@@ -1258,7 +1257,6 @@
       return;
     }
 
-    // لو فيه "نتيجة للعميل" تم إنشاؤها، نخزنها كذلك
     const clientText = (document.getElementById('clientResultText') && document.getElementById('clientResultText').value.trim())
       ? document.getElementById('clientResultText').value.trim()
       : (lc._lastClientText || '');
@@ -1329,7 +1327,6 @@
     const rec = filtered[indexFiltered];
     if(!rec) return;
 
-    // نعرضها داخل نافذة "نتيجة للعميل" + نضع النص المرسل إن وجد
     const lc = rec.real;
     answers._lastCalc = lc;
 
@@ -1341,7 +1338,6 @@
         _clientResultTextCache = rec.clientText;
         renderClientPreviewFromText(rec.clientText);
       } else {
-        // إذا ما فيه نص مرسل، ننشئ من النتيجة الحقيقة
         generateClientResultText();
       }
     }, 200);
@@ -1515,7 +1511,7 @@
     if (s <= 8000) return 757;
     if (s <= 9000) return 673;
     if (s <= 10000) return 599;
-    return 416; // أكثر من 10,000
+    return 416;
   }
 
   function fmtMoney(n){
@@ -2034,7 +2030,6 @@
     const finalNet = netAfterAdmin - commodityFee;
     const totalProfitWithFees = totalInst - finalNet;
 
-    // ✅ دعم سكني/اعتزاز (اعتزاز ثابت 160,000 ولا يتعارض)
     const ETEZAAZ_FIXED = 160000;
 
     let supportText = '';
@@ -2061,7 +2056,6 @@
           </div>
         `;
       } else {
-        // تقديري كما كان
         const sup = salary < 10000 ? 150000 : 100000;
         housingSupportLumpSum = sup;
         supportSakaniAdded = sup;
@@ -2105,17 +2099,14 @@
     const altBanks = matchingBanks.slice(1, 4);
     answers.recommendedBank = answers.recommendedBank || recommendedBank;
 
-    // ====== MAIN DISPLAY VALUE حسب طلبك ======
     let mainShownValue = Number(finalNetFixed);
     let mainShownLabel = 'التمويل الصافي';
 
-    // (1) العقاري:   = صافي التمويل + الدعم (سكني/اعتزاز/كلاهما)
     if(isMortgage){
       mainShownValue = Number(finalNetFixed) + supportTotalAdded;
       mainShownLabel = 'صافي التمويل مضاف له الدعم';
     }
 
-    // (2) شراء المديونية الشخصي:  = ما يصفي للعميل
     if(isBuyoutPersonal && buyoutAmount > 0){
       mainShownValue = Number(netAfterBuyout.toFixed(0));
       mainShownLabel = 'ما يصفي للعميل بعد سداد التمويل القديم';
@@ -2156,14 +2147,12 @@
       html += `<div class="alert-error">نعتذر منك، حسب البيانات المدخلة لا يمكنك الحصول على تمويل.</div>`;
     }
 
-    // ====== كتلة النتيجة الأساسية ( ) ======
     html += `
       <div class="result-main-block">
         <div class="result-main-title">⭐ ${mainShownLabel} (الأوضح)</div>
         <div class="result-amount-main">${fmtMoney(mainShownValue).replace(' ريال','')} ريال</div>
     `;
 
-    // تفصيل دعم العقاري تحت بخط أصغر (حسب طلبك)
     if(isMortgage){
       const base = Number(finalNetFixed);
       html += `
@@ -2188,10 +2177,8 @@
       html += `<div class="result-amount-sub">التمويل الصافي بعد خصم الرسوم الإدارية والضريبة ${addCommodityFee ? 'ورسوم السلع' : ''}.</div>`;
     }
 
-    // دعم تفصيلي (لو موجود) يبقى داخل النتيجة
     if(supportText) html += supportText;
 
-    // مربعات الصافي التفصيلية (تبقى)
     html += `
         <div class="dual-main-grid">
           <div class="dual-box">
@@ -2215,7 +2202,6 @@
       </div>
     `;
 
-    // الأقساط ( )
     html += `
       <div class="result-section-title">تفاصيل القسط المتوقع حسب الفترات</div>
       <div class="result-section-box">
@@ -2242,7 +2228,6 @@
       html += `</ul></div>`;
     }
 
-    // الرسوم والربح
     html += `
       <div class="result-section-title">ملخص الأرباح والرسوم</div>
       <div class="result-section-box">
@@ -2271,7 +2256,6 @@
       </div>
     `;
 
-    // تنبيه للقطاع الخاص (غير مدني وغير عسكري)
     if (answers.jobType && !['مدني (قطاع حكومي)','عسكري'].includes(answers.jobType)) {
       html += `
         <div class="notice-soft">
@@ -2280,7 +2264,6 @@
       `;
     }
 
-    // تنبيه اعتزاز (طلبك)
     if (answers.isEtezaaz === 'نعم') {
       html += `
         <div class="notice-soft">
@@ -2297,7 +2280,6 @@
 
     resultCard.innerHTML = html;
 
-    // حفظ آخر نتيجة (لاستخدام "النتيجة للعميل" + الأرشيف)
     answers._lastCalc = {
       calcDateTimeStr,
       clientName: name,
@@ -2393,7 +2375,6 @@
       alert('لا توجد نتيجة حالياً. احسب أولاً ثم افتح "النتيجة للعميل".');
       return;
     }
-    // لازم يكون من المسؤول (بعد تحقق ▫️) أو من لوحة المسؤول
     if(fromAdmin !== true && _miniAdminVerified !== true){
       alert('هذه الميزة خاصة بالمسؤول.');
       return;
@@ -2423,17 +2404,13 @@
     const instOv = safeNum(document.getElementById('clientInstOverride').value);
     const note  = (document.getElementById('clientNoteOverride').value || '').trim();
 
-    // الصافي للعميل: إذا كتبته اعتمده، وإلا نعتمد  للنوع:
     let usedNet = (netOv !== null) ? netOv : lc.finalNet;
 
-    // في العقاري: العميل غالباً يبي "الصافي + الدعم" كقيمة مرسلة
     let usedNetWithSupport = usedNet;
     if(lc.financeType === 'تمويل عقاري' && lc.supportTotalAdded){
       usedNetWithSupport = usedNet + lc.supportTotalAdded;
     }
 
-    // في شراء المديونية الشخصي: لو موجود buyout ضمن النص نستخرج من lc.mainShownValue إن كان واضح
-    // (النتيجة الحقيقة ما عندها buyout داخل lc إلا كقيمة محسوبة سابقاً، لذلك نكتفي بـ usedNet)
     const hasMultiPhases = Array.isArray(lc.phases) && lc.phases.length > 1;
     const singlePhaseInst = (!hasMultiPhases && Array.isArray(lc.phases) && lc.phases[0]) ? Number(lc.phases[0].inst) : null;
     const usedInst = (instOv !== null) ? instOv : (singlePhaseInst !== null ? singlePhaseInst : null);
@@ -2446,7 +2423,6 @@
 
     const computedProfit = totalPaid - usedNet;
 
-    // دعم
     let supportLines = '';
     if(lc.supportSakaniAdded){
       if(lc.housingSupportMonthly > 0){
@@ -2488,7 +2464,6 @@
       ? `\nتنبيه: القطاع الخاص بجميع أنواعه لابد اعتماده من الجهة الممولة وقد تختلف الشروط.\n`
       : '';
 
-    // نص العميل
     let text =
 `نتيجة الحسبة (التقريبية)
 تاريخ ووقت الحسبة: ${lc.calcDateTimeStr}
@@ -2530,16 +2505,15 @@ ${contact}`.trim();
     html += `<div class="hr"></div>`;
     for(let i=1;i<lines.length;i++){
       const l = lines[i];
-      // تمييز بعض السطور
       if(l.includes(':')){
         const parts = l.split(':');
         const k = parts.shift();
         const v = parts.join(':').trim();
-        html += `<div><span class="k">${escapeHtml(k)}:</span> <span class="v">${escapeHtml(v)}</span></div>`;
+        html += `<div><span class="k">${escapeHtml(k)}:</span> <span class="v">${escapeHtml(v)}<\/span><\/div>`;
       } else {
-        html += `<div>${escapeHtml(l)}</div>`;
+        html += `<div>${escapeHtml(l)}<\/div>`;
       }
-      if(i===5) html += `<div class="hr"></div>`;
+      if(i===5) html += `<div class="hr"><\/div>`;
     }
     document.getElementById('clientPreviewCard').innerHTML = html;
   }
@@ -2595,15 +2569,13 @@ ${contact}`.trim();
       document.body.removeChild(link);
     }).catch(err=>{
       console.error(err);
-      alert('تعذر حفظ نتيجة العميل كصورة.');
+      alert('تعذر حفظ صورة النتيجة للعميل. جرّب من متصفح آخر.');
     });
   }
 
-  // ====== تشغيل ======
-  document.addEventListener('DOMContentLoaded', () => {
-    showPage('landing');
+  // تشغيل أولي
+  document.addEventListener('DOMContentLoaded', ()=>{
     loadBankConfigs();
-    renderArchiveTable();
     updateDateTime();
     setInterval(updateDateTime, 1000);
   });
