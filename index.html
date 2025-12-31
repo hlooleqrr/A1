@@ -2081,7 +2081,7 @@
             <div class="support-title">🛡️ دعم اعتزاز (وزارة الدفاع)</div>
             <div class="support-row"><span>قيمة الدعم (ثابت)</span><strong>${fmtMoney(ETEZAAZ_FIXED)}</strong></div>
             <div class="support-row" style="border-bottom:none;"><span>ملاحظة</span><strong>دعم إضافي مستقل لا يتعارض مع دعم سكني</strong></div>
-            <div class="support-badge">⏳ يبدأ بعد سنتين</div>
+            <div class="support-badge">⏳ تبدأ الاقساط بعد سنتين</div>
           </div>
         `;
       }
@@ -2109,7 +2109,7 @@
     let mainShownValue = Number(finalNetFixed);
     let mainShownLabel = 'التمويل الصافي';
 
-    // (1) العقاري: الأوضح = صافي التمويل + الدعم (سكني/اعتزاز/كلاهما)
+    // (1) العقاري:   = صافي التمويل + الدعم (سكني/اعتزاز/كلاهما)
     if(isMortgage){
       mainShownValue = Number(finalNetFixed) + supportTotalAdded;
       mainShownLabel = 'صافي التمويل مضاف له الدعم';
