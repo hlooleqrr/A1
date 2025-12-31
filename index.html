@@ -91,7 +91,7 @@
       font-size: 18px;
     }
 
-    input, select {
+    input, select, textarea {
       width: 100%;
       padding: 11px 12px;
       margin: 8px 0 2px;
@@ -102,7 +102,7 @@
       background: #f9fafb;
       color: #111827;
     }
-    input:focus, select:focus {
+    input:focus, select:focus, textarea:focus {
       outline: none;
       border-color: #2563eb;
       box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.35);
@@ -220,7 +220,7 @@
       line-height: 1.5;
     }
 
-    /* تحسين شكل النتيجة */
+    /* ====== تحسين شكل النتيجة ====== */
     .result-main-block {
       background: radial-gradient(circle at top, #e0f2fe 0, #ffffff 60%);
       border-radius: 18px;
@@ -236,13 +236,15 @@
       display:flex;
       align-items:center;
       gap:8px;
+      font-weight: 900;
     }
     .result-amount-main {
-      font-size: 28px;
+      font-size: 30px;
       font-weight: 900;
       color: #1e40af;
-      margin: 2px 0;
+      margin: 2px 0 6px;
       letter-spacing: .2px;
+      line-height: 1.2;
     }
     .result-amount-sub {
       font-size: 13px;
@@ -266,7 +268,7 @@
     }
     .support-title {
       font-size: 13px;
-      font-weight: 800;
+      font-weight: 900;
       color: #0f766e;
       display:flex;
       align-items:center;
@@ -311,20 +313,21 @@
       border: 1px solid #dbeafe;
     }
     .dual-box-title {
-      font-size: 13px;
+      font-size: 12px;
       color: #1d4ed8;
       margin-bottom: 2px;
+      font-weight: 900;
     }
     .dual-box-amount {
       font-size: 18px;
-      font-weight: 800;
+      font-weight: 900;
       color: #1e3a8a;
     }
 
     .result-section-title {
       text-align: right;
       font-size: 16px;
-      font-weight: 800;
+      font-weight: 900;
       margin: 12px 0 6px;
       color: #111827;
     }
@@ -336,14 +339,17 @@
       text-align: right;
     }
 
+    /* الأقساط بخط أوضح */
     .instalment-row {
-      font-size: 14px;
-      padding: 6px 0;
+      font-size: 15px;
+      padding: 7px 0;
       border-bottom: 1px dashed #e5e7eb;
       text-align: right;
-      color: #374151;
-      line-height: 1.55;
+      color: #111827;
+      line-height: 1.6;
+      font-weight: 700;
     }
+    .instalment-row strong { font-weight: 900; color:#1e3a8a; }
     .instalment-row:last-child { border-bottom: none; }
 
     .alert-error {
@@ -370,6 +376,14 @@
       margin-top: 8px;
     }
 
+    /* VAT small */
+    .vat-small {
+      font-size: 11px;
+      color: #6b7280;
+      font-weight: 600;
+      margin-top: 2px;
+    }
+
     .admin-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit,minmax(180px,1fr));
@@ -387,6 +401,7 @@
       padding: 5px 6px;
       font-size: 12px;
       text-align: center;
+      vertical-align: top;
     }
     .admin-table th {
       background: #f3f4f6;
@@ -410,6 +425,7 @@
       align-items: center;
       justify-content: space-between;
       gap: 8px;
+      flex-wrap: wrap;
     }
 
     #adminIcon {
@@ -425,7 +441,50 @@
     }
     #adminIcon:hover { background: #d1d5db; }
 
-    #resultCard { /* طبيعي بدون ارتفاع إجباري */ }
+    /* أيقونة أدوات المسؤول تحت الفوتر */
+    #miniAdminTools {
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      cursor:pointer;
+      padding: 4px 8px;
+      border-radius: 10px;
+      border: 1px dashed #e5e7eb;
+      background:#fff;
+      color:#111827;
+      font-size: 12px;
+      user-select:none;
+    }
+    #miniAdminTools:hover { background:#f3f4f6; }
+
+    /* بطاقة معاينة نتيجة العميل للصورة */
+    .client-preview {
+      background:#ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 16px;
+      padding: 12px 12px;
+      text-align:right;
+      line-height:1.7;
+      font-size:14px;
+      color:#111827;
+    }
+    .client-preview .h {
+      font-weight: 900;
+      color:#1e3a8a;
+      font-size:16px;
+      margin-bottom:6px;
+    }
+    .client-preview .k {
+      color:#374151;
+      font-weight: 800;
+    }
+    .client-preview .v {
+      color:#0f172a;
+      font-weight: 900;
+    }
+    .client-preview .hr {
+      height:1px;background:#e5e7eb;margin:10px 0;
+    }
   </style>
 </head>
 <body>
@@ -487,10 +546,7 @@
       <!-- تعبئة من الجافاسكربت -->
     </div>
 
-    <!-- زر النتيجة للعميل -->
-    <div style="margin-top:10px; display:flex; justify-content:center;">
-      <button class="secondary small" onclick="openClientResultModal()">📄 النتيجة للعميل</button>
-    </div>
+    <!-- (تم إزالة زر "النتيجة للعميل" من هنا حسب طلبك، وصار ▫️ تحت الفوتر) -->
 
     <div style="margin-top:10px; display:flex; justify-content:space-between; gap:8px; flex-wrap:wrap;">
       <button class="secondary small" onclick="backToLanding()">🏠 رجوع للرئيسية</button>
@@ -536,7 +592,22 @@
     </div>
   </div>
 
-  <!-- لوحة المسؤول -->
+  <!-- لوحة المسؤول (Hub) -->
+  <div id="adminHubPage" class="page">
+    <div class="card fade-in">
+      <h2 style="margin-top:0; font-size:19px; color:#111827;">لوحة المسؤول</h2>
+      <p style="font-size:13px; color:#6b7280; text-align:right;">
+        اختر المطلوب:
+      </p>
+      <div style="display:flex; gap:10px; justify-content:flex-end; flex-wrap:wrap; margin-top:10px;">
+        <button class="primary small" onclick="showPage('admin')">تعديل النسب</button>
+        <button class="secondary small" onclick="showPage('adminArchive')">سجل نتائج العملاء</button>
+        <button class="secondary small" onclick="backToLanding()">رجوع</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- لوحة المسؤول (تعديل النسب) -->
   <div id="adminPage" class="page">
     <div class="card fade-in">
       <h2 style="margin-top:0; font-size:19px; color:#111827;">لوحة إعدادات البنوك</h2>
@@ -551,7 +622,6 @@
             <label>اسم البنك / شركة التمويل</label>
             <select id="adminBankName">
               <option value="">اختر...</option>
-              <!-- البنوك المحلية + الرقمية المرخصة -->
               <option>البنك الأهلي السعودي</option>
               <option>مصرف الراجحي</option>
               <option>بنك الرياض</option>
@@ -567,7 +637,7 @@
               <option>بنك إس تي سي (STC Bank)</option>
               <option>بنك فيجن (Vision Bank)</option>
               <option>آيزي بنك (EZ Bank)</option>
-              <!-- شركات التمويل المرخصة (أسماء إنجليزية كما في ساما) -->
+
               <option>Amlak International Company</option>
               <option>Dar Al Tamleek Company</option>
               <option>Saudi Home Loans Company</option>
@@ -715,7 +785,42 @@
       </div>
 
       <div style="margin-top:12px; text-align:left;">
-        <button class="secondary small" onclick="backToLanding()"> رجوع للرئيسية</button>
+        <button class="secondary small" onclick="showPage('adminHub')">رجوع للوحة المسؤول</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- سجل نتائج العملاء -->
+  <div id="adminArchivePage" class="page">
+    <div class="card fade-in">
+      <h2 style="margin-top:0; font-size:19px; color:#111827;">سجل نتائج العملاء</h2>
+      <p style="font-size:13px; color:#6b7280; text-align:right;">
+        ابحث برقم الجوال أو السجل المدني. يظهر "النتيجة الحقيقة" + "النتيجة المرسلة للعميل" إن وُجدت.
+      </p>
+
+      <div class="admin-grid">
+        <div style="grid-column:1/-1;">
+          <label>بحث (جوال / سجل مدني)</label>
+          <input id="archiveSearch" type="text" placeholder="اكتب رقم الجوال أو السجل المدني..." oninput="renderArchiveTable()" />
+        </div>
+      </div>
+
+      <table class="admin-table" id="archiveTable">
+        <thead>
+          <tr>
+            <th>المفتاح (جوال/سجل)</th>
+            <th>اسم العميل</th>
+            <th>نوع التمويل</th>
+            <th>تاريخ/وقت</th>
+            <th>البنك المرشح</th>
+            <th>تحكم</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+
+      <div style="margin-top:12px; text-align:left;">
+        <button class="secondary small" onclick="showPage('adminHub')">رجوع للوحة المسؤول</button>
       </div>
     </div>
   </div>
@@ -728,13 +833,92 @@
       جميع الحقوق محفوظة -  سرعة تملك العقار والحلول التمويلية -
       <span id="datetime"></span>
     </div>
+
+    <!-- ▫️ أدوات المسؤول تحت الفوتر -->
+    <div id="miniAdminTools" title="أدوات المسؤول (مخفية) — ▫️" onclick="openMiniAdminTools()">
+      ▫️
+      <span style="font-size:11px; color:#6b7280;">أدوات المسؤول</span>
+    </div>
   </div>
 </footer>
 
 <!-- مكتبة حفظ النتيجة كصورة -->
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
-<!-- نافذة النتيجة للعميل -->
+<!-- نافذة التحقق لأدوات المسؤول (▫️) -->
+<div id="miniAdminAuthModal" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,.55); z-index:9999; padding:18px;">
+  <div style="max-width:700px; margin:70px auto; background:#fff; border-radius:18px; padding:14px; text-align:right; box-shadow:0 18px 40px rgba(0,0,0,.25);">
+    <div style="display:flex; justify-content:space-between; align-items:center; gap:10px;">
+      <div style="font-weight:900; color:#111827;">▫️ أدوات المسؤول</div>
+      <button class="secondary small" onclick="closeMiniAdminAuth()">إغلاق</button>
+    </div>
+
+    <div class="alert-error" style="margin-top:10px;">
+      ⚠️ تحذير: هذا القسم خاص بالمسؤولين فقط. أي استخدام غير مصرح به قد يعرّضك للمساءلة.
+    </div>
+
+    <label>رمز دخول المسؤول</label>
+    <input id="miniAdminPin" type="password" placeholder="أدخل رمز المسؤول" />
+
+    <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;">
+      <button class="primary small" onclick="verifyMiniAdminPin()">تأكيد</button>
+      <button class="secondary small" onclick="closeMiniAdminAuth()">إلغاء</button>
+    </div>
+
+    <div id="miniAdminPinError" class="alert-error" style="display:none; margin-top:8px;">
+      الرمز غير صحيح.
+    </div>
+  </div>
+</div>
+
+<!-- نافذة خيارات المسؤول بعد التحقق -->
+<div id="miniAdminActionsModal" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,.55); z-index:9999; padding:18px;">
+  <div style="max-width:820px; margin:70px auto; background:#fff; border-radius:18px; padding:14px; text-align:right; box-shadow:0 18px 40px rgba(0,0,0,.25);">
+    <div style="display:flex; justify-content:space-between; align-items:center; gap:10px;">
+      <div style="font-weight:900; color:#111827;">▫️ خيارات المسؤول</div>
+      <button class="secondary small" onclick="closeMiniAdminActions()">إغلاق</button>
+    </div>
+
+    <p style="font-size:13px; color:#6b7280; margin:10px 0 0;">
+      اختر:
+    </p>
+
+    <div style="margin-top:10px; display:flex; gap:10px; justify-content:flex-end; flex-wrap:wrap;">
+      <button class="primary small" onclick="openClientResultModal(true)">نتيجة للعميل</button>
+      <button class="secondary small" onclick="openArchiveSaveModal()">حفظ النتيجة بالأرشيف</button>
+    </div>
+
+    <div style="margin-top:10px; font-size:12px; color:#6b7280;">
+      * “نتيجة للعميل” = نفس النتيجة المختصرة + التحذيرات + رقم التواصل. ويمكن حفظها كصورة.
+    </div>
+  </div>
+</div>
+
+<!-- نافذة حفظ بالأرشيف -->
+<div id="archiveSaveModal" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,.55); z-index:9999; padding:18px;">
+  <div style="max-width:820px; margin:70px auto; background:#fff; border-radius:18px; padding:14px; text-align:right; box-shadow:0 18px 40px rgba(0,0,0,.25);">
+    <div style="display:flex; justify-content:space-between; align-items:center; gap:10px;">
+      <div style="font-weight:900; color:#111827;">🗂️ حفظ النتيجة بالأرشيف</div>
+      <button class="secondary small" onclick="closeArchiveSaveModal()">إغلاق</button>
+    </div>
+
+    <div class="alert-error" style="margin-top:10px;">
+      ⚠️ تنبيه: سيتم حفظ النتيجة داخل الجهاز (LocalStorage) — مسؤولية حفظ البيانات تقع على المستخدم.
+    </div>
+
+    <label>رقم جوال العميل أو السجل المدني (إلزامي)</label>
+    <input id="archiveKeyInput" type="text" placeholder="مثال: 05xxxxxxxx أو 1xxxxxxxxx" />
+
+    <div style="margin-top:10px; display:flex; gap:10px; justify-content:flex-end; flex-wrap:wrap;">
+      <button class="primary small" onclick="saveCurrentResultToArchive()">حفظ</button>
+      <button class="secondary small" onclick="closeArchiveSaveModal()">إلغاء</button>
+    </div>
+
+    <div id="archiveSaveMsg" style="display:none; margin-top:10px; font-size:13px; color:#0f766e; font-weight:900;"></div>
+  </div>
+</div>
+
+<!-- نافذة النتيجة للعميل (بعد تحقق المسؤول) -->
 <div id="clientResultModal" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,.55); z-index:9999; padding:18px;">
   <div style="max-width:900px; margin:40px auto; background:#fff; border-radius:18px; padding:14px; text-align:right; box-shadow:0 18px 40px rgba(0,0,0,.25);">
     <div style="display:flex; justify-content:space-between; align-items:center; gap:10px;">
@@ -765,18 +949,27 @@
       <button class="primary small" onclick="generateClientResultText()">إنشاء النتيجة المختصرة</button>
       <button class="secondary small" onclick="copyClientResultText()">📋 نسخ</button>
       <button class="secondary small" onclick="shareClientResultOnWhatsApp()">📲 مشاركة واتساب</button>
+      <button class="secondary small" onclick="saveClientResultAsImage()">🖼️ حفظ كصورة</button>
     </div>
 
     <div style="margin-top:10px;">
       <label>النص الجاهز للإرسال</label>
-      <textarea id="clientResultText" style="width:100%; min-height:220px; padding:10px; font-size:14px; border-radius:12px; border:1px solid #e5e7eb; background:#f9fafb; direction:rtl;"></textarea>
+      <textarea id="clientResultText" style="width:100%; min-height:180px; padding:10px; font-size:14px; border-radius:12px; border:1px solid #e5e7eb; background:#f9fafb; direction:rtl;"></textarea>
+    </div>
+
+    <div style="margin-top:10px;">
+      <label>معاينة (للصورة)</label>
+      <div id="clientPreviewCard" class="client-preview">
+        <div class="h">نتيجة الحسبة (التقريبية)</div>
+        <div style="color:#6b7280; font-size:12px;">قم بإنشاء النتيجة المختصرة أولاً لتظهر المعاينة هنا.</div>
+      </div>
     </div>
   </div>
 </div>
 
 <script>
   function showPage(name) {
-    ['landing','calculator','result','adminLogin','admin','comingSoon'].forEach(id => {
+    ['landing','calculator','result','adminLogin','adminHub','admin','adminArchive','comingSoon'].forEach(id => {
       const el = document.getElementById(id + 'Page');
       if (!el) return;
       el.classList.toggle('active', id === name);
@@ -816,7 +1009,6 @@
   };
 
   let bankConfigs = [];
-
   const defaultBankConfigs = [
     { bankName: 'مصرف الراجحي', bankType:'بنك', financeType: 'personal', supportedType: 'الكل', minSalary: 4000, maxSalary: 8000, margin: 5.5 },
     { bankName: 'مصرف الراجحي', bankType:'بنك', financeType: 'personal', supportedType: 'الكل', minSalary: 8001, maxSalary: 20000, margin: 4.9 },
@@ -838,13 +1030,13 @@
     }
     renderBankTable();
   }
-
   function saveBankConfigs() {
     localStorage.setItem('stBankConfigs', JSON.stringify(bankConfigs));
   }
 
   function renderBankTable() {
     const tbody = document.querySelector('#adminTable tbody');
+    if(!tbody) return;
     tbody.innerHTML = '';
     bankConfigs.forEach((cfg, index) => {
       let financeLabel =
@@ -919,11 +1111,9 @@
     if (productDetail) cfg.productDetail = productDetail;
     if (etezaaz) cfg.etezaaz = etezaaz;
 
-    if (editIndex === '') {
-      bankConfigs.push(cfg);
-    } else {
-      bankConfigs[parseInt(editIndex)] = cfg;
-    }
+    if (editIndex === '') bankConfigs.push(cfg);
+    else bankConfigs[parseInt(editIndex)] = cfg;
+
     saveBankConfigs();
     renderBankTable();
     clearAdminForm();
@@ -957,27 +1147,18 @@
     if (!salary) return [];
 
     let fType;
-    if (answers.financeType === 'شراء مديونية تمويل شخصي') {
-      fType = 'buyoutPersonal';
-    } else if (answers.financeType === 'شراء مديونية تمويل عقاري') {
-      fType = 'buyoutMortgage';
-    } else if (answers.financeType === 'تمويل استهلاكي') {
-      fType = 'consumer';
-    } else if (answers.financeType && (answers.financeType.includes('شخصي') || answers.financeType === 'تمويل التأجيري')) {
-      fType = 'personal';
-    } else if (answers.financeType && answers.financeType.includes('عقاري')) {
-      fType = 'mortgage';
-    } else {
-      fType = 'personal';
-    }
+    if (answers.financeType === 'شراء مديونية تمويل شخصي') fType = 'buyoutPersonal';
+    else if (answers.financeType === 'شراء مديونية تمويل عقاري') fType = 'buyoutMortgage';
+    else if (answers.financeType === 'تمويل استهلاكي') fType = 'consumer';
+    else if (answers.financeType && (answers.financeType.includes('شخصي') || answers.financeType === 'تمويل التأجيري')) fType = 'personal';
+    else if (answers.financeType && answers.financeType.includes('عقاري')) fType = 'mortgage';
+    else fType = 'personal';
 
     const supp = answers.supported || 'الكل';
     const jobType = answers.jobType || '';
     const months = parseInt(answers.months || '0');
     const mortgageDetail = answers.mortgageProductType || '';
-    const wantsEtezaaz = (answers.financeType === 'تمويل عقاري' &&
-                          answers.supported === 'مدعوم' &&
-                          answers.isEtezaaz === 'نعم');
+    const wantsEtezaaz = (answers.financeType === 'تمويل عقاري' && answers.supported === 'مدعوم' && answers.isEtezaaz === 'نعم');
 
     const list = bankConfigs.filter(cfg => {
       if (cfg.financeType !== fType) return false;
@@ -1004,12 +1185,178 @@
     const err = document.getElementById('adminLoginError');
     if (pin === ADMIN_PIN) {
       err.style.display = 'none';
-      showPage('admin');
+      showPage('adminHub');
+      // تحديث الأرشيف أيضاً
+      renderArchiveTable();
     } else {
       err.style.display = 'block';
     }
   }
 
+  // ====== أدوات المسؤول (▫️) ======
+  let _miniAdminVerified = false;
+  function openMiniAdminTools(){
+    document.getElementById('miniAdminPin').value = '';
+    document.getElementById('miniAdminPinError').style.display = 'none';
+    document.getElementById('miniAdminAuthModal').style.display = 'block';
+  }
+  function closeMiniAdminAuth(){
+    document.getElementById('miniAdminAuthModal').style.display = 'none';
+  }
+  function verifyMiniAdminPin(){
+    const pin = document.getElementById('miniAdminPin').value;
+    if(pin === ADMIN_PIN){
+      _miniAdminVerified = true;
+      document.getElementById('miniAdminPinError').style.display = 'none';
+      document.getElementById('miniAdminAuthModal').style.display = 'none';
+      document.getElementById('miniAdminActionsModal').style.display = 'block';
+    } else {
+      document.getElementById('miniAdminPinError').style.display = 'block';
+    }
+  }
+  function closeMiniAdminActions(){
+    document.getElementById('miniAdminActionsModal').style.display = 'none';
+  }
+
+  function openArchiveSaveModal(){
+    closeMiniAdminActions();
+    const lc = answers._lastCalc;
+    if(!lc){
+      alert('لا توجد نتيجة حالياً. احسب أولاً ثم احفظ بالأرشيف.');
+      return;
+    }
+    document.getElementById('archiveKeyInput').value = '';
+    document.getElementById('archiveSaveMsg').style.display = 'none';
+    document.getElementById('archiveSaveModal').style.display = 'block';
+  }
+  function closeArchiveSaveModal(){
+    document.getElementById('archiveSaveModal').style.display = 'none';
+  }
+
+  // ====== أرشيف النتائج (LocalStorage) ======
+  function loadArchive(){
+    try{
+      const s = localStorage.getItem('stClientArchive');
+      if(!s) return [];
+      const a = JSON.parse(s);
+      return Array.isArray(a) ? a : [];
+    }catch(e){ return []; }
+  }
+  function saveArchive(list){
+    localStorage.setItem('stClientArchive', JSON.stringify(list || []));
+  }
+
+  function saveCurrentResultToArchive(){
+    const key = (document.getElementById('archiveKeyInput').value || '').trim();
+    if(!key){
+      alert('فضلاً أدخل رقم الجوال أو السجل المدني.');
+      return;
+    }
+    const lc = answers._lastCalc;
+    if(!lc){
+      alert('لا توجد نتيجة للحفظ.');
+      return;
+    }
+
+    // لو فيه "نتيجة للعميل" تم إنشاؤها، نخزنها كذلك
+    const clientText = (document.getElementById('clientResultText') && document.getElementById('clientResultText').value.trim())
+      ? document.getElementById('clientResultText').value.trim()
+      : (lc._lastClientText || '');
+
+    const rec = {
+      id: Date.now(),
+      key: key,
+      clientName: lc.clientName || '',
+      financeType: lc.financeType || '',
+      calcDateTimeStr: lc.calcDateTimeStr || '',
+      recommendedBankName: lc.recommendedBankName || '',
+      real: lc,
+      clientText: clientText || '',
+    };
+
+    const list = loadArchive();
+    list.unshift(rec);
+    saveArchive(list);
+
+    document.getElementById('archiveSaveMsg').style.display = 'block';
+    document.getElementById('archiveSaveMsg').textContent = 'تم الحفظ بالأرشيف ✅';
+    renderArchiveTable();
+  }
+
+  function renderArchiveTable(){
+    const table = document.querySelector('#archiveTable tbody');
+    if(!table) return;
+    table.innerHTML = '';
+    const q = (document.getElementById('archiveSearch')?.value || '').trim();
+    const list = loadArchive().filter(r=>{
+      if(!q) return true;
+      return (String(r.key||'').includes(q));
+    });
+
+    list.forEach((r, idx)=>{
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${escapeHtml(r.key || '')}</td>
+        <td>${escapeHtml(r.clientName || '')}</td>
+        <td>${escapeHtml(r.financeType || '')}</td>
+        <td>${escapeHtml(r.calcDateTimeStr || '')}</td>
+        <td>${escapeHtml(r.recommendedBankName || '')}</td>
+        <td>
+          <button class="btn small secondary" onclick="viewArchiveRecord(${idx})">عرض</button>
+          <button class="btn small secondary" onclick="deleteArchiveRecord(${idx})">حذف</button>
+        </td>
+      `;
+      table.appendChild(tr);
+    });
+  }
+
+  function deleteArchiveRecord(indexFiltered){
+    const q = (document.getElementById('archiveSearch')?.value || '').trim();
+    const all = loadArchive();
+    const filtered = all.filter(r=> !q || String(r.key||'').includes(q));
+    const rec = filtered[indexFiltered];
+    if(!rec) return;
+    if(!confirm('متأكد من حذف هذه النتيجة من الأرشيف؟')) return;
+    const newAll = all.filter(x => x.id !== rec.id);
+    saveArchive(newAll);
+    renderArchiveTable();
+  }
+
+  function viewArchiveRecord(indexFiltered){
+    const q = (document.getElementById('archiveSearch')?.value || '').trim();
+    const all = loadArchive();
+    const filtered = all.filter(r=> !q || String(r.key||'').includes(q));
+    const rec = filtered[indexFiltered];
+    if(!rec) return;
+
+    // نعرضها داخل نافذة "نتيجة للعميل" + نضع النص المرسل إن وجد
+    const lc = rec.real;
+    answers._lastCalc = lc;
+
+    openClientResultModal(true);
+
+    setTimeout(()=>{
+      if(rec.clientText){
+        document.getElementById('clientResultText').value = rec.clientText;
+        _clientResultTextCache = rec.clientText;
+        renderClientPreviewFromText(rec.clientText);
+      } else {
+        // إذا ما فيه نص مرسل، ننشئ من النتيجة الحقيقة
+        generateClientResultText();
+      }
+    }, 200);
+  }
+
+  function escapeHtml(s){
+    return String(s||'')
+      .replace(/&/g,'&amp;')
+      .replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;')
+      .replace(/'/g,'&#39;');
+  }
+
+  // ====== أسئلة الحاسبة ======
   let answers = { commitments: [] }, step = 0, commitmentStep = 0, currentCommitment = {};
   let hasStarted = false;
 
@@ -1120,12 +1467,14 @@
       showSorryPage(answers.clientName || "العميل");
       return 0;
     }
+
     const isPersonal = answers.financeType && (
       answers.financeType.includes('شخصي') ||
       answers.financeType === 'تمويل استهلاكي' ||
       answers.financeType === 'تمويل التأجيري' ||
       answers.financeType === 'شراء مديونية تمويل شخصي'
     );
+
     return Math.min(remainingMonths, isPersonal ? 60 : 360);
   }
 
@@ -1168,6 +1517,7 @@
     if (s <= 10000) return 599;
     return 416; // أكثر من 10,000
   }
+
   function fmtMoney(n){
     const x = Number(n || 0);
     return x.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " ريال";
@@ -1347,6 +1697,7 @@
     showQuestion();
   }
 
+  // ====== الحسبة ======
   function calculate(){
     const salary = parseFloat(answers.salary),
           months = parseInt(answers.months),
@@ -1380,7 +1731,7 @@
     const ss = String(now.getSeconds()).padStart(2,'0');
     const calcDateTimeStr = `${dayName} ${y}-${m}-${d} ${hh}:${mm}:${ss}`;
 
-    // منطق التمويل الاستهلاكي الخاص (11.67% من الراتب، مع سقف 45% مع الالتزامات)
+    // ==== التمويل الاستهلاكي (موجود كما هو) ====
     if (isConsumer) {
       const consumerInst = salary * 0.1167;
       const totalCommits = (answers.commitments || []).reduce((s,c)=> s + (c.amount || 0), 0);
@@ -1412,7 +1763,7 @@
             يمكنك تجربة نوع تمويل آخر أو تقليل الالتزامات الحالية قبل طلب التمويل الاستهلاكي.
           </div>
         `;
-        // حفظ آخر نتيجة (حالة الاعتذار أيضاً)
+
         answers._lastCalc = {
           calcDateTimeStr,
           clientName: name,
@@ -1427,9 +1778,15 @@
           adminFee: 0,
           vat: 0,
           commodityFee: 0,
+          supportSakaniAdded: 0,
+          supportEtezaazAdded: 0,
+          supportTotalAdded: 0,
+          mainShownValue: 0,
+          mainShownLabel: '',
           hasHousingSupport: false,
           housingSupportMonthly: 0,
           housingSupportTotalForLoan: 0,
+          housingSupportLumpSum: 0,
           isEtezaaz: false,
           phases: []
         };
@@ -1459,20 +1816,14 @@
       const matchingBanks = getMatchingBanksForAnswers();
       const recommendedBank = matchingBanks[0] || null;
       const altBanks = matchingBanks.slice(1, 4);
-
       answers.recommendedBank = answers.recommendedBank || recommendedBank;
 
       showPage('result');
       const resultCard = document.getElementById('resultCard');
+
       let html = '';
-
-      html += `<h2 style="margin:0 0 6px; font-size:18px; text-align:right; color:#111827;">
-        نتيجة الحسبة (التقريبية)
-      </h2>`;
-      html += `<div style="font-size:12px; color:#6b7280; text-align:right; margin-bottom:4px;">
-        تاريخ ووقت الحسبة: ${calcDateTimeStr}
-      </div>`;
-
+      html += `<h2 style="margin:0 0 6px; font-size:18px; text-align:right; color:#111827;">نتيجة الحسبة (التقريبية)</h2>`;
+      html += `<div style="font-size:12px; color:#6b7280; text-align:right; margin-bottom:4px;">تاريخ ووقت الحسبة: ${calcDateTimeStr}</div>`;
       html += `<div class="result-header">
         <div class="client-chip">مرحباً ومسهلا يا ${name}</div>
         <div style="text-align:right;">
@@ -1485,15 +1836,10 @@
         const b = recommendedBank;
         const logoSrc = bankLogoMap[b.bankName];
         html += `<div class="bank-card">
-          <div class="bank-logo">
-            ${logoSrc ? `<img src="${logoSrc}" alt="${b.bankName}">` : '🏦'}
-          </div>
+          <div class="bank-logo">${logoSrc ? `<img src="${logoSrc}" alt="${b.bankName}">` : '🏦'}</div>
           <div style="text-align:right">
             <div class="bank-text-main">${b.bankName}</div>
-            <div class="bank-text-sub">
-              تم ترشيح هذا البنك/الشركة بناءً على راتبك ونوع التمويل الاستهلاكي بنسبة هامش ربح تقريبية:
-              <strong>${b.margin}%</strong>
-            </div>
+            <div class="bank-text-sub">تم ترشيح هذا البنك/الشركة بناءً على راتبك ونوع التمويل بنسبة هامش ربح تقريبية: <strong>${b.margin}%</strong></div>
           </div>
         </div>`;
       }
@@ -1502,37 +1848,29 @@
 
       html += `
         <div class="result-main-block">
-          <div class="result-main-title">💳 التمويل الاستهلاكي الصافي المتوقع</div>
-          <div class="result-amount-main">
-            ${finalNetFixed.replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ريال
-          </div>
-          <div class="result-amount-sub">
-            هذا هو التمويل الصافي المتوقع بعد خصم الرسوم الإدارية والضريبة ورسوم السلع.
-          </div>
+          <div class="result-main-title">💳 التمويل الصافي (الأوضح)</div>
+          <div class="result-amount-main">${finalNetFixed.replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ريال</div>
+          <div class="result-amount-sub">التمويل الصافي بعد الرسوم الإدارية والضريبة ورسوم السلع.</div>
 
           <div class="dual-main-grid">
             <div class="dual-box">
               <div class="dual-box-title">الصافي قبل أي رسوم</div>
-              <div class="dual-box-amount">
-                ${netWithoutFeesFixed.replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ر.س
-              </div>
+              <div class="dual-box-amount">${netWithoutFeesFixed.replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ر.س</div>
             </div>
             <div class="dual-box">
               <div class="dual-box-title">بعد الرسوم الإدارية + الضريبة فقط</div>
-              <div class="dual-box-amount">
-                ${netAfterAdminFixed.replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ر.س
-              </div>
+              <div class="dual-box-amount">${netAfterAdminFixed.replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ر.س</div>
             </div>
           </div>
 
           <div style="margin-top:8px; font-size:13px; color:#374151;">
-            التمويل الصافي مكتوب بالحروف:
-            <strong>${numberToArabicWords(parseInt(finalNetFixed))}</strong>
+            التمويل الصافي مكتوب بالحروف: <strong>${numberToArabicWords(parseInt(finalNetFixed))}</strong>
           </div>
+
           <div class="result-amount-small" style="margin-top:4px;">
-            القسط الشهري (11.67% من الراتب):
-            <strong>${monthlyInstFixed.replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ريال</strong>
+            القسط الشهري (11.67% من الراتب): <strong>${monthlyInstFixed.replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ريال</strong>
           </div>
+
           <div class="result-amount-small" style="margin-top:2px;">
             نسبة هامش الربح المحتسبة: <strong>${profitMargin}% سنوياً</strong>
           </div>
@@ -1551,7 +1889,7 @@
 
       if (altBanks.length > 0) {
         html += `
-          <div class="result-section-title">٣ بنوك/شركات أخرى منافسة (من الأقل نسبة إلى الأعلى)</div>
+          <div class="result-section-title">٣ بنوك/شركات أخرى منافسة</div>
           <div class="result-section-box">
             <ul style="margin:0; padding-right:16px; font-size:13px; color:#4b5563; list-style-type:disc; text-align:right;">
         `;
@@ -1564,39 +1902,27 @@
       html += `
         <div class="result-section-title">ملخص الأرباح والرسوم</div>
         <div class="result-section-box">
+          <div class="instalment-row">الربح دون الرسوم: <strong>${(totalInst - netWithoutFees).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ريال</strong></div>
+          <div class="instalment-row">الربح مع الرسوم: <strong>${totalProfitWithFees.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ريال</strong></div>
           <div class="instalment-row">
-            الربح دون الرسوم:
-            <strong>${(totalInst - netWithoutFees).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ريال</strong>
+            الرسوم الإدارية: <strong>${adminFee.toFixed(0)} ريال</strong>
+            <div class="vat-small">(ضريبة القيمة المضافة لرسوم الادارية): ${vat.toFixed(0)} ريال</div>
+            + رسوم السلع: <strong>${commodityFee.toFixed(0)} ريال</strong>
           </div>
-          <div class="instalment-row">
-            الربح مع الرسوم:
-            <strong>${totalProfitWithFees.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ريال</strong>
-          </div>
-          <div class="instalment-row">
-            الرسوم الإدارية:
-            <strong>${adminFee.toFixed(0)} ريال</strong>
-            + ضريبة القيمة المضافة:
-            <strong>${vat.toFixed(0)} ريال</strong>
-            + رسوم السلع:
-            <strong>${commodityFee.toFixed(0)} ريال</strong>
-          </div>
-          <div class="instalment-row">
-            إجمالي التمويل مع الأرباح :
-            <strong>${totalInst.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ريال</strong>
-          </div>
+          <div class="instalment-row">إجمالي التمويل مع الأرباح : <strong>${totalInst.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ريال</strong></div>
         </div>
+
         <div style="margin-top:10px; font-size:13px; color:#6b7280; text-align:right;">
           ⚠️ هذه الحسبة تقريبية ، والنسب الفعلية ومنح التمويل يعتمد على سياسات الجهه الممولة وقت تقديم الطلب.
           🔺تنوية/نحن لسنا جهة تمويلية، ودورنا يقتصر على الوساطة وترشيح العروض عبر البنوك وشركات التمويل المرخّصة.
         </div>
         <div style="margin-top:8px; font-size:14px; font-weight:bold; color:#1e3a8a; text-align:center;">
-          📸 تقدر تصوّر الشاشة أو تستخدم زر «حفظ النتيجة كصورة» — تواصل معنا 📞0506214458
+          تواصل معنا 📞 0506214458
         </div>
       `;
 
       resultCard.innerHTML = html;
 
-      // حفظ آخر نتيجة (لاستخدام "النتيجة للعميل")
       answers._lastCalc = {
         calcDateTimeStr,
         clientName: name,
@@ -1611,17 +1937,22 @@
         adminFee: Number(adminFee.toFixed(0)),
         vat: Number(vat.toFixed(0)),
         commodityFee: Number(commodityFee.toFixed(0)),
+        supportSakaniAdded: 0,
+        supportEtezaazAdded: 0,
+        supportTotalAdded: 0,
+        mainShownValue: Number(finalNetFixed),
+        mainShownLabel: 'التمويل الصافي',
         hasHousingSupport: false,
         housingSupportMonthly: 0,
         housingSupportTotalForLoan: 0,
+        housingSupportLumpSum: 0,
         isEtezaaz: false,
         phases: [{from:1,to:months,inst: Number(monthlyInstFixed)}]
       };
-
       return;
     }
 
-    // باقي المنتجات (الشخصي/التأجيري/العقاري/شراء مديونية شخصي)
+    // ==== باقي المنتجات (شخصي/تأجيري/عقاري/شراء مديونية شخصي) ====
     const isPersonalLike = (financeType && (financeType.includes('شخصي') || isLeasing)) || isBuyoutPersonal;
     const isMortgage = financeType && financeType.includes('عقاري');
 
@@ -1665,6 +1996,7 @@
       let balloonExtra = balloonPhases.reduce((sum, b) =>
         (mmx >= b.start && mmx < b.end) ? sum + b.value : sum, 0);
       let available = allowedInst - activeCommits - balloonExtra;
+
       if(isPersonalLike){
         available = Math.min(available, salary * 0.3333);
       }
@@ -1702,32 +2034,38 @@
     const finalNet = netAfterAdmin - commodityFee;
     const totalProfitWithFees = totalInst - finalNet;
 
-    // ✅ دعم سكني/اعتزاز (بدون تعارض)
+    // ✅ دعم سكني/اعتزاز (اعتزاز ثابت 160,000 ولا يتعارض)
+    const ETEZAAZ_FIXED = 160000;
+
     let supportText = '';
     let housingSupportMonthly = 0;
     let housingSupportTotalForLoan = 0;
+    let housingSupportLumpSum = 0;
+
+    let supportSakaniAdded = 0;
+    let supportEtezaazAdded = 0;
 
     if(financeType === 'تمويل عقاري' && supported === 'مدعوم'){
-      // الحالة المطلوبة: مدعوم + لا دفعة مقدمة => دعم شهري حسب الجدول
       if (bundle === 'لا') {
         housingSupportMonthly = getHousingSupportMonthlyBySalary(salary);
         const dist = Math.min(months, 240);
         housingSupportTotalForLoan = housingSupportMonthly * dist;
-
-        const netWithHousing = finalNet + housingSupportTotalForLoan;
+        supportSakaniAdded = housingSupportTotalForLoan;
 
         supportText += `
           <div class="support-panel">
-            <div class="support-title">✅ الدعم (سكني / شهري) حسب الجدول</div>
+            <div class="support-title">✅ دعم سكني (شهري) حسب الجدول</div>
             <div class="support-row"><span>قيمة الدعم الشهري</span><strong>${fmtMoney(housingSupportMonthly)}</strong></div>
             <div class="support-row"><span>إجمالي الدعم حتى ${dist} شهر</span><strong>${fmtMoney(housingSupportTotalForLoan)}</strong></div>
-            <div class="support-row" style="border-bottom:none;"><span>الصافي مع دعم سكني (تقديري)</span><strong style="color:#0f766e;">${fmtMoney(netWithHousing)}</strong></div>
             <div class="support-badge">🟢 يتم صرف الدعم شهرياً</div>
           </div>
         `;
       } else {
-        // تبقى تقديرية كما كانت (لمن اختار نعم دفعة مقدمة)
+        // تقديري كما كان
         const sup = salary < 10000 ? 150000 : 100000;
+        housingSupportLumpSum = sup;
+        supportSakaniAdded = sup;
+
         supportText += `
           <div class="support-panel">
             <div class="support-title">✅ دعم سكني (تقديري)</div>
@@ -1736,19 +2074,20 @@
         `;
       }
 
-      // اعتزاز كدعم إضافي مستقل
       if (answers.isEtezaaz === 'نعم') {
+        supportEtezaazAdded = ETEZAAZ_FIXED;
         supportText += `
           <div class="support-panel" style="margin-top:8px;">
             <div class="support-title">🛡️ دعم اعتزاز (وزارة الدفاع)</div>
-            <div class="support-row" style="border-bottom:none;">
-              <span>نوع الدعم</span><strong>دعم إضافي مستقل</strong>
-            </div>
+            <div class="support-row"><span>قيمة الدعم (ثابت)</span><strong>${fmtMoney(ETEZAAZ_FIXED)}</strong></div>
+            <div class="support-row" style="border-bottom:none;"><span>ملاحظة</span><strong>دعم إضافي مستقل لا يتعارض مع دعم سكني</strong></div>
             <div class="support-badge">⏳ يبدأ بعد سنتين</div>
           </div>
         `;
       }
     }
+
+    const supportTotalAdded = (supportSakaniAdded || 0) + (supportEtezaazAdded || 0);
 
     const name = answers.clientName || "العميل";
     const duration = describeMonths(months);
@@ -1758,39 +2097,45 @@
 
     const allNegative = finalPhases.every(p => p.inst <= 0);
 
-    const buyoutAmount = isBuyoutPersonal
-      ? parseFloat(answers.buyoutAmount || '0')
-      : 0;
+    const buyoutAmount = isBuyoutPersonal ? parseFloat(answers.buyoutAmount || '0') : 0;
     const netAfterBuyout = finalNet - buyoutAmount;
 
     const matchingBanks = getMatchingBanksForAnswers();
     const recommendedBank = matchingBanks[0] || null;
     const altBanks = matchingBanks.slice(1, 4);
-
     answers.recommendedBank = answers.recommendedBank || recommendedBank;
+
+    // ====== MAIN DISPLAY VALUE حسب طلبك ======
+    let mainShownValue = Number(finalNetFixed);
+    let mainShownLabel = 'التمويل الصافي';
+
+    // (1) العقاري: الأوضح = صافي التمويل + الدعم (سكني/اعتزاز/كلاهما)
+    if(isMortgage){
+      mainShownValue = Number(finalNetFixed) + supportTotalAdded;
+      mainShownLabel = 'صافي التمويل مضاف له الدعم';
+    }
+
+    // (2) شراء المديونية الشخصي: الأوضح = ما يصفي للعميل
+    if(isBuyoutPersonal && buyoutAmount > 0){
+      mainShownValue = Number(netAfterBuyout.toFixed(0));
+      mainShownLabel = 'ما يصفي للعميل بعد سداد التمويل القديم';
+    }
 
     showPage('result');
     const resultCard = document.getElementById('resultCard');
     let html = '';
 
-    html += `<h2 style="margin:0 0 6px; font-size:18px; text-align:right; color:#111827;">
-      نتيجة الحسبة (التقريبية)
-    </h2>`;
-    html += `<div style="font-size:12px; color:#6b7280; text-align:right; margin-bottom:4px;">
-      تاريخ ووقت الحسبة: ${calcDateTimeStr}
-    </div>`;
+    html += `<h2 style="margin:0 0 6px; font-size:18px; text-align:right; color:#111827;">نتيجة الحسبة (التقريبية)</h2>`;
+    html += `<div style="font-size:12px; color:#6b7280; text-align:right; margin-bottom:4px;">تاريخ ووقت الحسبة: ${calcDateTimeStr}</div>`;
 
     html += `<div class="result-header">
       <div class="client-chip">مرحباً ومسهلا يا ${name}</div>
       <div style="text-align:right;">
-        <span class="badge-mode">
-          ${answers.calcMode === 'ترشيح بنك مناسب تلقائياً' ? 'الحسبة مع ترشيح بنك مناسب' : 'الحسبة على النسبة المدخلة'}
-        </span><br>
+        <span class="badge-mode">${answers.calcMode === 'ترشيح بنك مناسب تلقائياً' ? 'الحسبة مع ترشيح بنك مناسب' : 'الحسبة على النسبة المدخلة'}</span><br>
         <span class="badge-duration">مدة التمويل: ${duration}</span>
       </div>
     </div>`;
 
-    // إضافة نوع التمويل داخل شارة لطيفة
     html += `<div style="display:flex; justify-content:flex-end; margin:6px 0 10px;">
       <span class="badge-duration">نوع التمويل: ${financeType}</span>
     </div>`;
@@ -1799,60 +2144,65 @@
       const b = recommendedBank;
       const logoSrc = bankLogoMap[b.bankName];
       html += `<div class="bank-card">
-        <div class="bank-logo">
-          ${logoSrc ? `<img src="${logoSrc}" alt="${b.bankName}">` : '🏦'}
-        </div>
+        <div class="bank-logo">${logoSrc ? `<img src="${logoSrc}" alt="${b.bankName}">` : '🏦'}</div>
         <div style="text-align:right">
           <div class="bank-text-main">${b.bankName}</div>
-          <div class="bank-text-sub">
-            تم ترشيح هذا البنك/الشركة بناءً على راتبك ونوع التمويل بنسبة هامش ربح تقريبية:
-            <strong>${b.margin}%</strong>
-          </div>
+          <div class="bank-text-sub">تم ترشيح هذا البنك/الشركة بناءً على راتبك ونوع التمويل بنسبة هامش ربح تقريبية: <strong>${b.margin}%</strong></div>
         </div>
       </div>`;
     }
 
     if (allNegative) {
-      html += `<div class="alert-error">
-        نعتذر منك، حسب البيانات المدخلة لا يمكنك الحصول على تمويل.
-      </div>`;
+      html += `<div class="alert-error">نعتذر منك، حسب البيانات المدخلة لا يمكنك الحصول على تمويل.</div>`;
     }
 
+    // ====== كتلة النتيجة الأساسية (الأوضح) ======
     html += `
       <div class="result-main-block">
-        <div class="result-main-title">💰 التمويل الصافي المتوقع</div>
-        <div class="result-amount-main">
-          ${finalNetFixed.replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ريال
-        </div>
-        <div class="result-amount-sub">
-          هذا هو التمويل الصافي المتوقع بعد خصم الرسوم الإدارية والضريبة ${addCommodityFee ? 'ورسوم السلع' : ''}.
-        </div>
+        <div class="result-main-title">⭐ ${mainShownLabel} (الأوضح)</div>
+        <div class="result-amount-main">${fmtMoney(mainShownValue).replace(' ريال','')} ريال</div>
+    `;
 
-        ${supportText ? supportText : ''}
+    // تفصيل دعم العقاري تحت بخط أصغر (حسب طلبك)
+    if(isMortgage){
+      const base = Number(finalNetFixed);
+      html += `
+        <div class="result-amount-sub">هذه هي النتيجة التي يبحث عنها العميل: (صافي التمويل + الدعم إن وجد)</div>
+        <div class="result-amount-small">
+          صافي التمويل: <strong>${fmtMoney(base)}</strong><br>
+          ${supportSakaniAdded ? `دعم سكني المضاف: <strong>${fmtMoney(supportSakaniAdded)}</strong><br>` : `دعم سكني المضاف: <strong>لا يوجد</strong><br>`}
+          ${supportEtezaazAdded ? `دعم اعتزاز المضاف: <strong>${fmtMoney(supportEtezaazAdded)}</strong><br>` : `دعم اعتزاز المضاف: <strong>لا يوجد</strong><br>`}
+          الإجمالي (صافي التمويل + الدعم): <strong>${fmtMoney(mainShownValue)}</strong>
+        </div>
+      `;
+    } else if(isBuyoutPersonal && buyoutAmount > 0){
+      html += `
+        <div class="result-amount-sub">هذه هي النتيجة التي يبحث عنها العميل: (الصافي بعد سداد التمويل القديم)</div>
+        <div class="result-amount-small">
+          التمويل الصافي قبل السداد: <strong>${fmtMoney(Number(finalNetFixed))}</strong><br>
+          مبلغ السداد المبكر: <strong>${fmtMoney(buyoutAmount)}</strong><br>
+          ما يصفي للعميل: <strong>${fmtMoney(mainShownValue)}</strong>
+        </div>
+      `;
+    } else {
+      html += `<div class="result-amount-sub">التمويل الصافي بعد خصم الرسوم الإدارية والضريبة ${addCommodityFee ? 'ورسوم السلع' : ''}.</div>`;
+    }
 
+    // دعم تفصيلي (لو موجود) يبقى داخل النتيجة
+    if(supportText) html += supportText;
+
+    // مربعات الصافي التفصيلية (تبقى)
+    html += `
         <div class="dual-main-grid">
           <div class="dual-box">
             <div class="dual-box-title">الصافي قبل أي رسوم</div>
-            <div class="dual-box-amount">
-              ${netWithoutFeesFixed.replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ر.س
-            </div>
+            <div class="dual-box-amount">${netWithoutFeesFixed.replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ر.س</div>
           </div>
           <div class="dual-box">
             <div class="dual-box-title">بعد الرسوم الإدارية + الضريبة فقط</div>
-            <div class="dual-box-amount">
-              ${netAfterAdminFixed.replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ر.س
-            </div>
+            <div class="dual-box-amount">${netAfterAdminFixed.replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ر.س</div>
           </div>
         </div>
-
-        ${isBuyoutPersonal && buyoutAmount > 0 ? `
-          <div class="dual-box" style="margin-top:8px;">
-            <div class="dual-box-title">كم يصفي لك بعد سداد التمويل القديم</div>
-            <div class="dual-box-amount">
-              ${netAfterBuyout.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ر.س
-            </div>
-          </div>
-        ` : ''}
 
         <div style="margin-top:8px; font-size:13px; color:#374151;">
           التمويل الصافي مكتوب بالحروف:
@@ -1865,27 +2215,7 @@
       </div>
     `;
 
-    if (isBuyoutPersonal && buyoutAmount > 0) {
-      html += `
-        <div class="result-section-title">تفاصيل شراء مديونية التمويل الشخصي</div>
-        <div class="result-section-box">
-          <div class="instalment-row">
-            مبلغ التسديد المبكر (سداد التمويل الحالي):
-            <strong>${buyoutAmount.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ريال</strong>
-          </div>
-          <div class="instalment-row">
-            الصافي (لك) بعد خصم مبلغ التسديد المبكر:
-            <strong>${netAfterBuyout.toFixed(0).replace(/\B(?=(\d{5})+(?!\d))/g, ",")} ريال</strong>
-          </div>
-          ${netAfterBuyout < 5000 ? `
-            <div class="alert-error" style="margin-top:6px;">
-              تنبيه: الصافي أقل من 5,000 ريال، قد يعتذر البنك المشتري عن قبول الطلب، نرجو الانتباه.
-            </div>
-          ` : ''}
-        </div>
-      `;
-    }
-
+    // الأقساط (أوضح)
     html += `
       <div class="result-section-title">تفاصيل القسط المتوقع حسب الفترات</div>
       <div class="result-section-box">
@@ -1902,7 +2232,7 @@
 
     if (altBanks.length > 0) {
       html += `
-        <div class="result-section-title">٣ بنوك/شركات أخرى منافسة (من الأقل نسبة إلى الأعلى)</div>
+        <div class="result-section-title">٣ بنوك/شركات أخرى منافسة</div>
         <div class="result-section-box">
           <ul style="margin:0; padding-right:16px; font-size:13px; color:#4b5563; list-style-type:disc; text-align:right;">
       `;
@@ -1912,6 +2242,7 @@
       html += `</ul></div>`;
     }
 
+    // الرسوم والربح
     html += `
       <div class="result-section-title">ملخص الأرباح والرسوم</div>
       <div class="result-section-box">
@@ -1926,8 +2257,7 @@
         <div class="instalment-row">
           الرسوم الإدارية:
           <strong>${adminFee.toFixed(0)} ريال</strong>
-          + ضريبة القيمة المضافة:
-          <strong>${vat.toFixed(0)} ريال</strong>
+          <div class="vat-small">(ضريبة القيمة المضافة لرسوم الادارية): ${vat.toFixed(0)} ريال</div>
           ${addCommodityFee ? ` + رسوم السلع: <strong>${commodityFee.toFixed(0)} ريال</strong>` : ''}
         </div>
         <div class="instalment-row">
@@ -1941,7 +2271,7 @@
       </div>
     `;
 
-    // تنبيه للقطاع الخاص (كل من ليس مدني ولا عسكري)
+    // تنبيه للقطاع الخاص (غير مدني وغير عسكري)
     if (answers.jobType && !['مدني (قطاع حكومي)','عسكري'].includes(answers.jobType)) {
       html += `
         <div class="notice-soft">
@@ -1950,7 +2280,7 @@
       `;
     }
 
-    // تنبيه اعتزاز
+    // تنبيه اعتزاز (طلبك)
     if (answers.isEtezaaz === 'نعم') {
       html += `
         <div class="notice-soft">
@@ -1960,14 +2290,14 @@
     }
 
     html += `
-      <div style="margin-top:8px; font-size:14px; font-weight:bold; color:#1e3a8a; text-align:center;">
-        📸 تقدر تصوّر الشاشة أو تستخدم زر «حفظ النتيجة كصورة» — تواصل معنا 📞0506214458
+      <div style="margin-top:8px; font-size:14px; font-weight:900; color:#1e3a8a; text-align:center;">
+        تواصل معنا 📞 0506214458
       </div>
     `;
 
     resultCard.innerHTML = html;
 
-    // حفظ آخر نتيجة (لاستخدام "النتيجة للعميل")
+    // حفظ آخر نتيجة (لاستخدام "النتيجة للعميل" + الأرشيف)
     answers._lastCalc = {
       calcDateTimeStr,
       clientName: name,
@@ -1982,9 +2312,15 @@
       adminFee: Number(adminFee.toFixed(0)),
       vat: Number(vat.toFixed(0)),
       commodityFee: Number(commodityFee.toFixed(0)),
+      supportSakaniAdded: Number(supportSakaniAdded || 0),
+      supportEtezaazAdded: Number(supportEtezaazAdded || 0),
+      supportTotalAdded: Number(supportTotalAdded || 0),
+      mainShownValue: Number(mainShownValue || 0),
+      mainShownLabel: mainShownLabel || '',
       hasHousingSupport: (financeType === 'تمويل عقاري' && (answers.supported === 'مدعوم')),
       housingSupportMonthly: Number(housingSupportMonthly || 0),
       housingSupportTotalForLoan: Number(housingSupportTotalForLoan || 0),
+      housingSupportLumpSum: Number(housingSupportLumpSum || 0),
       isEtezaaz: (answers.isEtezaaz === 'نعم'),
       phases: Array.isArray(finalPhases) ? finalPhases : []
     };
@@ -1993,17 +2329,9 @@
   // حفظ النتيجة كصورة JPG (واضحة + حجم متوسط)
   function saveResultAsImage() {
     const card = document.getElementById('resultCard');
-    if (!card) {
-      alert('لم يتم العثور على بطاقة النتيجة.');
-      return;
-    }
+    if (!card) { alert('لم يتم العثور على بطاقة النتيجة.'); return; }
 
-    html2canvas(card, {
-      scale: 2,
-      backgroundColor: '#ffffff',
-      useCORS: true
-    }).then(canvas => {
-
+    html2canvas(card, { scale: 2, backgroundColor: '#ffffff', useCORS: true }).then(canvas => {
       const MAX_W = 1400;
       let outCanvas = canvas;
 
@@ -2036,10 +2364,7 @@
   // مشاركة النتيجة على الواتساب (النتيجة الحقيقة)
   function shareResultOnWhatsApp(){
     const card = document.getElementById('resultCard');
-    if(!card){
-      alert('لم يتم العثور على بطاقة النتيجة.');
-      return;
-    }
+    if(!card){ alert('لم يتم العثور على بطاقة النتيجة.'); return; }
     const text = card.innerText || card.textContent || '';
     const url = 'https://wa.me/?text=' + encodeURIComponent(text);
     window.open(url, '_blank');
@@ -2056,25 +2381,33 @@
     const mm = String(n.getMinutes()).padStart(2,'0');
     const ss = String(n.getSeconds()).padStart(2,'0');
     const el = document.getElementById('datetime');
-    if (el) {
-      el.textContent = `${dayName} ${y}-${m}-${d} ${hh}:${mm}:${ss}`;
-    }
+    if (el) el.textContent = `${dayName} ${y}-${m}-${d} ${hh}:${mm}:${ss}`;
   }
 
   // ====== النتيجة للعميل ======
   let _clientResultTextCache = '';
 
-  function openClientResultModal(){
+  function openClientResultModal(fromAdmin){
     const lc = answers._lastCalc;
     if(!lc){
       alert('لا توجد نتيجة حالياً. احسب أولاً ثم افتح "النتيجة للعميل".');
       return;
     }
+    // لازم يكون من المسؤول (بعد تحقق ▫️) أو من لوحة المسؤول
+    if(fromAdmin !== true && _miniAdminVerified !== true){
+      alert('هذه الميزة خاصة بالمسؤول.');
+      return;
+    }
+
     document.getElementById('clientNetOverride').value = '';
     document.getElementById('clientInstOverride').value = '';
     document.getElementById('clientNoteOverride').value = '';
     document.getElementById('clientResultText').value = '';
     _clientResultTextCache = '';
+    document.getElementById('clientPreviewCard').innerHTML = `
+      <div class="h">نتيجة الحسبة (التقريبية)</div>
+      <div style="color:#6b7280; font-size:12px;">قم بإنشاء النتيجة المختصرة أولاً لتظهر المعاينة هنا.</div>
+    `;
     document.getElementById('clientResultModal').style.display = 'block';
   }
 
@@ -2090,8 +2423,17 @@
     const instOv = safeNum(document.getElementById('clientInstOverride').value);
     const note  = (document.getElementById('clientNoteOverride').value || '').trim();
 
-    const usedNet = (netOv !== null) ? netOv : lc.finalNet;
+    // الصافي للعميل: إذا كتبته اعتمده، وإلا نعتمد "الأوضح" للنوع:
+    let usedNet = (netOv !== null) ? netOv : lc.finalNet;
 
+    // في العقاري: العميل غالباً يبي "الصافي + الدعم" كقيمة مرسلة
+    let usedNetWithSupport = usedNet;
+    if(lc.financeType === 'تمويل عقاري' && lc.supportTotalAdded){
+      usedNetWithSupport = usedNet + lc.supportTotalAdded;
+    }
+
+    // في شراء المديونية الشخصي: لو موجود buyout ضمن النص نستخرج من lc.mainShownValue إن كان واضح
+    // (النتيجة الحقيقة ما عندها buyout داخل lc إلا كقيمة محسوبة سابقاً، لذلك نكتفي بـ usedNet)
     const hasMultiPhases = Array.isArray(lc.phases) && lc.phases.length > 1;
     const singlePhaseInst = (!hasMultiPhases && Array.isArray(lc.phases) && lc.phases[0]) ? Number(lc.phases[0].inst) : null;
     const usedInst = (instOv !== null) ? instOv : (singlePhaseInst !== null ? singlePhaseInst : null);
@@ -2104,21 +2446,26 @@
 
     const computedProfit = totalPaid - usedNet;
 
+    // دعم
     let supportLines = '';
-    if(lc.hasHousingSupport && lc.housingSupportMonthly > 0){
-      supportLines += `- دعم سكني (شهري) حسب الجدول: ${fmtMoney(lc.housingSupportMonthly)}\n`;
-      supportLines += `- إجمالي دعم سكني (حتى 20 سنة كحد أقصى): ${fmtMoney(lc.housingSupportTotalForLoan)}\n`;
-      supportLines += `- الصافي مع دعم سكني (تقديري): ${fmtMoney(usedNet + lc.housingSupportTotalForLoan)}\n`;
+    if(lc.supportSakaniAdded){
+      if(lc.housingSupportMonthly > 0){
+        supportLines += `- دعم سكني (شهري) حسب الجدول: ${fmtMoney(lc.housingSupportMonthly)}\n`;
+        supportLines += `- إجمالي دعم سكني (حتى 20 سنة كحد أقصى): ${fmtMoney(lc.supportSakaniAdded)}\n`;
+      } else {
+        supportLines += `- دعم سكني المضاف: ${fmtMoney(lc.supportSakaniAdded)}\n`;
+      }
     }
-    if(lc.isEtezaaz){
-      supportLines += `- دعم اعتزاز (وزارة الدفاع): دعم إضافي مستقل (يبدأ بعد سنتين)\n`;
+    if(lc.supportEtezaazAdded){
+      supportLines += `- دعم اعتزاز (ثابت): ${fmtMoney(lc.supportEtezaazAdded)} (دعم إضافي مستقل)\n`;
+      supportLines += `- تنبيه اعتزاز: يبدأ بعد سنتين ولا تتوفر لدينا تفاصيل دقيقة للقسط — تواصل مع جهة عملك.\n`;
     }
 
     let instBlock = '';
     if (usedInst !== null) {
       instBlock = `القسط الشهري: ${fmtMoney(usedInst)}\n`;
     } else if (hasMultiPhases) {
-      instBlock = `القسط الشهري: حسب الفترات\n`;
+      instBlock = `الأقساط حسب الفترات:\n`;
       lc.phases.forEach(p=>{
         instBlock += `- من الشهر ${p.from} إلى ${p.to}: ${fmtMoney(p.inst)}\n`;
       });
@@ -2129,13 +2476,20 @@
     const feesBlock =
 `تفاصيل الرسوم (حسب نتيجة الحاسبة):
 - الرسوم الإدارية: ${fmtMoney(lc.adminFee)}
-- ضريبة القيمة المضافة: ${fmtMoney(lc.vat)}${lc.commodityFee ? `\n- رسوم السلع: ${fmtMoney(lc.commodityFee)}` : ''}\n`;
+- (ضريبة القيمة المضافة لرسوم الادارية): ${fmtMoney(lc.vat)}${lc.commodityFee ? `\n- رسوم السلع: ${fmtMoney(lc.commodityFee)}` : ''}\n`;
 
     const profitBlock = overrideUsed
       ? `الربح (محسوب من القسط × المدة - الصافي): ${fmtMoney(computedProfit)}\n`
       : `الربح مع الرسوم (حسب نتيجة الحاسبة): ${fmtMoney(lc.totalInst - lc.finalNet)}\n`;
 
-    const text =
+    const contact = `\nللاستفسار والتقديم: 0506214458\nسرعة تملك العقار والحلول التمويلية\n`;
+
+    const privateNotice = (answers.jobType && !['مدني (قطاع حكومي)','عسكري'].includes(answers.jobType))
+      ? `\nتنبيه: القطاع الخاص بجميع أنواعه لابد اعتماده من الجهة الممولة وقد تختلف الشروط.\n`
+      : '';
+
+    // نص العميل
+    let text =
 `نتيجة الحسبة (التقريبية)
 تاريخ ووقت الحسبة: ${lc.calcDateTimeStr}
 مرحباً ومسهلا يا ${lc.clientName}
@@ -2144,15 +2498,50 @@
 اسم البنك/الشركة المرشحة: ${lc.recommendedBankName}
 
 التمويل الصافي: ${fmtMoney(usedNet)}
-${supportLines ? `الدعم:\n${supportLines}` : ''}${instBlock ? `\n${instBlock}` : ''}
+`;
+
+    if(lc.financeType === 'تمويل عقاري' && (lc.supportSakaniAdded || lc.supportEtezaazAdded)){
+      text += `صافي التمويل مضاف له الدعم: ${fmtMoney(usedNetWithSupport)}\n`;
+      text += `تفاصيل الدعم:\n${supportLines || '- لا يوجد\n'}`;
+    }
+
+    text += `
+${instBlock}
 ${profitBlock}
 ${feesBlock}
-${note ? `\nملاحظة: ${note}\n` : ''}
-
-⚠️ هذه الحسبة تقريبية، والاعتماد النهائي حسب سياسات الجهة الممولة وقت التقديم.`;
+${note ? `ملاحظة: ${note}\n` : ''}${privateNotice}
+⚠️ هذه الحسبة تقريبية، والاعتماد النهائي حسب سياسات الجهة الممولة وقت التقديم.
+${contact}`.trim();
 
     _clientResultTextCache = text;
+    lc._lastClientText = text;
+
     document.getElementById('clientResultText').value = text;
+    renderClientPreviewFromText(text);
+  }
+
+  function renderClientPreviewFromText(text){
+    const lines = String(text||'').split('\n').map(l=>l.trim()).filter(Boolean);
+    if(!lines.length){
+      document.getElementById('clientPreviewCard').innerHTML = `<div class="h">نتيجة الحسبة (التقريبية)</div>`;
+      return;
+    }
+    let html = `<div class="h">${escapeHtml(lines[0])}</div>`;
+    html += `<div class="hr"></div>`;
+    for(let i=1;i<lines.length;i++){
+      const l = lines[i];
+      // تمييز بعض السطور
+      if(l.includes(':')){
+        const parts = l.split(':');
+        const k = parts.shift();
+        const v = parts.join(':').trim();
+        html += `<div><span class="k">${escapeHtml(k)}:</span> <span class="v">${escapeHtml(v)}</span></div>`;
+      } else {
+        html += `<div>${escapeHtml(l)}</div>`;
+      }
+      if(i===5) html += `<div class="hr"></div>`;
+    }
+    document.getElementById('clientPreviewCard').innerHTML = html;
   }
 
   function copyClientResultText(){
@@ -2171,9 +2560,50 @@ ${note ? `\nملاحظة: ${note}\n` : ''}
     window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
   }
 
+  // حفظ "نتيجة العميل" كصورة JPG
+  function saveClientResultAsImage(){
+    const preview = document.getElementById('clientPreviewCard');
+    const ta = document.getElementById('clientResultText');
+    if(!ta.value){
+      alert('أنشئ النتيجة المختصرة أولاً.');
+      return;
+    }
+
+    html2canvas(preview, { scale: 2, backgroundColor:'#ffffff', useCORS:true }).then(canvas=>{
+      const MAX_W = 1400;
+      let outCanvas = canvas;
+
+      if (canvas.width > MAX_W) {
+        const ratio = MAX_W / canvas.width;
+        const w = Math.round(canvas.width * ratio);
+        const h = Math.round(canvas.height * ratio);
+
+        const tmp = document.createElement('canvas');
+        tmp.width = w; tmp.height = h;
+        const ctx = tmp.getContext('2d');
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+        ctx.drawImage(canvas, 0, 0, w, h);
+        outCanvas = tmp;
+      }
+
+      const link = document.createElement('a');
+      link.download = 'fino-client-result.jpg';
+      link.href = outCanvas.toDataURL('image/jpeg', 0.92);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }).catch(err=>{
+      console.error(err);
+      alert('تعذر حفظ نتيجة العميل كصورة.');
+    });
+  }
+
+  // ====== تشغيل ======
   document.addEventListener('DOMContentLoaded', () => {
     showPage('landing');
     loadBankConfigs();
+    renderArchiveTable();
     updateDateTime();
     setInterval(updateDateTime, 1000);
   });
