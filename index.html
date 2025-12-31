@@ -2501,7 +2501,7 @@
 `;
 
     if(lc.financeType === 'تمويل عقاري' && (lc.supportSakaniAdded || lc.supportEtezaazAdded)){
-      text += `صافي التمويل مضاف له الدعم: ${fmtMoney(usedNetWithSupport)}\n`;
+      text += `)اذاكان الدعم شهري اعتمد صافي التمويل الذي اسفل باللون الاسود) صافي التمويل مضاف له الدعم: ${fmtMoney(usedNetWithSupport)}\n`;
       text += `تفاصيل الدعم:\n${supportLines || '- لا يوجد\n'}`;
     }
 
