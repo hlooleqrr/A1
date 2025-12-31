@@ -182,12 +182,6 @@
       display: inline-block;
       margin-top: 3px;
     }
-    .badge-date {
-      font-size: 12px;
-      color: #6b7280;
-      margin-top: 3px;
-      display: inline-block;
-    }
 
     .bank-card {
       display: flex;
@@ -440,37 +434,22 @@
       <button class="secondary small" onclick="backToLanding()">🏠 رجوع للرئيسية</button>
       <div style="display:flex; gap:8px; flex-wrap:wrap;">
         <button class="secondary small" onclick="saveResultAsImage()">💾 حفظ النتيجة كصورة</button>
-        <button class="secondary small" onclick="shareResultOnWhatsApp()">📲 مشاركة على واتساب</button>
+        <button class="secondary small" onclick="shareResultOnWhatsApp()">📲 مشاركة واتساب</button>
         <button class="primary small" onclick="resetCalc(); showPage('calculator');">🔁 إعادة حسبة جديدة</button>
       </div>
     </div>
   </div>
 
-  <!-- صفحة "قريباً" لشراء مديونية تمويل عقاري -->
+  <!-- صفحة "قريباً" للمنتجات غير المفعّلة -->
   <div id="comingSoonPage" class="page">
     <div class="card fade-in">
-      <h2 style="margin-top:0; font-size:19px; color:#111827;">شراء مديونية تمويل عقاري</h2>
-      <p style="font-size:14px; color:#6b7280;">
-        حالياً لا يوجد احتساب لشراء المديونية العقارية عبر هذه الحاسبة.<br>
+      <h2 id="comingSoonTitle" style="margin-top:0; font-size:19px; color:#111827;">المنتج غير مفعّل حالياً</h2>
+      <p id="comingSoonText" style="font-size:14px; color:#6b7280;">
+        حالياً لا يوجد احتساب لهذا المنتج عبر هذه الحاسبة.<br>
         سيتم التحديث وإضافة الخدمة في الأسابيع القادمة إن شاء الله 🙏
       </p>
       <div style="margin-top:12px;">
-        <button class="secondary small" onclick="backToLanding()"> رجوع للرئيسية</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- صفحة رسالة المنتجات غير الجاهزة -->
-  <div id="notReadyPage" class="page">
-    <div class="card fade-in">
-      <h2 style="margin-top:0; font-size:19px; color:#111827;">المنتج غير متاح حالياً</h2>
-      <p style="font-size:14px; color:#6b7280; text-align:right;">
-        نعتذر منك 🙏<br>
-        قريباً سيتم تحديث نسب هذا المنتج في منصة FINO.<br>
-        يمكنك اختيار احتساب تمويل آخر من الأنواع المتاحة حالياً.
-      </p>
-      <div style="margin-top:12px;">
-        <button class="primary small" onclick="backToFinanceType()">🔄 الرجوع لاختيار نوع التمويل</button>
+        <button class="secondary small" onclick="backToFinanceType()"> 🔙 رجوع لاختيار نوع التمويل</button>
       </div>
     </div>
   </div>
@@ -510,87 +489,74 @@
             <label>اسم البنك / شركة التمويل</label>
             <select id="adminBankName">
               <option value="">اختر...</option>
-              <!-- البنوك المحلية والرقمية -->
+              <!-- البنوك المحلية + الرقمية المرخصة -->
               <option>البنك الأهلي السعودي</option>
               <option>مصرف الراجحي</option>
               <option>بنك الرياض</option>
-              <option>البنك السعودي الأول (ساب)</option>
+              <option>بنك ساب</option>
               <option>البنك العربي الوطني</option>
+              <option>مصرف الإنماء</option>
+              <option>البنك السعودي الفرنسي</option>
+              <option>البنك السعودي للاستثمار</option>
               <option>بنك البلاد</option>
               <option>بنك الجزيرة</option>
-              <option>البنك السعودي للاستثمار</option>
-              <option>البنك السعودي الفرنسي</option>
-              <option>بنك الإنماء</option>
-              <option>بنك الخليج الدولي - السعودية</option>
-              <option>إس تي سي بنك</option>
-              <option>البنك الرقمي السعودي</option>
-              <option>بنك دي360</option>
-              <!-- فروع بنوك أجنبية مرخصة مختارة -->
-              <option>بنك الإمارات دبي الوطني</option>
-              <option>بنك البحرين الوطني</option>
-              <option>بنك الكويت الوطني</option>
-              <option>بنك مسقط</option>
-              <option>دويتشه بنك</option>
-              <option>بي إن باريبا</option>
-              <option>جي بي مورغان تشيس</option>
-              <option>بنك باكستان الوطني</option>
-              <option>بنك تي سي زراعات بانكاسي</option>
-              <option>بنك الصين للصناعة والتجارة</option>
-              <option>بنك قطر الوطني</option>
-              <option>بنك إم يو إف جي</option>
-              <option>بنك أبوظبي الأول</option>
-              <option>بنك كريدي سويس</option>
-              <option>بنك ستاندرد تشارترد</option>
-              <!-- شركات التمويل المرخصة (أهم الأسماء) -->
-              <option>شركة كرناف للتمويل</option>
-              <option>شركة الجسرة للتمويل</option>
-              <option>شركة متاجر للتمويل</option>
-              <option>الشركة السعودية للتمويل</option>
-              <option>شركة عبد اللطيف جميل للتمويل</option>
-              <option>شركة الخليج للتمويل</option>
-              <option>شركة تمويلي العالمية</option>
-              <option>شركة الأمثل للتمويل</option>
-              <option>شركة أصول الحديثة للتمويل</option>
-              <option>شركة دار الإئتمان السعودي</option>
-              <option>شركة توكيلات للتمويل</option>
-              <option>شركة إيجارة للتمويل</option>
-              <option>شركة تيسير للتمويل</option>
-              <option>الشركة السعودية الفرنسية للتمويل الإيجاري</option>
-              <option>شركة تمويل الأولى</option>
-              <option>أمريكان إكسبريس السعودية</option>
-              <option>شركة الجبر للتمويل</option>
-              <option>شركة الرائدة للتمويل</option>
-              <option>شركة راية للتمويل</option>
-              <option>شركة قرة للتمويل (Quara)</option>
-              <option>شركة تأجير للتمويل</option>
-              <option>شركة الخليج لرافعات التمويل التأجيري</option>
-              <option>شركة باب رزق جميل للتمويل متناهي الصغر</option>
-              <option>شركة المتحدة للخدمات المالية (تسهيل)</option>
-              <option>شركة إمكان للتمويل</option>
-              <option>شركة تمام للتمويل</option>
-              <option>الشركة الوطنية للتمويل العقاري</option>
-              <option>بنك / شركة أخرى (يتم كتابته لاحقاً)</option>
+              <option>بنك الخليج الدولي</option>
+              <option>بنك دال 360 (D360 Bank)</option>
+              <option>بنك إس تي سي (STC Bank)</option>
+              <option>بنك فيجن (Vision Bank)</option>
+              <option>آيزي بنك (EZ Bank)</option>
+              <!-- شركات التمويل المرخصة (أسماء إنجليزية كما في ساما) -->
+              <option>Amlak International Company</option>
+              <option>Dar Al Tamleek Company</option>
+              <option>Saudi Home Loans Company</option>
+              <option>Deutsche Gulf Finance</option>
+              <option>Abdul Latif Jameel United Real Estate Finance</option>
+              <option>Saudi Real Estate Refinance Company</option>
+              <option>Bidaya Home Finance</option>
+              <option>Nayifat Finance Company</option>
+              <option>Yanal Finance Company</option>
+              <option>AlYusr Leasing &amp; Financing Company</option>
+              <option>Ajil Financial Services Company</option>
+              <option>National Finance Company</option>
+              <option>Morabaha Marina Finance Company</option>
+              <option>Kirnaf Finance Company</option>
+              <option>Aljasriah Finance Company</option>
+              <option>Matager Finance Company</option>
+              <option>Saudi Finance Company</option>
+              <option>Abdul Latif Jameel Finance Company</option>
+              <option>Gulf Finance Company</option>
+              <option>Tamwily International Company</option>
+              <option>Alamthal Financing Company</option>
+              <option>Osoul Modern Finance Company</option>
+              <option>Dar Aletiman Alsaudi Company</option>
+              <option>Tawkelat Financing Company</option>
+              <option>Ijarah Finance Company</option>
+              <option>Tayseer Finance Company</option>
+              <option>Saudi Fransi For Finance Leasing Company</option>
+              <option>Tamweel Aloula Finance Company</option>
+              <option>American Express Saudi Arabia</option>
+              <option>Aljabr Finance Company</option>
+              <option>Alraedah Finance Company</option>
+              <option>Raya Financing Company</option>
+              <option>Quara Finance Company</option>
+              <option>Taajeer Finance Company</option>
+              <option>Gulf Lifting Financial Leasing Company</option>
+              <option>Bab Rizq Jameel Microfinance Company</option>
+              <option>United Company for Financial Services (Tasheel)</option>
+              <option>Emkan Finance Company</option>
+              <option>Tamam Finance Company</option>
+              <option>National Home Finance Company</option>
+              <option>بنك آخر (  )</option>
             </select>
           </div>
           <div>
             <label>نوع التمويل</label>
             <select id="adminFinanceType">
-              <option value="personal">تمويل شخصي / استهلاكي / تأجيري</option>
+              <option value="personal">تمويل شخصي / تأجيري</option>
+              <option value="consumer">تمويل استهلاكي</option>
               <option value="mortgage">تمويل عقاري</option>
               <option value="buyoutPersonal">شراء مديونية تمويل شخصي</option>
               <option value="buyoutMortgage">شراء مديونية تمويل عقاري</option>
-            </select>
-          </div>
-          <div>
-            <label>نوع الوظيفة (لهذه النسبة)</label>
-            <select id="adminJobType">
-              <option value="الكل">الكل</option>
-              <option value="عسكري">عسكري</option>
-              <option value="عسكري (اعتزاز)">عسكري (اعتزاز)</option>
-              <option value="مدني (قطاع حكومي)">مدني (قطاع حكومي)</option>
-              <option value="خاص (شبه حكومي)">خاص (شبه حكومي)</option>
-              <option value="خاص (شركة معتمدة)">خاص (شركة معتمدة)</option>
-              <option value="خاص (شركة غير معتمدة)">خاص (شركة غير معتمدة)</option>
             </select>
           </div>
           <div>
@@ -602,21 +568,6 @@
             </select>
           </div>
           <div>
-            <label>تفاصيل المنتج (اختياري)</label>
-            <select id="adminProductDetail">
-              <option value="الكل">الكل</option>
-              <option value="وحدة جاهزة من السوق">وحدة جاهزة من السوق</option>
-              <option value="بناء ذاتي">بناء ذاتي</option>
-              <option value="مشاريع الخارطة">مشاريع الخارطة</option>
-              <option value="تحت الانشاء(بيت تملكه عظم)">تحت الانشاء(بيت تملكه عظم)</option>
-              <option value="ارض وقرض(ارض وبناء ذاتي)">ارض وقرض(ارض وبناء ذاتي)</option>
-              <option value="رهن">رهن</option>
-              <option value="ارض (سكنية)">ارض (سكنية)</option>
-              <option value="تمويل استهلاكي">تمويل استهلاكي</option>
-              <option value="تمويل التأجيري">تمويل التأجيري</option>
-            </select>
-          </div>
-          <div>
             <label>من راتب (ريال)</label>
             <input id="adminMinSalary" type="number" min="0" />
           </div>
@@ -625,16 +576,48 @@
             <input id="adminMaxSalary" type="number" min="0" />
           </div>
           <div>
-            <label>من شهر</label>
+            <label>نسبة هامش الربح (%)</label>
+            <input id="adminMargin" type="number" min="0" step="0.01" />
+          </div>
+
+          <div>
+            <label>نوع الوظيفة (اختياري)</label>
+            <select id="adminJobType">
+              <option value="">الكل</option>
+              <option>عسكري</option>
+              <option>مدني (قطاع حكومي)</option>
+              <option>خاص (شبه حكومي)</option>
+              <option>خاص (شركة معتمدة)</option>
+              <option>خاص (شركة غير معتمدة)</option>
+            </select>
+          </div>
+          <div>
+            <label>من شهر (المدة)</label>
             <input id="adminMinMonths" type="number" min="1" />
           </div>
           <div>
-            <label>إلى شهر</label>
+            <label>إلى شهر (المدة)</label>
             <input id="adminMaxMonths" type="number" min="1" />
           </div>
           <div>
-            <label>نسبة هامش الربح (%)</label>
-            <input id="adminMargin" type="number" min="0" step="0.01" />
+            <label>تفاصيل المنتج (اختياري)</label>
+            <select id="adminProductDetail">
+              <option value="">الكل</option>
+              <option>وحدة جاهزة من السوق</option>
+              <option>بناء ذاتي</option>
+              <option>مشاريع الخارطة</option>
+              <option>تحت الانشاء (بيت تملكه عظم)</option>
+              <option>ارض وقرض (ارض وبناء ذاتي)</option>
+              <option>ارض (سكنية)</option>
+              <option>رهن</option>
+            </select>
+          </div>
+          <div>
+            <label>اعتزاز (للعسكري المدعوم)</label>
+            <select id="adminEtezaaz">
+              <option value="">بدون</option>
+              <option value="نعم">اعتزاز</option>
+            </select>
           </div>
         </div>
         <input type="hidden" id="adminEditIndex" value="" />
@@ -647,15 +630,16 @@
       <table class="admin-table" id="adminTable">
         <thead>
           <tr>
-            <th>البنك/الشركة</th>
+            <th>البنك / الشركة</th>
             <th>التمويل</th>
             <th>الدعم</th>
-            <th>الوظيفة</th>
-            <th>تفاصيل المنتج</th>
             <th>من راتب</th>
             <th>إلى راتب</th>
-            <th>من شهر</th>
-            <th>إلى شهر</th>
+            <th>المدة (من)</th>
+            <th>المدة (إلى)</th>
+            <th>نوع الوظيفة</th>
+            <th>تفاصيل المنتج</th>
+            <th>اعتزاز</th>
             <th>النسبة %</th>
             <th>تحكم</th>
           </tr>
@@ -690,7 +674,7 @@
 
 <script>
   function showPage(name) {
-    ['landing','calculator','result','adminLogin','admin','comingSoon','notReady'].forEach(id => {
+    ['landing','calculator','result','adminLogin','admin','comingSoon'].forEach(id => {
       const el = document.getElementById(id + 'Page');
       if (!el) return;
       el.classList.toggle('active', id === name);
@@ -707,16 +691,17 @@
   }
 
   function backToFinanceType(){
-    // يرجع للسؤال نفسه الخاص بنوع التمويل
-    const financeIndex = generalQuestions.findIndex(q => q.id === 'financeType');
-    if (financeIndex >= 0){
-      step = financeIndex;
-      showPage('calculator');
-      document.getElementById('nextButton').style.display = 'inline-flex';
-      showQuestion();
-    } else {
-      showPage('calculator');
-    }
+    showPage('calculator');
+    // ارجاع الخطوة إلى سؤال نوع التمويل
+    hasStarted = true;
+    const idx = generalQuestions.findIndex(q => q.id === 'financeType');
+    step = idx >= 0 ? idx : 0;
+    commitmentStep = 0;
+    currentCommitment = {};
+    document.getElementById('mainButton').style.display = 'none';
+    document.getElementById('resetButtonContainer').style.display = 'block';
+    document.getElementById('nextButton').style.display = 'inline-flex';
+    showQuestion();
   }
 
   const bankLogoMap = {
@@ -726,38 +711,25 @@
     'بنك البلاد': 'img/bilad.png',
     'بنك الجزيرة': 'img/jazira.png',
     'البنك السعودي الفرنسي': 'img/bsf.png',
-    'البنك السعودي الأول (ساب)': 'img/sab.png',
     'بنك ساب': 'img/sab.png',
     'البنك العربي الوطني': 'img/anb.png',
-    'البنك السعودي للاستثمار': 'img/saib.png',
-    'بنك الإنماء': 'img/alinma.png'
+    'البنك السعودي للاستثمار': 'img/saib.png'
   };
 
   let bankConfigs = [];
 
   const defaultBankConfigs = [
-    { bankName: 'مصرف الراجحي', bankOrCompany: 'bank', financeType: 'personal', supportedType: 'الكل', jobType:'الكل', productDetail:'الكل', minSalary: 4000, maxSalary: 8000, minMonths:1, maxMonths:60, margin: 5.5 },
-    { bankName: 'مصرف الراجحي', bankOrCompany: 'bank', financeType: 'personal', supportedType: 'الكل', jobType:'الكل', productDetail:'الكل', minSalary: 8001, maxSalary: 20000, minMonths:1, maxMonths:60, margin: 4.9 },
-    { bankName: 'البنك الأهلي السعودي', bankOrCompany: 'bank', financeType: 'mortgage', supportedType: 'مدعوم', jobType:'الكل', productDetail:'وحدة جاهزة من السوق', minSalary: 4000, maxSalary: 15000, minMonths:60, maxMonths:360, margin: 4.3 },
-    { bankName: 'بنك الرياض', bankOrCompany: 'bank', financeType: 'mortgage', supportedType: 'غير مدعوم', jobType:'الكل', productDetail:'الكل', minSalary: 6000, maxSalary: 20000, minMonths:60, maxMonths:360, margin: 4.8 }
+    { bankName: 'مصرف الراجحي', bankType:'بنك', financeType: 'personal', supportedType: 'الكل', minSalary: 4000, maxSalary: 8000, margin: 5.5 },
+    { bankName: 'مصرف الراجحي', bankType:'بنك', financeType: 'personal', supportedType: 'الكل', minSalary: 8001, maxSalary: 20000, margin: 4.9 },
+    { bankName: 'البنك الأهلي السعودي', bankType:'بنك', financeType: 'mortgage', supportedType: 'مدعوم', minSalary: 4000, maxSalary: 15000, margin: 4.3 },
+    { bankName: 'بنك الرياض', bankType:'بنك', financeType: 'mortgage', supportedType: 'غير مدعوم', minSalary: 6000, maxSalary: 20000, margin: 4.8 }
   ];
 
   function loadBankConfigs() {
     try {
       const saved = localStorage.getItem('stBankConfigs');
       if (saved) {
-        bankConfigs = JSON.parse(saved).map(cfg => ({
-          bankName: cfg.bankName,
-          financeType: cfg.financeType,
-          supportedType: cfg.supportedType ?? 'الكل',
-          minSalary: cfg.minSalary ?? 0,
-          maxSalary: cfg.maxSalary ?? 0,
-          margin: cfg.margin ?? 0,
-          jobType: cfg.jobType ?? 'الكل',
-          productDetail: cfg.productDetail ?? 'الكل',
-          minMonths: cfg.minMonths ?? 1,
-          maxMonths: cfg.maxMonths ?? 360
-        }));
+        bankConfigs = JSON.parse(saved);
       } else {
         bankConfigs = defaultBankConfigs;
         saveBankConfigs();
@@ -777,7 +749,8 @@
     tbody.innerHTML = '';
     bankConfigs.forEach((cfg, index) => {
       let financeLabel =
-        cfg.financeType === 'personal' ? 'شخصي/استهلاكي/تأجيري' :
+        cfg.financeType === 'personal' ? 'شخصي/تأجيري' :
+        cfg.financeType === 'consumer' ? 'استهلاكي' :
         cfg.financeType === 'mortgage' ? 'عقاري' :
         cfg.financeType === 'buyoutPersonal' ? 'شراء مديونية شخصي' :
         cfg.financeType === 'buyoutMortgage' ? 'شراء مديونية عقاري' :
@@ -785,15 +758,16 @@
 
       const tr = document.createElement('tr');
       tr.innerHTML = `
-        <td>${cfg.bankName}</td>
+        <td>${cfg.bankName || ''}</td>
         <td>${financeLabel}</td>
-        <td>${cfg.supportedType}</td>
-        <td>${cfg.jobType || 'الكل'}</td>
-        <td>${cfg.productDetail || 'الكل'}</td>
-        <td>${(cfg.minSalary||0).toLocaleString()}</td>
-        <td>${(cfg.maxSalary||0).toLocaleString()}</td>
-        <td>${cfg.minMonths || 1}</td>
-        <td>${cfg.maxMonths || 360}</td>
+        <td>${cfg.supportedType || ''}</td>
+        <td>${(cfg.minSalary || 0).toLocaleString()}</td>
+        <td>${(cfg.maxSalary || 0).toLocaleString()}</td>
+        <td>${cfg.minMonths || ''}</td>
+        <td>${cfg.maxMonths || ''}</td>
+        <td>${cfg.jobType || ''}</td>
+        <td>${cfg.productDetail || ''}</td>
+        <td>${cfg.etezaaz || ''}</td>
         <td>${cfg.margin}</td>
         <td>
           <button class="btn small secondary" onclick="editBankConfig(${index})">تعديل</button>
@@ -808,13 +782,14 @@
     document.getElementById('adminBankName').value = '';
     document.getElementById('adminFinanceType').value = 'personal';
     document.getElementById('adminSupportedType').value = 'الكل';
-    document.getElementById('adminJobType').value = 'الكل';
-    document.getElementById('adminProductDetail').value = 'الكل';
     document.getElementById('adminMinSalary').value = '';
     document.getElementById('adminMaxSalary').value = '';
+    document.getElementById('adminMargin').value = '';
+    document.getElementById('adminJobType').value = '';
     document.getElementById('adminMinMonths').value = '';
     document.getElementById('adminMaxMonths').value = '';
-    document.getElementById('adminMargin').value = '';
+    document.getElementById('adminProductDetail').value = '';
+    document.getElementById('adminEtezaaz').value = '';
     document.getElementById('adminEditIndex').value = '';
   }
 
@@ -823,20 +798,27 @@
     const bankName = document.getElementById('adminBankName').value;
     const financeType = document.getElementById('adminFinanceType').value;
     const supportedType = document.getElementById('adminSupportedType').value;
-    const jobType = document.getElementById('adminJobType').value || 'الكل';
-    const productDetail = document.getElementById('adminProductDetail').value || 'الكل';
     const minSalary = parseFloat(document.getElementById('adminMinSalary').value || '0');
     const maxSalary = parseFloat(document.getElementById('adminMaxSalary').value || '0');
-    const minMonths = parseInt(document.getElementById('adminMinMonths').value || '1');
-    const maxMonths = parseInt(document.getElementById('adminMaxMonths').value || '360');
     const margin = parseFloat(document.getElementById('adminMargin').value || '0');
+    const jobType = document.getElementById('adminJobType').value;
+    const minMonths = parseInt(document.getElementById('adminMinMonths').value || '0');
+    const maxMonths = parseInt(document.getElementById('adminMaxMonths').value || '0');
+    const productDetail = document.getElementById('adminProductDetail').value;
+    const etezaaz = document.getElementById('adminEtezaaz').value;
     const editIndex = document.getElementById('adminEditIndex').value;
 
     if (!bankName || !margin || !minSalary || !maxSalary) {
       alert('رجاءً أكمل جميع الحقول الأساسية.');
       return;
     }
-    const cfg = { bankName, financeType, supportedType, jobType, productDetail, minSalary, maxSalary, minMonths, maxMonths, margin };
+    const cfg = { bankName, financeType, supportedType, minSalary, maxSalary, margin };
+
+    if (jobType) cfg.jobType = jobType;
+    if (minMonths) cfg.minMonths = minMonths;
+    if (maxMonths) cfg.maxMonths = maxMonths;
+    if (productDetail) cfg.productDetail = productDetail;
+    if (etezaaz) cfg.etezaaz = etezaaz;
 
     if (editIndex === '') {
       bankConfigs.push(cfg);
@@ -850,16 +832,17 @@
 
   function editBankConfig(index) {
     const cfg = bankConfigs[index];
-    document.getElementById('adminBankName').value = cfg.bankName;
-    document.getElementById('adminFinanceType').value = cfg.financeType;
+    document.getElementById('adminBankName').value = cfg.bankName || '';
+    document.getElementById('adminFinanceType').value = cfg.financeType || 'personal';
     document.getElementById('adminSupportedType').value = cfg.supportedType || 'الكل';
-    document.getElementById('adminJobType').value = cfg.jobType || 'الكل';
-    document.getElementById('adminProductDetail').value = cfg.productDetail || 'الكل';
-    document.getElementById('adminMinSalary').value = cfg.minSalary;
-    document.getElementById('adminMaxSalary').value = cfg.maxSalary;
-    document.getElementById('adminMinMonths').value = cfg.minMonths || 1;
-    document.getElementById('adminMaxMonths').value = cfg.maxMonths || 360;
-    document.getElementById('adminMargin').value = cfg.margin;
+    document.getElementById('adminMinSalary').value = cfg.minSalary || '';
+    document.getElementById('adminMaxSalary').value = cfg.maxSalary || '';
+    document.getElementById('adminMargin').value = cfg.margin || '';
+    document.getElementById('adminJobType').value = cfg.jobType || '';
+    document.getElementById('adminMinMonths').value = cfg.minMonths || '';
+    document.getElementById('adminMaxMonths').value = cfg.maxMonths || '';
+    document.getElementById('adminProductDetail').value = cfg.productDetail || '';
+    document.getElementById('adminEtezaaz').value = cfg.etezaaz || '';
     document.getElementById('adminEditIndex').value = index;
   }
 
@@ -879,30 +862,38 @@
       fType = 'buyoutPersonal';
     } else if (answers.financeType === 'شراء مديونية تمويل عقاري') {
       fType = 'buyoutMortgage';
-    } else if (answers.financeType === 'تمويل عقاري') {
+    } else if (answers.financeType === 'تمويل استهلاكي') {
+      fType = 'consumer';
+    } else if (answers.financeType && (answers.financeType.includes('شخصي') || answers.financeType === 'تمويل التأجيري')) {
+      fType = 'personal';
+    } else if (answers.financeType && answers.financeType.includes('عقاري')) {
       fType = 'mortgage';
     } else {
-      // تمويل شخصي / استهلاكي / تأجيري نربطها على نفس النوع الأساسي
       fType = 'personal';
     }
 
     const supp = answers.supported || 'الكل';
-    const jobType = answers.jobType || 'الكل';
-    const mortgageProduct = answers.mortgageProduct || 'الكل';
+    const jobType = answers.jobType || '';
     const months = parseInt(answers.months || '0');
-    const isIctizaz = answers.isIctizaz === 'نعم';
+    const mortgageDetail = answers.mortgageProductType || '';
+    const wantsEtezaaz = (answers.financeType === 'تمويل عقاري' &&
+                          answers.supported === 'مدعوم' &&
+                          answers.isEtezaaz === 'نعم');
 
-    const list = bankConfigs.filter(cfg =>
-      cfg.financeType === fType &&
-      salary >= cfg.minSalary &&
-      salary <= cfg.maxSalary &&
-      (cfg.supportedType === 'الكل' || cfg.supportedType === supp) &&
-      (cfg.jobType === 'الكل' ||
-       cfg.jobType === jobType ||
-       (isIctizaz && cfg.jobType === 'عسكري (اعتزاز)')) &&
-      (cfg.productDetail === 'الكل' || cfg.productDetail === mortgageProduct) &&
-      (!months || ((cfg.minMonths || 1) <= months && months <= (cfg.maxMonths || 360)))
-    );
+    const list = bankConfigs.filter(cfg => {
+      if (cfg.financeType !== fType) return false;
+      if (!(salary >= cfg.minSalary && salary <= cfg.maxSalary)) return false;
+      if (!(cfg.supportedType === 'الكل' || cfg.supportedType === supp)) return false;
+
+      if (cfg.jobType && jobType && cfg.jobType !== jobType) return false;
+      if (cfg.minMonths && months && months < cfg.minMonths) return false;
+      if (cfg.maxMonths && months && months > cfg.maxMonths) return false;
+      if (cfg.productDetail && mortgageDetail && cfg.productDetail !== mortgageDetail) return false;
+      if (wantsEtezaaz && cfg.etezaaz && cfg.etezaaz !== 'نعم') return false;
+
+      return true;
+    });
+
     list.sort((a,b)=> a.margin - b.margin);
     return list;
   }
@@ -922,7 +913,6 @@
 
   let answers = { commitments: [] }, step = 0, commitmentStep = 0, currentCommitment = {};
   let hasStarted = false;
-  let finoShareText = '';
 
   const generalQuestions = [
     { id:'clientName',label:'تعرفنا بأسمك  ',type:'text' },
@@ -949,48 +939,40 @@
         'تمويل استهلاكي',
         'تمويل التأجيري',
         'تمويل عقاري',
+        'شراء مديونية تمويل شخصي',
+        'شراء مديونية تمويل عقاري',
+        'بطاقات الإتمان',
         'تمويل نقاط البيع',
         'تمويل المؤسسات',
-        'تمويل الأسطول',
-        'بطاقات الإتمان',
-        'شراء مديونية تمويل شخصي',
-        'شراء مديونية تمويل عقاري'
+        'تمويل الأسطول'
       ]
     },
     {
-      id:'mortgageProduct',
+      id:'mortgageProductType',
       label:'نوع التمويل العقاري',
       type:'select',
       options:[
         'وحدة جاهزة من السوق',
         'بناء ذاتي',
         'مشاريع الخارطة',
-        'تحت الانشاء(بيت تملكه عظم)',
-        'ارض وقرض(ارض وبناء ذاتي)',
-        'رهن',
-        'ارض (سكنية)'
+        'تحت الانشاء (بيت تملكه عظم)',
+        'ارض وقرض (ارض وبناء ذاتي)',
+        'ارض (سكنية)',
+        'رهن'
       ],
       show:a=>a.financeType==='تمويل عقاري'
     },
-    { 
-      id:'supported',
-      label:'هل التمويل العقاري مدعوم؟',
-      type:'select',
-      options:['مدعوم','غير مدعوم'],
-      show:a=>{
-        if (a.financeType !== 'تمويل عقاري') return false;
-        if (!a.mortgageProduct) return false;
-        return ['وحدة جاهزة من السوق','بناء ذاتي','مشاريع الخارطة','تحت الانشاء(بيت تملكه عظم)','ارض وقرض(ارض وبناء ذاتي)'].includes(a.mortgageProduct);
-      }
+    { id:'supported',label:'هل التمويل مدعوم؟',type:'select',options:['مدعوم','غير مدعوم'],
+      show:a=>a.financeType==='تمويل عقاري' && ['وحدة جاهزة من السوق','بناء ذاتي','مشاريع الخارطة','تحت الانشاء (بيت تملكه عظم)','ارض وقرض (ارض وبناء ذاتي)'].includes(a.mortgageProductType)
     },
-    { id:'bundle',label:'هل ترغب في دفعة مقدمة من سكني؟',type:'select',options:['نعم','لا'],show:a=>a.supported==='مدعوم' },
     {
-      id:'isIctizaz',
+      id:'isEtezaaz',
       label:'هل أنت من منسوبي وزارة الدفاع (مؤهل لبرنامج اعتزاز)؟',
       type:'select',
       options:['نعم','لا'],
       show:a=>a.financeType==='تمويل عقاري' && a.supported==='مدعوم' && a.jobType==='عسكري'
     },
+    { id:'bundle',label:'هل ترغب في دفعة مقدمة من سكني؟',type:'select',options:['نعم','لا'],show:a=>a.supported==='مدعوم' },
     { id:'salary',label:'كم الراتب الشهري الصافي؟',type:'number' },
     { id:'months',label:'على كم شهر تريد التمويل؟',type:'select',options:[],dynamic:true },
     { id:'calcMode',label:'كيف تفضّل اختيار النسبة؟',type:'select',options:['أدخل النسبة بنفسي','ترشيح بنك مناسب تلقائياً'] },
@@ -1051,12 +1033,13 @@
       showSorryPage(answers.clientName || "العميل");
       return 0;
     }
-    const isPersonalLikeProduct =
-      answers.financeType === 'تمويل شخصي' ||
+    const isPersonal = answers.financeType && (
+      answers.financeType.includes('شخصي') ||
+      answers.financeType === 'تمويل استهلاكي' ||
       answers.financeType === 'تمويل التأجيري' ||
-      answers.financeType === 'شراء مديونية تمويل شخصي';
-
-    return Math.min(remainingMonths, isPersonalLikeProduct ? 60 : 360);
+      answers.financeType === 'شراء مديونية تمويل شخصي'
+    );
+    return Math.min(remainingMonths, isPersonal ? 60 : 360);
   }
 
   function describeMonths(m){
@@ -1117,6 +1100,19 @@
     showQuestion();
   }
 
+  function showComingSoonForProduct(productName){
+    const titleEl = document.getElementById('comingSoonTitle');
+    const textEl = document.getElementById('comingSoonText');
+    if (productName === 'شراء مديونية تمويل عقاري') {
+      titleEl.textContent = 'شراء مديونية تمويل عقاري';
+      textEl.innerHTML = 'حالياً لا يوجد احتساب لشراء المديونية العقارية عبر هذه الحاسبة.<br>سيتم التحديث وإضافة الخدمة في الأسابيع القادمة إن شاء الله 🙏<br><br>يمكنك اختيار نوع تمويل آخر للاحتساب.';
+    } else {
+      titleEl.textContent = productName;
+      textEl.innerHTML = 'نعتذر منك، قريباً سيتم تحديث نسب هذا المنتج في المنصة.<br>يمكنك اختيار احتساب تمويل آخر من خلال الزر أدناه.';
+    }
+    showPage('comingSoon');
+  }
+
   function showQuestion(){
     const cont = document.getElementById('question');
     cont.innerHTML = '';
@@ -1125,8 +1121,15 @@
       q = generalQuestions[step];
       if(q.show && !q.show(answers)){ step++; showQuestion(); return; }
 
-      if(q.id === 'salary' && answers.financeType === 'شراء مديونية تمويل عقاري'){
-        showPage('comingSoon');
+      // منع استمرار الأسئلة لبعض المنتجات غير المفعّلة
+      if(q.id === 'salary' && (
+        answers.financeType === 'شراء مديونية تمويل عقاري' ||
+        answers.financeType === 'بطاقات الإتمان' ||
+        answers.financeType === 'تمويل نقاط البيع' ||
+        answers.financeType === 'تمويل المؤسسات' ||
+        answers.financeType === 'تمويل الأسطول'
+      )){
+        showComingSoonForProduct(answers.financeType);
         return;
       }
 
@@ -1140,7 +1143,7 @@
           showQuestion();
           return;
         } else {
-          alert('للأسف حسب بياناتك لايمكننا ترشيح بنك معين، سيتم استخدام النسبة التي تدخلها يدوياً.');
+          alert('للاسف حسب بياناتك لايمكننا ترشيح بنك معيّن    ، سيتم استخدام النسبة التي تدخلها يدوياً.');
         }
       }
     }else if(answers.hasCommitments === 'نعم'){
@@ -1166,8 +1169,6 @@
         for(let i=1; i<=limit; i++){
           sel.innerHTML += `<option value="${i}">${i} شهر</option>`;
         }
-      } else if(q.dynamic && q.id === 'monthsCommitment') {
-        // احتياطي لو استخدم لاحقاً
       } else {
         q.options.forEach(opt => {
           sel.innerHTML += `<option value="${opt}">${opt}</option>`;
@@ -1192,26 +1193,18 @@
     }
 
     if(step < generalQuestions.length){
-      // أسئلة عامة
-      if(q.id === 'financeType'){
-        // المنتجات غير الجاهزة
-        if(['بطاقات الإتمان','تمويل نقاط البيع','تمويل المؤسسات','تمويل الأسطول'].includes(val)){
-          showPage('notReady');
-          return;
-        }
-      }
-
       answers[q.id] = val;
 
-      if(q.id === 'financeType' && val === 'شراء مديونية تمويل عقاري'){
-        showPage('comingSoon');
-        return;
-      }
-
-      if(q.id === 'mortgageProduct'){
-        // إذا اختار نوع عقاري غير مدعوم تلقائياً
-        if(['رهن','ارض (سكنية)'].includes(val)){
-          answers.supported = 'غير مدعوم';
+      if(q.id === 'financeType'){
+        if(
+          val === 'شراء مديونية تمويل عقاري' ||
+          val === 'بطاقات الإتمان' ||
+          val === 'تمويل نقاط البيع' ||
+          val === 'تمويل المؤسسات' ||
+          val === 'تمويل الأسطول'
+        ){
+          showComingSoonForProduct(val);
+          return;
         }
       }
 
@@ -1224,7 +1217,6 @@
       }
       step++;
     }else{
-      // أسئلة الالتزامات
       if(q.id === 'months') currentCommitment[q.id] = parseInt(val);
       else if(q.id === 'amount' || q.id === 'balloonAmount') currentCommitment[q.id] = parseFloat(val);
       else currentCommitment[q.id] = val;
@@ -1251,7 +1243,9 @@
     const salary = parseFloat(answers.salary),
           months = parseInt(answers.months),
           years  = months / 12,
-          { financeType, supported, bundle } = answers;
+          financeType = answers.financeType,
+          supported = answers.supported,
+          bundle = answers.bundle;
 
     let profitMargin = parseFloat(answers.profitMargin);
     if (!profitMargin || isNaN(profitMargin)) {
@@ -1260,26 +1254,237 @@
     }
 
     const isBuyoutPersonal = financeType === 'شراء مديونية تمويل شخصي';
-    const isPersonalLike = (
-      financeType === 'تمويل شخصي' ||
-      financeType === 'تمويل التأجيري' ||
-      isBuyoutPersonal
-    );
     const isConsumer = financeType === 'تمويل استهلاكي';
+    const isLeasing = financeType === 'تمويل التأجيري';
+
+    // لو تمويل عقاري ولم يُسأل عن الدعم لبعض الأنواع، اعتبره غير مدعوم
+    if(financeType === 'تمويل عقاري' && !answers.supported){
+      answers.supported = 'غير مدعوم';
+    }
+
+    // تجهيز تاريخ/وقت الحسبة
+    const now = new Date();
+    const dayNames = ['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+    const dayName = dayNames[now.getDay()];
+    const y = now.getFullYear();
+    const m = String(now.getMonth()+1).padStart(2,'0');
+    const d = String(now.getDate()).padStart(2,'0');
+    const hh = String(now.getHours()).padStart(2,'0');
+    const mm = String(now.getMinutes()).padStart(2,'0');
+    const ss = String(now.getSeconds()).padStart(2,'0');
+    const calcDateTimeStr = `${dayName} ${y}-${m}-${d} ${hh}:${mm}:${ss}`;
+
+    // منطق التمويل الاستهلاكي الخاص (11.67% من الراتب، مع سقف 45% مع الالتزامات)
+    if (isConsumer) {
+      const consumerInst = salary * 0.1167;
+      const totalCommits = (answers.commitments || []).reduce((s,c)=> s + (c.amount || 0), 0);
+      const maxAll = salary * 0.45;
+
+      if (consumerInst + totalCommits > maxAll) {
+        showPage('result');
+        const name = answers.clientName || 'العميل';
+        const resultCard = document.getElementById('resultCard');
+        resultCard.innerHTML = `
+          <h2 style="margin:0 0 6px; font-size:18px; text-align:right; color:#111827;">
+            نتيجة الحسبة (التقريبية)
+          </h2>
+          <div style="font-size:12px; color:#6b7280; text-align:right; margin-bottom:4px;">
+            تاريخ ووقت الحسبة: ${calcDateTimeStr}
+          </div>
+          <div class="result-header">
+            <div class="client-chip">مرحباً ومسهلا يا ${name}</div>
+            <div style="text-align:right;">
+              <span class="badge-mode">تمويل استهلاكي - نظام 11.67%</span><br>
+              <span class="badge-duration">مدة التمويل: ${describeMonths(months)}</span>
+            </div>
+          </div>
+          <div class="alert-error">
+            نعتذر منك، حسب البيانات المدخلة فإن إجمالي التزاماتك الحالية مع قسط التمويل الاستهلاكي
+            يتجاوز 45% من صافي الراتب، ولذلك قد لا يكون التمويل متاحاً بهذا المنتج.
+          </div>
+          <div style="margin-top:10px; font-size:13px; color:#6b7280; text-align:right;">
+            يمكنك تجربة نوع تمويل آخر أو تقليل الالتزامات الحالية قبل طلب التمويل الاستهلاكي.
+          </div>
+        `;
+        return;
+      }
+
+      const totalInst = consumerInst * months;
+      const profitFactor = (years * profitMargin / 100) + 1;
+      const netFinance = totalInst / profitFactor;
+
+      let adminFee = netFinance * 0.005;
+      if (adminFee > 2500) adminFee = 2500;
+      const vat = adminFee * 0.15;
+      const commodityFee = netFinance * 0.01;
+
+      const netWithoutFees = netFinance;
+      const netAfterAdmin = netFinance - (adminFee + vat);
+      const finalNet = netAfterAdmin - commodityFee;
+      const totalProfitWithFees = totalInst - finalNet;
+
+      const name = answers.clientName || "العميل";
+      const duration = describeMonths(months);
+      const finalNetFixed = finalNet.toFixed(0);
+      const netAfterAdminFixed = netAfterAdmin.toFixed(0);
+      const netWithoutFeesFixed = netWithoutFees.toFixed(0);
+
+      const matchingBanks = getMatchingBanksForAnswers();
+      const recommendedBank = matchingBanks[0] || null;
+      const altBanks = matchingBanks.slice(1, 4);
+
+      answers.recommendedBank = answers.recommendedBank || recommendedBank;
+
+      showPage('result');
+      const resultCard = document.getElementById('resultCard');
+      let html = '';
+
+      html += `<h2 style="margin:0 0 6px; font-size:18px; text-align:right; color:#111827;">
+        نتيجة الحسبة (التقريبية)
+      </h2>`;
+      html += `<div style="font-size:12px; color:#6b7280; text-align:right; margin-bottom:4px;">
+        تاريخ ووقت الحسبة: ${calcDateTimeStr}
+      </div>`;
+
+      html += `<div class="result-header">
+        <div class="client-chip">مرحباً ومسهلا يا ${name}</div>
+        <div style="text-align:right;">
+          <span class="badge-mode">تمويل استهلاكي - نظام 11.67%</span><br>
+          <span class="badge-duration">مدة التمويل: ${duration}</span>
+        </div>
+      </div>`;
+
+      if (recommendedBank) {
+        const b = recommendedBank;
+        const logoSrc = bankLogoMap[b.bankName];
+        html += `<div class="bank-card">
+          <div class="bank-logo">
+            ${logoSrc ? `<img src="${logoSrc}" alt="${b.bankName}">` : '🏦'}
+          </div>
+          <div style="text-align:right">
+            <div class="bank-text-main">${b.bankName}</div>
+            <div class="bank-text-sub">
+              تم ترشيح هذا البنك/الشركة بناءً على راتبك ونوع التمويل الاستهلاكي بنسبة هامش ربح تقريبية:
+              <strong>${b.margin}%</strong>
+            </div>
+          </div>
+        </div>`;
+      }
+
+      const monthlyInstFixed = consumerInst.toFixed(0);
+
+      html += `
+        <div class="result-main-block">
+          <div class="result-main-title">التمويل الاستهلاكي الصافي المتوقع</div>
+          <div class="result-amount-main">
+            ${finalNetFixed.replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ريال
+          </div>
+          <div class="result-amount-sub">
+            هذا هو التمويل الصافي المتوقع بعد خصم الرسوم الإدارية والضريبة ورسوم السلع.
+          </div>
+          <div class="dual-main-grid">
+            <div class="dual-box">
+              <div class="dual-box-title">الصافي قبل أي رسوم</div>
+              <div class="dual-box-amount">
+                ${netWithoutFeesFixed.replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ر.س
+              </div>
+            </div>
+            <div class="dual-box">
+              <div class="dual-box-title">بعد الرسوم الإدارية + الضريبة فقط</div>
+              <div class="dual-box-amount">
+                ${netAfterAdminFixed.replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ر.س
+              </div>
+            </div>
+          </div>
+          <div style="margin-top:6px; font-size:13px; color:#374151;">
+            التمويل الصافي مكتوب بالحروف لتوضيح الرقم:
+            <strong>${numberToArabicWords(parseInt(finalNetFixed))}</strong>
+          </div>
+          <div class="result-amount-small" style="margin-top:4px;">
+            القسط الشهري لنظام الاستهلاكي (11.67% من الراتب): 
+            <strong>${monthlyInstFixed.replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ريال</strong>
+          </div>
+          <div class="result-amount-small" style="margin-top:2px;">
+            نسبة هامش الربح المحتسبة: <strong>${profitMargin}% سنوياً</strong>
+          </div>
+        </div>
+      `;
+
+      html += `
+        <div class="result-section-title">تفاصيل القسط المتوقع</div>
+        <div class="result-section-box">
+          <div class="instalment-row">
+            القسط من الشهر <strong>1</strong> إلى <strong>${months}</strong>:
+            <strong>${monthlyInstFixed.replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ريال</strong>
+          </div>
+        </div>
+      `;
+
+      if (altBanks.length > 0) {
+        html += `
+          <div class="result-section-title">٣ بنوك/شركات أخرى منافسة (من الأقل نسبة إلى الأعلى)</div>
+          <div class="result-section-box">
+            <ul style="margin:0; padding-right:16px; font-size:13px; color:#4b5563; list-style-type:disc; text-align:right;">
+        `;
+        altBanks.forEach(b => {
+          html += `<li>${b.bankName} - نسبة هامش ربح تقريبية: <strong>${b.margin}%</strong></li>`;
+        });
+        html += `</ul></div>`;
+      }
+
+      html += `
+        <div class="result-section-title">ملخص الأرباح والرسوم</div>
+        <div class="result-section-box">
+          <div class="instalment-row">
+            الربح دون الرسوم:
+            <strong>${(totalInst - netWithoutFees).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ريال</strong>
+          </div>
+          <div class="instalment-row">
+            الربح مع الرسوم:
+            <strong>${totalProfitWithFees.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ريال</strong>
+          </div>
+          <div class="instalment-row">
+            الرسوم الإدارية:
+            <strong>${adminFee.toFixed(0)} ريال</strong>  
+            + ضريبة القيمة المضافة:
+            <strong>${vat.toFixed(0)} ريال</strong>
+            + رسوم السلع:
+            <strong>${commodityFee.toFixed(0)} ريال</strong>
+          </div>
+          <div class="instalment-row">
+            إجمالي التمويل مع الأرباح :
+            <strong>${totalInst.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ريال</strong>
+          </div>
+        </div>
+        <div style="margin-top:10px; font-size:13px; color:#6b7280; text-align:right;">
+          ⚠️ هذه الحسبة تقريبية ، والنسب الفعلية ومنح التمويل يعتمد على سياسات الجهه الممولة وقت تقديم الطلب.
+          🔺تنوية/نحن لسنا جهة تمويلية، ودورنا يقتصر على الوساطة وترشيح العروض عبر البنوك وشركات التمويل المرخّصة.
+        </div>
+        <div style="margin-top:8px; font-size:14px; font-weight:bold; color:#1e3a8a; text-align:center;">
+          📸 تقدر تصوّر الشاشة أو تستخدم زر «حفظ النتيجة كصورة
+      »   تواصل معنا 📞0506214458
+        </div>
+      `;
+
+      resultCard.innerHTML = html;
+      return;
+    }
+
+    // باقي المنتجات (الشخصي/التأجيري/العقاري/شراء مديونية شخصي)
+    const isPersonalLike = (financeType && (financeType.includes('شخصي') || isLeasing)) || isBuyoutPersonal;
+    const isMortgage = financeType && financeType.includes('عقاري');
 
     let deductionRate = 0, addCommodityFee = false;
 
-    if(isConsumer){
-      // الاستهلاكي: نستخدم شرط 45% + قسط ثابت 11.67% من صافي الراتب
-      deductionRate = 45;
-    }else if(isPersonalLike){
-      if(months > 60){ alert('مدة التمويل الشخصي/التأجيري لا تتجاوز 60 شهر'); return; }
+    if(isPersonalLike){
+      if(months > 60){ alert('مدة التمويل الشخصي / التأجيري لا تتجاوز 60 شهر'); return; }
       deductionRate = 45;
       addCommodityFee = true;
-    }else{
-      // عقاري أو غيره
+    }else if(isMortgage){
       if(supported === 'مدعوم'){
-        if(bundle === 'لا'){
+        if(answers.isEtezaaz === 'نعم'){
+          deductionRate = 65; // نفس السياسة العامة، مع دعم اعتزاز خاص في النتيجة
+        } else if(bundle === 'لا'){
           deductionRate = 65;
         } else {
           deductionRate = salary < 15000 ? 55 : 65;
@@ -1301,43 +1506,16 @@
       }
     });
 
-    const totalCommitAtStart = commits.reduce((sum,c)=> sum + (c.amount || 0), 0);
-    const consumerInst = isConsumer ? (salary * 0.1167) : 0;
-
-    if(isConsumer){
-      // شرط: الاستهلاكي + الالتزامات لا يتجاوز 45% من الراتب
-      if( (consumerInst + totalCommitAtStart) > salary * 0.45 ){
-        showPage('result');
-        const resultCard = document.getElementById('resultCard');
-        resultCard.innerHTML = `
-          <h2 style="margin:0 0 6px; font-size:18px; text-align:right; color:#111827;">
-            نتيجة الحسبة (التقريبية)
-          </h2>
-          <div class="alert-error">
-            نعتذر منك، مجموع التزاماتك الحالية مع قسط التمويل الاستهلاكي (11.67% من الراتب)
-            يتجاوز الحد المسموح به 45% من صافي الراتب، لذلك لا يمكن إتمام هذا المنتج وفق السياسات الحالية.
-          </div>
-        `;
-        finoShareText = 'منصة FINO - لا يمكن اعتماد تمويل استهلاكي بسبب تجاوز نسبة 45% من صافي الراتب.';
-        return;
-      }
-    }
-
     let futurePhases = [];
     for(let m = 1; m <= months; m++) {
-      let available;
-      if(isConsumer){
-        available = consumerInst; // قسط الاستهلاكي ثابت
-      } else {
-        let activeCommits = commits
-          .filter(c => m <= parseInt(c.months))
-          .reduce((sum, c) => sum + (c.amount || 0), 0);
-        let balloonExtra = balloonPhases.reduce((sum, b) =>
-          (m >= b.start && m < b.end) ? sum + b.value : sum, 0);
-        available = allowedInst - activeCommits - balloonExtra;
-        if(isPersonalLike){
-          available = Math.min(available, salary * 0.3333);
-        }
+      let activeCommits = commits
+        .filter(c => m <= parseInt(c.months))
+        .reduce((sum, c) => sum + (c.amount || 0), 0);
+      let balloonExtra = balloonPhases.reduce((sum, b) =>
+        (m >= b.start && m < b.end) ? sum + b.value : sum, 0);
+      let available = allowedInst - activeCommits - balloonExtra;
+      if(isPersonalLike){
+        available = Math.min(available, salary * 0.3333);
       }
       futurePhases.push({ month: m, inst: available });
     }
@@ -1356,7 +1534,7 @@
     const netFinance = totalInst / profitFactor;
 
     let adminFee = 0, vat = 0;
-    if (isPersonalLike || isConsumer || isBuyoutPersonal) {
+    if (isPersonalLike) {
       adminFee = netFinance * 0.005;
       if (adminFee > 2500) adminFee = 2500;
       vat = adminFee * 0.15;
@@ -1375,19 +1553,18 @@
 
     let supportText = '';
     if(financeType === 'تمويل عقاري' && supported === 'مدعوم'){
-      const sup = salary < 10000 ? 150000 : 100000;
-      const dist = Math.min(months, 240),
-            monthly = Math.round(sup / dist);
-      let ictizazHtml = '';
-      if (answers.jobType === 'عسكري' && answers.isIctizaz === 'نعم') {
-        ictizazHtml = `<div class="result-amount-small" style="color:#1d4ed8;">دعم حكومي عسكري (اعتزاز): 160,000 ريال (يُحسب حسب أنظمة الجهة الداعمة)</div>`;
+      if (answers.isEtezaaz === 'نعم') {
+        supportText = `<div class="result-amount-small" style="color:#1d4ed8;">دعم حكومي عسكري (اعتزاز) تقديري: 160,000 ريال</div>`;
+      } else {
+        const sup = salary < 10000 ? 150000 : 100000;
+        if(bundle === 'نعم'){
+          supportText = `<div class="result-amount-small" style="color:#1d4ed8;">دعم حكومي مضاف تقديرياً: ${sup.toLocaleString()} ريال</div>`;
+        }else{
+          const dist = Math.min(months, 240),
+                monthly = Math.round(sup / dist);
+          supportText = `<div class="result-amount-small" style="color:#1d4ed8;">تم توزيع دعم ${sup.toLocaleString()} ريال على ${dist} شهر ≈ ${monthly.toLocaleString()} ريال شهرياً</div>`;
+        }
       }
-      supportText =
-        `<div class="result-amount-small" style="color:#1d4ed8;">
-          تم توزيع دعم ${sup.toLocaleString()} ريال على ${dist} شهر ≈ ${monthly.toLocaleString()} ريال شهرياً
-        </div>${ictizazHtml}`;
-    } else if (financeType === 'تمويل عقاري' && supported === 'غير مدعوم' && answers.jobType === 'عسكري' && answers.isIctizaz === 'نعم') {
-      supportText = `<div class="result-amount-small" style="color:#1d4ed8;">دعم حكومي عسكري (اعتزاز): 160,000 ريال (يُطبق حسب ضوابط برنامج اعتزاز)</div>`;
     }
 
     const name = answers.clientName || "العميل";
@@ -1398,7 +1575,6 @@
 
     const allNegative = finalPhases.every(p => p.inst <= 0);
 
-    const isBuyoutPersonal = financeType === 'شراء مديونية تمويل شخصي';
     const buyoutAmount = isBuyoutPersonal
       ? parseFloat(answers.buyoutAmount || '0')
       : 0;
@@ -1412,14 +1588,14 @@
 
     showPage('result');
     const resultCard = document.getElementById('resultCard');
-    const nowStr = document.getElementById('datetime') ? document.getElementById('datetime').textContent : '';
-    const finalNetText = finalNetFixed.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-
     let html = '';
 
     html += `<h2 style="margin:0 0 6px; font-size:18px; text-align:right; color:#111827;">
       نتيجة الحسبة (التقريبية)
     </h2>`;
+    html += `<div style="font-size:12px; color:#6b7280; text-align:right; margin-bottom:4px;">
+      تاريخ ووقت الحسبة: ${calcDateTimeStr}
+    </div>`;
 
     html += `<div class="result-header">
       <div class="client-chip">مرحباً ومسهلا يا ${name}</div>
@@ -1427,8 +1603,7 @@
         <span class="badge-mode">
           ${answers.calcMode === 'ترشيح بنك مناسب تلقائياً' ? 'الحسبة مع ترشيح بنك مناسب' : 'الحسبة على النسبة المدخلة'}
         </span><br>
-        <span class="badge-duration">مدة التمويل: ${duration}</span><br>
-        <span class="badge-date">تاريخ ووقت الحسبة: ${nowStr}</span>
+        <span class="badge-duration">مدة التمويل: ${duration}</span>
       </div>
     </div>`;
 
@@ -1442,7 +1617,7 @@
         <div style="text-align:right">
           <div class="bank-text-main">${b.bankName}</div>
           <div class="bank-text-sub">
-            تم ترشيح هذا البنك بناءً على راتبك ونوع التمويل بنسبة هامش ربح تقريبية:
+            تم ترشيح هذا البنك/الشركة بناءً على راتبك ونوع التمويل بنسبة هامش ربح تقريبية:
             <strong>${b.margin}%</strong>
           </div>
         </div>
@@ -1459,7 +1634,7 @@
       <div class="result-main-block">
         <div class="result-main-title"> </div>
         <div class="result-amount-main">
-          ${finalNetText} ريال
+          ${finalNetFixed.replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ريال
         </div>
         <div class="result-amount-sub">
           هذا هو التمويل الصافي المتوقع بعد خصم جميع الرسوم الإدارية والضريبة ${addCommodityFee ? 'ورسوم السلع' : ''}.
@@ -1534,7 +1709,7 @@
 
     if (altBanks.length > 0) {
       html += `
-        <div class="result-section-title">٣ بنوك / شركات تمويل أخرى منافسة (من الأقل نسبة إلى الأعلى)</div>
+        <div class="result-section-title">٣ بنوك/شركات أخرى منافسة (من الأقل نسبة إلى الأعلى)</div>
         <div class="result-section-box">
           <ul style="margin:0; padding-right:16px; font-size:13px; color:#4b5563; list-style-type:disc; text-align:right;">
       `;
@@ -1568,27 +1743,17 @@
         </div>
       </div>
       <div style="margin-top:10px; font-size:13px; color:#6b7280; text-align:right;">
-        ⚠️ هذه الحسبة تقريبية ، والنسب الفعلية ومنح التمويل يعتمد على سياسات الجهة الممولة وقت تقديم الطلب.
+        ⚠️ هذه الحسبة تقريبية ، والنسب الفعلية ومنح التمويل يعتمد على سياسات الجهه الممولة وقت تقديم الطلب.
         🔺تنوية/نحن لسنا جهة تمويلية، ودورنا يقتصر على الوساطة وترشيح العروض عبر البنوك وشركات التمويل المرخّصة.
+
       </div>
       <div style="margin-top:8px; font-size:14px; font-weight:bold; color:#1e3a8a; text-align:center;">
-        📸 تقدر تصوّر الشاشة أو تستخدم زر «حفظ النتيجة كصورة» ثم تشاركها مع موظف التمويل.
-        <br>تواصل معنا 📞0506214458
+        📸 تقدر تصوّر الشاشة أو تستخدم زر «حفظ النتيجة كصورة
+    »   تواصل معنا 📞0506214458
       </div>
     `;
 
     resultCard.innerHTML = html;
-
-    // نص المشاركة للواتساب
-    finoShareText =
-      `منصة FINO - نتيجة حسبة تقريبية\n` +
-      `العميل: ${name}\n` +
-      `نوع التمويل: ${financeType}\n` +
-      `مدة التمويل: ${duration}\n` +
-      `التمويل الصافي المتوقع: ${finalNetText} ريال\n` +
-      (recommendedBank ? `البنك/شركة التمويل المقترحة: ${recommendedBank.bankName}\n` : '') +
-      `تاريخ الحسبة: ${nowStr}\n\n` +
-      `من سرعة تملك العقار والحلول التمويلية - 0506214458`;
   }
 
   // حفظ النتيجة كصورة
@@ -1613,14 +1778,22 @@
     });
   }
 
+  // مشاركة النتيجة على الواتساب
   function shareResultOnWhatsApp(){
-    const text = finoShareText || 'منصة FINO - نتيجة حسبة تقريبية من سرعة تملك العقار.';
+    const card = document.getElementById('resultCard');
+    if(!card){
+      alert('لم يتم العثور على بطاقة النتيجة.');
+      return;
+    }
+    const text = card.innerText || card.textContent || '';
     const url = 'https://wa.me/?text=' + encodeURIComponent(text);
     window.open(url, '_blank');
   }
 
   function updateDateTime(){
     const n = new Date();
+    const dayNames = ['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+    const dayName = dayNames[n.getDay()];
     const y = n.getFullYear();
     const m = String(n.getMonth()+1).padStart(2,'0');
     const d = String(n.getDate()).padStart(2,'0');
@@ -1629,7 +1802,7 @@
     const ss = String(n.getSeconds()).padStart(2,'0');
     const el = document.getElementById('datetime');
     if (el) {
-      el.textContent = `${y}-${m}-${d} ${hh}:${mm}:${ss}`;
+      el.textContent = `${dayName} ${y}-${m}-${d} ${hh}:${mm}:${ss}`;
     }
   }
 
