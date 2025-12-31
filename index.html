@@ -516,7 +516,7 @@
 
       <!-- أيقونة دخول المسؤول في الصفحة الأولى فقط -->
       <div style="margin-top:16px; display:flex; justify-content:center;">
-        <div id="adminIcon" title="لوحة المشرفين" onclick="showPage('adminLogin')">
+        <div id="adminIcon" title="لوحة المشرفين  " onclick="showPage('adminLogin')">
           ❕ <span style="font-size:12px;"></span>
         </div>
       </div>
@@ -1498,6 +1498,7 @@
     return parts.join(" و ") + " ريال";
   }
 
+  // دعم سكني شهري حسب الجدول (20 سنة = 240 شهر)
   function getHousingSupportMonthlyBySalary(salary){
     const s = Number(salary || 0);
     if (s <= 3000) return 1350;
@@ -1508,7 +1509,7 @@
     if (s <= 8000) return 757;
     if (s <= 9000) return 673;
     if (s <= 10000) return 599;
-    return 416;
+    return 416; // أكثر من 10,000
   }
 
   function fmtMoney(n){
@@ -1625,9 +1626,6 @@
           sel.innerHTML += `<option value="${opt}">${opt}</option>`;
         });
       }
-      if(q.default){
-        setTimeout(()=>{ sel.value = String(q.default); }, 0);
-      }
       div.appendChild(sel);
     } else {
       div.innerHTML += `<input type="${q.type}" id="${q.id}" ${q.default ? `value="${q.default}"` : ''}>`;
@@ -1693,7 +1691,7 @@
     showQuestion();
   }
 
-  // ====== الحسبة (كما هي عندك) ======
+  // ====== الحسبة ======
   function calculate(){
     const salary = parseFloat(answers.salary),
           months = parseInt(answers.months),
@@ -1727,7 +1725,7 @@
     const ss = String(now.getSeconds()).padStart(2,'0');
     const calcDateTimeStr = `${dayName} ${y}-${m}-${d} ${hh}:${mm}:${ss}`;
 
-    // ==== التمويل الاستهلاكي ====
+    // ==== التمويل الاستهلاكي (موجود كما هو) ====
     if (isConsumer) {
       const consumerInst = salary * 0.1167;
       const totalCommits = (answers.commitments || []).reduce((s,c)=> s + (c.amount || 0), 0);
@@ -2315,7 +2313,12 @@
     const card = document.getElementById('resultCard');
     if (!card) { alert('لم يتم العثور على بطاقة النتيجة.'); return; }
 
-    html2canvas(card, { scale: 2, backgroundColor: '#ffffff', useCORS: true }).then(canvas => {
+    html2canvas(card, {
+      scale: 2,
+      backgroundColor: '#ffffff',
+      useCORS: true,
+      allowTaint: true
+    }).then(canvas => {
       const MAX_W = 1400;
       let outCanvas = canvas;
 
@@ -2398,14 +2401,6 @@
     document.getElementById('clientResultModal').style.display = 'none';
   }
 
-  function renderClientPreviewFromText(text){
-    const box = document.getElementById('clientPreviewCard');
-    if(!box) return;
-    const safe = escapeHtml(text).replace(/\n/g,'<br>');
-    box.innerHTML = `<div class="h">نتيجة الحسبة (التقريبية)</div>
-      <div style="font-size:13px; color:#111827; font-weight:700; line-height:1.8;">${safe}</div>`;
-  }
-
   function generateClientResultText(){
     const lc = answers._lastCalc;
     if(!lc){ alert('لا توجد نتيجة.'); return; }
@@ -2414,89 +2409,82 @@
     const instOv = safeNum(document.getElementById('clientInstOverride').value);
     const note  = (document.getElementById('clientNoteOverride').value || '').trim();
 
-    let usedNet = (netOv !== null) ? netOv : lc.finalNet;
-
+    let usedNet = (netOv !== null) ? netOv : (lc.finalNet || 0);
     let usedNetWithSupport = usedNet;
-    if(lc.financeType === 'تمويل عقاري' && lc.supportTotalAdded){
-      usedNetWithSupport = usedNet + lc.supportTotalAdded;
+
+    if(lc.financeType === 'تمويل عقاري' && (lc.supportTotalAdded || 0) > 0){
+      usedNetWithSupport = usedNet + (lc.supportTotalAdded || 0);
     }
 
     const hasMultiPhases = Array.isArray(lc.phases) && lc.phases.length > 1;
     const singlePhaseInst = (!hasMultiPhases && Array.isArray(lc.phases) && lc.phases[0]) ? Number(lc.phases[0].inst) : null;
     const usedInst = (instOv !== null) ? instOv : (singlePhaseInst !== null ? singlePhaseInst : null);
 
-    const totalPaid = (usedInst !== null)
-      ? (usedInst * lc.months)
-      : lc.totalInst;
+    const overrideUsed = (netOv !== null) || (instOv !== null);
 
-    const computedProfit = totalPaid - usedNet;
+    let lines = [];
+    lines.push('نتيجة الحسبة (التقريبية)');
+    lines.push(`الاسم: ${lc.clientName || ''}`);
+    lines.push(`نوع التمويل: ${lc.financeType || ''}`);
+    lines.push(`مدة التمويل: ${lc.durationText || (lc.months ? describeMonths(lc.months) : '')}`);
+    lines.push('------------------------------');
 
-    let supportLines = '';
-    if(lc.supportSakaniAdded){
-      if(lc.housingSupportMonthly > 0){
-        supportLines += `- دعم سكني (شهري) حسب مصفوفة الدعم: ${fmtMoney(lc.housingSupportMonthly)}\n`;
-        supportLines += `- إجمالي دعم سكني (حتى 20 سنة كحد أقصى): ${fmtMoney(lc.supportSakaniAdded)}\n`;
-      } else {
-        supportLines += `- دعم سكني المضاف: ${fmtMoney(lc.supportSakaniAdded)}\n`;
-      }
+    // صافي مع/بدون دعم
+    if(lc.financeType === 'تمويل عقاري'){
+      const base = usedNet;
+      const sak = Number(lc.supportSakaniAdded || 0);
+      const etz = Number(lc.supportEtezaazAdded || 0);
+      const tot = sak + etz;
+
+      lines.push(`صافي التمويل: ${fmtMoney(base)}`);
+      lines.push(`دعم سكني المضاف: ${sak ? fmtMoney(sak) : 'لا يوجد'}`);
+      lines.push(`دعم اعتزاز المضاف: ${etz ? fmtMoney(etz) : 'لا يوجد'}`);
+      lines.push(`الإجمالي (صافي التمويل + الدعم): ${fmtMoney(base + tot)}`);
     } else {
-      // لا شيء
+      lines.push(`التمويل الصافي: ${fmtMoney(usedNet)}`);
     }
 
-    if(lc.supportEtezaazAdded){
-      supportLines += `- دعم اعتزاز (وزارة الدفاع): ${fmtMoney(lc.supportEtezaazAdded)}\n`;
-    }
-
-    let phasesText = '';
+    // الأقساط
+    lines.push('------------------------------');
     if(Array.isArray(lc.phases) && lc.phases.length){
-      phasesText = lc.phases.map(p=>{
-        return `- القسط من الشهر ${p.from} إلى ${p.to}: ${fmtMoney(p.inst)}`;
-      }).join('\n');
+      lines.push('الأقساط حسب الفترات:');
+      lc.phases.forEach(p=>{
+        lines.push(`- من ${p.from} إلى ${p.to}: ${fmtMoney(Number(p.inst || 0))}`);
+      });
+    } else if(usedInst !== null && lc.months){
+      lines.push(`القسط الشهري: ${fmtMoney(usedInst)}`);
     }
 
-    const clientName = lc.clientName || 'عميلنا';
-    const bankName = lc.recommendedBankName ? `\n🏦 البنك/الجهة المرشحة: ${lc.recommendedBankName}` : '';
-
-    let mainNetLine = '';
-    if(lc.financeType === 'تمويل عقاري' && (lc.supportSakaniAdded || lc.supportEtezaazAdded)){
-      mainNetLine = `⭐ صافي التمويل مضاف له الدعم: ${fmtMoney(usedNetWithSupport)}\n`;
-    } else {
-      mainNetLine = `⭐ التمويل الصافي: ${fmtMoney(usedNet)}\n`;
+    if(note){
+      lines.push('------------------------------');
+      lines.push(`ملاحظة: ${note}`);
     }
 
-    const instLine = (usedInst !== null)
-      ? `⭐ القسط الشهري: ${fmtMoney(usedInst)}\n`
-      : '';
-
-    const noteLine = note ? `📝 ملاحظة: ${note}\n` : '';
-
-    let privateWarn = '';
-    // نفس تنبيه النتيجة: أي نوع وظيفة غير (مدني/عسكري)
-    // (هنا نعتمد من answers الحالية إن وجدت)
+    // تنبيهات
     if (answers.jobType && !['مدني (قطاع حكومي)','عسكري'].includes(answers.jobType)) {
-      privateWarn = `\n⚠️ تنبيه: حالات القطاع الخاص تخضع لاعتماد الجهة الممولة وقد تختلف الشروط حسب سياسة كل جهة.`;
+      lines.push('------------------------------');
+      lines.push('تنبيه: جميع حالات القطاع الخاص (شبه حكومي/معتمد/غير معتمد) تخضع لاعتماد الجهة الممولة وقد تختلف الشروط حسب سياسة كل جهة.');
     }
 
-    let etezaazWarn = '';
-    if (answers.isEtezaaz === 'نعم') {
-      etezaazWarn = `\n⚠️ تنبيه اعتزاز: دعم وزارة الدفاع يبدأ بعد سنتين، ولا تتوفر لدينا تفاصيل دقيقة لقيمة القسط — يرجى التواصل مع جهة عملك لمعرفة التفاصيل الكاملة.`;
+    if (answers.isEtezaaz === 'نعم' || lc.isEtezaaz === true) {
+      lines.push('------------------------------');
+      lines.push('تنبيه اعتزاز: دعم وزارة الدفاع يبدأ بعد سنتين، ولا تتوفر لدينا تفاصيل دقيقة لقيمة القسط — يرجى التواصل مع جهة عملك لمعرفة التفاصيل الكاملة.');
     }
 
-    const text =
-`مرحباً ومسهلا يا ${clientName}
-${mainNetLine}${instLine}${bankName}
+    lines.push('------------------------------');
+    lines.push('⚠️ هذه الحسبة تقريبية، والاعتماد النهائي حسب سياسة الجهة الممولة وقت تقديم الطلب.');
+    lines.push('تواصل معنا: 0506214458');
 
-مدة التمويل: ${lc.durationText || (lc.months ? describeMonths(lc.months) : '')}
+    if(overrideUsed){
+      lines.push('------------------------------');
+      lines.push('ملاحظة داخلية: تم إدخال صافي/قسط يدوي (للاستخدام الإداري).');
+    }
 
-${supportLines ? `الدعم المضاف:\n${supportLines}\n` : ''}${phasesText ? `تفاصيل الأقساط حسب الفترات:\n${phasesText}\n\n` : ''}الربح (تقريبي): ${fmtMoney(computedProfit)}
-
-${noteLine}⚠️ هذه الحسبة تقريبية، والاعتماد النهائي حسب سياسة الجهة الممولة وقت تقديم الطلب.
-تواصل معنا: 0506214458${privateWarn}${etezaazWarn}`;
-
+    const text = lines.join('\n');
     document.getElementById('clientResultText').value = text;
     _clientResultTextCache = text;
 
-    // نخزن آخر نص مرسل داخل آخر نتيجة للأرشفة
+    // حفظ النص داخل آخر نتيجة لتخزينه بالأرشيف
     if(answers._lastCalc){
       answers._lastCalc._lastClientText = text;
     }
@@ -2504,35 +2492,48 @@ ${noteLine}⚠️ هذه الحسبة تقريبية، والاعتماد الن
     renderClientPreviewFromText(text);
   }
 
-  function copyClientResultText(){
-    const ta = document.getElementById('clientResultText');
-    if(!ta) return;
-    const txt = ta.value || '';
-    if(!txt){ alert('لا يوجد نص لنسخه.'); return; }
+  function renderClientPreviewFromText(text){
+    const card = document.getElementById('clientPreviewCard');
+    const safe = (text || '').split('\n').map(l => escapeHtml(l));
+    let html = `<div class="h">نتيجة الحسبة (التقريبية)</div>`;
+    html += `<div style="font-size:12px;color:#6b7280;margin-bottom:6px;">جاهزة للإرسال + جاهزة للحفظ كصورة</div>`;
+    html += `<div class="hr"></div>`;
+    html += `<div style="white-space:pre-line; font-size:13px; line-height:1.75;">${safe.join('\n')}</div>`;
+    card.innerHTML = html;
+  }
 
-    navigator.clipboard.writeText(txt).then(()=>{
+  async function copyClientResultText(){
+    const t = (document.getElementById('clientResultText').value || '').trim();
+    if(!t){ alert('قم بإنشاء النص أولاً.'); return; }
+    try{
+      await navigator.clipboard.writeText(t);
       alert('تم النسخ ✅');
-    }).catch(()=>{
+    }catch(e){
+      // fallback
+      const ta = document.getElementById('clientResultText');
+      ta.focus();
       ta.select();
       document.execCommand('copy');
       alert('تم النسخ ✅');
-    });
+    }
   }
 
   function shareClientResultOnWhatsApp(){
-    const ta = document.getElementById('clientResultText');
-    if(!ta){ alert('لا يوجد نص.'); return; }
-    const txt = ta.value || '';
-    if(!txt){ alert('أنشئ النتيجة المختصرة أولاً.'); return; }
-    const url = 'https://wa.me/?text=' + encodeURIComponent(txt);
+    const t = (document.getElementById('clientResultText').value || '').trim();
+    if(!t){ alert('قم بإنشاء النص أولاً.'); return; }
+    const url = 'https://wa.me/?text=' + encodeURIComponent(t);
     window.open(url, '_blank');
   }
 
   function saveClientResultAsImage(){
-    const box = document.getElementById('clientPreviewCard');
-    if(!box){ alert('لا توجد معاينة للحفظ.'); return; }
-
-    html2canvas(box, { scale: 2, backgroundColor: '#ffffff', useCORS: true }).then(canvas => {
+    const preview = document.getElementById('clientPreviewCard');
+    if(!preview){ alert('لم يتم العثور على بطاقة المعاينة.'); return; }
+    html2canvas(preview, {
+      scale: 2,
+      backgroundColor:'#ffffff',
+      useCORS:true,
+      allowTaint:true
+    }).then(canvas=>{
       const MAX_W = 1400;
       let outCanvas = canvas;
 
@@ -2556,16 +2557,20 @@ ${noteLine}⚠️ هذه الحسبة تقريبية، والاعتماد الن
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-    }).catch(err => {
+    }).catch(err=>{
       console.error(err);
-      alert('تعذر حفظ النتيجة كصورة.');
+      alert('تعذر حفظ النتيجة كصورة. جرّب من متصفح آخر.');
     });
   }
 
-  // تشغيل المنصة
-  loadBankConfigs();
-  updateDateTime();
-  setInterval(updateDateTime, 1000);
+  // ====== تشغيل أولي ======
+  document.addEventListener('DOMContentLoaded', () => {
+    loadBankConfigs();
+    updateDateTime();
+    setInterval(updateDateTime, 1000);
+    // تهيئة صفحة الحاسبة
+    // لا نبدأ الأسئلة تلقائياً إلا بعد الضغط "ابدأ الحسبة"
+  });
 </script>
 
 </body>
