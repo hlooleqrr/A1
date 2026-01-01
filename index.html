@@ -2,1041 +2,712 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>منصة FINO - ترشيح التمويل الذكي</title>
+  <title>منصة FINO - ترشيح التمويل الذكي | FINO — Smart Finance Match</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- Tajawal -->
+  <!-- خط Tajawal -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800;900&display=swap" rel="stylesheet">
 
   <style>
     *{box-sizing:border-box}
+    html,body{height:100%}
     body{
       font-family:'Tajawal',system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
-      background:#f3f4f6;margin:0;color:#111827;
-      text-align:center;font-size:20px;direction:rtl;
+      background:#f3f4f6;
+      margin:0;
+      text-align:center;
+      font-size:20px;
+      direction:rtl;
+      color:#111827;
     }
     header{
       background:linear-gradient(135deg,#0f172a,#1e3a8a);
-      color:#fff;padding:14px 10px;position:sticky;top:0;z-index:10;
-      box-shadow:0 10px 25px rgba(0,0,0,.12);
+      color:#fff;
+      padding:14px 10px;
+      position:sticky;
+      top:0;
+      z-index:10;
+      box-shadow:0 6px 18px rgba(0,0,0,.18);
     }
-    header h1{margin:0;font-size:24px;font-weight:900;letter-spacing:.2px}
-    header p{margin:6px 0 0;font-size:14px;opacity:.95}
-    .wrap{max-width:980px;margin:14px auto;padding:0 12px}
+    header h1{
+      margin:0;
+      font-size:24px;
+      font-weight:800;
+      letter-spacing:.2px;
+      line-height:1.25;
+    }
+    header .sub{
+      margin-top:6px;
+      font-size:14px;
+      opacity:.92;
+      font-weight:700;
+    }
+    main{
+      max-width:980px;
+      margin:18px auto 28px;
+      padding:0 14px;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:14px;
+    }
+    @media(min-width:900px){
+      .grid{grid-template-columns:1.12fr .88fr}
+    }
     .card{
-      background:#fff;border-radius:18px;padding:16px 14px;
-      box-shadow:0 10px 30px rgba(0,0,0,.08);
+      background:rgba(249,250,251,.97);
       border:1px solid rgba(15,23,42,.08);
+      border-radius:18px;
+      padding:16px 14px;
+      box-shadow:0 10px 28px rgba(2,6,23,.07);
       text-align:right;
     }
-    .grid{display:grid;grid-template-columns:1fr;gap:12px}
-    @media(min-width:900px){.grid{grid-template-columns:1fr 1fr}}
-    .title{font-size:22px;font-weight:900;margin:0 0 10px}
-    .muted{color:#6b7280;font-size:16px;line-height:1.6;margin:6px 0 0}
-    .hr{height:1px;background:rgba(15,23,42,.10);margin:14px 0;border:0}
+    .card h2{
+      margin:0 0 10px;
+      font-size:22px;
+      font-weight:900;
+      color:#0f172a;
+      letter-spacing:.2px;
+      text-align:right;
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 12px;
+      border-radius:999px;
+      background:rgba(30,58,138,.10);
+      color:#1e3a8a;
+      font-weight:900;
+      font-size:14px;
+      margin-bottom:10px;
+    }
+    .muted{
+      color:#334155;
+      font-weight:700;
+      line-height:1.65;
+      margin:0;
+      text-align:right;
+    }
+    .steps{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:10px;
+      margin-top:12px;
+    }
+    @media(min-width:640px){
+      .steps{grid-template-columns:1fr 1fr}
+    }
+    .step{
+      background:#fff;
+      border:1px solid rgba(15,23,42,.08);
+      border-radius:16px;
+      padding:12px;
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+      box-shadow:0 6px 18px rgba(2,6,23,.05);
+    }
+    .num{
+      width:38px;height:38px;border-radius:12px;
+      background:linear-gradient(135deg,#1e3a8a,#0ea5e9);
+      color:#fff;
+      display:flex;align-items:center;justify-content:center;
+      font-weight:900;
+      flex:0 0 auto;
+      box-shadow:0 10px 18px rgba(30,58,138,.25);
+    }
+    .step b{display:block;font-size:16px;margin-bottom:2px;color:#0f172a}
+    .step span{display:block;font-size:14px;color:#334155;font-weight:700;line-height:1.55}
+    .cta{
+      margin-top:14px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-start;
+    }
     .btn{
-      width:100%;border:none;border-radius:16px;padding:14px 14px;
-      font-size:20px;font-weight:900;cursor:pointer;
-      background:#1e3a8a;color:#fff;transition:.15s;
+      border:none;
+      border-radius:16px;
+      padding:14px 16px;
+      font-weight:900;
+      font-size:18px;
+      cursor:pointer;
+      transition:transform .12s ease, box-shadow .12s ease, opacity .12s ease;
+      font-family:'Tajawal',sans-serif;
+      user-select:none;
     }
-    .btn:hover{transform:translateY(-1px)}
-    .btn.secondary{
-      background:#e5edff;color:#1e3a8a;
-      border:1px solid rgba(30,58,138,.25);
-      font-size:16px;font-weight:800;border-radius:14px;padding:10px 12px;
-      width:auto;display:inline-flex;gap:8px;align-items:center
+    .btn:active{transform:scale(.98)}
+    .btnPrimary{
+      background:linear-gradient(135deg,#1e3a8a,#0ea5e9);
+      color:#fff;
+      box-shadow:0 14px 26px rgba(30,58,138,.25);
     }
-    .field{display:flex;flex-direction:column;gap:6px}
-    label{font-size:16px;font-weight:800}
-    select,input{
-      font-family:inherit;font-size:18px;padding:12px 12px;border-radius:14px;
-      border:1px solid rgba(15,23,42,.18);outline:none;background:#fff;
+    .btnGhost{
+      background:#fff;
+      color:#0f172a;
+      border:1px solid rgba(15,23,42,.12);
+      box-shadow:0 10px 22px rgba(2,6,23,.05);
     }
-    select:focus,input:focus{border-color:#1e3a8a;box-shadow:0 0 0 4px rgba(30,58,138,.12)}
-    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
-    .row .field{flex:1;min-width:160px}
-    .chips{display:flex;flex-wrap:wrap;gap:10px}
-    .chip{
-      flex:1;min-width:210px;
-      background:#f8fafc;border:1px solid rgba(15,23,42,.12);
-      border-radius:16px;padding:12px;cursor:pointer;
-      font-weight:900;font-size:18px;text-align:center;
+    .btnDanger{
+      background:#fee2e2;
+      color:#991b1b;
+      border:1px solid rgba(153,27,27,.20);
+      box-shadow:0 10px 22px rgba(153,27,27,.08);
     }
-    .chip.active{border-color:#1e3a8a;box-shadow:0 0 0 4px rgba(30,58,138,.10);background:#eef2ff}
-    .note{
-      background:#fff7ed;border:1px solid rgba(251,146,60,.35);
-      color:#9a3412;border-radius:14px;padding:12px;font-size:16px;line-height:1.7
+    .hr{height:1px;background:rgba(15,23,42,.10);margin:14px 0}
+    .formRow{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:10px;
+      margin-top:8px;
     }
-    .ok{
-      background:#ecfdf5;border:1px solid rgba(16,185,129,.28);
-      color:#065f46;border-radius:14px;padding:12px;font-size:16px;line-height:1.7
+    @media(min-width:640px){
+      .formRow{grid-template-columns:1fr 1fr}
     }
-    .bad{
-      background:#fef2f2;border:1px solid rgba(239,68,68,.28);
-      color:#991b1b;border-radius:14px;padding:12px;font-size:18px;line-height:1.7;font-weight:900
+    label{
+      display:block;
+      font-weight:900;
+      color:#0f172a;
+      margin:0 0 6px;
+      font-size:16px;
+      text-align:right;
     }
-    .hidden{display:none !important}
+    input,select{
+      width:100%;
+      padding:14px 12px;
+      border-radius:14px;
+      border:1px solid rgba(15,23,42,.15);
+      font-size:18px;
+      outline:none;
+      background:#fff;
+      font-family:'Tajawal',sans-serif;
+    }
+    input:focus,select:focus{
+      border-color:rgba(30,58,138,.55);
+      box-shadow:0 0 0 4px rgba(14,165,233,.12);
+    }
+    .hint{
+      margin:8px 0 0;
+      font-size:14px;
+      color:#475569;
+      font-weight:800;
+      line-height:1.6;
+      text-align:right;
+    }
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:6px 10px;
+      border-radius:999px;
+      font-weight:900;
+      font-size:13px;
+      border:1px solid rgba(15,23,42,.10);
+      background:#fff;
+      color:#0f172a;
+    }
     .resultBox{
-      background:#0b1220;color:#fff;border-radius:18px;padding:14px;
-      border:1px solid rgba(255,255,255,.10);text-align:right
+      background:#fff;
+      border:1px solid rgba(15,23,42,.10);
+      border-radius:18px;
+      padding:14px;
+      box-shadow:0 10px 26px rgba(2,6,23,.06);
+      text-align:right;
     }
-    .resultBox h2{margin:0 0 10px;font-size:22px;font-weight:900}
-    .lines{display:grid;gap:8px}
-    .line{
-      background:rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:14px;padding:10px 10px;font-size:18px
+    .resultBox h3{
+      margin:0 0 8px;
+      font-size:20px;
+      font-weight:900;
+      color:#0f172a;
     }
-    .line b{font-weight:900}
-    .blueName{color:#60a5fa;font-weight:900}
-    footer{
-      margin:12px auto 18px;max-width:980px;padding:0 12px;
-      color:#6b7280;font-size:14px;line-height:1.7
+    .kpi{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:10px;
+      margin-top:10px;
     }
-    .footCard{
-      background:#fff;border:1px solid rgba(15,23,42,.08);
-      border-radius:16px;padding:12px;box-shadow:0 8px 22px rgba(0,0,0,.06);
-      text-align:center
+    @media(min-width:640px){
+      .kpi{grid-template-columns:1fr 1fr}
     }
-    .tiny{font-size:12px;color:#6b7280}
-    .mono{font-variant-numeric:tabular-nums}
+    .kpiItem{
+      background:rgba(30,58,138,.06);
+      border:1px solid rgba(30,58,138,.16);
+      border-radius:16px;
+      padding:12px;
+      text-align:right;
+    }
+    .kpiItem .t{font-size:14px;font-weight:900;color:#1e3a8a;margin-bottom:2px}
+    .kpiItem .v{font-size:20px;font-weight:900;color:#0f172a}
+    .list{
+      margin:10px 0 0;
+      padding:0;
+      list-style:none;
+      display:grid;
+      gap:10px;
+    }
+    .offer{
+      background:#fff;
+      border:1px solid rgba(15,23,42,.10);
+      border-radius:16px;
+      padding:12px;
+      text-align:right;
+      box-shadow:0 8px 22px rgba(2,6,23,.05);
+    }
+    .offerTop{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .offerName{
+      font-weight:900;
+      color:#0f172a;
+      font-size:18px;
+    }
+    .score{
+      font-weight:900;
+      font-size:14px;
+      padding:6px 10px;
+      border-radius:999px;
+      background:rgba(14,165,233,.12);
+      color:#0369a1;
+      border:1px solid rgba(3,105,161,.18);
+    }
+    .offerMeta{
+      margin-top:8px;
+      display:grid;
+      grid-template-columns:1fr;
+      gap:8px;
+      color:#334155;
+      font-weight:800;
+      font-size:14px;
+      line-height:1.6;
+    }
+    @media(min-width:640px){
+      .offerMeta{grid-template-columns:1fr 1fr}
+    }
+    .note{
+      margin-top:12px;
+      padding:12px;
+      border-radius:16px;
+      background:#fff7ed;
+      border:1px solid rgba(234,88,12,.18);
+      color:#9a3412;
+      font-weight:900;
+      font-size:14px;
+      line-height:1.7;
+      text-align:right;
+    }
+    .footer{
+      margin-top:14px;
+      padding:12px 10px;
+      color:#475569;
+      font-weight:800;
+      font-size:13px;
+      line-height:1.6;
+      text-align:center;
+    }
+    .hide{display:none !important}
+    .center{ text-align:center }
   </style>
 </head>
 
 <body>
   <header>
-    <h1>FINO — Smart Finance Match</h1>
-    <p>منصة ذكية ترشّح لك الأفضل خلال ثوانٍ</p>
+    <h1>منصة FINO — ترشيح التمويل الذكي</h1>
+    <div class="sub">FINO — Smart Finance Match</div>
   </header>
 
-  <div class="wrap">
-    <div class="card" id="homeCard">
-      <div class="title">ابدأ الحسبة</div>
-      <div class="muted">
-        ملاحظة: لسنا جهة تمويلية، دورنا يقتصر على الترشيح والمساعدة في الإجراءات مع الجهات المرخّصة.
-      </div>
-      <hr class="hr">
-      <button class="btn" id="startBtn">ابدأ الحسبة</button>
-    </div>
+  <main>
+    <div class="grid">
+      <section class="card" id="introCard">
+        <div class="pill">⚡ خلال ثوانٍ.. بدون حيرة ولا تعب</div>
+        <h2>كيف تساعدك FINO؟</h2>
+        <p class="muted">
+          منصة ذكية تحسب لك التمويل وتُرشّح لك العرض الأنسب بناءً على بياناتك (الراتب + الالتزامات + المدة) بشكل سريع وواضح.
+        </p>
 
-    <div class="card hidden" id="formCard">
-      <div class="title">بيانات العميل</div>
-
-      <!-- نوع التمويل -->
-      <div class="field">
-        <label>اختر نوع التمويل تريد حسبته:</label>
-        <div class="chips" id="financeTypeChips">
-          <div class="chip active" data-val="mortgage">تمويل عقاري</div>
-          <div class="chip" data-val="personal">تمويل شخصي أو تمويل استهلاكي</div>
-        </div>
-      </div>
-
-      <hr class="hr">
-
-      <!-- الاسم -->
-      <div class="field">
-        <label>اسمك الكريم</label>
-        <input id="clientName" type="text" placeholder="مثال: محمد" />
-      </div>
-
-      <hr class="hr">
-
-      <!-- الوظيفة -->
-      <div class="field">
-        <label>نوع الوظيفة</label>
-        <select id="jobType">
-          <option value="military">عسكري</option>
-          <option value="civil">مدني</option>
-          <option value="semi">خاص شبه حكومي</option>
-          <option value="private_ok">خاص معتمد</option>
-          <option value="private_no">خاص غير معتمد</option>
-        </select>
-      </div>
-
-      <hr class="hr">
-
-      <!-- تاريخ الميلاد هجري -->
-      <div class="field">
-        <label>تاريخ الميلاد (هجري)</label>
-        <div class="row">
-          <div class="field">
-            <label>اليوم</label>
-            <select id="bdDay"></select>
-          </div>
-          <div class="field">
-            <label>الشهر</label>
-            <select id="bdMonth"></select>
-          </div>
-          <div class="field">
-            <label>السنة</label>
-            <select id="bdYear"></select>
-          </div>
-        </div>
-        <div class="tiny">اختيار فقط (بدون إدخال يدوي)</div>
-      </div>
-
-      <div id="militaryExtra" class="hidden">
-        <hr class="hr">
-
-        <!-- الرتبة -->
-        <div class="field">
-          <label>اذكر الرتبة</label>
-          <select id="rank"></select>
-          <div class="tiny">يتم احتساب الراتب الأساسي تلقائيًا من جدول الرتب + تاريخ التعيين (بدون سؤال العميل عن الراتب الأساسي)</div>
-        </div>
-
-        <hr class="hr">
-
-        <!-- تاريخ التعيين -->
-        <div class="field">
-          <label>تاريخ التعيين (هجري)</label>
-          <div class="row">
-            <div class="field">
-              <label>اليوم</label>
-              <select id="apDay"></select>
+        <div class="steps">
+          <div class="step">
+            <div class="num">1</div>
+            <div>
+              <b>أدخل بياناتك</b>
+              <span>الراتب، الالتزامات، نوع التمويل، والمدة.</span>
             </div>
-            <div class="field">
-              <label>الشهر</label>
-              <select id="apMonth"></select>
+          </div>
+          <div class="step">
+            <div class="num">2</div>
+            <div>
+              <b>نحسب القدرة التقريبية</b>
+              <span>نحسب القسط المتاح بناءً على بياناتك.</span>
             </div>
-            <div class="field">
-              <label>السنة</label>
-              <select id="apYear"></select>
+          </div>
+          <div class="step">
+            <div class="num">3</div>
+            <div>
+              <b>ترشيح العروض</b>
+              <span>نرشّح لك أفضل الخيارات بشكل مرتب.</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="num">4</div>
+            <div>
+              <b>تواصل سريع</b>
+              <span>تقدر تحفظ نتيجتك وترسلها للموظف بسهولة.</span>
             </div>
           </div>
         </div>
 
-        <div class="note" id="retireNote" style="margin-top:10px"></div>
-
-        <div class="field hidden" id="extendBlock" style="margin-top:10px">
-          <label>هل تريد الحسبة على التقاعد الممتد؟</label>
-          <select id="extendAfterRet">
-            <option value="no">لا</option>
-            <option value="yes">نعم</option>
-          </select>
-          <div class="tiny">يتم توضيح الأقساط قبل التقاعد وبعده في النتيجة</div>
+        <div class="cta">
+          <button class="btn btnPrimary" id="startBtn">ابدأ الآن</button>
+          <button class="btn btnGhost" id="loadBtn">استرجاع آخر إدخال</button>
         </div>
-      </div>
 
-      <hr class="hr">
-
-      <!-- الراتب الصافي الحالي (مسموح) -->
-      <div class="field">
-        <label>راتبك الصافي الحالي (شهري)</label>
-        <input id="netSalary" type="number" inputmode="numeric" placeholder="مثال: 10000" />
-      </div>
-
-      <hr class="hr">
-
-      <!-- مدعوم/دفعة مقدمة (للمنطق 55/65) -->
-      <div class="row">
-        <div class="field">
-          <label>هل التمويل مدعوم؟</label>
-          <select id="isSupported">
-            <option value="no">لا</option>
-            <option value="yes">نعم</option>
-          </select>
+        <div class="note">
+          تنويه: نحن لسنا جهة تمويلية، ودورنا يقتصر على الوساطة وترشيح العروض عبر البنوك وشركات التمويل المرخّصة، وننجز لك المعاملة ونحل المعوقات بأسرع وقت.
         </div>
-        <div class="field" id="sakaniBlock">
-          <label>هل ترغب في دفعة مقدمة من سكني؟</label>
-          <select id="sakaniDown">
-            <option value="no">لا</option>
-            <option value="yes">نعم</option>
-          </select>
+
+        <div class="footer">
+          © FINO — Smart Finance Match
         </div>
-      </div>
+      </section>
 
-      <hr class="hr">
+      <section class="card hide" id="formCard">
+        <h2>بياناتك</h2>
 
-      <!-- مدة التمويل -->
-      <div class="field">
-        <label>مدة التمويل (بالأشهر)</label>
-        <select id="monthsSelect"></select>
-        <div class="tiny" id="monthsHint"></div>
-      </div>
+        <div class="formRow">
+          <div>
+            <label for="fullName">اسمك الكريم</label>
+            <input id="fullName" type="text" placeholder="مثال: محمد" autocomplete="name" />
+          </div>
 
-      <hr class="hr">
-
-      <!-- الالتزامات -->
-      <div class="field">
-        <label>هل لديك التزامات؟</label>
-        <select id="hasObl">
-          <option value="no">لا</option>
-          <option value="yes">نعم</option>
-        </select>
-      </div>
-
-      <div id="oblBlock" class="hidden">
-        <hr class="hr">
-        <div class="title" style="font-size:20px;margin:0 0 10px">تفاصيل الالتزام</div>
-
-        <div class="row">
-          <div class="field">
-            <label>نوع الالتزام</label>
-            <select id="oblType">
-              <option value="car">قرض سيارة</option>
-              <option value="consumer">قرض استهلاكي</option>
-              <option value="other">التزام آخر</option>
+          <div>
+            <label for="finType">اختر نوع التمويل تريد حسبته:</label>
+            <select id="finType">
+              <option value="mortgage">تمويل عقاري</option>
+              <option value="personal">تمويل شخصي أو تمويل استهلاكي</option>
             </select>
           </div>
-          <div class="field">
-            <label>قيمة القسط الشهري</label>
-            <input id="oblPay" type="number" inputmode="numeric" placeholder="مثال: 1500" />
+        </div>
+
+        <div class="formRow">
+          <div>
+            <label for="salary">الراتب الشهري (ريال)</label>
+            <input id="salary" type="number" inputmode="numeric" placeholder="مثال: 12000" min="0" />
           </div>
-          <div class="field">
-            <label>عدد الأشهر المتبقية</label>
-            <select id="oblMonthsLeft"></select>
+
+          <div>
+            <label for="commitments">إجمالي الالتزامات الشهرية (ريال)</label>
+            <input id="commitments" type="number" inputmode="numeric" placeholder="مثال: 1500" min="0" />
           </div>
         </div>
 
-        <div id="balloonBlock" class="hidden" style="margin-top:10px">
-          <div class="row">
-            <div class="field">
-              <label>هل لديك دفعة أخيرة؟</label>
-              <select id="hasBalloon">
-                <option value="no">لا</option>
-                <option value="yes">نعم</option>
-              </select>
+        <div class="formRow">
+          <div>
+            <label for="months">مدة التمويل (بالأشهر)</label>
+            <input id="months" type="number" inputmode="numeric" placeholder="مثال: 240" min="12" />
+          </div>
+
+          <div>
+            <label for="support">هل التمويل مدعوم؟</label>
+            <select id="support">
+              <option value="no">غير مدعوم</option>
+              <option value="yes">مدعوم</option>
+            </select>
+          </div>
+        </div>
+
+        <p class="hint">ملاحظة: النتائج تقريبية للترشيح فقط، وقد تختلف حسب سياسات الجهة التمويلية والملاءة والالتزامات الفعلية.</p>
+
+        <div class="cta">
+          <button class="btn btnPrimary" id="calcBtn">احسب و رشّح</button>
+          <button class="btn btnGhost" id="backBtn">رجوع</button>
+        </div>
+      </section>
+
+      <section class="card hide" id="resultCard">
+        <h2>نتيجة الحسبة (التقريبية)</h2>
+
+        <div class="resultBox" id="welcomeBox">
+          <h3 id="welcomeTitle">مرحباً ومسهلا</h3>
+          <div class="kpi">
+            <div class="kpiItem">
+              <div class="t">القسط المتاح تقريباً</div>
+              <div class="v" id="kpiInstallment">—</div>
             </div>
-            <div class="field hidden" id="balloonAmountWrap">
-              <label>مبلغ الدفعة الأخيرة</label>
-              <input id="balloonAmount" type="number" inputmode="numeric" placeholder="مثال: 45000" />
+            <div class="kpiItem">
+              <div class="t">المدة</div>
+              <div class="v" id="kpiMonths">—</div>
             </div>
           </div>
-          <div class="tiny">الدفعة الأخيرة تُوزّع على 24 شهر بعد انتهاء قسط السيارة</div>
+
+          <div class="hr"></div>
+
+          <div class="kpi">
+            <div class="kpiItem">
+              <div class="t">تمويلك الصافي بعد خصم الرسوم</div>
+              <div class="v" id="kpiNet">—</div>
+            </div>
+            <div class="kpiItem">
+              <div class="t">الربح مع الرسوم</div>
+              <div class="v" id="kpiProfit">—</div>
+            </div>
+          </div>
+
+          <div class="note" id="negativeNote" style="display:none;">
+            نعتذر منك لا يمكن تمويلك
+          </div>
         </div>
 
-        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px">
-          <button class="btn" type="button" id="addOblBtn">إضافة الالتزام</button>
-          <button class="btn secondary" type="button" id="clearOblBtn">🧹 تصفير الالتزامات</button>
+        <div class="hr"></div>
+
+        <div class="resultBox">
+          <h3>أفضل العروض المقترحة</h3>
+          <ul class="list" id="offersList"></ul>
+          <div class="hint center" id="offersHint">—</div>
         </div>
 
-        <div class="muted" style="margin-top:10px" id="oblList"></div>
-
-        <div class="field" style="margin-top:10px">
-          <label>هل لديك التزام آخر؟</label>
-          <select id="moreObl">
-            <option value="no">لا</option>
-            <option value="yes">نعم</option>
-          </select>
+        <div class="cta">
+          <button class="btn btnPrimary" id="saveBtn">حفظ النتيجة</button>
+          <button class="btn btnGhost" id="copyBtn">نسخ ملخص</button>
+          <button class="btn btnDanger" id="resetBtn">🔁 إعادة الحسبة</button>
         </div>
-      </div>
 
-      <hr class="hr">
+        <div class="note">
+          تنويه: لسنا جهة تمويلية. الترشيح تقديري ويعتمد على البيانات المدخلة. الاعتماد النهائي عند الجهة التمويلية المرخّصة.
+        </div>
 
-      <button class="btn" id="calcBtn">احسب الآن</button>
+        <div class="footer" id="footTime">—</div>
+      </section>
     </div>
-
-    <div class="card hidden" id="resultCard">
-      <div class="resultBox">
-        <h2 id="resultTitle">نتيجة الحسبة (التقريبية)</h2>
-
-        <div class="lines" id="resultLines"></div>
-
-        <div id="negativeWarn" class="bad hidden" style="margin-top:10px">
-          نعتذر منك لا يمكن تمويلك
-        </div>
-      </div>
-
-      <div style="margin-top:12px;text-align:center">
-        <button class="btn secondary" id="resetBtn">🔁 إعادة الحسبة</button>
-      </div>
-
-      <div class="muted" style="margin-top:12px;text-align:right">
-        تنويه: النتائج تقديرية وتعتمد على معلوماتك المدخلة وقد تختلف حسب سياسات الجهات التمويلية.
-      </div>
-    </div>
-  </div>
-
-  <footer>
-    <div class="footCard">
-      <div class="mono" id="todayLine">—</div>
-      <div class="tiny">© FINO — Smart Finance Match</div>
-    </div>
-  </footer>
+  </main>
 
   <script>
-    /***********************
-     * أدوات تاريخ هجري (اعتماداً على Intl لليوم الحالي)
-     * - الحسابات تتم "على الهجري" بالأرقام
-     ***********************/
-    function getTodayHijriParts(){
-      const fmt = new Intl.DateTimeFormat('en-TN-u-ca-islamic-umalqura', {year:'numeric',month:'numeric',day:'numeric'});
-      const parts = fmt.formatToParts(new Date());
-      const obj = {};
-      for(const p of parts){
-        if(p.type==='year') obj.y = parseInt(p.value,10);
-        if(p.type==='month') obj.m = parseInt(p.value,10);
-        if(p.type==='day') obj.d = parseInt(p.value,10);
-      }
-      // fallback
-      if(!obj.y || !obj.m || !obj.d){
-        obj.y=1445; obj.m=1; obj.d=1;
-      }
-      return obj;
-    }
-    function hijriTotalMonths(h){ return (h.y*12 + (h.m-1)); }
-    function monthsBetweenHijri(a,b){
-      // فرق أشهر بين تاريخين هجريين (تقريبي/عملي للحدود)
-      let months = hijriTotalMonths(b) - hijriTotalMonths(a);
-      // إذا يوم النهاية أقل من يوم البداية ننقص شهر
-      if(b.d < a.d) months -= 1;
-      return months;
-    }
-    function addHijriYears(h, years){
-      return {y:h.y+years, m:h.m, d:h.d};
-    }
-    function hijriToTextMonths(totalMonths){
-      const years = Math.floor(totalMonths/12);
-      const months = totalMonths%12;
-      const yTxt = years===0 ? "" : (years===1 ? "سنة" : (years===2 ? "سنتين" : (years<=10 ? years+" سنوات" : years+" سنة")));
-      const mTxt = months===0 ? "" : (months===1 ? "شهر واحد" : (months===2 ? "شهرين" : (months<=10 ? months+" أشهر" : months+" شهر")));
-      if(years>0 && months>0) return `${totalMonths} شهر (${yTxt} و${mTxt})`;
-      if(years>0) return `${totalMonths} شهر (${yTxt})`;
-      return `${totalMonths} شهر (${mTxt || "0"})`;
+    const $ = (id) => document.getElementById(id);
+
+    const introCard  = $("introCard");
+    const formCard   = $("formCard");
+    const resultCard = $("resultCard");
+
+    const startBtn = $("startBtn");
+    const loadBtn  = $("loadBtn");
+    const backBtn  = $("backBtn");
+    const calcBtn  = $("calcBtn");
+    const saveBtn  = $("saveBtn");
+    const copyBtn  = $("copyBtn");
+    const resetBtn = $("resetBtn");
+
+    const fullName = $("fullName");
+    const finType  = $("finType");
+    const salary   = $("salary");
+    const commitments = $("commitments");
+    const months   = $("months");
+    const support  = $("support");
+
+    const welcomeTitle = $("welcomeTitle");
+    const kpiInstallment = $("kpiInstallment");
+    const kpiMonths = $("kpiMonths");
+    const kpiNet = $("kpiNet");
+    const kpiProfit = $("kpiProfit");
+    const offersList = $("offersList");
+    const offersHint = $("offersHint");
+    const negativeNote = $("negativeNote");
+    const footTime = $("footTime");
+
+    function show(card){
+      [introCard, formCard, resultCard].forEach(c => c.classList.add("hide"));
+      card.classList.remove("hide");
+      window.scrollTo({top:0, behavior:"smooth"});
     }
 
-    /***********************
-     * جدول الرتب (حسب بياناتك) — نحسب الدرجة تلقائياً:
-     * salary = grade1 + inc*(grade-1)  والحد الأعلى الدرجة 15
-     ***********************/
-    const RANKS = [
-      // أفراد
-      {name:'جندي', inc:130, grade1:3220, group:'الأفراد'},
-      {name:'جندي أول', inc:145, grade1:3395, group:'الأفراد'},
-      {name:'عريف', inc:175, grade1:3765, group:'الأفراد'},
-      {name:'وكيل رقيب', inc:210, grade1:4455, group:'الأفراد'},
-      {name:'رقيب', inc:250, grade1:5260, group:'الأفراد'},
-      {name:'رقيب أول', inc:300, grade1:6180, group:'الأفراد'},
-      {name:'رئيس رقباء', inc:360, grade1:7215, group:'الأفراد'},
-      // ضباط
-      {name:'ملازم', inc:380, grade1:7590, group:'الضباط'},
-      {name:'ملازم أول', inc:440, grade1:8835, group:'الضباط'},
-      {name:'نقيب', inc:265, grade1:10600, group:'الضباط'},
-      {name:'رائد', inc:265, grade1:13515, group:'الضباط'},
-      {name:'مقدم', inc:310, grade1:14645, group:'الضباط'},
-      {name:'عقيد', inc:360, grade1:16520, group:'الضباط'},
-      {name:'عميد', inc:470, grade1:18805, group:'الضباط'},
-      {name:'لواء', inc:635, grade1:21390, group:'الضباط'}
+    function fmt(n){
+      if(!isFinite(n)) return "—";
+      return Math.round(n).toLocaleString("ar-SA") + " ريال";
+    }
+
+    function nowText(){
+      const d = new Date();
+      const opt = { year:"numeric", month:"2-digit", day:"2-digit", hour:"2-digit", minute:"2-digit", second:"2-digit" };
+      return "آخر تحديث: " + d.toLocaleString("ar-SA", opt);
+    }
+
+    // بيانات عروض افتراضية (للترشيح التقديري)
+    const OFFERS = [
+      { name:"عرض بنك A", baseRate: 3.85, feePct: 1.0, fast:true, support:true },
+      { name:"عرض بنك B", baseRate: 3.65, feePct: 1.2, fast:false, support:true },
+      { name:"عرض بنك C", baseRate: 4.05, feePct: 0.8, fast:true, support:false },
+      { name:"عرض بنك D", baseRate: 3.95, feePct: 1.5, fast:false, support:false },
+      { name:"عرض شركة تمويل E", baseRate: 4.35, feePct: 1.0, fast:true, support:false },
     ];
 
-    /***********************
-     * سن التقاعد (قابل للتعديل بسهولة)
-     * (لم تزودني هنا بالسن لكل رتبة؛ وضعت قيم عملية قابلة للتعديل)
-     ***********************/
-    const RET_AGE_BY_RANK = {
-      'جندي':44,'جندي أول':44,'عريف':46,'وكيل رقيب':48,'رقيب':50,'رقيب أول':52,'رئيس رقباء':54,
-      'ملازم':44,'ملازم أول':46,'نقيب':48,'رائد':50,'مقدم':52,'عقيد':54,'عميد':56,'لواء':58
-    };
-
-    function getRankInfo(name){ return RANKS.find(r=>r.name===name); }
-    function salaryAtGrade(rankName, grade){
-      const info = getRankInfo(rankName);
-      if(!info) return 0;
-      const g = Math.max(1, Math.min(15, grade));
-      return info.grade1 + info.inc*(g-1);
-    }
-    function estimateGradeFromServiceYears(serviceYears){
-      // الدرجة 1 عند التعيين، ثم تزيد كل سنة حتى 15
-      const g = 1 + Math.floor(Math.max(0, serviceYears));
-      return Math.max(1, Math.min(15, g));
+    function scoreOffer(o, data){
+      let s = 100;
+      s -= (o.baseRate * 10);
+      s -= (o.feePct * 8);
+      if(data.support === "yes" && !o.support) s -= 18;
+      if(data.support === "no" && o.support) s -= 6;
+      if(o.fast) s += 6;
+      if(data.finType === "mortgage" && o.baseRate <= 3.9) s += 4;
+      if(data.finType === "personal" && o.feePct <= 1.0) s += 3;
+      return Math.round(s);
     }
 
-    /***********************
-     * واجهة
-     ***********************/
-    const homeCard = document.getElementById('homeCard');
-    const formCard = document.getElementById('formCard');
-    const resultCard = document.getElementById('resultCard');
+    function calc(){
+      const data = {
+        fullName: (fullName.value || "").trim(),
+        finType: finType.value,
+        salary: Number(salary.value),
+        commitments: Number(commitments.value),
+        months: Number(months.value),
+        support: support.value
+      };
 
-    const startBtn = document.getElementById('startBtn');
-    const calcBtn  = document.getElementById('calcBtn');
-    const resetBtn = document.getElementById('resetBtn');
+      if(!data.salary || data.salary < 0) data.salary = 0;
+      if(!data.commitments || data.commitments < 0) data.commitments = 0;
+      if(!data.months || data.months < 12) data.months = (data.finType === "personal") ? 60 : 240;
 
-    const financeTypeChips = document.getElementById('financeTypeChips');
-    let financeType = 'mortgage';
+      const ratio = (data.finType === "mortgage") ? 0.55 : 0.3333;
 
-    const jobType = document.getElementById('jobType');
-    const militaryExtra = document.getElementById('militaryExtra');
-    const rankSel = document.getElementById('rank');
-    const extendBlock = document.getElementById('extendBlock');
-    const extendAfterRet = document.getElementById('extendAfterRet');
-    const retireNote = document.getElementById('retireNote');
+      const maxDeduction = data.salary * ratio;
+      const availableInstallment = maxDeduction - data.commitments;
 
-    const bdDay=document.getElementById('bdDay'), bdMonth=document.getElementById('bdMonth'), bdYear=document.getElementById('bdYear');
-    const apDay=document.getElementById('apDay'), apMonth=document.getElementById('apMonth'), apYear=document.getElementById('apYear');
+      welcomeTitle.textContent = data.fullName ? ("مرحباً ومسهلا يا " + data.fullName) : "مرحباً ومسهلا";
+      kpiInstallment.textContent = fmt(availableInstallment);
+      kpiMonths.textContent = Math.round(data.months).toLocaleString("ar-SA") + " شهر";
 
-    const netSalary = document.getElementById('netSalary');
-    const isSupported = document.getElementById('isSupported');
-    const sakaniBlock = document.getElementById('sakaniBlock');
-    const sakaniDown = document.getElementById('sakaniDown');
+      const gross = Math.max(0, availableInstallment) * data.months;
+      const fees = gross * 0.01;
+      const profit = gross * 0.15;
+      const net = gross - fees;
 
-    const monthsSelect = document.getElementById('monthsSelect');
-    const monthsHint = document.getElementById('monthsHint');
+      kpiNet.textContent = fmt(net);
+      kpiProfit.textContent = fmt(profit + fees);
 
-    const hasObl = document.getElementById('hasObl');
-    const oblBlock = document.getElementById('oblBlock');
-    const oblType = document.getElementById('oblType');
-    const oblPay  = document.getElementById('oblPay');
-    const oblMonthsLeft = document.getElementById('oblMonthsLeft');
-
-    const balloonBlock = document.getElementById('balloonBlock');
-    const hasBalloon = document.getElementById('hasBalloon');
-    const balloonAmountWrap = document.getElementById('balloonAmountWrap');
-    const balloonAmount = document.getElementById('balloonAmount');
-
-    const addOblBtn = document.getElementById('addOblBtn');
-    const clearOblBtn = document.getElementById('clearOblBtn');
-    const oblList = document.getElementById('oblList');
-    const moreObl = document.getElementById('moreObl');
-
-    const clientName = document.getElementById('clientName');
-
-    const resultLines = document.getElementById('resultLines');
-    const negativeWarn = document.getElementById('negativeWarn');
-
-    // تخزين الالتزامات
-    let obligations = []; // {type, pay, monthsLeft, balloonAmount}
-
-    function setFinanceType(val){
-      financeType = val;
-      [...financeTypeChips.querySelectorAll('.chip')].forEach(c=>{
-        c.classList.toggle('active', c.dataset.val===val);
-      });
-      // إظهار/إخفاء سكني (فقط للعقاري عادة)
-      if(financeType==='mortgage'){
-        sakaniBlock.classList.remove('hidden');
-      }else{
-        sakaniBlock.classList.add('hidden');
-      }
-      refreshMonthsOptions();
-      refreshOblMonthsOptions();
-      refreshRetirementUI();
-    }
-
-    financeTypeChips.addEventListener('click',(e)=>{
-      const chip = e.target.closest('.chip');
-      if(!chip) return;
-      setFinanceType(chip.dataset.val);
-    });
-
-    startBtn.addEventListener('click',()=>{
-      homeCard.classList.add('hidden');
-      formCard.classList.remove('hidden');
-      window.scrollTo({top:0,behavior:'smooth'});
-    });
-
-    resetBtn.addEventListener('click',()=>{
-      resultCard.classList.add('hidden');
-      formCard.classList.remove('hidden');
-      window.scrollTo({top:0,behavior:'smooth'});
-    });
-
-    // تعبئة خيارات الأيام/الأشهر/السنوات
-    function fillDateSelects(){
-      bdDay.innerHTML=''; bdMonth.innerHTML=''; bdYear.innerHTML='';
-      apDay.innerHTML=''; apMonth.innerHTML=''; apYear.innerHTML='';
-
-      for(let d=1; d<=30; d++){
-        bdDay.append(new Option(d,d));
-        apDay.append(new Option(d,d));
-      }
-      for(let m=1; m<=12; m++){
-        bdMonth.append(new Option(m,m));
-        apMonth.append(new Option(m,m));
-      }
-      // الميلاد: 1370/01/01 إلى 1430/01/01 (حسب طلبك العام)
-      for(let y=1370; y<=1430; y++){
-        bdYear.append(new Option(y,y));
-      }
-      // افتراضي 1412/01/01
-      bdYear.value = '1412';
-      bdMonth.value = '1';
-      bdDay.value = '1';
-
-      // التعيين: من (اليوم-40 سنة) إلى اليوم (هجري)
-      const todayH = getTodayHijriParts();
-      const start = Math.max(1300, todayH.y-40);
-      for(let y=start; y<=todayH.y; y++){
-        apYear.append(new Option(y,y));
-      }
-      apYear.value = String(Math.max(start, todayH.y-20));
-      apMonth.value = String(todayH.m);
-      apDay.value = String(Math.min(30,todayH.d));
-    }
-
-    function fillRanks(){
-      rankSel.innerHTML='';
-      // تجميع
-      const groups = {};
-      for(const r of RANKS){
-        if(!groups[r.group]) groups[r.group]=[];
-        groups[r.group].push(r);
-      }
-      for(const gName of Object.keys(groups)){
-        const og = document.createElement('optgroup');
-        og.label = gName;
-        for(const r of groups[gName]){
-          og.appendChild(new Option(r.name, r.name));
-        }
-        rankSel.appendChild(og);
-      }
-      rankSel.value = 'جندي';
-    }
-
-    // أشهر الالتزام المتبقية: 1..360 (عملي) لكن نقيّد حسب مدة التمويل المختارة
-    function refreshOblMonthsOptions(){
-      oblMonthsLeft.innerHTML='';
-      const term = parseInt(monthsSelect.value||'60',10);
-      const max = Math.max(1, Math.min(360, term));
-      for(let m=1; m<=max; m++){
-        oblMonthsLeft.append(new Option(m,m));
-      }
-      oblMonthsLeft.value = String(Math.min(max, 60));
-    }
-
-    // إظهار/إخفاء العسكري
-    jobType.addEventListener('change', refreshRetirementUI);
-    rankSel.addEventListener('change', refreshRetirementUI);
-    bdDay.addEventListener('change', refreshMonthsOptions);
-    bdMonth.addEventListener('change', refreshMonthsOptions);
-    bdYear.addEventListener('change', refreshMonthsOptions);
-    apDay.addEventListener('change', refreshRetirementUI);
-    apMonth.addEventListener('change', refreshRetirementUI);
-    apYear.addEventListener('change', refreshRetirementUI);
-    extendAfterRet.addEventListener('change', refreshMonthsOptions);
-
-    function getBirthHijri(){
-      return {y:parseInt(bdYear.value,10), m:parseInt(bdMonth.value,10), d:parseInt(bdDay.value,10)};
-    }
-    function getAppHijri(){
-      return {y:parseInt(apYear.value,10), m:parseInt(apMonth.value,10), d:parseInt(apDay.value,10)};
-    }
-
-    function refreshRetirementUI(){
-      const isMil = jobType.value==='military';
-      militaryExtra.classList.toggle('hidden', !isMil);
-
-      if(!isMil){
-        retireNote.textContent='';
-        extendBlock.classList.add('hidden');
-        extendAfterRet.value='no';
-        refreshMonthsOptions();
-        return;
+      if(availableInstallment <= 0){
+        negativeNote.style.display = "block";
+      } else {
+        negativeNote.style.display = "none";
       }
 
-      const todayH = getTodayHijriParts();
-      const birthH = getBirthHijri();
-      const rName = rankSel.value;
-      const retAge = RET_AGE_BY_RANK[rName] ?? 60;
-      const retH = addHijriYears(birthH, retAge);
-      const monthsToRet = monthsBetweenHijri(todayH, retH);
-      const yearsToRet = monthsToRet/12;
+      offersList.innerHTML = "";
+      const scored = OFFERS.map(o => ({...o, score: scoreOffer(o, data)}))
+                           .sort((a,b) => b.score - a.score)
+                           .slice(0, 4);
 
-      // خدمة حتى اليوم (من تاريخ التعيين إلى اليوم)
-      const appH = getAppHijri();
-      const serviceMonths = Math.max(0, monthsBetweenHijri(appH, todayH));
-      const serviceYears = serviceMonths/12;
-
-      const grade = estimateGradeFromServiceYears(serviceYears);
-      const currentBasic = salaryAtGrade(rName, grade);
-      const pensionExpected = Math.round(currentBasic * 0.55); // حسب طلبك: راتب التقاعد = 55% من الراتب الأساسي المحسوب
-
-      const retText = `تاريخ تقاعدك المتوقع (هجري): ${retH.y}/${String(retH.m).padStart(2,'0')}/${String(retH.d).padStart(2,'0')}`;
-      const monthsText = monthsToRet>=0 ? `المتبقي للتقاعد: ${hijriToTextMonths(monthsToRet)}` : `تنبيه: يبدو أنك تجاوزت سن التقاعد لهذه الرتبة.`;
-      const salText = `الراتب الأساسي (تقديري) حسب الرتبة/الخدمة: ${fmtMoney(currentBasic)} ريال — الدرجة التقديرية: ${grade}/15`;
-      const penText = `الراتب التقاعدي المتوقع (تقديري): ${fmtMoney(pensionExpected)} ريال — قسط التقاعد (55%): ${fmtMoney(Math.round(pensionExpected*0.55))} ريال`;
-
-      retireNote.innerHTML =
-        `<div class="${monthsToRet<0?'bad':'ok'}">
-          <b>${retText}</b><br>
-          ${monthsText}<br>
-          ${salText}<br>
-          ${penText}
-        </div>`;
-
-      // شرطك: سؤال التقاعد الممتد يظهر فقط إذا (عقاري + عسكري + التقاعد أقل من 25 سنة)
-      const showExtend = (financeType==='mortgage' && yearsToRet>0 && yearsToRet<25);
-      extendBlock.classList.toggle('hidden', !showExtend);
-      if(!showExtend) extendAfterRet.value='no';
-
-      refreshMonthsOptions();
-    }
-
-    // خيارات مدة التمويل (مع القيود)
-    function refreshMonthsOptions(){
-      monthsSelect.innerHTML='';
-
-      const todayH = getTodayHijriParts();
-      const birthH = getBirthHijri();
-
-      // حد أقصى عام
-      let maxByType = (financeType==='mortgage') ? 360 : 60;
-
-      // حد حسب سن التقاعد
-      let maxByRet = 9999;
-
-      if(jobType.value==='military'){
-        const rName = rankSel.value;
-        const retAge = RET_AGE_BY_RANK[rName] ?? 60;
-        const retH = addHijriYears(birthH, retAge);
-        const monthsToRet = monthsBetweenHijri(todayH, retH);
-
-        if(financeType==='mortgage' && (extendAfterRet.value==='yes') && !extendBlock.classList.contains('hidden')){
-          // ممتد: إلى عمر 60 هجري
-          const age60H = addHijriYears(birthH, 60);
-          maxByRet = monthsBetweenHijri(todayH, age60H);
-        }else{
-          // غير ممتد: إلى التقاعد فقط
-          maxByRet = monthsToRet;
-        }
-      }else{
-        // مدني/خاص: إلى عمر 60 هجري
-        const age60H = addHijriYears(birthH, 60);
-        maxByRet = monthsBetweenHijri(todayH, age60H);
-      }
-
-      let max = Math.min(maxByType, maxByRet);
-      if(!isFinite(max)) max = maxByType;
-      max = Math.floor(max);
-
-      // إن كان أقل من 12 شهر اعتبر غير مؤهل
-      if(max < 12) max = 12;
-
-      for(let m=12; m<=max; m++){
-        monthsSelect.append(new Option(m, m));
-      }
-
-      // افتراضياتك
-      if(financeType==='mortgage'){
-        monthsSelect.value = String(Math.min(240, max));
-      }else{
-        monthsSelect.value = String(Math.min(60, max));
-      }
-
-      monthsHint.textContent = `الحد الأعلى المسموح حسب النوع/التقاعد: ${hijriToTextMonths(parseInt(monthsSelect.value,10))}`;
-
-      refreshOblMonthsOptions();
-    }
-
-    // التزامات
-    hasObl.addEventListener('change', ()=>{
-      oblBlock.classList.toggle('hidden', hasObl.value!=='yes');
-      if(hasObl.value!=='yes'){
-        obligations = [];
-        renderOblList();
-      }
-    });
-
-    oblType.addEventListener('change', ()=>{
-      const isCar = oblType.value==='car';
-      balloonBlock.classList.toggle('hidden', !isCar);
-      if(!isCar){
-        hasBalloon.value='no';
-        balloonAmountWrap.classList.add('hidden');
-        balloonAmount.value='';
-      }
-    });
-    hasBalloon.addEventListener('change', ()=>{
-      balloonAmountWrap.classList.toggle('hidden', hasBalloon.value!=='yes');
-      if(hasBalloon.value!=='yes') balloonAmount.value='';
-    });
-
-    addOblBtn.addEventListener('click', ()=>{
-      const pay = parseFloat(oblPay.value||'0');
-      const mLeft = parseInt(oblMonthsLeft.value||'0',10);
-      if(!(pay>0) || !(mLeft>0)){
-        alert('فضلاً أدخل قيمة القسط + عدد الأشهر المتبقية بشكل صحيح');
-        return;
-      }
-      let bAmt = 0;
-      if(oblType.value==='car' && hasBalloon.value==='yes'){
-        bAmt = parseFloat(balloonAmount.value||'0');
-        if(!(bAmt>0)){
-          alert('فضلاً أدخل مبلغ الدفعة الأخيرة');
-          return;
-        }
-      }
-
-      obligations.push({
-        type:oblType.value,
-        pay:Math.round(pay),
-        monthsLeft:mLeft,
-        balloonAmount:Math.round(bAmt)
+      scored.forEach(o => {
+        const li = document.createElement("li");
+        li.className = "offer";
+        li.innerHTML = `
+          <div class="offerTop">
+            <div class="offerName">${o.name}</div>
+            <div class="score">${o.score} / 100</div>
+          </div>
+          <div class="offerMeta">
+            <div>معدل تقريبي: <span class="badge">${o.baseRate}%</span></div>
+            <div>رسوم إدارية تقديرية: <span class="badge">${o.feePct}%</span></div>
+            <div>يدعم التمويل المدعوم: <span class="badge">${o.support ? "نعم" : "لا"}</span></div>
+            <div>سرعة إنجاز: <span class="badge">${o.fast ? "سريع" : "عادي"}</span></div>
+          </div>
+        `;
+        offersList.appendChild(li);
       });
 
-      // بعد الإضافة: إذا قال "نعم" خله يكمل، وإذا "لا" خلاص
-      moreObl.value = 'no';
-      renderOblList();
+      offersHint.textContent = "الترشيح مبني على بياناتك بشكل تقريبي وقد تختلف النسب والرسوم حسب الجهة.";
+      footTime.textContent = nowText();
 
-      // تهيئة الحقول للالتزام التالي
-      oblPay.value='';
-      hasBalloon.value='no';
-      balloonAmount.value='';
-      balloonAmountWrap.classList.add('hidden');
-    });
+      window.__FINO_LAST = { data, availableInstallment, net, profit, fees, scored, ts: new Date().toISOString() };
+    }
 
-    clearOblBtn.addEventListener('click', ()=>{
-      obligations = [];
-      renderOblList();
-    });
+    function saveDraft(){
+      const draft = {
+        fullName: fullName.value,
+        finType: finType.value,
+        salary: salary.value,
+        commitments: commitments.value,
+        months: months.value,
+        support: support.value
+      };
+      localStorage.setItem("fino_draft_v1", JSON.stringify(draft));
+    }
 
-    moreObl.addEventListener('change', ()=>{
-      // ما نطلع النتيجة إلا بعد أن يختار "لا" ويضغط احسب
-      // هذا مجرد تحكم بصري
-      if(moreObl.value==='yes'){
-        // يبقى على نفس البلوك، المستخدم يكمل إدخال التزام جديد
+    function loadDraft(){
+      const raw = localStorage.getItem("fino_draft_v1");
+      if(!raw) return false;
+      try{
+        const d = JSON.parse(raw);
+        fullName.value = d.fullName ?? "";
+        finType.value = d.finType ?? "mortgage";
+        salary.value = d.salary ?? "";
+        commitments.value = d.commitments ?? "";
+        months.value = d.months ?? "";
+        support.value = d.support ?? "no";
+        return true;
+      }catch(e){
+        return false;
       }
-    });
+    }
 
-    function renderOblList(){
-      if(obligations.length===0){
-        oblList.innerHTML = '<span class="muted">لا يوجد التزامات مضافة.</span>';
-        return;
-      }
-      const lines = obligations.map((o,i)=>{
-        let t = (o.type==='car'?'قرض سيارة':(o.type==='consumer'?'قرض استهلاكي':'التزام آخر'));
-        let extra = (o.type==='car' && o.balloonAmount>0) ? ` + دفعة أخيرة ${fmtMoney(o.balloonAmount)} توزع 24 شهر` : '';
-        return `• (${i+1}) ${t} — قسط ${fmtMoney(o.pay)} ريال — باقي ${o.monthsLeft} شهر${extra}`;
+    function copySummary(){
+      const last = window.__FINO_LAST;
+      if(!last) return;
+      const d = last.data;
+      const top = (last.scored && last.scored[0]) ? last.scored[0].name : "—";
+      const txt =
+`FINO — ترشيح التمويل الذكي
+الاسم: ${d.fullName || "—"}
+نوع التمويل: ${d.finType === "mortgage" ? "عقاري" : "شخصي/استهلاكي"}
+الراتب: ${fmt(d.salary)}
+الالتزامات: ${fmt(d.commitments)}
+المدة: ${Math.round(d.months)} شهر
+القسط المتاح: ${fmt(last.availableInstallment)}
+الصافي بعد خصم الرسوم (تقريبي): ${fmt(last.net)}
+الربح مع الرسوم (تقريبي): ${fmt(last.profit + last.fees)}
+أفضل ترشيح: ${top}
+${nowText()}
+تنويه: لسنا جهة تمويلية، والترشيح تقديري.`;
+      navigator.clipboard.writeText(txt).then(()=>{
+        copyBtn.textContent = "تم النسخ ✅";
+        setTimeout(()=> copyBtn.textContent = "نسخ ملخص", 1300);
+      }).catch(()=>{
+        alert("تعذر النسخ، انسخ يدويًا.");
       });
-      oblList.innerHTML = lines.join('<br>');
     }
 
-    // إظهار/إخفاء سؤال دفعة سكني
-    isSupported.addEventListener('change', ()=>{
-      sakaniBlock.classList.toggle('hidden', isSupported.value!=='yes' || financeType!=='mortgage');
+    startBtn.addEventListener("click", ()=> show(formCard));
+    loadBtn.addEventListener("click", ()=>{
+      const ok = loadDraft();
+      show(formCard);
+      if(!ok) alert("لا يوجد إدخال سابق محفوظ.");
+    });
+    backBtn.addEventListener("click", ()=> show(introCard));
+
+    calcBtn.addEventListener("click", ()=>{
+      saveDraft();
+      calc();
+      show(resultCard);
     });
 
-    monthsSelect.addEventListener('change', refreshOblMonthsOptions);
-
-    /***********************
-     * حساب
-     ***********************/
-    function fmtMoney(n){
-      const x = Math.round(Number(n||0));
-      return x.toLocaleString('en-US'); // أرقام بدون هلالات/كسور
-    }
-
-    function buildObligationSchedule(term){
-      // يحسب الالتزامات شهرياً (مع الدفعة الأخيرة للسيارة توزع 24 شهر بعد انتهاء قسط السيارة)
-      const sched = new Array(term).fill(0);
-      for(const o of obligations){
-        const m = Math.min(term, o.monthsLeft);
-        for(let i=0;i<m;i++){
-          sched[i] += o.pay;
-        }
-        if(o.type==='car' && o.balloonAmount>0){
-          const extra = o.balloonAmount / 24;
-          const start = m; // بعد انتهاء السيارة
-          const end = Math.min(term, start+24);
-          for(let i=start;i<end;i++){
-            sched[i] += extra;
-          }
-        }
-      }
-      return sched.map(v=>Math.round(v));
-    }
-
-    function compressSegments(values){
-      // يرجع فترات ثابتة (مع منع "من 10 إلى 10")
-      const segs=[];
-      let start=1, curr=values[0];
-      for(let i=2;i<=values.length;i++){
-        const v = values[i-1];
-        if(v!==curr){
-          segs.push({s:start,e:i-1,val:curr});
-          start=i; curr=v;
-        }
-      }
-      segs.push({s:start,e:values.length,val:curr});
-      return segs;
-    }
-
-    function allowedRateMortgage(salary, supported, sakaniNoDown){
-      // حسب اتفاقك: 65% إذا الراتب 15000+ أو إذا مدعوم واختر "لا" لدفعة سكني
-      if(salary>=15000) return 0.65;
-      if(supported && sakaniNoDown) return 0.65;
-      return 0.55;
-    }
-
-    calcBtn.addEventListener('click', ()=>{
-      negativeWarn.classList.add('hidden');
-      resultLines.innerHTML='';
-
-      const term = parseInt(monthsSelect.value||'0',10);
-      const salary = parseFloat(netSalary.value||'0');
-      if(!(salary>0) || !(term>=12)){
-        alert('فضلاً أدخل الراتب الصافي + مدة التمويل بشكل صحيح');
-        return;
-      }
-
-      // التزامات
-      const hasO = hasObl.value==='yes';
-      if(hasO && obligations.length===0){
-        alert('اخترت نعم للالتزامات، لازم تضيف التزامات ثم تضغط احسب');
-        return;
-      }
-      // مهم: ما نمنع الحساب لو moreObl="yes" لكن منطقك يقول لا تظهر النتيجة إلا بعد اكتمال الإدخال
-      if(hasO && moreObl.value==='yes'){
-        alert('أكمل إدخال الالتزام الجديد ثم اختر (لا) في "هل لديك التزام آخر؟"');
-        return;
-      }
-
-      const supported = (isSupported.value==='yes');
-      const sakaniNoDown = (supported && sakaniDown.value==='no');
-
-      // جدول الالتزامات شهرياً
-      const oblSched = hasO ? buildObligationSchedule(term) : new Array(term).fill(0);
-
-      // حساب خاص للعسكري (التقاعد/قسط التقاعد) على الهجري
-      const todayH = getTodayHijriParts();
-      const birthH = getBirthHijri();
-
-      let militaryInfo = null;
-      if(jobType.value==='military'){
-        const appH = getAppHijri();
-        const serviceMonths = Math.max(0, monthsBetweenHijri(appH, todayH));
-        const serviceYears = serviceMonths/12;
-
-        const rName = rankSel.value;
-        const retAge = RET_AGE_BY_RANK[rName] ?? 60;
-        const retH = addHijriYears(birthH, retAge);
-        const monthsToRet = monthsBetweenHijri(todayH, retH);
-
-        const grade = estimateGradeFromServiceYears(serviceYears);
-        const basicNow = salaryAtGrade(rName, grade);
-        const pensionExpected = Math.round(basicNow * 0.55);
-        const pensionInstall = Math.round(pensionExpected * 0.55);
-
-        militaryInfo = {
-          rName, grade,
-          basicNow,
-          pensionExpected,
-          pensionInstall,
-          retH,
-          monthsToRet
-        };
-      }
-
-      // بناء أقساط التمويل حسب النوع
-      let paySched = new Array(term).fill(0);
-
-      if(financeType==='personal'){
-        // شخصي: إذا فيه التزامات = سقف 45%، وقسط الشخصي لا يتجاوز 33.33%
-        const totalCapRate = hasO ? 0.45 : (1/3);
-        const personalCapRate = (1/3);
-        const totalCap = Math.round(salary * totalCapRate);
-        const personalCap = Math.round(salary * personalCapRate);
-
-        for(let i=0;i<term;i++){
-          const available = totalCap - oblSched[i];
-          const p = Math.max(0, Math.min(personalCap, available));
-          paySched[i] = Math.round(p);
-        }
-      }else{
-        // عقاري
-        const ratePre = allowedRateMortgage(salary, supported, sakaniNoDown);
-        const capPre = Math.round(salary * ratePre);
-
-        // إذا عسكري واختار ممتد وكانت خانته ظاهرة = قبل التقاعد على سياسة العقاري، وبعد التقاعد على 55% من الراتب التقاعدي المتوقع
-        const isMil = jobType.value==='military';
-        const extend = (isMil && !extendBlock.classList.contains('hidden') && extendAfterRet.value==='yes');
-
-        let monthsToRet = (militaryInfo ? militaryInfo.monthsToRet : 9999);
-        monthsToRet = Math.max(0, Math.min(term, monthsToRet));
-
-        for(let i=0;i<term;i++){
-          let cap = capPre;
-          if(extend && i>=monthsToRet){
-            // بعد التقاعد
-            const capPost = militaryInfo ? militaryInfo.pensionInstall : Math.round(salary*0.55);
-            cap = capPost;
-          }
-          const p = Math.max(0, cap - oblSched[i]);
-          paySched[i] = Math.round(p);
-        }
-      }
-
-      // تحقق السالب
-      const anyNegative = paySched.some(v=>v<0);
-      if(anyNegative){
-        negativeWarn.classList.remove('hidden');
-      }
-
-      // عرض النتائج
-      const name = (clientName.value||'').trim();
-      const greetName = name ? name : 'عزيزي العميل';
-
-      const segs = compressSegments(paySched);
-
-      const out = [];
-      out.push(`<div class="line"><b class="blueName">مرحباً ومسهلا يا ${escapeHtml(greetName)}</b></div>`);
-
-      // معلومات عسكرية + قسط التقاعد
-      if(militaryInfo){
-        out.push(`<div class="line"><b>الرتبة:</b> ${escapeHtml(militaryInfo.rName)} — <b>الدرجة التقديرية:</b> ${militaryInfo.grade}/15</div>`);
-        out.push(`<div class="line"><b>الراتب الأساسي (تقديري):</b> ${fmtMoney(militaryInfo.basicNow)} ريال</div>`);
-        out.push(`<div class="line"><b>الراتب التقاعدي المتوقع (تقديري):</b> ${fmtMoney(militaryInfo.pensionExpected)} ريال</div>`);
-        out.push(`<div class="line"><b>قسط التقاعد (55%):</b> ${fmtMoney(militaryInfo.pensionInstall)} ريال</div>`);
-      }
-
-      out.push(`<div class="line"><b>مدة التمويل:</b> ${hijriToTextMonths(term)}</div>`);
-
-      // الأقساط
-      out.push(`<div class="line"><b>الأقساط الشهرية (حسب الفترات):</b></div>`);
-      for(const s of segs){
-        const money = fmtMoney(s.val);
-        if(s.s===s.e){
-          out.push(`<div class="line">الشهر ${s.s}: <b>${money}</b> ريال</div>`);
-        }else{
-          out.push(`<div class="line">من الشهر ${s.s} إلى ${s.e}: <b>${money}</b> ريال</div>`);
-        }
-      }
-
-      // عرض القسط "بعد خصم الرسوم" كعنوان (بدون كسر/هلالات)
-      const firstPay = paySched[0]||0;
-      out.push(`<div class="line"><b>تمويلك الصافي يا ${escapeHtml(greetName)} بعد خصم الرسوم:</b> <span class="mono">${fmtMoney(estimateNetFromPayment(firstPay, term, financeType))}</span> ريال</div>`);
-
-      // عرض
-      formCard.classList.add('hidden');
-      resultCard.classList.remove('hidden');
-      resultLines.innerHTML = out.join('');
-      window.scrollTo({top:0,behavior:'smooth'});
+    saveBtn.addEventListener("click", ()=>{
+      saveDraft();
+      saveBtn.textContent = "تم الحفظ ✅";
+      setTimeout(()=> saveBtn.textContent = "حفظ النتيجة", 1300);
     });
 
-    // تقدير بسيط للصافي (بدون تغيير منطقك القديم لأنه غير موجود هنا): دالة تقديرية فقط
-    function estimateNetFromPayment(monthlyPay, term, type){
-      // تقدير سريع: (قسط * أشهر) * معامل
-      // (تقدر تعدله لاحقاً حسب نسبك/بنوكك)
-      const factor = (type==='mortgage') ? 0.78 : 0.70;
-      return Math.max(0, Math.round(monthlyPay * term * factor));
-    }
+    copyBtn.addEventListener("click", copySummary);
 
-    function escapeHtml(s){
-      return String(s||'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;');
-    }
+    resetBtn.addEventListener("click", ()=>{
+      show(formCard);
+      resetBtn.textContent = "🔁 إعادة الحسبة";
+    });
 
-    /***********************
-     * تشغيل أولي
-     ***********************/
-    fillDateSelects();
-    fillRanks();
-    setFinanceType('mortgage');
-    renderOblList();
-    refreshRetirementUI();
-
-    // فوتر: ميلادي + هجري بالأرقام
-    function updateFooter(){
-      const d = new Date();
-      const greg = new Intl.DateTimeFormat('ar-SA', {year:'numeric',month:'2-digit',day:'2-digit',weekday:'long'}).format(d);
-      const hijr = new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura', {year:'numeric',month:'2-digit',day:'2-digit'}).format(d);
-      const time = new Intl.DateTimeFormat('ar-SA', {hour:'2-digit',minute:'2-digit',second:'2-digit'}).format(d);
-      document.getElementById('todayLine').textContent = `اليوم: ${greg} — هجري: ${hijr} — الوقت: ${time}`;
-    }
-    updateFooter();
-    setInterval(updateFooter, 1000);
+    window.addEventListener("load", ()=>{
+      loadDraft();
+    });
   </script>
 </body>
 </html>
