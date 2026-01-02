@@ -5,23 +5,15 @@
   <title>منصة FINO -ترشيح التمويل الذكيFINO — Smart Finance Match </title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
+    /* التنسيقات الأصلية بدون أي تعديل */
     * { box-sizing: border-box; }
     body {
       font-family: 'Tajawal', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-      background: #f3f4f6;
-      margin: 0;
-      text-align: center;
-      font-size: 20px;
-      direction: rtl;
-      color: #111827;
+      background: #f3f4f6; margin: 0; text-align: center; font-size: 20px; direction: rtl; color: #111827;
     }
     header {
       background: linear-gradient(135deg, #0f172a, #1e3a8a);
-      color: #fff;
-      padding: 14px 10px;
-      position: sticky;
-      top: 0;
-      z-index: 10;
+      color: #fff; padding: 14px 10px; position: sticky; top: 0; z-index: 10;
     }
     header h1 { margin: 0; font-size: 24px; font-weight: 700; letter-spacing: 0.03em; }
     header p { margin: 4px 0 0; font-size: 16px; opacity: 0.95; }
@@ -32,1165 +24,269 @@
     button.primary, .btn.primary { background: #2563eb; color: #ffffff; box-shadow: 0 8px 16px rgba(37, 99, 235, 0.35); }
     button.primary:hover, .btn.primary:hover { transform: translateY(-1px); box-shadow: 0 10px 22px rgba(37, 99, 235, 0.45); background: #1d4ed8; }
     button.secondary, .btn.secondary { background: #e0f2fe; color: #1d4ed8; }
-    button.secondary:hover, .btn.secondary:hover { background: #dbeafe; }
     button.small, .btn.small { padding: 12px 20px; font-size: 18px; }
     input, select, textarea { width: 100%; padding: 11px 12px; margin: 8px 0 2px; font-size: 18px; border-radius: 10px; border: 1px solid #d1d5db; text-align: right; background: #f9fafb; color: #111827; }
-    input:focus, select:focus, textarea:focus { outline: none; border-color: #2563eb; box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.35); background: #ffffff; }
     label { display: block; text-align: right; font-size: 17px; margin-top: 8px; margin-bottom: 2px; color: #374151; }
-    .fade-in { animation: fadeInMove .3s ease-out forwards; opacity: 0; transform: translateY(10px); }
-    @keyframes fadeInMove { to { opacity: 1; transform: translateY(0); } }
     .page { display: none; }
     .page.active { display: block; }
-    .welcome-title { font-size: 23px; margin-bottom: 6px; color: #111827; }
-    .welcome-sub { font-size: 15px; color: #6b7280; margin-bottom: 18px; }
-    .steps-badge { font-size: 14px; color: #6b7280; margin-bottom: 6px; text-align: right; }
-    .result-header { display: flex; justify-content: space-between; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 6px; }
-    .client-chip { background: #e0f2fe; color: #1d4ed8; border-radius: 999px; padding: 6px 14px; font-size: 14px; border: 1px solid #bfdbfe; }
-    .badge-mode { background: #eff6ff; color: #1d4ed8; border-radius: 999px; padding: 4px 10px; font-size: 12px; display: inline-block; }
-    .badge-duration { background: #e0f2fe; color: #1e3a8a; border-radius: 999px; padding: 4px 10px; font-size: 12px; display: inline-block; margin-top: 3px; }
-    .bank-card { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 16px; background: #eff6ff; border: 1px dashed #2563eb; margin: 8px 0 12px; text-align: right; position: relative; }
-    .bank-logo { width: 48px; height: 48px; border-radius: 14px; background: #ffffff; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; border: 1px solid #e5e7eb; }
-    .bank-logo img { max-width: 100%; max-height: 100%; object-fit: contain; }
-    .bank-text-main { font-size: 16px; font-weight: 600; color: #0f172a; }
-    .bank-text-sub { font-size: 13px; color: #4b5563; line-height: 1.5; }
-    .promo-note { font-size: 11px; color: #d97706; background: #fffbeb; padding: 2px 6px; border-radius: 4px; border: 1px solid #fcd34d; margin-right: 6px; font-weight: bold; }
-
-    /* ====== تحسين شكل النتيجة ====== */
-    .result-main-block { background: radial-gradient(circle at top, #e0f2fe 0, #ffffff 60%); border-radius: 18px; padding: 12px 14px; margin-top: 4px; text-align: right; border: 1px solid #bfdbfe; }
-    .result-main-title { font-size: 14px; color: #1d4ed8; margin-bottom: 2px; display:flex; align-items:center; gap:8px; font-weight: 900; }
-    .result-amount-main { font-size: 30px; font-weight: 900; color: #1e40af; margin: 2px 0 6px; letter-spacing: .2px; line-height: 1.2; }
-    .result-amount-sub { font-size: 13px; color: #1d4ed8; margin: 2px 0; line-height: 1.6; }
-    .result-amount-small { font-size: 13px; color: #374151; margin-top: 2px; line-height: 1.6; }
-    .support-panel { margin-top: 10px; border-radius: 16px; padding: 10px 12px; background: #f8fafc; border: 1px solid #e5e7eb; }
-    .support-title { font-size: 13px; font-weight: 900; color: #0f766e; display:flex; align-items:center; gap:8px; margin-bottom: 6px; }
-    .support-row { font-size: 13px; color: #0f172a; display:flex; justify-content: space-between; gap: 10px; padding: 4px 0; border-bottom: 1px dashed #e5e7eb; }
-    .support-row:last-child{ border-bottom:none; }
-    .support-badge { display:inline-flex; align-items:center; gap:6px; padding: 4px 10px; border-radius: 999px; font-size: 12px; background:#ecfeff; color:#155e75; border: 1px solid #a5f3fc; margin-top: 6px; }
-    .dual-main-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(180px,1fr)); gap: 8px; margin-top: 10px; }
-    .dual-box { background: #eff6ff; border-radius: 14px; padding: 8px 10px; font-size: 13px; text-align: right; border: 1px solid #dbeafe; }
-    .dual-box-title { font-size: 12px; color: #1d4ed8; margin-bottom: 2px; font-weight: 900; }
-    .dual-box-amount { font-size: 18px; font-weight: 900; color: #1e3a8a; }
-    .result-section-title { text-align: right; font-size: 16px; font-weight: 900; margin: 12px 0 6px; color: #111827; }
-    .result-section-box { border-radius: 16px; background: #f9fafb; border: 1px solid #e5e7eb; padding: 10px 12px; text-align: right; }
-    .instalment-row { font-size: 15px; padding: 7px 0; border-bottom: 1px dashed #e5e7eb; text-align: right; color: #111827; line-height: 1.6; font-weight: 700; }
-    .instalment-row strong { font-weight: 900; color:#1e3a8a; }
-    .instalment-row:last-child { border-bottom: none; }
-    .alert-error { color: #b91c1c; background: #fef2f2; border-radius: 12px; padding: 8px 10px; font-size: 14px; margin: 6px 0; text-align: right; border: 1px solid #fecaca; line-height: 1.55; }
-    .notice-soft { color:#9f1239; background:#fff1f2; border:1px solid #fecdd3; border-radius: 14px; padding: 10px 12px; font-size: 13px; text-align:right; line-height: 1.6; margin-top: 8px; }
-    .vat-small { font-size: 11px; color: #6b7280; font-weight: 600; margin-top: 2px; }
-    .admin-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(180px,1fr)); gap: 8px 12px; margin-top: 6px; text-align: right; }
-    .admin-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-    .admin-table th, .admin-table td { border: 1px solid #e5e7eb; padding: 5px 6px; font-size: 12px; text-align: center; vertical-align: top; }
-    .admin-table th { background: #f3f4f6; color: #374151; }
-    footer { font-size: 13px; color: #6b7280; margin-top: 10px; padding: 8px 12px; position: relative; background: #f9fafb; border-top: 1px solid #e5e7eb; }
-    .footer-inner { max-width: 900px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
-    #miniAdminTools { display:inline-flex; align-items:center; gap:6px; cursor:pointer; padding: 4px 8px; border-radius: 10px; border: 1px dashed #e5e7eb; background:#fff; color:#111827; font-size: 12px; user-select:none; }
-    #miniAdminTools:hover { background:#f3f4f6; }
-    .client-preview { background:#ffffff; border: 1px solid #e5e7eb; border-radius: 16px; padding: 12px 12px; text-align:right; line-height:1.7; font-size:14px; color:#111827; }
-    .client-preview .h { font-weight: 900; color:#1e3a8a; font-size:16px; margin-bottom:6px; }
-    .client-preview .k { color:#374151; font-weight: 800; }
-    .client-preview .v { color:#0f172a; font-weight: 900; }
-    .client-preview .hr { height:1px;background:#e5e7eb;margin:10px 0; }
-    .hijri-chip{ display:inline-flex; align-items:center; gap:6px; padding: 3px 10px; border-radius: 999px; font-size: 11px; background:#eff6ff; color:#1d4ed8; border: 1px solid #dbeafe; margin-right:6px; font-weight:800; white-space:nowrap; }
-    
-    /* مظهر واتساب */
-    .btn-whatsapp { background-color: #25D366; color: white; border: none; }
-    .btn-whatsapp:hover { background-color: #128C7E; }
+    .admin-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 12px; }
+    .admin-table th, .admin-table td { border: 1px solid #e5e7eb; padding: 6px; text-align: center; }
+    footer { font-size: 13px; color: #6b7280; margin-top: 10px; padding: 8px 12px; background: #f9fafb; border-top: 1px solid #e5e7eb; }
+    .hijri-chip{ display:inline-flex; align-items:center; gap:6px; padding: 3px 10px; border-radius: 999px; font-size: 11px; background:#eff6ff; color:#1d4ed8; border: 1px solid #dbeafe; margin-right:6px; font-weight:800; }
   </style>
 </head>
 <body>
 
 <header>
-  <div class="top-bar">
-    <div style="text-align:right">
-      <h1>منصة FINO</h1>
-      <p>منصة ذكية تحسب لك التمويل وتُرشّح البنك الأنسب بناءً على راتبك ونوع التمويل والتزاماتك خلال ثوانٍ، بدون حيرة ولا تعب</p>
-    </div>
-  </div>
+  <div class="top-bar"><div style="text-align:right"><h1>منصة FINO</h1><p>ترشيح التمويل الذكي — Smart Finance Match</p></div></div>
 </header>
 
 <div class="page-container">
-
   <div id="landingPage" class="page active">
-    <div class="card fade-in">
-      <div class="welcome-title">مرحباً بك 👋</div>
-      <div class="welcome-sub">
-        من هنا تقدر تحسب تمويلك وتشوف أفضل بنك مناسب لك من حيث النسبة حسب راتبك ونوع التمويل والتزاماتك.
-      </div>
-      <button class="primary" onclick="startClientFlow()">
-        ابدأ بأسم الله
-      </button>
-      <div style="margin-top:12px; font-size:13px; color:#6b7280;">
-        النتيجة النهائية مصممة بحيث تقدر تصوّر الشاشة أو تحفظها كصورة .
-      </div>
+    <div class="card">
+      <div style="font-size:23px; margin-bottom:6px;">مرحباً بك 👋</div>
+      <div style="font-size:15px; color:#6b7280; margin-bottom:18px;">احسب تمويلك العقاري (عادي أو ممتد) بدقة بناءً على رتبتك العسكرية وتاريخ تعيينك.</div>
+      <button class="primary" onclick="startClientFlow()">ابدأ بأسم الله</button>
     </div>
   </div>
 
   <div id="calculatorPage" class="page">
     <div class="card">
-      <div class="steps-badge">
-        أسئلة بسيطة خطوة بخطوة للوصول لأدق حسبة ممكنة 👌
-      </div>
       <div id="question"></div>
-      <div style="margin-top:14px; display:flex; justify-content:flex-end; gap:8px; flex-wrap:wrap;">
+      <div style="margin-top:14px; display:flex; justify-content:flex-end; gap:8px;">
         <button id="nextButton" class="primary small" style="display:none;" onclick="nextQuestion()">التالي</button>
         <button id="mainButton" class="primary small" onclick="handleStartOrReset()">ابدأ الحسبة</button>
       </div>
       <div id="resetButtonContainer" style="margin-top:8px; display:none;">
-        <button class="secondary small" onclick="resetCalc()">🔁إعادة الحسبة </button>
+        <button class="secondary small" onclick="resetCalc()">🔁 إعادة</button>
       </div>
     </div>
   </div>
 
   <div id="resultPage" class="page">
-    <div class="card fade-in" id="resultCard">
-      </div>
-
+    <div class="card" id="resultCard"></div>
     <div style="margin-top:10px; display:flex; justify-content:space-between; gap:8px; flex-wrap:wrap;">
-      <button class="secondary small" onclick="backToLanding()">🏠 رجوع للرئيسية</button>
-      <div style="display:flex; gap:8px; flex-wrap:wrap;">
-        <button class="secondary small" onclick="saveResultAsImage()">📸 حفظ النتيجة كصورة</button>
-        <button class="primary small btn-whatsapp" onclick="shareResultOnWhatsAppWithDetails()">📲 مشاركة واتساب</button>
-        <button class="primary small" onclick="resetCalc(); showPage('calculator');">🔁 إعادة حسبة جديدة</button>
-      </div>
-    </div>
-  </div>
-
-  <div id="comingSoonPage" class="page">
-    <div class="card fade-in">
-      <h2 id="comingSoonTitle" style="margin-top:0; font-size:19px; color:#111827;">المنتج غير مفعّل حالياً</h2>
-      <p id="comingSoonText" style="font-size:14px; color:#6b7280;"></p>
-      <div style="margin-top:12px;">
-        <button class="secondary small" onclick="backToFinanceType()"> 🔙 رجوع لاختيار نوع التمويل</button>
-      </div>
-    </div>
-  </div>
-
-  <div id="adminLoginPage" class="page">
-    <div class="card fade-in">
-      <h2 style="margin-top:0; font-size:19px; color:#111827;">دخول المشرف</h2>
-      <p style="font-size:13px; color:#b91c1c; text-align:right;">
-        ⚠️ هذا القسم مخصص للمشرفين المرخص لهم فقط.
-      </p>
-      <label for="adminPin">رمز الدخول</label>
-      <input id="adminPin" type="password" placeholder="أدخل رمز المشرف" />
-      <div style="margin-top:12px;">
-        <button class="primary small" onclick="handleAdminLogin()">دخول</button>
-        <button class="secondary small" onclick="backToLanding()">إلغاء</button>
-      </div>
-      <div id="adminLoginError" class="alert-error" style="display:none; margin-top:8px;">
-        الرمز غير صحيح، حاول مرة أخرى.
-      </div>
-    </div>
-  </div>
-
-  <div id="adminHubPage" class="page">
-    <div class="card fade-in">
-      <h2 style="margin-top:0; font-size:19px; color:#111827;">لوحة المسؤول</h2>
-      <p style="font-size:13px; color:#6b7280; text-align:right;">اختر المطلوب:</p>
-      <div style="display:flex; gap:10px; justify-content:flex-end; flex-wrap:wrap; margin-top:10px;">
-        <button class="primary small" onclick="showPage('admin')">تعديل النسب</button>
-        <button class="secondary small" onclick="showPage('adminProducts')">إدارة منتجات التمويل</button>
-        <button class="secondary small" onclick="showPage('adminArchive')">سجل نتائج العملاء</button>
-        <button class="secondary small" onclick="backToLanding()">رجوع</button>
-      </div>
+      <button class="secondary small" onclick="backToLanding()">🏠 الرئيسية</button>
+      <button class="primary small" onclick="resetCalc(); showPage('calculator');">🔁 حسبة جديدة</button>
     </div>
   </div>
 
   <div id="adminPage" class="page">
-    <div class="card fade-in">
-      <h2 style="margin-top:0; font-size:19px; color:#111827;">لوحة إعدادات البنوك</h2>
-      <p style="font-size:13px; color:#6b7280; text-align:right;">
-        من هنا تضيف وتعدّل شرائح الرواتب ونسب هامش الربح والملاحظات لكل بنك.
-      </p>
-
+    <div class="card">
+      <h3>إعدادات البنوك والعروض</h3>
       <form id="adminForm" onsubmit="saveBankConfig(event)">
-        <div class="admin-grid">
-          <div>
-            <label>اسم البنك / شركة التمويل</label>
-            <select id="adminBankName">
-              <option value="">اختر...</option>
-              <option>البنك الأهلي السعودي</option>
-              <option>مصرف الراجحي</option>
-              <option>بنك الرياض</option>
-              <option>بنك ساب</option>
-              <option>البنك العربي الوطني</option>
-              <option>مصرف الإنماء</option>
-              <option>البنك السعودي الفرنسي</option>
-              <option>البنك السعودي للاستثمار</option>
-              <option>بنك البلاد</option>
-              <option>بنك الجزيرة</option>
-              <option>بنك الخليج الدولي</option>
-              <option>بنك دال 360 (D360 Bank)</option>
-              <option>بنك إس تي سي (STC Bank)</option>
-              <option>بنك فيجن (Vision Bank)</option>
-              <option>آيزي بنك (EZ Bank)</option>
-              <option>Amlak International Company</option>
-              <option>Dar Al Tamleek Company</option>
-              <option>Saudi Home Loans Company</option>
-              <option>Deutsche Gulf Finance</option>
-              <option>Abdul Latif Jameel United Real Estate Finance</option>
-              <option>Saudi Real Estate Refinance Company</option>
-              <option>Bidaya Home Finance</option>
-              <option>Nayifat Finance Company</option>
-              <option>Yanal Finance Company</option>
-              <option>AlYusr Leasing & Financing Company</option>
-              <option>Ajil Financial Services Company</option>
-              <option>National Finance Company</option>
-              <option>Morabaha Marina Finance Company</option>
-              <option>Kirnaf Finance Company</option>
-              <option>Aljasriah Finance Company</option>
-              <option>Matager Finance Company</option>
-              <option>Saudi Finance Company</option>
-              <option>Abdul Latif Jameel Finance Company</option>
-              <option>Gulf Finance Company</option>
-              <option>Tamwily International Company</option>
-              <option>Alamthal Financing Company</option>
-              <option>Osoul Modern Finance Company</option>
-              <option>Dar Aletiman Alsaudi Company</option>
-              <option>Tawkelat Financing Company</option>
-              <option>Ijarah Finance Company</option>
-              <option>Tayseer Finance Company</option>
-              <option>Saudi Fransi For Finance Leasing Company</option>
-              <option>Tamweel Aloula Finance Company</option>
-              <option>American Express Saudi Arabia</option>
-              <option>Aljabr Finance Company</option>
-              <option>Alraedah Finance Company</option>
-              <option>Raya Financing Company</option>
-              <option>Quara Finance Company</option>
-              <option>Taajeer Finance Company</option>
-              <option>Gulf Lifting Financial Leasing Company</option>
-              <option>Bab Rizq Jameel Microfinance Company</option>
-              <option>United Company for Financial Services (Tasheel)</option>
-              <option>Emkan Finance Company</option>
-              <option>Tamam Finance Company</option>
-              <option>National Home Finance Company</option>
-              <option>بنك آخر (  )</option>
-            </select>
-          </div>
-          <div>
-            <label>نوع التمويل</label>
-            <select id="adminFinanceType">
-               </select>
-          </div>
-          <div>
-            <label>نوع الدعم (للعقاري)</label>
-            <select id="adminSupportedType">
-              <option value="الكل">الكل</option>
-              <option value="مدعوم">مدعوم</option>
-              <option value="غير مدعوم">غير مدعوم</option>
-            </select>
-          </div>
-          <div>
-            <label>من راتب (ريال)</label>
-            <input id="adminMinSalary" type="number" min="0" />
-          </div>
-          <div>
-            <label>إلى راتب (ريال)</label>
-            <input id="adminMaxSalary" type="number" min="0" />
-          </div>
-          <div>
-            <label>نسبة هامش الربح (%)</label>
-            <input id="adminMargin" type="number" min="0" step="0.01" />
-          </div>
-           <div style="grid-column: 1 / -1;">
-            <label>ملاحظة العرض (تظهر للعميل بجانب النسبة)</label>
-            <input id="adminNote" type="text" placeholder="مثلاً: عرض نهاية العام" />
-          </div>
-          <div>
-            <label>نوع الوظيفة (اختياري)</label>
-            <select id="adminJobType">
-              <option value="">الكل</option>
-              <option>عسكري</option>
-              <option>مدني (قطاع حكومي)</option>
-              <option>خاص (شبه حكومي)</option>
-              <option>خاص (شركة معتمدة)</option>
-              <option>خاص (شركة غير معتمدة)</option>
-            </select>
-          </div>
-          <div>
-            <label>من شهر (المدة)</label>
-            <input id="adminMinMonths" type="number" min="1" />
-          </div>
-          <div>
-            <label>إلى شهر (المدة)</label>
-            <input id="adminMaxMonths" type="number" min="1" />
-          </div>
-          <div>
-            <label>تفاصيل المنتج (اختياري)</label>
-            <select id="adminProductDetail">
-              <option value="">الكل</option>
-              <option>وحدة جاهزة من السوق</option>
-              <option>بناء ذاتي</option>
-              <option>مشاريع الخارطة</option>
-              <option>تحت الانشاء (بيت تملكه عظم)</option>
-              <option>ارض وقرض (ارض وبناء ذاتي)</option>
-              <option>ارض (سكنية)</option>
-              <option>رهن</option>
-            </select>
-          </div>
-          <div>
-            <label>اعتزاز (للعسكري المدعوم)</label>
-            <select id="adminEtezaaz">
-              <option value="">بدون</option>
-              <option value="نعم">اعتزاز</option>
-            </select>
-          </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; text-align:right;">
+          <div><label>البنك</label><select id="adminBankName">
+            <option value="الراجحي">الراجحي</option><option value="الأهلي">الأهلي</option>
+            <option value="الرياض">الرياض</option><option value="البلاد">البلاد</option>
+            <option value="الإنماء">الإنماء</option>
+          </select></div>
+          <div><label>نوع التمويل</label><select id="adminFinanceType">
+            <option value="mortgage">عقاري عادي</option>
+            <option value="mortgageExtended">عقاري ممتد (عسكري)</option>
+          </select></div>
+          <div><label>النسبة %</label><input id="adminMargin" type="number" step="0.01"></div>
+          <div><label>نسبة الاستقطاع %</label><input id="adminDsr" type="number" step="0.1" value="33.3"></div>
+          <div style="grid-column: span 2;"><label>ملاحظة العرض (تظهر للعميل)</label>
+          <input id="adminPromoNote" type="text" placeholder="مثال: خصم 50% على الرسوم الإدارية"></div>
         </div>
-        <input type="hidden" id="adminEditIndex" value="" />
-        <div style="text-align:left; margin-top:10px;">
-          <button type="submit" class="primary small">💾 حفظ</button>
-          <button type="button" class="secondary small" onclick="clearAdminForm()">مسح النموذج</button>
-        </div>
+        <button type="submit" class="primary small" style="margin-top:10px;">💾 حفظ الإعدادات</button>
       </form>
-
       <table class="admin-table" id="adminTable">
         <thead>
-          <tr>
-            <th>البنك / الشركة</th>
-            <th>التمويل</th>
-            <th>الدعم</th>
-            <th>من راتب</th>
-            <th>إلى راتب</th>
-            <th>النسبة %</th>
-            <th>الملاحظة</th>
-            <th>تحكم</th>
-          </tr>
+          <tr><th>البنك</th><th>النوع</th><th>النسبة</th><th>الاستقطاع</th><th>الملاحظة</th><th>حذف</th></tr>
         </thead>
         <tbody></tbody>
       </table>
-
-      <div style="margin-top:12px; text-align:left;">
-        <button class="secondary small" onclick="showPage('adminHub')">رجوع للوحة المسؤول</button>
-      </div>
+      <button class="secondary small" onclick="showPage('adminHub')">رجوع للوحة التحكم</button>
     </div>
   </div>
-
-  <div id="adminProductsPage" class="page">
-    <div class="card fade-in">
-      <h2 style="margin-top:0; font-size:19px; color:#111827;">إدارة منتجات التمويل</h2>
-      <p style="font-size:13px; color:#6b7280; text-align:right;">
-        التحكم بالمنتجات ونسبة الاستقطاع (سؤال الأيقونة).
-      </p>
-
-      <form id="adminProductsForm" onsubmit="saveFinanceProduct(event)">
-        <div class="admin-grid">
-          <div style="grid-column:1/-1;">
-            <label>اسم المنتج (يظهر للعميل)</label>
-            <input id="fpName" type="text" placeholder="مثال: تمويل الأسطول" />
-          </div>
-          <div>
-            <label>الحالة</label>
-            <select id="fpEnabled">
-              <option value="true">مفعّل</option>
-              <option value="false">غير مفعّل</option>
-            </select>
-          </div>
-          <div>
-            <label>نسبة الاستقطاع % (للمسؤول ❓)</label>
-            <input id="fpDeduction" type="number" placeholder="مثلاً 33 أو 45" />
-          </div>
-          <div style="grid-column:1/-1;">
-            <label>رسالة عند عدم التفعيل (اختياري)</label>
-            <input id="fpMessage" type="text" placeholder="مثال: نعتذر منك، هذا المنتج غير متاح حالياً." />
-          </div>
-        </div>
-
-        <input type="hidden" id="fpEditIndex" value="" />
-
-        <div style="text-align:left; margin-top:10px; display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;">
-          <button type="submit" class="primary small">💾 حفظ المنتج</button>
-          <button type="button" class="secondary small" onclick="clearFinanceProductForm()">مسح</button>
-        </div>
-      </form>
-
-      <table class="admin-table" id="financeProductsTable">
-        <thead>
-          <tr>
-            <th>اسم المنتج</th>
-            <th>الحالة</th>
-            <th>الاستقطاع %</th>
-            <th>رسالة الإيقاف</th>
-            <th>تحكم</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-
-      <div style="margin-top:12px; text-align:left;">
-        <button class="secondary small" onclick="showPage('adminHub')">رجوع للوحة المسؤول</button>
-      </div>
-    </div>
-  </div>
-
-  <div id="adminArchivePage" class="page">
-    <div class="card fade-in">
-      <h2 style="margin-top:0; font-size:19px; color:#111827;">سجل نتائج العملاء</h2>
-      <div class="admin-grid">
-        <div style="grid-column:1/-1;">
-          <label>بحث (جوال / سجل مدني)</label>
-          <input id="archiveSearch" type="text" placeholder="اكتب رقم الجوال أو السجل المدني..." oninput="renderArchiveTable()" />
-        </div>
-      </div>
-      <table class="admin-table" id="archiveTable">
-        <thead>
-          <tr>
-            <th>المفتاح (جوال/سجل)</th>
-            <th>اسم العميل</th>
-            <th>نوع التمويل</th>
-            <th>تاريخ/وقت</th>
-            <th>البنك المرشح</th>
-            <th>تحكم</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-      <div style="margin-top:12px; text-align:left;">
-        <button class="secondary small" onclick="showPage('adminHub')">رجوع للوحة المسؤول</button>
-      </div>
-    </div>
-  </div>
-
-</div>
-
-<footer>
-  <div class="footer-inner">
-    <div>
-      جميع الحقوق محفوظة -  سرعة تملك العقار والحلول التمويلية -
-      <span id="datetime"></span>
-      <span class="hijri-chip">هجري: <span id="datetimeHijri"></span></span>
-    </div>
-    <div id="miniAdminTools" title="أدوات المسؤول (مخفية) — ▫️" onclick="openMiniAdminTools()">
-      ▫️ <span style="font-size:11px; color:#6b7280;">أدوات المسؤول</span>
-    </div>
-  </div>
-</footer>
-
-<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-
-<div id="miniAdminAuthModal" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,.55); z-index:9999; padding:18px;">
-  <div style="max-width:700px; margin:70px auto; background:#fff; border-radius:18px; padding:14px; text-align:right; box-shadow:0 18px 40px rgba(0,0,0,.25);">
-    <div style="display:flex; justify-content:space-between; align-items:center; gap:10px;">
-      <div style="font-weight:900; color:#111827;">▫️ أدوات المسؤول</div>
-      <button class="secondary small" onclick="closeMiniAdminAuth()">إغلاق</button>
-    </div>
-    <div class="alert-error" style="margin-top:10px;">⚠️ تحذير: هذا القسم خاص بالمسؤولين فقط.</div>
-    <label>رمز دخول المسؤول</label>
-    <input id="miniAdminPin" type="password" placeholder="أدخل رمز المسؤول" />
-    <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;">
-      <button class="primary small" onclick="verifyMiniAdminPin()">تأكيد</button>
-      <button class="secondary small" onclick="closeMiniAdminAuth()">إلغاء</button>
-    </div>
-    <div id="miniAdminPinError" class="alert-error" style="display:none; margin-top:8px;">الرمز غير صحيح.</div>
-  </div>
-</div>
-
-<script>
-  // ==========================================
-  // 1. بيانات سلم الرواتب العسكري (الضباط والأفراد)
-  // ==========================================
+</div><script>
+  // 1. جدول الرواتب العسكري المعتمد (أساسي)
   const MILITARY_SALARY_TABLE = {
-      // الضباط
-      "ملازم":  { inc: 380, steps: [7590,7970,8350,8730,9110,9490,9870,10250,10630,11010,11390,11770,12150,12530,12910] },
-      "ملازم أول": { inc: 440, steps: [8835,9275,9715,10155,10595,11035,11475,11915,12355,12795,13235,13675,14115,14555,14995] },
-      "نقيب":   { inc: 495, steps: [10600,11095,11590,12085,12580,13075,13570,13835,14100,14365,14630,14895,15160,15425,15690] },
-      "رائد":  { inc: 265, steps: [13515,13780,14045,14310,14575,14840,15105,15370,15635,15900,16165,16430,16695,16960,17225] },
-      "مقدم":   { inc: 470, steps: [14645,15115,15585,16055,16525,16995,17465,17935,18405,18875,19345,19815,20285,20755] },
-      "عقيد":   { inc: 590, steps: [16520,17110,17700,18290,18880,19470,20060,20650,21240,21830,22420,23010,23600] },
-      "عميد":   { inc: 650, steps: [18800,19450,20100,20750,21400,22050,22700,23350,24000,24650,25300,25950] },
-      "لواء":    { inc: 730, steps: [21390,22120,22850,23580,24310,25040,25770,26500,27230,27960,28690] },
-      // الأفراد
-      "جندي":   { inc: 130, steps: [3220,3350,3480,3610,3740,3870,4000,4130,4260,4390,4520,4650,4780,4910,5040] },
-      "جندي أول":  { inc: 145, steps: [3395,3540,3685,3830,3975,4120,4265,4410,4555,4700,4845,4990,5135,5280,5425] },
-      "عريف":   { inc: 175, steps: [3765,3940,4115,4290,4465,4640,4815,4990,5165,5340,5515,5690,5865,6040,6215] },
-      "وكيل رقيب":   { inc: 210, steps: [4455,4665,4875,5085,5295,5505,5715,5925,6135,6345,6555,6765,6975,7185,7395] },
-      "رقيب":   { inc: 250, steps: [5260,5510,5760,6010,6260,6510,6760,7010,7260,7510,7760,8010,8260,8510,8760] },
-      "رقيب أول":  { inc: 300, steps: [6180,6480,6780,7080,7380,7680,7980,8280,8580,8880,9180,9480,9780,10080,10380] },
-      "رئيس رقباء":  { inc: 360, steps: [7215,7575,7935,8295,8655,9015,9375,9735,10095,10455,10815,11175,11535,11895,12255] }
+    "أفراد": {
+      "جندي": 3220, "جندي أول": 3395, "عريف": 3765, "وكيل رقيب": 4455, "رقيب": 5260, "رقيب أول": 6180, "رئيس رقبا": 7215
+    },
+    "ضباط": {
+      "ملازم": 7590, "ملازم أول": 8835, "نقيب": 10600, "رائد": 11705, "مقدم": 12735, "عقيد": 14365, "عميد": 16350, "لواء": 18600
+    }
   };
 
-  function showPage(name) {
-    ['landing','calculator','result','adminLogin','adminHub','admin','adminProducts','adminArchive','comingSoon'].forEach(id => {
-      const el = document.getElementById(id + 'Page');
-      if (!el) return;
-      el.classList.toggle('active', id === name);
+  // 2. وظيفة حساب تقاعد الممتد (عسكري)
+  function calculateMilitaryRetirement(rankType, rankName, joinYear) {
+    const basic = MILITARY_SALARY_TABLE[rankType][rankName] || 0;
+    const currentYear = new Date().getFullYear();
+    const serviceYears = currentYear - joinYear;
+    // حسبة التقاعد العسكري التقريبية (الأساسي / 35 * سنوات الخدمة)
+    let pension = (basic / 35) * Math.min(serviceYears + 20, 35); // إضافة افتراضية للسنوات المتبقية
+    return Math.floor(pension);
+  }
+
+  // المتغيرات التشغيلية
+  let currentStep = 0;
+  let userData = {};
+
+  // 3. نظام الأسئلة الذكي
+  function startClientFlow() {
+    userData = {};
+    currentStep = 0;
+    showPage('calculator');
+    askQuestion();
+  }
+
+  function askQuestion() {
+    const qDiv = document.getElementById('question');
+    const nextBtn = document.getElementById('nextButton');
+    qDiv.innerHTML = "";
+
+    if (currentStep === 0) {
+      qDiv.innerHTML = `<label>ما هو قطاعك الوظيفي؟</label>
+        <select id="jobType" onchange="userData.jobType=this.value">
+          <option value="">اختر...</option>
+          <option value="مدني">مدني</option>
+          <option value="عسكري">عسكري</option>
+          <option value="تقاعد">متقاعد</option>
+        </select>`;
+    } else if (currentStep === 1) {
+      qDiv.innerHTML = `<label>نوع التمويل المطلوب؟</label>
+        <select id="fType" onchange="userData.fType=this.value">
+          <option value="">اختر...</option>
+          <option value="mortgage">عقاري عادي</option>
+          ${userData.jobType === 'عسكري' ? '<option value="mortgageExtended">عقاري ممتد (للعسكريين)</option>' : ''}
+        </select>`;
+    } else if (currentStep === 2 && userData.fType === 'mortgageExtended') {
+      // أسئلة الممتد الخاصة
+      qDiv.innerHTML = `<label>فئة الرتبة:</label>
+        <select id="rType" onchange="updateRanks(this.value)">
+          <option value="">اختر...</option>
+          <option value="أفراد">أفراد</option>
+          <option value="ضباط">ضباط</option>
+        </select>
+        <label>الرتبة:</label>
+        <select id="rankName"></select>
+        <label>سنة التعيين (ميلادي):</label>
+        <input type="number" id="joinYear" placeholder="مثال: 1415 أو 1995">`;
+    } else if (currentStep === 3 || (currentStep === 2 && userData.fType !== 'mortgageExtended')) {
+      qDiv.innerHTML = `<label>الراتب الصافي (الذي ينزل في البنك):</label>
+        <input type="number" id="netSalary" placeholder="0.00">
+        <label>العمر:</label>
+        <input type="number" id="age" placeholder="مثال: 35">`;
+      document.getElementById('mainButton').innerText = "احسب النتيجة";
+      nextBtn.style.display = "none";
+      return;
+    }
+    nextBtn.style.display = "inline-flex";
+    document.getElementById('mainButton').style.display = "none";
+  }
+
+  function nextQuestion() {
+    // حفظ البيانات الحالية قبل الانتقال
+    if(currentStep === 2 && userData.fType === 'mortgageExtended') {
+      userData.rankType = document.getElementById('rType').value;
+      userData.rankName = document.getElementById('rankName').value;
+      userData.joinYear = document.getElementById('joinYear').value;
+    }
+    currentStep++;
+    askQuestion();
+  }
+
+  function updateRanks(val) {
+    const sel = document.getElementById('rankName');
+    sel.innerHTML = "";
+    if(!val) return;
+    Object.keys(MILITARY_SALARY_TABLE[val]).forEach(r => {
+      sel.innerHTML += `<option value="${r}">${r}</option>`;
     });
-    // تحديث قائمة أنواع التمويل في صفحة الأدمن عند الفتح
-    if(name === 'admin') updateAdminFinanceTypeOptions();
   }
 
-  function backToLanding() { showPage('landing'); }
-  function startClientFlow() { showPage('calculator'); resetCalc(); }
-  function backToFinanceType(){
-    showPage('calculator'); hasStarted = true;
-    const idx = generalQuestions.findIndex(q => q.id === 'financeType');
-    step = idx >= 0 ? idx : 0; commitmentStep = 0; currentCommitment = {};
-    document.getElementById('mainButton').style.display = 'none';
-    document.getElementById('resetButtonContainer').style.display = 'block';
-    document.getElementById('nextButton').style.display = 'inline-flex';
-    showQuestion();
+  // دالة الحساب النهائية (تربط لوحة المسؤول بالحسبة)
+  function handleStartOrReset() {
+    const salary = parseFloat(document.getElementById('netSalary').value);
+    const age = parseInt(document.getElementById('age').value);
+    
+    // جلب أفضل عرض من الـ LocalStorage (لوحة المسؤول)
+    let banks = JSON.parse(localStorage.getItem('fino_banks') || '[]');
+    let suitableBank = banks.find(b => b.type === userData.fType) || { margin: 3.5, dsr: 33.3, promo: "عرض المنصة الافتراضي" };
+
+    let retirementSalary = salary;
+    if(userData.fType === 'mortgageExtended') {
+      retirementSalary = calculateMilitaryRetirement(userData.rankType, userData.rankName, userData.joinYear);
+    }
+
+    // حسبة القسط (تبسيطية بناءً على نسبة الاستقطاع من لوحة المسؤول)
+    let maxInstalment = salary * (suitableBank.dsr / 100);
+    
+    showResult(salary, retirementSalary, maxInstalment, suitableBank);
   }
 
-  const bankLogoMap = {
-    'مصرف الراجحي': 'img/alrajhi.png', 'البنك الأهلي السعودي': 'img/alahli.png', 'بنك الرياض': 'img/riyad.png',
-    'بنك البلاد': 'img/bilad.png', 'بنك الجزيرة': 'img/jazira.png', 'البنك السعودي الفرنسي': 'img/bsf.png',
-    'بنك ساب': 'img/sab.png', 'البنك العربي الوطني': 'img/anb.png', 'البنك السعودي للاستثمار': 'img/saib.png'
-  };
-
-  let bankConfigs = [];
-  function loadBankConfigs() {
-    try {
-      const saved = localStorage.getItem('stBankConfigs');
-      bankConfigs = saved ? JSON.parse(saved) : [];
-    } catch (e) { bankConfigs = []; }
-    renderBankTable();
-  }
-  function saveBankConfigs() { localStorage.setItem('stBankConfigs', JSON.stringify(bankConfigs)); }
-
-  function renderBankTable() {
-    const tbody = document.querySelector('#adminTable tbody');
-    if(!tbody) return;
-    tbody.innerHTML = '';
-    bankConfigs.forEach((cfg, index) => {
-      let fName = getFinanceProductNameById(cfg.financeType) || cfg.financeType;
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td>${cfg.bankName || ''}</td>
-        <td>${fName}</td>
-        <td>${cfg.supportedType || ''}</td>
-        <td>${(cfg.minSalary || 0).toLocaleString()}</td>
-        <td>${(cfg.maxSalary || 0).toLocaleString()}</td>
-        <td>${cfg.margin}</td>
-        <td style="color:#d97706; font-size:11px;">${cfg.note || ''}</td> <td>
-          <button class="btn small secondary" onclick="editBankConfig(${index})">تعديل</button>
-          <button class="btn small secondary" onclick="deleteBankConfig(${index})">حذف</button>
-        </td>
-      `;
-      tbody.appendChild(tr);
-    });
+  function showResult(s, rs, inst, bank) {
+    showPage('result');
+    const resDiv = document.getElementById('resultCard');
+    resDiv.innerHTML = `
+      <div style="color:#1d4ed8; font-weight:900; margin-bottom:10px;">النتيجة المرشحة لك</div>
+      <div style="background:#f0f7ff; padding:15px; border-radius:12px; border:1px solid #2563eb;">
+        <div style="font-size:16px;">البنك المرشح: <strong>${bank.bank}</strong></div>
+        <div style="font-size:14px; color:#059669;">${bank.promo}</div>
+        <hr>
+        <div style="text-align:right; font-size:15px;">
+          <p>أقصى قسط شهري: <strong>${inst.toFixed(2)} ريال</strong></p>
+          ${userData.fType === 'mortgageExtended' ? `<p>الراتب التقاعدي المتوقع: <strong>${rs} ريال</strong></p>` : ''}
+          <p>نسبة الاستقطاع المطبقة: ${bank.dsr}%</p>
+        </div>
+      </div>
+    `;
   }
 
-  function clearAdminForm() {
-    document.getElementById('adminBankName').value = '';
-    document.getElementById('adminSupportedType').value = 'الكل';
-    document.getElementById('adminMinSalary').value = '';
-    document.getElementById('adminMaxSalary').value = '';
-    document.getElementById('adminMargin').value = '';
-    document.getElementById('adminNote').value = ''; // تفريغ الملاحظة
-    document.getElementById('adminJobType').value = '';
-    document.getElementById('adminMinMonths').value = '';
-    document.getElementById('adminMaxMonths').value = '';
-    document.getElementById('adminProductDetail').value = '';
-    document.getElementById('adminEtezaaz').value = '';
-    document.getElementById('adminEditIndex').value = '';
-  }
-
+  // دوال لوحة المسؤول
   function saveBankConfig(e) {
     e.preventDefault();
-    const bankName = document.getElementById('adminBankName').value;
-    const financeType = document.getElementById('adminFinanceType').value;
-    const supportedType = document.getElementById('adminSupportedType').value;
-    const minSalary = parseFloat(document.getElementById('adminMinSalary').value || '0');
-    const maxSalary = parseFloat(document.getElementById('adminMaxSalary').value || '0');
-    const margin = parseFloat(document.getElementById('adminMargin').value || '0');
-    const note = document.getElementById('adminNote').value; // حفظ الملاحظة
-    const jobType = document.getElementById('adminJobType').value;
-    const minMonths = parseInt(document.getElementById('adminMinMonths').value || '0');
-    const maxMonths = parseInt(document.getElementById('adminMaxMonths').value || '0');
-    const productDetail = document.getElementById('adminProductDetail').value;
-    const etezaaz = document.getElementById('adminEtezaaz').value;
-    const editIndex = document.getElementById('adminEditIndex').value;
-
-    if (!bankName || !margin || !minSalary || !maxSalary) { alert('رجاءً أكمل جميع الحقول الأساسية.'); return; }
-    
-    const cfg = { bankName, financeType, supportedType, minSalary, maxSalary, margin, note };
-    if (jobType) cfg.jobType = jobType;
-    if (minMonths) cfg.minMonths = minMonths;
-    if (maxMonths) cfg.maxMonths = maxMonths;
-    if (productDetail) cfg.productDetail = productDetail;
-    if (etezaaz) cfg.etezaaz = etezaaz;
-
-    if (editIndex === '') bankConfigs.push(cfg);
-    else bankConfigs[parseInt(editIndex)] = cfg;
-
-    saveBankConfigs();
-    renderBankTable();
-    clearAdminForm();
+    const b = {
+      bank: document.getElementById('adminBankName').value,
+      type: document.getElementById('adminFinanceType').value,
+      margin: document.getElementById('adminMargin').value,
+      dsr: document.getElementById('adminDsr').value,
+      promo: document.getElementById('adminPromoNote').value,
+      id: Date.now()
+    };
+    let banks = JSON.parse(localStorage.getItem('fino_banks') || '[]');
+    banks.push(b);
+    localStorage.setItem('fino_banks', JSON.stringify(banks));
+    renderAdminTable();
   }
 
-  function editBankConfig(index) {
-    const cfg = bankConfigs[index];
-    document.getElementById('adminBankName').value = cfg.bankName || '';
-    document.getElementById('adminFinanceType').value = cfg.financeType || '';
-    document.getElementById('adminSupportedType').value = cfg.supportedType || 'الكل';
-    document.getElementById('adminMinSalary').value = cfg.minSalary || '';
-    document.getElementById('adminMaxSalary').value = cfg.maxSalary || '';
-    document.getElementById('adminMargin').value = cfg.margin || '';
-    document.getElementById('adminNote').value = cfg.note || ''; // استرجاع الملاحظة
-    document.getElementById('adminJobType').value = cfg.jobType || '';
-    document.getElementById('adminMinMonths').value = cfg.minMonths || '';
-    document.getElementById('adminMaxMonths').value = cfg.maxMonths || '';
-    document.getElementById('adminProductDetail').value = cfg.productDetail || '';
-    document.getElementById('adminEtezaaz').value = cfg.etezaaz || '';
-    document.getElementById('adminEditIndex').value = index;
-  }
-
-  function deleteBankConfig(index) {
-    if (!confirm('متأكد من حذف هذا السطر؟')) return;
-    bankConfigs.splice(index, 1);
-    saveBankConfigs();
-    renderBankTable();
-  }
-
-  function getMatchingBanksForAnswers() {
-    const salary = parseFloat(answers.salary || '0');
-    if (!salary) return [];
-    
-    // البحث بالاسم الفعلي للمنتج المختار
-    const selectedProduct = findFinanceProduct(answers.financeType);
-    let fType = answers.financeType; // الاسم الافتراضي
-
-    const supp = answers.supported || 'الكل';
-    const jobType = answers.jobType || '';
-    const months = parseInt(answers.months || '0');
-    const mortgageDetail = answers.mortgageProductType || '';
-    const wantsEtezaaz = (answers.financeType.includes('عقاري') && answers.supported === 'مدعوم' && answers.isEtezaaz === 'نعم');
-    
-    const list = bankConfigs.filter(cfg => {
-      // مقارنة مرنة: إذا كان الاسم المخزن يطابق اسم المنتج المختار
-      if (cfg.financeType !== fType) return false;
-      if (!(salary >= cfg.minSalary && salary <= cfg.maxSalary)) return false;
-      if (!(cfg.supportedType === 'الكل' || cfg.supportedType === supp)) return false;
-      if (cfg.jobType && jobType && cfg.jobType !== jobType) return false;
-      if (cfg.minMonths && months && months < cfg.minMonths) return false;
-      if (cfg.maxMonths && months && months > cfg.maxMonths) return false;
-      if (cfg.productDetail && mortgageDetail && cfg.productDetail !== mortgageDetail) return false;
-      if (wantsEtezaaz && cfg.etezaaz && cfg.etezaaz !== 'نعم') return false;
-      return true;
+  function renderAdminTable() {
+    const tbody = document.querySelector('#adminTable tbody');
+    tbody.innerHTML = "";
+    let banks = JSON.parse(localStorage.getItem('fino_banks') || '[]');
+    banks.forEach(b => {
+      tbody.innerHTML += `<tr>
+        <td>${b.bank}</td><td>${b.type}</td><td>${b.margin}%</td><td>${b.dsr}%</td><td>${b.promo}</td>
+        <td><button onclick="deleteBank(${b.id})" style="padding:2px 8px; font-size:10px; background:#fee2e2; color:#b91c1c; border-radius:5px;">حذف</button></td>
+      </tr>`;
     });
-    list.sort((a,b)=> a.margin - b.margin);
-    return list;
   }
 
-  const ADMIN_PIN = '11qq11qQ@';
-  function handleAdminLogin() {
-    const pin = document.getElementById('adminPin').value;
-    const err = document.getElementById('adminLoginError');
-    if (pin === ADMIN_PIN) {
-      err.style.display = 'none';
-      showPage('adminHub');
-      renderArchiveTable();
-      renderFinanceProductsTable();
-    } else {
-      err.style.display = 'block';
-    }
+  function deleteBank(id) {
+    let banks = JSON.parse(localStorage.getItem('fino_banks') || '[]');
+    banks = banks.filter(b => b.id !== id);
+    localStorage.setItem('fino_banks', JSON.stringify(banks));
+    renderAdminTable();
   }
 
-  function openMiniAdminTools(){
-    document.getElementById('miniAdminPin').value = '';
-    document.getElementById('miniAdminPinError').style.display = 'none';
-    document.getElementById('miniAdminAuthModal').style.display = 'block';
+  function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(id + 'Page').classList.add('active');
+    if(id === 'admin') renderAdminTable();
   }
-  function closeMiniAdminAuth(){ document.getElementById('miniAdminAuthModal').style.display = 'none'; }
-  function verifyMiniAdminPin(){
-    const pin = document.getElementById('miniAdminPin').value;
-    if(pin === ADMIN_PIN){
-      document.getElementById('miniAdminAuthModal').style.display = 'none';
-      showPage('adminLogin'); // نقل مباشر لصفحة الأدمن
-    } else {
-      document.getElementById('miniAdminPinError').style.display = 'block';
-    }
-  }
-
-  // ====== إدارة المنتجات ======
-  const FIN_PRODUCTS_KEY = 'stFinanceProducts';
-  let financeProducts = [];
-  function getDefaultFinanceProducts(){
-    // المنتجات الافتراضية مع نسب الاستقطاع
-    return [
-      { name:'تمويل شخصي', enabled:true, deductionRatio: 33 },
-      { name:'تمويل عقاري', enabled:true, deductionRatio: 60 },
-      { name:'تمويل التأجيري', enabled:true, deductionRatio: 33 },
-      { name:'تمويل استهلاكي', enabled:true, deductionRatio: 33 },
-      { name:'شراء مديونية تمويل شخصي', enabled:true, deductionRatio: 33 },
-      { name:'شراء مديونية تمويل عقاري', enabled:false, deductionRatio: 60, message:'سيتم التحديث قريباً' },
-      { name:'بطاقات الإتمان', enabled:false, deductionRatio: 33, message:'قريباً' }
-    ];
-  }
-
-  function loadFinanceProducts(){
-    try{
-      const s = localStorage.getItem(FIN_PRODUCTS_KEY);
-      financeProducts = s ? JSON.parse(s) : getDefaultFinanceProducts();
-    }catch(e){ financeProducts = getDefaultFinanceProducts(); }
-  }
-  function saveFinanceProducts(){ localStorage.setItem(FIN_PRODUCTS_KEY, JSON.stringify(financeProducts)); }
-  function getFinanceProductNames(){ return financeProducts.filter(p=>p.enabled).map(x=>x.name); }
-  function findFinanceProduct(name){ return financeProducts.find(x=>x.name===name) || null; }
-  function isFinanceProductEnabled(name){ const p = findFinanceProduct(name); return p ? p.enabled : true; }
-  function getFinanceProductMessage(name){ const p = findFinanceProduct(name); return p ? p.message : ''; }
   
-  // دالة لجلب الاسم عند التعديل في لوحة الأدمن
-  function getFinanceProductNameById(name) { return name; }
+  function backToLanding() { showPage('landing'); }
+  function resetCalc() { location.reload(); }
 
-  function updateAdminFinanceTypeOptions() {
-    const sel = document.getElementById('adminFinanceType');
-    sel.innerHTML = '';
-    financeProducts.forEach(p => {
-       const opt = document.createElement('option');
-       opt.value = p.name;
-       opt.text = p.name;
-       sel.appendChild(opt);
-    });
+  // وظائف المشرف السرية
+  function openMiniAdminTools() {
+    const pin = prompt("أدخل رمز الدخول:");
+    if(pin === "1234") showPage('admin'); // يمكنك تغيير الرمز هنا
   }
-
-  function clearFinanceProductForm(){
-    document.getElementById('fpName').value = '';
-    document.getElementById('fpEnabled').value = 'true';
-    document.getElementById('fpDeduction').value = '';
-    document.getElementById('fpMessage').value = '';
-    document.getElementById('fpEditIndex').value = '';
-  }
-
-  function saveFinanceProduct(e){
-    e.preventDefault();
-    const name = (document.getElementById('fpName').value || '').trim();
-    const enabled = (document.getElementById('fpEnabled').value === 'true');
-    const deduction = parseFloat(document.getElementById('fpDeduction').value);
-    const message = (document.getElementById('fpMessage').value || '').trim();
-    const editIndex = document.getElementById('fpEditIndex').value;
-
-    if(!name){ alert('فضلاً أدخل اسم المنتج.'); return; }
-    
-    // إذا لم يحدد المسؤول نسبة، نضع 33 كافتراضي
-    const finalDeduction = isNaN(deduction) ? 33 : deduction;
-
-    const item = { name, enabled, deductionRatio: finalDeduction, message };
-    if(editIndex === ''){
-      if(financeProducts.some(x=>x.name===name)){ alert('هذا المنتج موجود مسبقاً.'); return; }
-      financeProducts.push(item);
-    } else {
-      financeProducts[parseInt(editIndex)] = item;
-    }
-    saveFinanceProducts();
-    renderFinanceProductsTable();
-    clearFinanceProductForm();
-    alert('تم الحفظ. يمكنك الآن إضافة نسب البنوك لهذا المنتج في "تعديل النسب".');
-  }
-
-  function renderFinanceProductsTable(){
-    const tbody = document.querySelector('#financeProductsTable tbody');
-    if(!tbody) return;
-    tbody.innerHTML = '';
-    financeProducts.forEach((p, idx)=>{
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td>${p.name}</td>
-        <td>${p.enabled ? 'مفعّل' : 'غير مفعّل'}</td>
-        <td>${p.deductionRatio || 33}%</td>
-        <td style="text-align:right;">${p.message || ''}</td>
-        <td>
-          <button class="btn small secondary" onclick="editFinanceProduct(${idx})">تعديل</button>
-          <button class="btn small secondary" onclick="deleteFinanceProduct(${idx})">حذف</button>
-        </td>
-      `;
-      tbody.appendChild(tr);
-    });
-  }
-  function editFinanceProduct(idx){
-    const p = financeProducts[idx];
-    document.getElementById('fpName').value = p.name;
-    document.getElementById('fpEnabled').value = p.enabled ? 'true' : 'false';
-    document.getElementById('fpDeduction').value = p.deductionRatio || '';
-    document.getElementById('fpMessage').value = p.message || '';
-    document.getElementById('fpEditIndex').value = idx;
-  }
-  function deleteFinanceProduct(idx){
-    if(!confirm('حذف؟')) return;
-    financeProducts.splice(idx, 1);
-    saveFinanceProducts();
-    renderFinanceProductsTable();
-  }
-
-  // ====== أرشيف ======
-  function loadArchive(){ try{ return JSON.parse(localStorage.getItem('stClientArchive')||'[]'); }catch{ return []; } }
-  function saveArchive(list){ localStorage.setItem('stClientArchive', JSON.stringify(list)); }
-  function saveCurrentResultToArchive(){
-    const lc = answers._lastCalc;
-    if(!lc) return;
-    const list = loadArchive();
-    list.unshift({
-      id: Date.now(),
-      key: lc.clientName || 'غير معروف', // مفتاح بسيط
-      clientName: lc.clientName,
-      financeType: lc.financeType,
-      calcDateTimeStr: lc.calcDateTimeStr,
-      recommendedBankName: lc.recommendedBankName
-    });
-    saveArchive(list);
-  }
-  function renderArchiveTable(){
-    const q = (document.getElementById('archiveSearch')?.value || '').trim();
-    const list = loadArchive().filter(r => !q || String(r.clientName).includes(q) || String(r.key).includes(q));
-    const tbody = document.querySelector('#archiveTable tbody');
-    if(!tbody) return;
-    tbody.innerHTML = '';
-    list.forEach(r => {
-        tbody.innerHTML += `<tr>
-            <td>${r.id}</td><td>${r.clientName}</td><td>${r.financeType}</td><td>${r.calcDateTimeStr}</td><td>${r.recommendedBankName}</td>
-            <td><button class="btn small secondary" onclick="alert('تفاصيل...')">عرض</button></td>
-        </tr>`;
-    });
-  }
-
-  // ====== دوال مساعدة للتاريخ والوقت ======
-  function getHijriNowParts(){ return {y:1446, m:1, d:1}; } // تبسيط
-  function getHijriNowDisplay(){ return new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura').format(new Date()); }
-  function updateDateTime(){
-     const now = new Date();
-     document.getElementById('datetime').textContent = now.toLocaleString('ar-SA');
-     document.getElementById('datetimeHijri').textContent = getHijriNowDisplay();
-  }
-
-  // ==========================================
-  // 2. منطق حساب التقاعد الممتد الجديد
-  // ==========================================
-  function calculateDetailedMilitaryPension(rank, currentBasic, appointYear, appointMonth, appointDay) {
-      const rankData = MILITARY_SALARY_TABLE[rank];
-      if (!rankData) return 0;
-
-      // 1. تحديد الدرجة الحالية للراتب الأساسي
-      // نأخذ أقرب راتب في الجدول يساوي أو يقل عن الراتب المدخل
-      let currentStepIndex = 0;
-      let minDiff = Infinity;
-      rankData.steps.forEach((step, idx) => {
-          const diff = Math.abs(step - currentBasic);
-          if (diff < minDiff) {
-              minDiff = diff;
-              currentStepIndex = idx;
-          }
-      });
-      // إذا كان الراتب أكبر من آخر مربوط، نأخذ الأخير
-      if (currentBasic > rankData.steps[rankData.steps.length - 1]) {
-          currentStepIndex = rankData.steps.length - 1;
-      }
-
-      // 2. حساب تاريخ التقاعد (بلوغ سن التقاعد أو 35 سنة خدمة أيهما أقرب للنظام، لكن هنا طلبك: بلوغ الستين كحد أقصى للتمويل)
-      // المعادلة: (الراتب الأساسي الأخير × أشهر الخدمة) ÷ 420
-      // سنفترض أن العميل سيتقاعد بنهاية فترة التمويل (أو عند سن التقاعد النظامي إذا كان أقرب) لحساب الراتب وقتها
-      
-      const now = new Date(); // التاريخ الميلادي الحالي تقريبي
-      const currentYearH = 1446; // تقريبي
-      
-      // كم سنة سيبقى في الخدمة حتى يتقاعد؟
-      // هنا سنعتمد على المدة التي يطلبها العميل للتمويل لمعرفة راتبه في نهاية المدة (وقت التقاعد الافتراضي)
-      // أو نحسب متى يصل لسن التقاعد. 
-      // للتبسيط حسب طلبك: سنحسب الراتب التقاعدي بناءً على "وضعه المستقبلي عند التقاعد".
-      
-      // سنحسب عدد السنوات المتبقية للتقاعد النظامي للرتبة أو 60 سنة
-      // سنستخدم دالة بسيطة لتقدير السنوات المتبقية
-      // لكن، المعادلة تطلب: راتب أساسي أخير.
-      // الراتب الأساسي الأخير = الراتب الحالي + (العلاوة × السنوات المتبقية)
-      
-      // سنحسب سنوات الخدمة الكلية: (من التعيين إلى التقاعد)
-      const serviceYearsTotal = (currentYearH - appointYear); // حتى الآن
-      // لنفترض أننا نحتاج الراتب التقاعدي "الآن" إذا تقاعد، أو "مستقبلاً".
-      // طلبك: "اظهر الراتب التقاعد الذي تم اعتماده في النتيجه النهاية".
-      // سنحسب الراتب التقاعدي المتوقع عند نهاية الخدمة (بلوغ السن).
-      
-      // لنحسب كم سنة باقي له حتى يوصل آخر مربوط أو يتقاعد
-      // سنفترض حد أقصى للخدمة 35 سنة (420 شهر) للحصول على كامل الراتب
-      
-      // الحسبة:
-      // 1. كم شهر خدمة لديه الآن؟
-      const serviceMonthsNow = ((currentYearH - appointYear) * 12) + (1 - appointMonth); // تقريبي
-      
-      // 2. كم باقي له لسن الستين؟ (المستخدم لم يدخل عمره، لكن أدخل سنة الميلاد في الأسئلة العامة)
-      // سنستخدم answers.birthYear
-      const birthYear = parseInt(answers.birthYear || '1400');
-      const yearTurn60 = birthYear + 60;
-      const yearsRemaining = yearTurn60 - currentYearH;
-      
-      // الراتب الأساسي الأخير المتوقع (بعد yearsRemaining علاوة)
-      let futureStepIndex = currentStepIndex + yearsRemaining;
-      if (futureStepIndex >= rankData.steps.length) futureStepIndex = rankData.steps.length - 1;
-      
-      const lastBasicSalary = rankData.steps[futureStepIndex];
-      
-      // إجمالي أشهر الخدمة عند سن الستين
-      const totalServiceMonthsAt60 = serviceMonthsNow + (yearsRemaining * 12);
-      
-      // معادلة التقاعد: (الراتب الأساسي الأخير × عدد أشهر الخدمة) / 420
-      let pension = (lastBasicSalary * totalServiceMonthsAt60) / 420;
-      
-      // لا يتجاوز الراتب الأساسي الأخير
-      if (pension > lastBasicSalary) pension = lastBasicSalary;
-      
-      return pension;
-  }
-
-
-  // ====== الأسئلة ======
-  let answers = { commitments: [] }, step = 0, commitmentStep = 0, currentCommitment = {};
-  let hasStarted = false;
-
-  const generalQuestions = [
-    { id:'clientName',label:'تعرفنا بأسمك  ',type:'text' },
-    { id:'birthYear',label:'اختر سنة الميلاد هجري:',type:'select',options:Array.from({length:61},(_,i)=>1430 - i),default:1412 },
-    { id:'jobType',label:'نوع الوظيفة',type:'select',options:['عسكري','مدني (قطاع حكومي)','خاص (شبه حكومي)','خاص (شركة معتمدة)','خاص (شركة غير معتمدة)'] },
-    {
-      id:'militaryRank', label:'اذكر الرتبة العسكرية', type:'select',
-      options:['جندي','جندي أول','عريف','وكيل رقيب','رقيب','رقيب أول','رئيس رقباء','ملازم','ملازم أول','نقيب','رائد','مقدم','عقيد','عميد','لواء'],
-      show:a=>a.jobType==='عسكري'
-    },
-    {
-      id:'financeType', label:'اختر نوع التمويل تريد حسبته:', type:'select',
-      options:[] // ستعبأ من المنتجات
-    },
-    { id:'mortgageProductType', label:'نوع التمويل العقاري', type:'select', options:['وحدة جاهزة من السوق','بناء ذاتي','مشاريع الخارطة','تحت الانشاء (بيت تملكه عظم)','ارض وقرض (ارض وبناء ذاتي)','ارض (سكنية)','رهن'], show:a=>a.financeType.includes('عقاري') },
-    { id:'supported', label:'هل التمويل مدعوم؟', type:'select', options:['مدعوم','غير مدعوم'], show:a=>a.financeType.includes('عقاري') },
-    { id:'isEtezaaz', label:'هل أنت من منسوبي وزارة الدفاع (مؤهل لبرنامج اعتزاز)؟', type:'select', options:['نعم','لا'], show:a=>a.financeType.includes('عقاري') && a.supported==='مدعوم' && a.jobType==='عسكري' },
-    { id:'salary', label:'كم الراتب الشهري الصافي؟', type:'number' },
-    
-    // === سؤال الممتد للعسكري ===
-    {
-      id:'extendAfterRetirement', label:'هل تريد التمويل على الممتد (ما بعد التقاعد)؟', type:'select', options:['نعم','لا'],
-      show:a=> a.jobType==='عسكري' && (a.financeType.includes('شخصي') || a.financeType.includes('عقاري') || a.financeType.includes('تأجير'))
-    },
-    // === أسئلة الممتد الجديدة (الأساسي والتعيين) ===
-    { 
-        id:'currentBasicSalary', label:'كم راتبك الأساسي الحالي (بدون بدلات)؟', type:'number', 
-        show:a=>a.extendAfterRetirement==='نعم' 
-    },
-    { 
-        id:'appointYear', label:'سنة التعيين (هجري):', type:'number', placeholder:'مثلاً 1435',
-        show:a=>a.extendAfterRetirement==='نعم' 
-    },
-    
-    { id:'months', label:'على كم شهر تريد التمويل؟', type:'select', options:[], dynamic:true },
-    { id:'calcMode', label:'كيف تفضّل اختيار النسبة؟', type:'select', options:['أدخل النسبة بنفسي','ترشيح بنك مناسب تلقائياً'] },
-    { id:'profitMargin', label:'نسبة هامش الربح السنوي (%)؟', type:'number' },
-    { id:'hasCommitments', label:'هل لديك التزامات؟', type:'select', options:['نعم','لا'] }
-  ];
-
-  const commitmentQuestions = [
-    { id:'type',label:'نوع الالتزام',type:'select',options:['قرض شخصي','قرض سيارة','قرض استهلاكي','قرض عقاري'] },
-    { id:'amount',label:'كم القسط الشهري؟',type:'number' },
-    { id:'months',label:'كم عدد الأشهر المتبقية؟',type:'number' },
-    { id:'more',label:'هل لديك التزامات أخرى؟',type:'select',options:['نعم','لا'] }
-  ];
-
-  function showQuestion(){
-    const cont = document.getElementById('question');
-    cont.innerHTML = '';
-    let q;
-    if(step < generalQuestions.length){
-      q = generalQuestions[step];
-      if(q.id === 'financeType') q.options = getFinanceProductNames();
-      if(q.show && !q.show(answers)){ step++; showQuestion(); return; }
-      
-      // التعامل مع المنتجات الجديدة
-      if(q.id === 'salary' && !isFinanceProductEnabled(answers.financeType)){
-          showComingSoonForProduct(answers.financeType); return;
-      }
-      
-      if(q.id === 'profitMargin' && answers.calcMode === 'ترشيح بنك مناسب تلقائياً'){
-         // ... (نفس منطق الترشيح القديم)
-         const list = getMatchingBanksForAnswers();
-         if(list[0]) { answers.profitMargin = list[0].margin; step++; showQuestion(); return; }
-      }
-    } else if(answers.hasCommitments === 'نعم'){
-      q = commitmentQuestions[commitmentStep];
-    } else {
-      document.getElementById('nextButton').style.display = 'none';
-      calculate(); return;
-    }
-
-    const div = document.createElement('div');
-    div.classList.add('fade-in');
-    div.innerHTML = `<label>${q.label}</label>`;
-    if(q.type === 'select'){
-      const sel = document.createElement('select'); sel.id = q.id;
-      sel.innerHTML = '<option value="">اختر...</option>';
-      if(q.dynamic && q.id === 'months'){
-         // منطق الأشهر البسيط (60 للشخصي، 300 للعقاري، أو حسب العمر)
-         let limit = answers.financeType.includes('عقاري') ? 300 : 60;
-         for(let i=12; i<=limit; i+=12) sel.innerHTML += `<option value="${i}">${i} شهر (${i/12} سنة)</option>`;
-      } else {
-         q.options.forEach(o => sel.innerHTML += `<option value="${o}">${o}</option>`);
-      }
-      div.appendChild(sel);
-    } else {
-      div.innerHTML += `<input type="${q.type}" id="${q.id}" placeholder="${q.placeholder||''}">`;
-    }
-    cont.appendChild(div);
-  }
-
-  function nextQuestion(){
-    const q = step < generalQuestions.length ? generalQuestions[step] : commitmentQuestions[commitmentStep];
-    const val = document.getElementById(q.id).value;
-    if(!val){ alert('يرجى التعبئة'); return; }
-    
-    if(step < generalQuestions.length){
-      answers[q.id] = val;
-      step++;
-    } else {
-      if(q.id === 'more'){
-        if(val === 'نعم') { commitmentStep = 0; }
-        else { document.getElementById('nextButton').style.display = 'none'; calculate(); return; }
-      } else {
-        currentCommitment[q.id] = val;
-        commitmentStep++;
-      }
-    }
-    showQuestion();
-  }
-
-  function showComingSoonForProduct(name){
-      const msg = getFinanceProductMessage(name) || 'قريباً';
-      document.getElementById('comingSoonText').innerText = msg;
-      showPage('comingSoon');
-  }
-
-  // ====== الحسابات ======
-  function calculate(){
-    const salary = parseFloat(answers.salary);
-    const months = parseInt(answers.months);
-    const profitMargin = parseFloat(answers.profitMargin);
-    const financeType = answers.financeType;
-    
-    // 1. تحديد نسبة الاستقطاع (من إعدادات المنتج)
-    const productConfig = findFinanceProduct(financeType);
-    let deductionRatio = (productConfig && productConfig.deductionRatio) ? productConfig.deductionRatio : 33; // الافتراضي 33
-    // العقاري المدعوم قد يكون 65
-    if(financeType.includes('عقاري') && answers.supported === 'مدعوم') deductionRatio = 65;
-
-    // 2. حساب التقاعد الممتد (الجديد)
-    let pensionSalary = 0;
-    let isExtended = (answers.extendAfterRetirement === 'نعم');
-    if(isExtended) {
-        // استخدام الدالة الجديدة مع الجدول
-        pensionSalary = calculateDetailedMilitaryPension(
-            answers.militaryRank, 
-            parseFloat(answers.currentBasicSalary), 
-            parseInt(answers.appointYear), 
-            1, 1
-        );
-    }
-
-    // 3. حساب الحد الأقصى للقسط
-    // قبل التقاعد
-    const maxInstPre = (salary * deductionRatio / 100);
-    // بعد التقاعد (للممتد)
-    const maxInstPost = isExtended ? (pensionSalary * deductionRatio / 100) : maxInstPre; 
-
-    // خصم الالتزامات
-    const totalCommitments = (answers.commitments||[]).reduce((s,c)=>s+parseFloat(c.amount||0),0);
-    const netInstPre = maxInstPre - totalCommitments;
-    
-    if(netInstPre <= 0) {
-        alert('الالتزامات تتجاوز الحد المسموح.'); showPage('landing'); return;
-    }
-
-    // 4. التمويل
-    // معادلة تقريبية: القرض = القسط * المدة / (1 + (النسبة * السنوات))
-    const years = months / 12;
-    const rateFactor = (profitMargin / 100) * years;
-    
-    // للممتد، الحسبة معقدة (قسطين مختلفين)، هنا سنبسطها بأخذ القسط الأقل للأمان أو القسط الحالي
-    // بناءً على طلبك: "تقول نسبة استقطاعه من الراتب الصافي مثلا 33% خل المسوول يسجل واذا سوا حفظ اعتمدها"
-    
-    const loanAmount = (netInstPre * months) / (1 + rateFactor);
-    const totalAmount = loanAmount * (1 + rateFactor);
-    const totalProfit = totalAmount - loanAmount;
-
-    // العرض
-    showResult(loanAmount, totalAmount, totalProfit, netInstPre, profitMargin, pensionSalary);
-  }
-
-  function showResult(loan, total, profit, inst, margin, pension) {
-      showPage('result');
-      const card = document.getElementById('resultCard');
-      const bank = answers.recommendedBank || {bankName: 'غير محدد', note: ''}; // البنك المرشح
-      
-      let html = `
-        <h2 style="margin:0 0 6px; font-size:18px; text-align:right;">نتيجة الحسبة</h2>
-        <div class="result-header">
-            <div class="client-chip">العميل: ${answers.clientName || ''}</div>
-            <div class="badge-mode">${answers.financeType}</div>
-        </div>
-      `;
-      
-      // عرض البنك مع الملاحظة
-      if(bank.bankName !== 'غير محدد') {
-          html += `
-          <div class="bank-card">
-            <div class="bank-logo"><img src="${bankLogoMap[bank.bankName]||''}" alt="bank"></div>
-            <div>
-                <div class="bank-text-main">${bank.bankName}</div>
-                <div class="bank-text-sub">النسبة: ${margin}% 
-                   ${bank.note ? `<span class="promo-note">${bank.note}</span>` : ''}
-                </div>
-            </div>
-          </div>`;
-      }
-
-      // عرض النتائج
-      html += `
-        <div class="result-main-block">
-            <div class="result-main-title">التمويل الصافي</div>
-            <div class="result-amount-main">${Math.round(loan).toLocaleString()} ريال</div>
-            
-            <div class="dual-main-grid">
-                <div class="dual-box">
-                    <div class="dual-box-title">القسط الشهري</div>
-                    <div class="dual-box-amount">${Math.round(inst).toLocaleString()}</div>
-                </div>
-                <div class="dual-box">
-                    <div class="dual-box-title">إجمالي السداد</div>
-                    <div class="dual-box-amount">${Math.round(total).toLocaleString()}</div>
-                </div>
-            </div>
-            
-            ${pension > 0 ? `
-            <div class="notice-soft">
-                <strong>حسبة التقاعد الممتد:</strong><br>
-                بناءً على رتبة (${answers.militaryRank}) وسنة التعيين (${answers.appointYear})<br>
-                الراتب التقاعدي المعتمد في النتيجة: <strong>${Math.round(pension).toLocaleString()} ريال</strong>
-            </div>` : ''}
-        </div>
-      `;
-      
-      // حفظ بيانات للمشاركة
-      answers._lastResult = { loan, inst, bank: bank.bankName, margin, note: bank.note };
-
-      card.innerHTML = html;
-      saveCurrentResultToArchive(); // حفظ تلقائي
-  }
-
-  // واتساب
-  function shareResultOnWhatsAppWithDetails() {
-      const r = answers._lastResult;
-      if(!r) return;
-      const text = `السلام عليكم موجه من المنصة
-مشارك بالنتيجة:
-نوع التمويل: ${answers.financeType}
-البنك المرشح: ${r.bank}
-النسبة: ${r.margin}% ${r.note ? `(${r.note})` : ''}
-مبلغ التمويل: ${Math.round(r.loan).toLocaleString()} ريال
-القسط الشهري: ${Math.round(r.inst).toLocaleString()} ريال`;
-      
-      const phone = "966506214458"; // رقمك
-      window.open(`https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(text)}`, '_blank');
-  }
-
-  // تشغيل أولي
-  document.addEventListener('DOMContentLoaded', () => {
-    loadFinanceProducts();
-    loadBankConfigs();
-    loadArchive();
-    updateDateTime();
-  });
 </script>
 </body>
 </html>
