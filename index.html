@@ -1,4 +1,4 @@
-
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
@@ -613,6 +613,7 @@
       <div style="display:flex; gap:10px; justify-content:flex-end; flex-wrap:wrap; margin-top:10px;">
         <button class="primary small" onclick="showPage('admin')">تعديل النسب</button>
         <button class="secondary small" onclick="showPage('adminProducts')">إدارة منتجات التمويل</button>
+        <button class="secondary small" onclick="showPage('adminSpecialOffers')">إدارة العروض الخاصة</button>
         <button class="secondary small" onclick="showPage('adminArchive')">سجل نتائج العملاء</button>
         <button class="secondary small" onclick="backToLanding()">رجوع</button>
       </div>
@@ -763,6 +764,11 @@
               <option value="نعم">اعتزاز</option>
             </select>
           </div>
+          <div>
+            <label>العمر الأقصى المسموح (سنة)</label>
+            <input id="adminMaxAge" type="number" min="60" max="75" placeholder="مثال: 65" />
+            <div style="font-size:10px; color:#6b7280;">اتركه فارغاً للافتراضي (60 سنة)</div>
+          </div>
           <div style="grid-column:1/-1;">
             <label>ملاحظة على النسبة (تظهر للعميل في النتيجة)</label>
             <input id="adminRateNote" type="text" placeholder="مثال: هذه النسبة عرض نهاية العام" />
@@ -789,6 +795,7 @@
             <th>تفاصيل المنتج</th>
             <th>اعتزاز</th>
             <th>النسبة %</th>
+            <th>العمر الأقصى</th>
             <th>ملاحظة</th>
             <th>تحكم</th>
           </tr>
@@ -800,6 +807,86 @@
         ملاحظة: شعارات البنوك تُجلب تلقائياً بالاعتماد على اسم البنك.
         ضع ملفات الصور في مجلد <code>img</code> بنفس الأسماء المشار إليها في الكود.
       </div>
+
+      <div style="margin-top:12px; text-align:left;">
+        <button class="secondary small" onclick="showPage('adminHub')">رجوع للوحة المسؤول</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- إدارة العروض الخاصة -->
+  <div id="adminSpecialOffersPage" class="page">
+    <div class="card fade-in">
+      <h2 style="margin-top:0; font-size:19px; color:#111827;">✨ إدارة العروض الخاصة للجهات</h2>
+      <p style="font-size:13px; color:#6b7280; text-align:right;">
+        من هنا تضيف عروض خاصة لجهات عمل محددة (مثل: وزارة الداخلية، وزارة الحرس الوطني، المتقاعدين...)
+      </p>
+
+      <form id="specialOfferForm" onsubmit="saveSpecialOffer(event)">
+        <div class="admin-grid">
+          <div>
+            <label>القطاع</label>
+            <select id="soCategory">
+              <option value="">اختر...</option>
+              <option>قطاع عسكري</option>
+              <option>قطاع حكومي</option>
+              <option>قطاع خاص</option>
+              <option>متقاعدين</option>
+            </select>
+          </div>
+          <div>
+            <label>جهة العمل</label>
+            <input id="soEntity" type="text" placeholder="مثال: وزارة الداخلية" />
+          </div>
+          <div>
+            <label>نوع التمويل</label>
+            <select id="soFinanceType">
+              <option value="personal">تمويل شخصي / تأجيري</option>
+              <option value="consumer">تمويل استهلاكي</option>
+              <option value="mortgage">تمويل عقاري</option>
+            </select>
+          </div>
+          <div>
+            <label>نسبة هامش الربح (%)</label>
+            <input id="soMargin" type="number" step="0.01" min="0" placeholder="مثال: 3.5" />
+          </div>
+          <div>
+            <label>البنك / شركة التمويل</label>
+            <input id="soBankName" type="text" placeholder="مثال: مصرف الراجحي" />
+          </div>
+          <div>
+            <label>العمر الأقصى (سنة)</label>
+            <input id="soMaxAge" type="number" min="60" max="75" placeholder="مثال: 65" />
+          </div>
+          <div style="grid-column:1/-1;">
+            <label>ملاحظة العرض (تظهر للعميل)</label>
+            <input id="soNote" type="text" placeholder="مثال: عرض خاص لمنسوبي وزارة الداخلية" />
+          </div>
+        </div>
+
+        <input type="hidden" id="soEditIndex" value="" />
+
+        <div style="text-align:left; margin-top:10px;">
+          <button type="submit" class="primary small">💾 حفظ العرض</button>
+          <button type="button" class="secondary small" onclick="clearSpecialOfferForm()">مسح</button>
+        </div>
+      </form>
+
+      <table class="admin-table" id="specialOffersTable">
+        <thead>
+          <tr>
+            <th>القطاع</th>
+            <th>جهة العمل</th>
+            <th>نوع التمويل</th>
+            <th>البنك</th>
+            <th>النسبة %</th>
+            <th>العمر الأقصى</th>
+            <th>ملاحظة</th>
+            <th>تحكم</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
 
       <div style="margin-top:12px; text-align:left;">
         <button class="secondary small" onclick="showPage('adminHub')">رجوع للوحة المسؤول</button>
@@ -1079,7 +1166,7 @@
 
 <script>
   function showPage(name) {
-    ['landing','calculator','result','adminLogin','adminHub','admin','adminProducts','adminArchive','comingSoon'].forEach(id => {
+    ['landing','calculator','result','adminLogin','adminHub','admin','adminProducts','adminSpecialOffers','adminArchive','comingSoon'].forEach(id => {
       const el = document.getElementById(id + 'Page');
       if (!el) return;
       el.classList.toggle('active', id === name);
@@ -1170,6 +1257,7 @@
         <td>${cfg.productDetail || ''}</td>
         <td>${cfg.etezaaz || ''}</td>
         <td>${cfg.margin}</td>
+        <td>${cfg.maxAge ? cfg.maxAge + ' سنة' : '60 (افتراضي)'}</td>
         <td style="text-align:right; font-size:11px; color:#6b7280;">${cfg.rateNote || ''}</td>
         <td>
           <button class="btn small secondary" onclick="editBankConfig(${index})">تعديل</button>
@@ -1192,6 +1280,7 @@
     document.getElementById('adminMaxMonths').value = '';
     document.getElementById('adminProductDetail').value = '';
     document.getElementById('adminEtezaaz').value = '';
+    document.getElementById('adminMaxAge').value = '';
     document.getElementById('adminRateNote').value = '';
     document.getElementById('adminEditIndex').value = '';
   }
@@ -1209,6 +1298,7 @@
     const maxMonths = parseInt(document.getElementById('adminMaxMonths').value || '0');
     const productDetail = document.getElementById('adminProductDetail').value;
     const etezaaz = document.getElementById('adminEtezaaz').value;
+    const maxAge = parseInt(document.getElementById('adminMaxAge').value || '0');
     const rateNote = (document.getElementById('adminRateNote').value || '').trim();
     const editIndex = document.getElementById('adminEditIndex').value;
 
@@ -1223,6 +1313,7 @@
     if (maxMonths) cfg.maxMonths = maxMonths;
     if (productDetail) cfg.productDetail = productDetail;
     if (etezaaz) cfg.etezaaz = etezaaz;
+    if (maxAge && maxAge > 60) cfg.maxAge = maxAge;
     if (rateNote) cfg.rateNote = rateNote;
 
     if (editIndex === '') bankConfigs.push(cfg);
@@ -1246,6 +1337,7 @@
     document.getElementById('adminMaxMonths').value = cfg.maxMonths || '';
     document.getElementById('adminProductDetail').value = cfg.productDetail || '';
     document.getElementById('adminEtezaaz').value = cfg.etezaaz || '';
+    document.getElementById('adminMaxAge').value = cfg.maxAge || '';
     document.getElementById('adminRateNote').value = cfg.rateNote || '';
     document.getElementById('adminEditIndex').value = index;
   }
@@ -1644,14 +1736,30 @@
     openClientResultModal(true);
 
     setTimeout(()=>{
+      let baseText = '';
       if(rec.clientText){
-        document.getElementById('clientResultText').value = rec.clientText;
-        _clientResultTextCache = rec.clientText;
-        renderClientPreviewFromText(rec.clientText);
+        baseText = rec.clientText;
       } else {
         // إذا ما فيه نص مرسل، ننشئ من النتيجة الحقيقة
         generateClientResultText();
+        baseText = document.getElementById('clientResultText').value || '';
       }
+      
+      // إضافة تفاصيل التقاعد للمسؤول إذا وجدت
+      if(lc && lc.pensionDetailsForAdmin){
+        const pd = lc.pensionDetailsForAdmin;
+        baseText += `\n\n📊 تفاصيل احتساب راتب التقاعد (للمسؤول فقط):\n`;
+        baseText += `الرتبة: ${pd.rank || '-'}\n`;
+        baseText += `الراتب الأساسي الحالي: ${fmtMoney(pd.basicSalaryNow || 0)}\n`;
+        baseText += `الراتب الأساسي المتوقع وقت التقاعد: ${fmtMoney(pd.basicAtRetirement || 0)}\n`;
+        baseText += `مدة الخدمة المتوقعة: ${pd.serviceYears || 0} سنة (${pd.serviceMonths || 0} شهر)\n`;
+        baseText += `راتب التقاعد المحتسب: ${fmtMoney(pd.pensionSalary || 0)}\n`;
+        baseText += `معادلة الحساب: (الراتب الأساسي الأخير × عدد أشهر الخدمة) ÷ 420`;
+      }
+      
+      document.getElementById('clientResultText').value = baseText;
+      _clientResultTextCache = baseText;
+      renderClientPreviewFromText(baseText);
     }, 200);
   }
 
@@ -1703,7 +1811,29 @@
     { id:'birthDay',label:'اختر يوم الميلاد هجري:',type:'select',options:Array.from({length:30},(_,i)=>i+1),default:1 },
     { id:'birthMonth',label:'اختر شهر الميلاد هجري:',type:'select',options:Array.from({length:12},(_,i)=>i+1),default:1 },
     { id:'birthYear',label:'اختر سنة الميلاد هجري:',type:'select',options:Array.from({length:61},(_,i)=>1430 - i),default:1412 },
-    { id:'jobType',label:'نوع الوظيفة',type:'select',options:['عسكري','مدني (قطاع حكومي)','خاص (شبه حكومي)','خاص (شركة معتمدة)','خاص (شركة غير معتمدة)'] },
+    { id:'jobType',label:'نوع الوظيفة',type:'select',options:['عسكري','مدني (قطاع حكومي)','خاص (شبه حكومي)','خاص (شركة معتمدة)','خاص (شركة غير معتمدة)','متقاعد','✨ اكتشف هنا ربما لجهتك عرض'] },
+    {
+      id:'specialOfferCategory',
+      label:'اختر القطاع:',
+      type:'select',
+      options:[],
+      dynamic:true,
+      show:a=>a.jobType==='✨ اكتشف هنا ربما لجهتك عرض'
+    },
+    {
+      id:'specialOfferEntity',
+      label:'اختر جهة العمل:',
+      type:'select',
+      options:[],
+      dynamic:true,
+      show:a=>a.jobType==='✨ اكتشف هنا ربما لجهتك عرض' && a.specialOfferCategory
+    },
+    {
+      id:'retiredSalary',
+      label:'كم راتبك التقاعدي؟',
+      type:'number',
+      show:a=>a.jobType==='متقاعد'
+    },
     {
       id:'militaryRank',
       label:'اذكر الرتبة العسكرية',
@@ -1789,7 +1919,7 @@
         return (info.rankRemainingMonths > 0 && info.rankRemainingMonths <= (25*12) && info.monthsTo60 > info.rankRemainingMonths);
       }
     },
-    { id:'basicSalaryNow',label:'كم راتبك الأساسي الحالي (بدون البدلات)؟',type:'number', show:a=>a.extendAfterRetirement==='نعم' },
+
     { id:'appointDay',label:'تاريخ التعيين (هجري) - اليوم',type:'select',options:Array.from({length:30},(_,i)=>i+1),default:1, show:a=>a.extendAfterRetirement==='نعم' },
     { id:'appointMonth',label:'تاريخ التعيين (هجري) - الشهر',type:'select',options:Array.from({length:12},(_,i)=>i+1),default:1, show:a=>a.extendAfterRetirement==='نعم' },
     { id:'appointYear',label:'تاريخ التعيين (هجري) - السنة',type:'select',options:[],dynamic:true, show:a=>a.extendAfterRetirement==='نعم' },
@@ -1842,6 +1972,21 @@
     'رقيب أول': { allowance: 300, salaries: [6180,6480,6780,7080,7380,7680,7980,8280,8580,8880,9180,9480,9780,10080,10380] },
     'رئيس رقباء': { allowance: 360, salaries: [7215,7575,7935,8295,8655,9015,9375,9735,10095,10455,10815,11175,11535,11895,12255] }
   };
+
+  // دالة لحساب الراتب الأساسي الحالي تلقائياً من الرتبة وتاريخ التعيين
+  function calculateCurrentBasicSalary(rank, appointYear, appointMonth, appointDay) {
+    const rankData = militarySalaryTable[rank];
+    if (!rankData) return 0;
+    
+    // حساب سنوات الخدمة من تاريخ التعيين حتى اليوم
+    const nowH = getHijriNowParts();
+    const serviceMonths = monthsDiffHijri(appointYear, appointMonth, appointDay, nowH.y, nowH.m, nowH.d);
+    const serviceYears = Math.floor(serviceMonths / 12);
+    
+    // تحديد السنة في جدول الرواتب (السنة الأولى = index 0)
+    const yearIndex = Math.min(Math.max(0, serviceYears), rankData.salaries.length - 1);
+    return rankData.salaries[yearIndex];
+  }
 
   // دالة لحساب الراتب الأساسي وقت التقاعد بناءً على الراتب الحالي والرتبة
   function getBasicSalaryAtRetirement(rank, currentBasicSalary, yearsToRetirement) {
@@ -1918,7 +2063,29 @@
 
     answers.retirementYearHijri = retY;
 
+    // لا نعتذر للمتقاعدين أو من قرب التقاعد - نبحث عن بنوك تقبل عمر أكبر
     if(remainingMonths <= 0){
+      // البحث عن بنوك تقبل عمر أكبر من 60
+      const banksWithHigherAge = getBanksWithHigherMaxAge();
+      if(banksWithHigherAge.length > 0){
+        // نستخدم أعلى عمر متاح
+        const highestAge = Math.max(...banksWithHigherAge.map(b => b.maxAge || 60));
+        const newRetY = by + highestAge;
+        const newRemainingMonths = monthsDiffHijri(info.nowH.y, info.nowH.m, info.nowH.d, newRetY, retM, retD);
+        if(newRemainingMonths > 0){
+          answers.retirementYearHijri = newRetY;
+          answers.usingExtendedAge = true;
+          answers.extendedMaxAge = highestAge;
+          const isPersonal = answers.financeType && (
+            answers.financeType.includes('شخصي') ||
+            answers.financeType === 'تمويل استهلاكي' ||
+            answers.financeType === 'تمويل التأجيري' ||
+            answers.financeType === 'شراء مديونية تمويل شخصي'
+          );
+          return Math.min(newRemainingMonths, isPersonal ? 60 : 360);
+        }
+      }
+      // إذا لم يوجد بنوك تقبل عمر أكبر، نعتذر
       showSorryPage(answers.clientName || "العميل");
       return 0;
     }
@@ -1931,6 +2098,11 @@
     );
 
     return Math.min(remainingMonths, isPersonal ? 60 : 360);
+  }
+
+  // دالة للبحث عن بنوك تقبل عمر أكبر من 60 سنة
+  function getBanksWithHigherMaxAge(){
+    return bankConfigs.filter(cfg => cfg.maxAge && cfg.maxAge > 60);
   }
 
   function describeMonths(m){
@@ -2110,6 +2282,18 @@
         for(let y = nowH.y; y >= start; y--){
           sel.innerHTML += `<option value="${y}">${y}</option>`;
         }
+      } else if(q.dynamic && q.id === 'specialOfferCategory'){
+        // عرض القطاعات المتاحة من العروض الخاصة
+        const categories = getSpecialOfferCategories();
+        categories.forEach(cat => {
+          sel.innerHTML += `<option value="${cat}">${cat}</option>`;
+        });
+      } else if(q.dynamic && q.id === 'specialOfferEntity'){
+        // عرض جهات العمل حسب القطاع المختار
+        const entities = getSpecialOfferEntities(answers.specialOfferCategory);
+        entities.forEach(ent => {
+          sel.innerHTML += `<option value="${ent}">${ent}</option>`;
+        });
       } else {
         q.options.forEach(opt => {
           sel.innerHTML += `<option value="${opt}">${opt}</option>`;
@@ -2205,9 +2389,9 @@
     // مدة الخدمة بالأشهر من التعيين إلى تاريخ التقاعد (هجري)
     const serviceMonths = monthsDiffHijri(ay, am, ad, retY, retM, retD);
 
-    // استخدام الراتب الأساسي الذي أدخله العميل
-    const basicSalaryNow = parseFloat(answers.basicSalaryNow || '0');
+    // حساب الراتب الأساسي الحالي تلقائياً من الرتبة وتاريخ التعيين
     const rank = answers.militaryRank || '';
+    const basicSalaryNow = calculateCurrentBasicSalary(rank, ay, am, ad);
     
     // حساب السنوات المتبقية حتى التقاعد
     const yearsToRetirement = info.rankRemainingMonths / 12;
@@ -2216,9 +2400,6 @@
     let basicAtRetirement = basicSalaryNow;
     if (basicSalaryNow > 0 && rank) {
       basicAtRetirement = getBasicSalaryAtRetirement(rank, basicSalaryNow, yearsToRetirement);
-    } else {
-      // استخدام المعامل التقديري إذا لم يدخل العميل راتبه الأساسي
-      basicAtRetirement = Number(currentNetSalary || 0) * Number(retirementSettings.basicMultiplier || 1.0);
     }
 
     // معادلة التقاعد العسكري: (الراتب الأساسي الأخير × عدد أشهر الخدمة) ÷ 420
@@ -2244,8 +2425,9 @@
     const retD = info.birth.d;
 
     const serviceMonths = monthsDiffHijri(ay, am, ad, retY, retM, retD);
-    const basicSalaryNow = parseFloat(answers.basicSalaryNow || '0');
     const rank = answers.militaryRank || '';
+    // حساب الراتب الأساسي الحالي تلقائياً من الرتبة وتاريخ التعيين
+    const basicSalaryNow = calculateCurrentBasicSalary(rank, ay, am, ad);
     const yearsToRetirement = info.rankRemainingMonths / 12;
     
     let basicAtRetirement = basicSalaryNow;
@@ -2761,23 +2943,16 @@
       html += `<div class="alert-error">نعتذر منك، حسب البيانات المدخلة لا يمكنك الحصول على تمويل.</div>`;
     }
 
-    // (إضافة) توضيح الممتد للعسكري (عرض فقط إذا اختاره)
+    // (إضافة) توضيح الممتد للعسكري (عرض فقط إذا اختاره) - إخفاء التفاصيل من العميل
     if(isExtended){
       const pensionDetails = getMilitaryPensionDetails();
+      // عرض راتب التقاعد المتوقع فقط للعميل (بدون تفاصيل الحساب)
       let pensionInfoHtml = '';
       if(pensionDetails && pensionDetails.pensionSalary > 0){
         pensionInfoHtml = `
           <div style="margin-top:8px; padding:8px 10px; background:#ecfdf5; border:1px solid #a7f3d0; border-radius:10px;">
-            <div style="font-size:13px; font-weight:bold; color:#065f46; margin-bottom:4px;">📊 تفاصيل راتب التقاعد المحتسب:</div>
-            <div style="font-size:12px; color:#047857; line-height:1.8;">
-              <strong>الرتبة:</strong> ${pensionDetails.rank}<br>
-              <strong>الراتب الأساسي الحالي:</strong> ${fmtMoney(pensionDetails.basicSalaryNow)}<br>
-              <strong>الراتب الأساسي المتوقع وقت التقاعد:</strong> ${fmtMoney(pensionDetails.basicAtRetirement)}<br>
-              <strong>مدة الخدمة المتوقعة:</strong> ${pensionDetails.serviceYears} سنة (${pensionDetails.serviceMonths} شهر)<br>
-              <strong style="font-size:14px; color:#065f46;">راتب التقاعد المحتسب:</strong> <span style="font-size:16px; font-weight:900; color:#059669;">${fmtMoney(pensionDetails.pensionSalary)}</span>
-            </div>
-            <div style="font-size:10px; color:#6b7280; margin-top:4px;">
-              معادلة الحساب: (الراتب الأساسي الأخير × عدد أشهر الخدمة) ÷ 420
+            <div style="font-size:14px; font-weight:bold; color:#065f46;">
+              💰 الراتب التقاعدي المتوقع: <span style="font-size:18px; font-weight:900; color:#059669;">${fmtMoney(pensionDetails.pensionSalary)}</span>
             </div>
           </div>
         `;
@@ -2789,12 +2964,16 @@
           ${pensionInfoHtml}
         </div>
       `;
+      // حفظ تفاصيل التقاعد للمسؤول (تظهر في النتيجة المحفوظة)
+      if(pensionDetails){
+        answers.pensionDetailsForAdmin = pensionDetails;
+      }
     }
 
     // ====== كتلة النتيجة الأساسية ( ) ======
     html += `
       <div class="result-main-block">
-        <div class="result-main-title">⭐ ${mainShownLabel} ( )</div>
+        <div class="result-main-title">💰 ${mainShownLabel}</div>
         <div class="result-amount-main">${fmtMoney(mainShownValue).replace(' ريال','')} ريال</div>
     `;
 
@@ -2929,6 +3108,13 @@
     }
 
     html += `
+      <div style="margin-top:12px; padding:12px; background:linear-gradient(135deg, #25D366 0%, #128C7E 100%); border-radius:12px; text-align:center;">
+        <div style="font-size:14px; font-weight:bold; color:#fff; margin-bottom:8px;">📱 تواصل معنا عبر الواتساب</div>
+        <button onclick="sendWhatsAppWithResult()" style="background:#fff; color:#25D366; border:none; padding:10px 24px; border-radius:25px; font-size:14px; font-weight:bold; cursor:pointer; display:inline-flex; align-items:center; gap:8px;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          تحدث معنا الآن
+        </button>
+      </div>
       <div style="margin-top:8px; font-size:14px; font-weight:900; color:#1e3a8a; text-align:center;">
         تواصل معنا 📞 0506214458
       </div>
@@ -2966,39 +3152,37 @@
       extended: !!isExtended,
       preRetMonths: preRetMonths,
       pensionSalaryEst: Number(pensionSalaryEst || 0),
-      retirementHijri: timing.rankRetHijriStr || ''
+      retirementHijri: timing.rankRetHijriStr || '',
+      // تفاصيل التقاعد للمسؤول (تظهر في النتيجة المحفوظة)
+      pensionDetailsForAdmin: answers.pensionDetailsForAdmin || null
     };
   }
 
-  // حفظ النتيجة كصورة JPG (واضحة + حجم متوسط)
+  // حفظ النتيجة كصورة PNG (واضحة جداً للاستوديو)
   function saveResultAsImage() {
     const card = document.getElementById('resultCard');
     if (!card) { alert('لم يتم العثور على بطاقة النتيجة.'); return; }
 
-    html2canvas(card, { scale: 2, backgroundColor: '#ffffff', useCORS: true }).then(canvas => {
-      const MAX_W = 1400;
-      let outCanvas = canvas;
-
-      if (canvas.width > MAX_W) {
-        const ratio = MAX_W / canvas.width;
-        const w = Math.round(canvas.width * ratio);
-        const h = Math.round(canvas.height * ratio);
-
-        const tmp = document.createElement('canvas');
-        tmp.width = w; tmp.height = h;
-        const ctx = tmp.getContext('2d');
-        ctx.imageSmoothingEnabled = true;
-        ctx.imageSmoothingQuality = 'high';
-        ctx.drawImage(canvas, 0, 0, w, h);
-        outCanvas = tmp;
-      }
-
+    // استخدام scale أعلى لصورة أوضح
+    html2canvas(card, { 
+      scale: 3, 
+      backgroundColor: '#ffffff', 
+      useCORS: true,
+      logging: false,
+      allowTaint: true
+    }).then(canvas => {
+      // إنشاء اسم الملف بالتاريخ والوقت
+      const now = new Date();
+      const fileName = `fino-result-${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}-${String(now.getHours()).padStart(2,'0')}${String(now.getMinutes()).padStart(2,'0')}.png`;
+      
       const link = document.createElement('a');
-      link.download = 'fino-result.jpg';
-      link.href = outCanvas.toDataURL('image/jpeg', 0.92);
+      link.download = fileName;
+      link.href = canvas.toDataURL('image/png', 1.0);
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+      
+      alert('تم حفظ الصورة بنجاح! تحقق من مجلد التنزيلات أو الاستوديو.');
     }).catch(err => {
       console.error(err);
       alert('تعذر حفظ النتيجة كصورة، جرّب من متصفح آخر أو تأكد أن جافاسكربت مفعّل.');
@@ -3011,6 +3195,28 @@
     if(!card){ alert('لم يتم العثور على بطاقة النتيجة.'); return; }
     const text = card.innerText || card.textContent || '';
     const url = 'https://wa.me/?text=' + encodeURIComponent(text);
+    window.open(url, '_blank');
+  }
+
+  // إرسال واتساب مع رسالة جاهزة والنتيجة
+  function sendWhatsAppWithResult(){
+    const phoneNumber = '966506214458'; // رقم الواتساب
+    const lc = answers._lastCalc;
+    let resultSummary = '';
+    
+    if(lc){
+      resultSummary = `\n\n📊 ملخص النتيجة:\n`;
+      resultSummary += `الاسم: ${lc.clientName || '-'}\n`;
+      resultSummary += `نوع التمويل: ${lc.financeType || '-'}\n`;
+      resultSummary += `المدة: ${lc.durationText || '-'}\n`;
+      resultSummary += `التمويل الصافي: ${fmtMoney(lc.mainShownValue || lc.finalNet || 0)}\n`;
+      if(lc.recommendedBankName && lc.recommendedBankName !== 'غير محدد'){
+        resultSummary += `البنك المرشح: ${lc.recommendedBankName}\n`;
+      }
+    }
+    
+    const message = `السلام عليكم\nموجه من المنصة${resultSummary}`;
+    const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
     window.open(url, '_blank');
   }
 
@@ -3251,6 +3457,120 @@ ${contact}`.trim();
     });
   }
 
+  // ====== إدارة العروض الخاصة ======
+  let specialOffers = [];
+  const SPECIAL_OFFERS_KEY = 'fino_special_offers';
+
+  function loadSpecialOffers(){
+    try {
+      const stored = localStorage.getItem(SPECIAL_OFFERS_KEY);
+      if(stored) specialOffers = JSON.parse(stored);
+    } catch(e){ console.error(e); }
+  }
+
+  function saveSpecialOffers(){
+    localStorage.setItem(SPECIAL_OFFERS_KEY, JSON.stringify(specialOffers));
+  }
+
+  function renderSpecialOffersTable(){
+    const tbody = document.querySelector('#specialOffersTable tbody');
+    if(!tbody) return;
+    tbody.innerHTML = '';
+    specialOffers.forEach((offer, index) => {
+      let financeLabel = offer.financeType === 'personal' ? 'شخصي/تأجيري' :
+                         offer.financeType === 'consumer' ? 'استهلاكي' :
+                         offer.financeType === 'mortgage' ? 'عقاري' : offer.financeType;
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${offer.category || ''}</td>
+        <td>${offer.entity || ''}</td>
+        <td>${financeLabel}</td>
+        <td>${offer.bankName || ''}</td>
+        <td>${offer.margin || ''}</td>
+        <td>${offer.maxAge ? offer.maxAge + ' سنة' : '60 (افتراضي)'}</td>
+        <td style="font-size:11px;">${offer.note || ''}</td>
+        <td>
+          <button class="btn small secondary" onclick="editSpecialOffer(${index})">تعديل</button>
+          <button class="btn small secondary" onclick="deleteSpecialOffer(${index})">حذف</button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function clearSpecialOfferForm(){
+    document.getElementById('soCategory').value = '';
+    document.getElementById('soEntity').value = '';
+    document.getElementById('soFinanceType').value = 'personal';
+    document.getElementById('soMargin').value = '';
+    document.getElementById('soBankName').value = '';
+    document.getElementById('soMaxAge').value = '';
+    document.getElementById('soNote').value = '';
+    document.getElementById('soEditIndex').value = '';
+  }
+
+  function saveSpecialOffer(e){
+    e.preventDefault();
+    const category = document.getElementById('soCategory').value;
+    const entity = document.getElementById('soEntity').value.trim();
+    const financeType = document.getElementById('soFinanceType').value;
+    const margin = parseFloat(document.getElementById('soMargin').value || '0');
+    const bankName = document.getElementById('soBankName').value.trim();
+    const maxAge = parseInt(document.getElementById('soMaxAge').value || '0');
+    const note = document.getElementById('soNote').value.trim();
+    const editIndex = document.getElementById('soEditIndex').value;
+
+    if(!category || !entity || !margin){
+      alert('رجاءً أكمل الحقول الأساسية (القطاع، جهة العمل، النسبة).');
+      return;
+    }
+
+    const offer = { category, entity, financeType, margin, bankName, note };
+    if(maxAge && maxAge > 60) offer.maxAge = maxAge;
+
+    if(editIndex === '') specialOffers.push(offer);
+    else specialOffers[parseInt(editIndex)] = offer;
+
+    saveSpecialOffers();
+    renderSpecialOffersTable();
+    clearSpecialOfferForm();
+  }
+
+  function editSpecialOffer(index){
+    const offer = specialOffers[index];
+    document.getElementById('soCategory').value = offer.category || '';
+    document.getElementById('soEntity').value = offer.entity || '';
+    document.getElementById('soFinanceType').value = offer.financeType || 'personal';
+    document.getElementById('soMargin').value = offer.margin || '';
+    document.getElementById('soBankName').value = offer.bankName || '';
+    document.getElementById('soMaxAge').value = offer.maxAge || '';
+    document.getElementById('soNote').value = offer.note || '';
+    document.getElementById('soEditIndex').value = index;
+  }
+
+  function deleteSpecialOffer(index){
+    if(!confirm('متأكد من حذف هذا العرض؟')) return;
+    specialOffers.splice(index, 1);
+    saveSpecialOffers();
+    renderSpecialOffersTable();
+  }
+
+  // دالة للحصول على القطاعات المتاحة
+  function getSpecialOfferCategories(){
+    const categories = [...new Set(specialOffers.map(o => o.category))];
+    return categories;
+  }
+
+  // دالة للحصول على جهات العمل حسب القطاع
+  function getSpecialOfferEntities(category){
+    return specialOffers.filter(o => o.category === category).map(o => o.entity);
+  }
+
+  // دالة للحصول على العرض حسب الجهة
+  function getSpecialOfferByEntity(entity){
+    return specialOffers.find(o => o.entity === entity);
+  }
+
   // ====== تشغيل ======
   document.addEventListener('DOMContentLoaded', () => {
     showPage('landing');
@@ -3258,10 +3578,12 @@ ${contact}`.trim();
     // (إضافة) تحميل منتجات التمويل + إعدادات التقاعد
     loadFinanceProducts();
     loadRetirementSettings();
+    loadSpecialOffers();
 
     loadBankConfigs();
     renderArchiveTable();
     renderFinanceProductsTable();
+    renderSpecialOffersTable();
     loadRetirementSettingsToUI();
 
     updateDateTime();
