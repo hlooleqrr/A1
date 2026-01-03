@@ -291,25 +291,27 @@
     .bank-card {
       display: flex;
       align-items: center;
-      gap: 12px;
-      padding: 12px;
-      border-radius: 16px;
-      background: #eff6ff;
-      border: 1px dashed #2563eb;
-      margin: 8px 0 12px;
+      gap: 16px;
+      padding: 16px 18px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+      border: 2px solid #93c5fd;
+      margin: 12px 0 16px;
       text-align: right;
+      box-shadow: 0 4px 16px rgba(59, 130, 246, 0.15);
     }
     .bank-logo {
-      width: 48px;
-      height: 48px;
-      border-radius: 14px;
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
       background: #ffffff;
       display: flex;
       align-items: center;
       justify-content: center;
       overflow: hidden;
       flex-shrink: 0;
-      border: 1px solid #e5e7eb;
+      border: 2px solid #bfdbfe;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     }
     .bank-logo img {
       max-width: 100%;
@@ -317,53 +319,123 @@
       object-fit: contain;
     }
     .bank-text-main {
-      font-size: 16px;
-      font-weight: 600;
-      color: #0f172a;
+      font-size: 18px;
+      font-weight: 800;
+      color: #1e40af;
+      margin-bottom: 4px;
     }
     .bank-text-sub {
-      font-size: 13px;
-      color: #4b5563;
-      line-height: 1.5;
+      font-size: 14px;
+      color: #3b82f6;
+      line-height: 1.6;
+      font-weight: 500;
     }
 
-    /* ====== تحسين شكل النتيجة ====== */
+    /* ====== تحسين شكل النتيجة - تصميم عصري ====== */
     .result-main-block {
-      background: radial-gradient(circle at top, #e0f2fe 0, #ffffff 60%);
-      border-radius: 18px;
-      padding: 12px 14px;
-      margin-top: 4px;
+      background: linear-gradient(135deg, #f0f9ff 0%, #ffffff 50%, #ecfeff 100%);
+      border-radius: 24px;
+      padding: 20px 18px;
+      margin-top: 8px;
       text-align: right;
-      border: 1px solid #bfdbfe;
+      border: 2px solid #bae6fd;
+      box-shadow: 0 8px 32px rgba(14, 165, 233, 0.15);
     }
     .result-main-title {
-      font-size: 14px;
-      color: #1d4ed8;
-      margin-bottom: 2px;
+      font-size: 18px;
+      color: #0369a1;
+      margin-bottom: 6px;
       display:flex;
       align-items:center;
-      gap:8px;
-      font-weight: 900;
+      gap:10px;
+      font-weight: 800;
+      letter-spacing: 0.3px;
     }
     .result-amount-main {
-      font-size: 30px;
+      font-size: 42px;
       font-weight: 900;
-      color: #1e40af;
-      margin: 2px 0 6px;
-      letter-spacing: .2px;
-      line-height: 1.2;
+      background: linear-gradient(135deg, #0369a1, #0ea5e9);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin: 8px 0 12px;
+      letter-spacing: 0.5px;
+      line-height: 1.1;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
     .result-amount-sub {
-      font-size: 13px;
-      color: #1d4ed8;
-      margin: 2px 0;
-      line-height: 1.6;
+      font-size: 15px;
+      color: #0284c7;
+      margin: 4px 0;
+      line-height: 1.7;
+      font-weight: 500;
     }
     .result-amount-small {
-      font-size: 13px;
-      color: #374151;
-      margin-top: 2px;
+      font-size: 14px;
+      color: #334155;
+      margin-top: 4px;
+      line-height: 1.7;
+      font-weight: 500;
+    }
+    
+    /* بطاقة الترحيب العصرية */
+    .result-greeting-card {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      border-radius: 20px;
+      padding: 16px 20px;
+      margin-bottom: 16px;
+      border: 2px solid #fcd34d;
+      text-align: right;
+    }
+    .result-greeting-emoji {
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+    .result-greeting-text {
+      font-size: 20px;
+      font-weight: 800;
+      color: #92400e;
       line-height: 1.6;
+    }
+    .result-greeting-sub {
+      font-size: 15px;
+      color: #b45309;
+      margin-top: 6px;
+      font-weight: 500;
+    }
+    
+    /* بطاقة التقاعد */
+    .retirement-card {
+      background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+      border-radius: 20px;
+      padding: 16px 18px;
+      margin: 12px 0;
+      border: 2px solid #6ee7b7;
+      text-align: right;
+    }
+    .retirement-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: #047857;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .retirement-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px dashed #a7f3d0;
+      font-size: 14px;
+      color: #065f46;
+    }
+    .retirement-row:last-child { border-bottom: none; }
+    .retirement-value {
+      font-weight: 800;
+      color: #047857;
+      font-size: 16px;
     }
 
     .support-panel {
@@ -433,30 +505,34 @@
 
     .result-section-title {
       text-align: right;
-      font-size: 16px;
-      font-weight: 900;
-      margin: 12px 0 6px;
-      color: #111827;
+      font-size: 18px;
+      font-weight: 800;
+      margin: 16px 0 10px;
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
     .result-section-box {
-      border-radius: 16px;
-      background: #f9fafb;
-      border: 1px solid #e5e7eb;
-      padding: 10px 12px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+      border: 2px solid #e2e8f0;
+      padding: 14px 16px;
       text-align: right;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
     }
 
     /* الأقساط بخط أوضح */
     .instalment-row {
-      font-size: 15px;
-      padding: 7px 0;
-      border-bottom: 1px dashed #e5e7eb;
+      font-size: 16px;
+      padding: 10px 0;
+      border-bottom: 1px dashed #cbd5e1;
       text-align: right;
-      color: #111827;
-      line-height: 1.6;
-      font-weight: 700;
+      color: #1e293b;
+      line-height: 1.7;
+      font-weight: 600;
     }
-    .instalment-row strong { font-weight: 900; color:#1e3a8a; }
+    .instalment-row strong { font-weight: 800; color:#0369a1; font-size: 17px; }
     .instalment-row:last-child { border-bottom: none; }
 
     .alert-error {
@@ -657,6 +733,9 @@
       <div style="margin-top:12px; font-size:13px; color:#6b7280;">
         النتيجة النهائية مصممة بحيث تقدر تصوّر الشاشة أو تحفظها كصورة .
       </div>
+      
+      <!-- قسم التقييمات في الصفحة الرئيسية -->
+      <div id="homeRatings" style="margin-top:15px; display:none;"></div>
     </div>
   </div>
 
@@ -672,7 +751,7 @@
         <button id="mainButton" class="primary small" onclick="handleStartOrReset()">ابدأ الحسبة</button>
       </div>
       <div id="resetButtonContainer" style="margin-top:8px; display:none;">
-        <button onclick="resetCalc()" style="background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff;border:none;padding:8px 16px;font-size:12px;border-radius:20px;cursor:pointer;box-shadow:0 4px 12px rgba(239,68,68,0.3);">🔄 إعادة الحسبة</button>
+        <button onclick="resetCalc()" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;border:none;padding:6px 14px;font-size:11px;border-radius:16px;cursor:pointer;box-shadow:0 3px 10px rgba(99,102,241,0.25);transition:all 0.2s ease;opacity:0.85;" onmouseover="this.style.opacity='1';this.style.transform='translateY(-1px)'" onmouseout="this.style.opacity='0.85';this.style.transform='translateY(0)'">🔄 إعادة الحسبة</button>
       </div>
     </div>
   </div>
@@ -692,6 +771,38 @@
         <button class="secondary small" onclick="shareResultOnWhatsApp()">📲 مشاركة واتساب</button>
         <button class="primary small" onclick="resetCalc(); showPage('calculator');">🔁 إعادة حسبة جديدة</button>
       </div>
+    </div>
+  </div>
+
+    <!-- قسم التقييم -->
+    <div id="ratingSection" class="card fade-in" style="margin-top:12px; display:none;">
+      <h3 style="margin:0 0 8px; font-size:16px; color:#111827; text-align:right;">⭐ قيّم تجربتك</h3>
+      <p style="font-size:13px; color:#6b7280; text-align:right; margin-bottom:10px;">رأيك يهمنا! كيف كانت تجربتك مع منصة FINO؟</p>
+      <div id="ratingStars" style="display:flex; justify-content:center; gap:8px; margin-bottom:10px;">
+        <span class="rating-star" onclick="setRating(1)" style="font-size:28px; cursor:pointer;">☆</span>
+        <span class="rating-star" onclick="setRating(2)" style="font-size:28px; cursor:pointer;">☆</span>
+        <span class="rating-star" onclick="setRating(3)" style="font-size:28px; cursor:pointer;">☆</span>
+        <span class="rating-star" onclick="setRating(4)" style="font-size:28px; cursor:pointer;">☆</span>
+        <span class="rating-star" onclick="setRating(5)" style="font-size:28px; cursor:pointer;">☆</span>
+      </div>
+      <textarea id="ratingComment" placeholder="اكتب ملاحظاتك هنا (اختياري)..." style="width:100%; height:60px; border-radius:10px; border:1px solid #d1d5db; padding:8px; font-size:14px; resize:none;"></textarea>
+      <button onclick="submitRating()" style="margin-top:8px; background:linear-gradient(135deg,#10b981,#059669); color:#fff; border:none; padding:8px 20px; border-radius:20px; font-size:14px; cursor:pointer;">إرسال التقييم</button>
+      <div id="ratingSuccess" style="display:none; margin-top:8px; color:#059669; font-size:13px;">✅ شكراً لك على تقييمك!</div>
+    </div>
+
+    <!-- قسم التسويق -->
+    <div id="marketingSection" class="card fade-in" style="margin-top:12px; background:linear-gradient(135deg,#fef3c7,#fde68a); border:2px solid #f59e0b;">
+      <div style="text-align:center;">
+        <div style="font-size:24px; margin-bottom:6px;">🚀</div>
+        <h3 style="margin:0 0 6px; font-size:17px; color:#92400e;">ننجز تمويلك بأسرع وقت!</h3>
+        <p style="font-size:14px; color:#78350f; margin-bottom:10px;">تواصل معنا الحين وخلنا نساعدك في إتمام تمويلك بدون تعقيدات ⚡️</p>
+        <a href="https://wa.me/966506214458" target="_blank" style="display:inline-block; background:linear-gradient(135deg,#25d366,#128c7e); color:#fff; padding:10px 24px; border-radius:25px; font-size:15px; font-weight:bold; text-decoration:none;">📲 تواصل عبر الواتساب</a>
+      </div>
+    </div>
+
+    <!-- زر إبرام عقد -->
+    <div id="contractSection" class="card fade-in" style="margin-top:12px; display:none;">
+      <a id="contractLink" href="#" target="_blank" style="display:block; background:linear-gradient(135deg,#3b82f6,#1d4ed8); color:#fff; padding:12px 20px; border-radius:12px; font-size:16px; font-weight:bold; text-decoration:none; text-align:center;">📝 إبرام عقد تحويل إلكتروني</a>
     </div>
   </div>
 
@@ -740,6 +851,9 @@
         <button class="primary small" onclick="showPage('admin')">تعديل النسب</button>
         <button class="secondary small" onclick="showPage('adminProducts')">إدارة منتجات التمويل</button>
         <button class="secondary small" onclick="showPage('adminArchive')">سجل نتائج العملاء</button>
+        <button class="secondary small" onclick="showPage('adminRatings')">⭐ التقييمات</button>
+        <button class="secondary small" onclick="showPage('adminOffers')">🎁 العروض الخاصة</button>
+        <button class="secondary small" onclick="showPage('adminMarketing')">📢 إعدادات التسويق</button>
         <button class="secondary small" onclick="backToLanding()">رجوع</button>
       </div>
     </div>
@@ -1039,6 +1153,7 @@
             <th>نوع التمويل</th>
             <th>تاريخ/وقت</th>
             <th>البنك المرشح</th>
+            <th>ممتد</th>
             <th>تحكم</th>
           </tr>
         </thead>
@@ -1099,6 +1214,171 @@
       
       <div style="margin-top:15px;">
         <button class="secondary small" onclick="showPage('landing')">🏠 رجوع للرئيسية</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- صفحة إدارة التقييمات -->
+  <div id="adminRatingsPage" class="page">
+    <div class="card fade-in">
+      <h2 style="margin-top:0; font-size:19px; color:#111827;">⭐ إدارة تقييمات العملاء</h2>
+      <p style="font-size:13px; color:#6b7280; text-align:right;">
+        هنا تقدر تشوف تقييمات العملاء وتنشرها في الصفحة الرئيسية.
+      </p>
+      
+      <div style="margin:15px 0;">
+        <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+          <input type="checkbox" id="showRatingsOnHome" onchange="saveRatingsSettings()">
+          <span>عرض التقييمات في الصفحة الرئيسية</span>
+        </label>
+      </div>
+      
+      <table class="admin-table" id="ratingsTable">
+        <thead>
+          <tr>
+            <th>الاسم</th>
+            <th>التقييم</th>
+            <th>الملاحظة</th>
+            <th>التاريخ</th>
+            <th>منشور</th>
+            <th>تحكم</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      
+      <div style="margin-top:15px;">
+        <button class="secondary small" onclick="showPage('adminHub')">🔙 رجوع للوحة المسؤول</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- صفحة إدارة العروض الخاصة -->
+  <div id="adminOffersPage" class="page">
+    <div class="card fade-in">
+      <h2 style="margin-top:0; font-size:19px; color:#111827;">🎁 إدارة العروض الخاصة</h2>
+      <p style="font-size:13px; color:#6b7280; text-align:right;">
+        أضف عروض خاصة تظهر للعميل وقت النتيجة حسب نوع التمويل أو المبلغ.
+      </p>
+      
+      <form id="offerForm" onsubmit="saveOffer(event)" style="margin-top:15px;">
+        <input type="hidden" id="offerEditIndex" value="">
+        <div class="admin-grid">
+          <div>
+            <label>عنوان العرض</label>
+            <input id="offerTitle" type="text" placeholder="مثال: عرض خاص للعسكريين">
+          </div>
+          <div>
+            <label>نص العرض</label>
+            <textarea id="offerText" rows="2" placeholder="مثال: يا فلان ولايهمك مالك الا نسدد عنك..."></textarea>
+          </div>
+          <div>
+            <label>نوع التمويل المستهدف</label>
+            <select id="offerTargetType">
+              <option value="">الكل</option>
+              <option>تمويل شخصي</option>
+              <option>تمويل عقاري</option>
+              <option>شراء مديونية</option>
+            </select>
+          </div>
+          <div>
+            <label>الحد الأدنى للمبلغ (ريال)</label>
+            <input id="offerMinAmount" type="number" min="0" placeholder="0">
+          </div>
+          <div>
+            <label>الحالة</label>
+            <select id="offerEnabled">
+              <option value="true">مفعّل</option>
+              <option value="false">موقف</option>
+            </select>
+          </div>
+        </div>
+        <div style="margin-top:10px; display:flex; gap:8px; justify-content:flex-end;">
+          <button type="submit" class="primary small">💾 حفظ العرض</button>
+          <button type="button" class="secondary small" onclick="clearOfferForm()">إلغاء</button>
+        </div>
+      </form>
+      
+      <table class="admin-table" id="offersTable" style="margin-top:15px;">
+        <thead>
+          <tr>
+            <th>العنوان</th>
+            <th>النص</th>
+            <th>المستهدف</th>
+            <th>الحد الأدنى</th>
+            <th>الحالة</th>
+            <th>تحكم</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      
+      <div style="margin-top:15px;">
+        <button class="secondary small" onclick="showPage('adminHub')">🔙 رجوع للوحة المسؤول</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- صفحة إعدادات التسويق -->
+  <div id="adminMarketingPage" class="page">
+    <div class="card fade-in">
+      <h2 style="margin-top:0; font-size:19px; color:#111827;">📢 إعدادات التسويق</h2>
+      <p style="font-size:13px; color:#6b7280; text-align:right;">
+        تحكم بقسم التسويق وزر إبرام العقد في صفحة النتيجة.
+      </p>
+      
+      <div class="admin-grid" style="margin-top:15px;">
+        <div>
+          <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+            <input type="checkbox" id="showMarketingSection" onchange="saveMarketingSettings()" checked>
+            <span>عرض قسم التسويق "ننجز تمويلك"</span>
+          </label>
+        </div>
+        <div>
+          <label>عنوان قسم التسويق</label>
+          <input id="marketingTitle" type="text" value="ننجز تمويلك بأسرع وقت!">
+        </div>
+        <div>
+          <label>نص قسم التسويق</label>
+          <textarea id="marketingText" rows="2">تواصل معنا الحين وخلنا نساعدك في إتمام تمويلك بدون تعقيدات ⚡️</textarea>
+        </div>
+        <div>
+          <label>رقم الواتساب</label>
+          <input id="marketingWhatsapp" type="text" value="966506214458">
+        </div>
+      </div>
+      
+      <hr style="margin:20px 0; border:none; border-top:1px dashed #e5e7eb;">
+      
+      <div class="admin-grid">
+        <div>
+          <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+            <input type="checkbox" id="showContractButton" onchange="saveMarketingSettings()">
+            <span>عرض زر "إبرام عقد"</span>
+          </label>
+        </div>
+        <div>
+          <label>نص زر العقد</label>
+          <input id="contractButtonText" type="text" value="📝 إبرام عقد تحويل إلكتروني">
+        </div>
+        <div>
+          <label>رابط العقد</label>
+          <input id="contractLink" type="url" placeholder="https://example.com/contract">
+        </div>
+      </div>
+      
+      <hr style="margin:20px 0; border:none; border-top:1px dashed #e5e7eb;">
+      
+      <div>
+        <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+          <input type="checkbox" id="showRatingSection" onchange="saveMarketingSettings()" checked>
+          <span>عرض قسم التقييم للعملاء</span>
+        </label>
+      </div>
+      
+      <div style="margin-top:15px; display:flex; gap:8px; justify-content:flex-end;">
+        <button class="primary small" onclick="saveMarketingSettings()">💾 حفظ الإعدادات</button>
+        <button class="secondary small" onclick="showPage('adminHub')">🔙 رجوع</button>
       </div>
     </div>
   </div>
@@ -1248,7 +1528,7 @@
 
 <script>
   function showPage(name) {
-    ['landing','calculator','result','adminLogin','adminHub','admin','adminProducts','adminArchive','comingSoon','earlySettlement'].forEach(id => {
+    ['landing','calculator','result','adminLogin','adminHub','admin','adminProducts','adminArchive','comingSoon','earlySettlement','adminRatings','adminOffers','adminMarketing','adminQuestions'].forEach(id => {
       const el = document.getElementById(id + 'Page');
       if (!el) return;
       el.classList.toggle('active', id === name);
@@ -1768,19 +2048,33 @@
 
     list.forEach((r, idx)=>{
       const tr = document.createElement('tr');
+      const hasExtended = r.real && r.real.extended;
+      const hasFormula = r.real && r.real.retirementFormula;
       tr.innerHTML = `
         <td>${escapeHtml(r.key || '')}</td>
         <td>${escapeHtml(r.clientName || '')}</td>
         <td>${escapeHtml(r.financeType || '')}</td>
         <td>${escapeHtml(r.calcDateTimeStr || '')}</td>
         <td>${escapeHtml(r.recommendedBankName || '')}</td>
+        <td>${hasExtended ? '<span style="color:#047857;">\u2705 نعم</span>' : '<span style="color:#6b7280;">-</span>'}</td>
         <td>
           <button class="btn small secondary" onclick="viewArchiveRecord(${idx})">عرض</button>
+          ${hasFormula ? `<button class="btn small secondary" onclick="showRetirementFormula(${idx})">📊 معادلة</button>` : ''}
           <button class="btn small secondary" onclick="deleteArchiveRecord(${idx})">حذف</button>
         </td>
       `;
       table.appendChild(tr);
     });
+  }
+
+  function showRetirementFormula(indexFiltered){
+    const q = (document.getElementById('archiveSearch')?.value || '').trim();
+    const all = loadArchive();
+    const filtered = all.filter(r=> !q || String(r.key||'').includes(q));
+    const rec = filtered[indexFiltered];
+    if(!rec || !rec.real || !rec.real.retirementFormula) return;
+    
+    alert('📊 معادلة حساب راتب التقاعد:\n\n' + rec.real.retirementFormula);
   }
 
   function deleteArchiveRecord(indexFiltered){
@@ -1816,6 +2110,11 @@
       } else {
         // إذا ما فيه نص مرسل، ننشئ من النتيجة الحقيقة
         generateClientResultText();
+      }
+      
+      // عرض معادلة حساب التقاعد للمسؤول (إذا وجدت)
+      if(lc && lc.retirementFormula){
+        alert('📊 معادلة حساب التقاعد:\n\n' + lc.retirementFormula);
       }
     }, 200);
   }
@@ -1921,6 +2220,24 @@
     },
     { id:'bundle',label:'هل ترغب في دفعة مقدمة من سكني؟',type:'select',options:['نعم','لا'],show:a=>a.supported==='مدعوم' },
     { id:'salary',label:'كم الراتب الشهري الصافي؟',type:'number' },
+    {
+      id:'currentBank',
+      label:'راتبك يتحول على أي بنك؟',
+      type:'select',
+      options:[
+        'البنك الأهلي السعودي',
+        'مصرف الراجحي',
+        'بنك الرياض',
+        'بنك ساب',
+        'البنك العربي الوطني',
+        'مصرف الإنماء',
+        'البنك السعودي الفرنسي',
+        'البنك السعودي للاستثمار',
+        'بنك البلاد',
+        'بنك الجزيرة',
+        'بنك آخر'
+      ]
+    },
 
     /* (إضافة) دمج الدعم الشهري مع الراتب + استقطاع 65% */
     {
@@ -2686,6 +3003,12 @@
       `;
 
       resultCard.innerHTML = html;
+      
+      // عرض العروض الخاصة
+      showSpecialOffers(financeType, Number(finalNetFixed));
+      
+      // عرض قسم التسويق والتقييم
+      updateMarketingAndRatingDisplay();
 
       answers._lastCalc = {
         calcDateTimeStr,
@@ -2918,19 +3241,35 @@
     const resultCard = document.getElementById('resultCard');
     let html = '';
 
-    html += `<h2 style="margin:0 0 6px; font-size:18px; text-align:right; color:#111827;">نتيجة الحسبة (التقريبية)</h2>`;
-    html += `<div style="font-size:12px; color:#6b7280; text-align:right; margin-bottom:4px;">تاريخ ووقت الحسبة: ${calcDateTimeStr}</div>`;
+    // الترحيب حسب الوقت
+    const hour = new Date().getHours();
+    let greetEmoji = '🌅';
+    let greetText = 'صباح الخير';
+    if (hour >= 12 && hour < 17) { greetEmoji = '☀️'; greetText = 'مساء النور'; }
+    else if (hour >= 17 && hour < 21) { greetEmoji = '🌇'; greetText = 'مساء الخير'; }
+    else if (hour >= 21 || hour < 5) { greetEmoji = '🌙'; greetText = 'أهلاً بالليل'; }
+    
+    // بطاقة الترحيب العصرية
+    html += `
+      <div class="result-greeting-card">
+        <div class="result-greeting-emoji">${greetEmoji}</div>
+        <div class="result-greeting-text">أرحب يا ${name}! ${greetText}</div>
+        <div class="result-greeting-sub">🎉 خلصنا الحسبة وجاك الخبر الحلو!</div>
+      </div>
+    `;
+    
+    html += `<div style="font-size:13px; color:#64748b; text-align:right; margin-bottom:8px;">تاريخ ووقت الحسبة: ${calcDateTimeStr}</div>`;
 
     html += `<div class="result-header">
-      <div class="client-chip">مرحباً ومسهلا يا ${name}</div>
+      <div class="client-chip">👤 ${name}</div>
       <div style="text-align:right;">
-        <span class="badge-mode">${answers.calcMode === 'ترشيح بنك مناسب تلقائياً' ? 'الحسبة مع ترشيح بنك مناسب' : 'الحسبة على النسبة المدخلة'}</span><br>
-        <span class="badge-duration">مدة التمويل: ${duration}</span>
+        <span class="badge-mode">${answers.calcMode === 'ترشيح بنك مناسب تلقائياً' ? '🏦 ترشيح بنك مناسب' : '📊 الحسبة على النسبة المدخلة'}</span><br>
+        <span class="badge-duration">📅 مدة التمويل: ${duration}</span>
       </div>
     </div>`;
 
     html += `<div style="display:flex; justify-content:flex-end; margin:6px 0 10px;">
-      <span class="badge-duration">نوع التمويل: ${financeType}</span>
+      <span class="badge-duration">💳 نوع التمويل: ${financeType}</span>
     </div>`;
 
     if (recommendedBank) {
@@ -2949,12 +3288,37 @@
       html += `<div class="alert-error">نعتذر منك، حسب البيانات المدخلة لا يمكنك الحصول على تمويل.</div>`;
     }
 
-    // (إضافة) توضيح الممتد للعسكري (عرض فقط إذا اختاره)
+    // بطاقة التقاعد العصرية (للعسكريين فقط)
     if(isExtended){
+      // حساب السنوات والأشهر المتبقية
+      const remainingYears = Math.floor(timing.rankRemainingMonths / 12);
+      const remainingMonthsLeft = timing.rankRemainingMonths % 12;
+      const remainingText = remainingYears > 0 
+        ? `${remainingYears} سنة و ${remainingMonthsLeft} شهر`
+        : `${remainingMonthsLeft} شهر`;
+      
       html += `
-        <div class="notice-soft" style="margin-bottom:10px;">
-          ملاحظة: تم اختيار <strong>التمويل الممتد</strong> — يتم احتساب الأقساط قبل التقاعد على الراتب الحالي، وبعد التقاعد على راتب التقاعد (تقديري) حسب إعدادات المسؤول.
-          <br>تاريخ التقاعد المتوقع (هجري): <strong>${timing.rankRetHijriStr}</strong>
+        <div class="retirement-card">
+          <div class="retirement-title">🎖️ معلومات التقاعد يا ${name}</div>
+          <div class="retirement-row">
+            <span>اخترت التمويل الممتد بعد التقاعد</span>
+            <span class="retirement-value">✅ نعم</span>
+          </div>
+          <div class="retirement-row">
+            <span>راتبك المتوقع بعد التقاعد</span>
+            <span class="retirement-value">${pensionSalaryEst.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ريال</span>
+          </div>
+          <div class="retirement-row">
+            <span>تتقاعد يا ${name} بعد عمر طويل بالطاعة بعد</span>
+            <span class="retirement-value">${remainingText}</span>
+          </div>
+          <div class="retirement-row">
+            <span>تاريخ التقاعد المتوقع (هجري)</span>
+            <span class="retirement-value">${timing.rankRetHijriStr}</span>
+          </div>
+          <div style="margin-top:10px; font-size:13px; color:#065f46; text-align:right;">
+            📝 الأقساط قبل التقاعد على راتبك الحالي، وبعد التقاعد على راتب التقاعد التقديري.
+          </div>
         </div>
       `;
     }
@@ -3103,7 +3467,34 @@
     `;
 
     resultCard.innerHTML = html;
+    
+    // عرض العروض الخاصة
+    showSpecialOffers(financeType, Number(finalNetFixed));
+    
+    // عرض قسم التسويق والتقييم
+    updateMarketingAndRatingDisplay();
 
+    // حساب معادلة التقاعد للمسؤول
+    let retirementFormula = '';
+    if(isExtended && answers.jobType === 'عسكري'){
+      const ad = parseInt(answers.appointDay || '0', 10);
+      const am = parseInt(answers.appointMonth || '0', 10);
+      const ay = parseInt(answers.appointYear || '0', 10);
+      const retY = timing.birth.y + timing.rankAge;
+      const serviceMonths = monthsDiffHijri(ay, am, ad, retY, timing.birth.m, timing.birth.d);
+      const basicEst = salary * (retirementSettings.basicMultiplier || 1.0);
+      
+      retirementFormula = `معادلة حساب راتب التقاعد:
+• الراتب الصافي: ${salary.toLocaleString()} ريال
+• معامل الأساسي: ${retirementSettings.basicMultiplier || 1.0}
+• الراتب الأساسي التقديري: ${basicEst.toFixed(0)} ريال (الصافي × المعامل)
+• تاريخ التعيين: ${ay}/${am}/${ad}
+• تاريخ التقاعد المتوقع: ${timing.rankRetHijriStr}
+• مدة الخدمة بالأشهر: ${serviceMonths} شهر
+• المعادلة: راتب التقاعد = الأساسي × (أشهر الخدمة / 420)
+• راتب التقاعد التقديري: ${basicEst.toFixed(0)} × (${serviceMonths} / 420) = ${pensionSalaryEst.toFixed(0)} ريال`;
+    }
+    
     // حفظ آخر نتيجة (لاستخدام "النتيجة للعميل" + الأرشيف)
     answers._lastCalc = {
       calcDateTimeStr,
@@ -3134,7 +3525,9 @@
       extended: !!isExtended,
       preRetMonths: preRetMonths,
       pensionSalaryEst: Number(pensionSalaryEst || 0),
-      retirementHijri: timing.rankRetHijriStr || ''
+      retirementHijri: timing.rankRetHijriStr || '',
+      // معادلة حساب التقاعد للمسؤول
+      retirementFormula: retirementFormula
     };
   }
 
@@ -3493,6 +3886,370 @@ ${contact}`.trim();
     document.getElementById('esResult').style.display = 'block';
   }
   
+  // ====== نظام التقييمات ======
+  const RATINGS_KEY = 'stRatings';
+  const RATINGS_SETTINGS_KEY = 'stRatingsSettings';
+  let ratings = [];
+  let ratingsSettings = { showOnHome: false };
+  let currentRating = 0;
+
+  function loadRatings() {
+    try {
+      const s = localStorage.getItem(RATINGS_KEY);
+      ratings = s ? JSON.parse(s) : [];
+      const ss = localStorage.getItem(RATINGS_SETTINGS_KEY);
+      ratingsSettings = ss ? JSON.parse(ss) : { showOnHome: false };
+    } catch(e) {
+      ratings = [];
+      ratingsSettings = { showOnHome: false };
+    }
+  }
+
+  function saveRatings() {
+    localStorage.setItem(RATINGS_KEY, JSON.stringify(ratings));
+  }
+
+  function saveRatingsSettings() {
+    const showOnHome = document.getElementById('showRatingsOnHome')?.checked || false;
+    ratingsSettings = { showOnHome };
+    localStorage.setItem(RATINGS_SETTINGS_KEY, JSON.stringify(ratingsSettings));
+    updateHomeRatings();
+  }
+
+  function setRating(stars) {
+    currentRating = stars;
+    const starsEl = document.querySelectorAll('#ratingStars .rating-star');
+    starsEl.forEach((el, idx) => {
+      el.textContent = idx < stars ? '★' : '☆';
+      el.style.color = idx < stars ? '#f59e0b' : '#d1d5db';
+    });
+  }
+
+  function submitRating() {
+    if (currentRating === 0) {
+      alert('فضلاً اختر عدد النجوم');
+      return;
+    }
+    const comment = document.getElementById('ratingComment')?.value || '';
+    const name = answers.clientName || 'عميل';
+    const rating = {
+      name,
+      stars: currentRating,
+      comment,
+      date: new Date().toLocaleDateString('ar-SA'),
+      published: false
+    };
+    ratings.push(rating);
+    saveRatings();
+    document.getElementById('ratingSuccess').style.display = 'block';
+    document.getElementById('ratingSection').style.pointerEvents = 'none';
+    document.getElementById('ratingSection').style.opacity = '0.7';
+  }
+
+  function renderRatingsTable() {
+    const tbody = document.querySelector('#ratingsTable tbody');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+    ratings.forEach((r, idx) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${escapeHtml(r.name)}</td>
+        <td>${'★'.repeat(r.stars)}${'☆'.repeat(5-r.stars)}</td>
+        <td style="max-width:150px; overflow:hidden; text-overflow:ellipsis;">${escapeHtml(r.comment || '-')}</td>
+        <td>${r.date}</td>
+        <td>${r.published ? '✅' : '❌'}</td>
+        <td>
+          <button class="btn small secondary" onclick="toggleRatingPublish(${idx})">${r.published ? 'إلغاء النشر' : 'نشر'}</button>
+          <button class="btn small secondary" onclick="deleteRating(${idx})">حذف</button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+    document.getElementById('showRatingsOnHome').checked = ratingsSettings.showOnHome;
+  }
+
+  function toggleRatingPublish(idx) {
+    ratings[idx].published = !ratings[idx].published;
+    saveRatings();
+    renderRatingsTable();
+    updateHomeRatings();
+  }
+
+  function deleteRating(idx) {
+    if (!confirm('متأكد من حذف هذا التقييم؟')) return;
+    ratings.splice(idx, 1);
+    saveRatings();
+    renderRatingsTable();
+    updateHomeRatings();
+  }
+
+  function updateHomeRatings() {
+    const container = document.getElementById('homeRatings');
+    if (!container) return;
+    if (!ratingsSettings.showOnHome) {
+      container.style.display = 'none';
+      return;
+    }
+    const published = ratings.filter(r => r.published);
+    if (published.length === 0) {
+      container.style.display = 'none';
+      return;
+    }
+    container.style.display = 'block';
+    container.innerHTML = `
+      <h3 style="margin:0 0 10px; font-size:16px; color:#111827;">⭐ آراء العملاء</h3>
+      <div style="display:flex; flex-wrap:wrap; gap:10px; justify-content:center;">
+        ${published.slice(0, 6).map(r => `
+          <div style="background:#f9fafb; border-radius:12px; padding:10px; min-width:150px; text-align:right;">
+            <div style="color:#f59e0b;">${'★'.repeat(r.stars)}</div>
+            <div style="font-size:13px; color:#374151; margin-top:4px;">${escapeHtml(r.comment || '')}</div>
+            <div style="font-size:11px; color:#9ca3af; margin-top:4px;">- ${escapeHtml(r.name)}</div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  }
+
+  // ====== نظام العروض الخاصة ======
+  const OFFERS_KEY = 'stOffers';
+  let offers = [];
+
+  function loadOffers() {
+    try {
+      const s = localStorage.getItem(OFFERS_KEY);
+      offers = s ? JSON.parse(s) : [];
+    } catch(e) {
+      offers = [];
+    }
+  }
+
+  function saveOffersData() {
+    localStorage.setItem(OFFERS_KEY, JSON.stringify(offers));
+  }
+
+  function clearOfferForm() {
+    document.getElementById('offerTitle').value = '';
+    document.getElementById('offerText').value = '';
+    document.getElementById('offerTargetType').value = '';
+    document.getElementById('offerMinAmount').value = '';
+    document.getElementById('offerEnabled').value = 'true';
+    document.getElementById('offerEditIndex').value = '';
+  }
+
+  function saveOffer(e) {
+    e.preventDefault();
+    const title = document.getElementById('offerTitle').value.trim();
+    const text = document.getElementById('offerText').value.trim();
+    const targetType = document.getElementById('offerTargetType').value;
+    const minAmount = parseFloat(document.getElementById('offerMinAmount').value) || 0;
+    const enabled = document.getElementById('offerEnabled').value === 'true';
+    const editIndex = document.getElementById('offerEditIndex').value;
+
+    if (!title || !text) {
+      alert('فضلاً أدخل العنوان والنص');
+      return;
+    }
+
+    const offer = { title, text, targetType, minAmount, enabled };
+
+    if (editIndex === '') {
+      offers.push(offer);
+    } else {
+      offers[parseInt(editIndex)] = offer;
+    }
+
+    saveOffersData();
+    renderOffersTable();
+    clearOfferForm();
+  }
+
+  function renderOffersTable() {
+    const tbody = document.querySelector('#offersTable tbody');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+    offers.forEach((o, idx) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${escapeHtml(o.title)}</td>
+        <td style="max-width:150px; overflow:hidden; text-overflow:ellipsis;">${escapeHtml(o.text)}</td>
+        <td>${o.targetType || 'الكل'}</td>
+        <td>${o.minAmount ? o.minAmount.toLocaleString() : '-'}</td>
+        <td>${o.enabled ? 'مفعّل' : 'موقف'}</td>
+        <td>
+          <button class="btn small secondary" onclick="editOffer(${idx})">تعديل</button>
+          <button class="btn small secondary" onclick="deleteOffer(${idx})">حذف</button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function editOffer(idx) {
+    const o = offers[idx];
+    document.getElementById('offerTitle').value = o.title;
+    document.getElementById('offerText').value = o.text;
+    document.getElementById('offerTargetType').value = o.targetType || '';
+    document.getElementById('offerMinAmount').value = o.minAmount || '';
+    document.getElementById('offerEnabled').value = o.enabled ? 'true' : 'false';
+    document.getElementById('offerEditIndex').value = idx;
+  }
+
+  function deleteOffer(idx) {
+    if (!confirm('متأكد من حذف هذا العرض؟')) return;
+    offers.splice(idx, 1);
+    saveOffersData();
+    renderOffersTable();
+  }
+
+  function getMatchingOffers(financeType, amount) {
+    return offers.filter(o => {
+      if (!o.enabled) return false;
+      if (o.targetType && !financeType.includes(o.targetType.replace('تمويل ', '').replace('شراء ', ''))) return false;
+      if (o.minAmount && amount < o.minAmount) return false;
+      return true;
+    });
+  }
+
+  // ====== إعدادات التسويق ======
+  const MARKETING_KEY = 'stMarketing';
+  let marketingSettings = {
+    showMarketing: true,
+    marketingTitle: 'ننجز تمويلك بأسرع وقت!',
+    marketingText: 'تواصل معنا الحين وخلنا نساعدك في إتمام تمويلك بدون تعقيدات ⚡️',
+    whatsapp: '966506214458',
+    showContract: false,
+    contractText: '📝 إبرام عقد تحويل إلكتروني',
+    contractLink: '',
+    showRating: true,
+    showBankQuestion: true
+  };
+
+  function loadMarketingSettings() {
+    try {
+      const s = localStorage.getItem(MARKETING_KEY);
+      if (s) marketingSettings = { ...marketingSettings, ...JSON.parse(s) };
+    } catch(e) {}
+  }
+
+  function saveMarketingSettings() {
+    marketingSettings = {
+      showMarketing: document.getElementById('showMarketingSection')?.checked ?? true,
+      marketingTitle: document.getElementById('marketingTitle')?.value || 'ننجز تمويلك بأسرع وقت!',
+      marketingText: document.getElementById('marketingText')?.value || '',
+      whatsapp: document.getElementById('marketingWhatsapp')?.value || '966506214458',
+      showContract: document.getElementById('showContractButton')?.checked ?? false,
+      contractText: document.getElementById('contractButtonText')?.value || '📝 إبرام عقد تحويل إلكتروني',
+      contractLink: document.getElementById('contractLink')?.value || '',
+      showRating: document.getElementById('showRatingSection')?.checked ?? true,
+      showBankQuestion: marketingSettings.showBankQuestion
+    };
+    localStorage.setItem(MARKETING_KEY, JSON.stringify(marketingSettings));
+    alert('تم حفظ الإعدادات');
+  }
+
+  function loadMarketingSettingsToUI() {
+    const m = marketingSettings;
+    if (document.getElementById('showMarketingSection')) document.getElementById('showMarketingSection').checked = m.showMarketing;
+    if (document.getElementById('marketingTitle')) document.getElementById('marketingTitle').value = m.marketingTitle;
+    if (document.getElementById('marketingText')) document.getElementById('marketingText').value = m.marketingText;
+    if (document.getElementById('marketingWhatsapp')) document.getElementById('marketingWhatsapp').value = m.whatsapp;
+    if (document.getElementById('showContractButton')) document.getElementById('showContractButton').checked = m.showContract;
+    if (document.getElementById('contractButtonText')) document.getElementById('contractButtonText').value = m.contractText;
+    if (document.getElementById('contractLink')) document.getElementById('contractLink').value = m.contractLink;
+    if (document.getElementById('showRatingSection')) document.getElementById('showRatingSection').checked = m.showRating;
+  }
+
+  // ====== عرض العروض الخاصة ======
+  function showSpecialOffers(financeType, amount) {
+    const matchingOffers = getMatchingOffers(financeType || '', amount || 0);
+    const offersContainer = document.getElementById('offersSection');
+    
+    if (!offersContainer) {
+      // إنشاء الحاوية إذا لم تكن موجودة
+      const resultPage = document.getElementById('resultPage');
+      if (resultPage && matchingOffers.length > 0) {
+        const div = document.createElement('div');
+        div.id = 'offersSection';
+        div.className = 'card fade-in';
+        div.style.marginTop = '12px';
+        div.style.background = 'linear-gradient(135deg, #ecfdf5, #d1fae5)';
+        div.style.border = '2px solid #10b981';
+        resultPage.querySelector('.card')?.after(div);
+      }
+    }
+    
+    const container = document.getElementById('offersSection');
+    if (!container) return;
+    
+    if (matchingOffers.length === 0) {
+      container.style.display = 'none';
+      return;
+    }
+    
+    container.style.display = 'block';
+    const clientName = answers.clientName || 'عزيزنا';
+    container.innerHTML = matchingOffers.map(o => `
+      <div style="text-align:center; padding:10px;">
+        <div style="font-size:24px; margin-bottom:6px;">🎁</div>
+        <h3 style="margin:0 0 6px; font-size:17px; color:#065f46;">${escapeHtml(o.title)}</h3>
+        <p style="font-size:14px; color:#047857; margin:0;">${escapeHtml(o.text.replace(/فلان/g, clientName))}</p>
+      </div>
+    `).join('<hr style="border:none; border-top:1px dashed #10b981; margin:10px 0;">');
+  }
+  
+  // ====== عرض قسم التسويق والتقييم ======
+  function updateMarketingAndRatingDisplay() {
+    const m = marketingSettings;
+    
+    // قسم التسويق
+    const marketingSection = document.getElementById('marketingSection');
+    if (marketingSection) {
+      if (m.showMarketing) {
+        marketingSection.style.display = 'block';
+        marketingSection.innerHTML = `
+          <div style="text-align:center;">
+            <div style="font-size:24px; margin-bottom:6px;">🚀</div>
+            <h3 style="margin:0 0 6px; font-size:17px; color:#92400e;">${escapeHtml(m.marketingTitle)}</h3>
+            <p style="font-size:14px; color:#78350f; margin-bottom:10px;">${escapeHtml(m.marketingText)}</p>
+            <a href="https://wa.me/${m.whatsapp}" target="_blank" style="display:inline-block; background:linear-gradient(135deg,#25d366,#128c7e); color:#fff; padding:10px 24px; border-radius:25px; font-size:15px; font-weight:bold; text-decoration:none;">📲 تواصل عبر الواتساب</a>
+          </div>
+        `;
+      } else {
+        marketingSection.style.display = 'none';
+      }
+    }
+    
+    // زر العقد
+    const contractSection = document.getElementById('contractSection');
+    if (contractSection) {
+      if (m.showContract && m.contractLink) {
+        contractSection.style.display = 'block';
+        contractSection.innerHTML = `
+          <a href="${escapeHtml(m.contractLink)}" target="_blank" style="display:block; background:linear-gradient(135deg,#3b82f6,#1d4ed8); color:#fff; padding:12px 20px; border-radius:12px; font-size:16px; font-weight:bold; text-decoration:none; text-align:center;">${escapeHtml(m.contractText)}</a>
+        `;
+      } else {
+        contractSection.style.display = 'none';
+      }
+    }
+    
+    // قسم التقييم
+    const ratingSection = document.getElementById('ratingSection');
+    if (ratingSection) {
+      ratingSection.style.display = m.showRating ? 'block' : 'none';
+      // إعادة تعيين التقييم
+      currentRating = 0;
+      const starsEl = document.querySelectorAll('#ratingStars .rating-star');
+      starsEl.forEach(el => {
+        el.textContent = '☆';
+        el.style.color = '#d1d5db';
+      });
+      document.getElementById('ratingComment').value = '';
+      document.getElementById('ratingSuccess').style.display = 'none';
+      ratingSection.style.pointerEvents = 'auto';
+      ratingSection.style.opacity = '1';
+    }
+  }
+
   // ====== الجزيئات المتحركة ======
   function createParticles() {
     const container = document.getElementById('particles');
@@ -3556,6 +4313,15 @@ ${contact}`.trim();
     renderArchiveTable();
     renderFinanceProductsTable();
     loadRetirementSettingsToUI();
+    
+    // تحميل التقييمات والعروض والتسويق
+    loadRatings();
+    loadOffers();
+    loadMarketingSettings();
+    renderRatingsTable();
+    renderOffersTable();
+    loadMarketingSettingsToUI();
+    updateHomeRatings();
 
     updateDateTime();
     setInterval(updateDateTime, 1000);
