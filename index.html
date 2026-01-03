@@ -441,21 +441,21 @@
     }
     #adminIcon:hover { background: #d1d5db; }
 
-    /* أيقونة أدوات المسؤول تحت الفوتر */
+    /* أيقونة أدوات المسؤول - صغيرة وشفافة */
     #miniAdminTools {
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
+      display:none; /* مخفية افتراضياً - تظهر فقط في الصفحة الأولى والأخيرة */
       cursor:pointer;
-      padding: 4px 8px;
-      border-radius: 10px;
-      border: 1px dashed #e5e7eb;
-      background:#fff;
-      color:#111827;
-      font-size: 12px;
+      padding: 2px 4px;
+      font-size: 8px;
+      color: rgba(156, 163, 175, 0.3); /* شفاف جداً */
       user-select:none;
+      position: fixed;
+      bottom: 5px;
+      left: 5px;
+      z-index: 100;
+      transition: color 0.3s ease;
     }
-    #miniAdminTools:hover { background:#f3f4f6; }
+    #miniAdminTools:hover { color: rgba(107, 114, 128, 0.6); }
 
     /* بطاقة معاينة نتيجة العميل للصورة */
     .client-preview {
@@ -545,8 +545,10 @@
         <button id="nextButton" class="primary small" style="display:none;" onclick="nextQuestion()">التالي</button>
         <button id="mainButton" class="primary small" onclick="handleStartOrReset()">ابدأ الحسبة</button>
       </div>
-      <div id="resetButtonContainer" style="margin-top:8px; display:none;">
-        <button class="secondary small" onclick="resetCalc()">🔁إعادة الحسبة </button>
+      <div id="resetButtonContainer" style="margin-top:10px; display:none;">
+        <button onclick="resetCalc()" style="background:transparent; border:1px solid #d1d5db; color:#6b7280; padding:6px 14px; font-size:13px; border-radius:20px; cursor:pointer; transition:all 0.2s ease;" onmouseover="this.style.background='#f3f4f6'; this.style.borderColor='#9ca3af';" onmouseout="this.style.background='transparent'; this.style.borderColor='#d1d5db';">
+          <span style="font-size:11px;">↻</span> إعادة
+        </button>
       </div>
     </div>
   </div>
@@ -769,6 +771,14 @@
             <input id="adminMaxAge" type="number" min="60" max="75" placeholder="مثال: 65" />
             <div style="font-size:10px; color:#6b7280;">اتركه فارغاً للافتراضي (60 سنة)</div>
           </div>
+          <div>
+            <label>احتساب العمر</label>
+            <select id="adminAgeCalcType">
+              <option value="hijri">هجري (الافتراضي)</option>
+              <option value="gregorian">ميلادي</option>
+            </select>
+            <div style="font-size:10px; color:#6b7280;">بعض البنوك تحسب العمر بالميلادي</div>
+          </div>
           <div style="grid-column:1/-1;">
             <label>ملاحظة على النسبة (تظهر للعميل في النتيجة)</label>
             <input id="adminRateNote" type="text" placeholder="مثال: هذه النسبة عرض نهاية العام" />
@@ -796,6 +806,7 @@
             <th>اعتزاز</th>
             <th>النسبة %</th>
             <th>العمر الأقصى</th>
+            <th>احتساب العمر</th>
             <th>ملاحظة</th>
             <th>تحكم</th>
           </tr>
@@ -806,7 +817,6 @@
       <div style="margin-top:8px; font-size:11px; color:#9ca3af; text-align:right;">
         ملاحظة: شعارات البنوك تُجلب تلقائياً بالاعتماد على اسم البنك.
         ضع ملفات الصور في مجلد <code>img</code> بنفس الأسماء المشار إليها في الكود.
-      </div>
 
       <div style="margin-top:12px; text-align:left;">
         <button class="secondary small" onclick="showPage('adminHub')">رجوع للوحة المسؤول</button>
@@ -1030,11 +1040,8 @@
       <span class="hijri-chip">هجري: <span id="datetimeHijri"></span></span>
     </div>
 
-    <!-- ▫️ أدوات المسؤول تحت الفوتر -->
-    <div id="miniAdminTools" title="أدوات المسؤول (مخفية) — ▫️" onclick="openMiniAdminTools()">
-      ▫️
-      <span style="font-size:11px; color:#6b7280;">أدوات المسؤول</span>
-    </div>
+    <!-- أيقونة المسؤول - رمز صغير شفاف -->
+    <div id="miniAdminTools" title="" onclick="openMiniAdminTools()">▪</div>
   </div>
 </footer>
 
@@ -1171,6 +1178,16 @@
       if (!el) return;
       el.classList.toggle('active', id === name);
     });
+    
+    // إظهار أيقونة المسؤول فقط في الصفحة الأولى (الهبوط) والأخيرة (النتيجة)
+    const adminIcon = document.getElementById('miniAdminTools');
+    if(adminIcon){
+      if(name === 'landing' || name === 'result'){
+        adminIcon.style.display = 'block';
+      } else {
+        adminIcon.style.display = 'none';
+      }
+    }
   }
 
   function backToLanding() { showPage('landing'); }
@@ -1258,6 +1275,7 @@
         <td>${cfg.etezaaz || ''}</td>
         <td>${cfg.margin}</td>
         <td>${cfg.maxAge ? cfg.maxAge + ' سنة' : '60 (افتراضي)'}</td>
+        <td>${cfg.ageCalcType === 'gregorian' ? 'ميلادي' : 'هجري'}</td>
         <td style="text-align:right; font-size:11px; color:#6b7280;">${cfg.rateNote || ''}</td>
         <td>
           <button class="btn small secondary" onclick="editBankConfig(${index})">تعديل</button>
@@ -1281,6 +1299,7 @@
     document.getElementById('adminProductDetail').value = '';
     document.getElementById('adminEtezaaz').value = '';
     document.getElementById('adminMaxAge').value = '';
+    document.getElementById('adminAgeCalcType').value = 'hijri';
     document.getElementById('adminRateNote').value = '';
     document.getElementById('adminEditIndex').value = '';
   }
@@ -1299,6 +1318,7 @@
     const productDetail = document.getElementById('adminProductDetail').value;
     const etezaaz = document.getElementById('adminEtezaaz').value;
     const maxAge = parseInt(document.getElementById('adminMaxAge').value || '0');
+    const ageCalcType = document.getElementById('adminAgeCalcType').value || 'hijri';
     const rateNote = (document.getElementById('adminRateNote').value || '').trim();
     const editIndex = document.getElementById('adminEditIndex').value;
 
@@ -1314,6 +1334,7 @@
     if (productDetail) cfg.productDetail = productDetail;
     if (etezaaz) cfg.etezaaz = etezaaz;
     if (maxAge && maxAge > 60) cfg.maxAge = maxAge;
+    if (ageCalcType && ageCalcType !== 'hijri') cfg.ageCalcType = ageCalcType;
     if (rateNote) cfg.rateNote = rateNote;
 
     if (editIndex === '') bankConfigs.push(cfg);
@@ -1338,6 +1359,7 @@
     document.getElementById('adminProductDetail').value = cfg.productDetail || '';
     document.getElementById('adminEtezaaz').value = cfg.etezaaz || '';
     document.getElementById('adminMaxAge').value = cfg.maxAge || '';
+    document.getElementById('adminAgeCalcType').value = cfg.ageCalcType || 'hijri';
     document.getElementById('adminRateNote').value = cfg.rateNote || '';
     document.getElementById('adminEditIndex').value = index;
   }
@@ -1366,6 +1388,11 @@
     const months = parseInt(answers.months || '0');
     const mortgageDetail = answers.mortgageProductType || '';
     const wantsEtezaaz = (answers.financeType === 'تمويل عقاري' && answers.supported === 'مدعوم' && answers.isEtezaaz === 'نعم');
+    
+    // بيانات تاريخ الميلاد لحساب العمر
+    const birthY = parseInt(answers.birthYear || '0');
+    const birthM = parseInt(answers.birthMonth || '0');
+    const birthD = parseInt(answers.birthDay || '0');
 
     const list = bankConfigs.filter(cfg => {
       if (cfg.financeType !== fType) return false;
@@ -1377,6 +1404,14 @@
       if (cfg.maxMonths && months && months > cfg.maxMonths) return false;
       if (cfg.productDetail && mortgageDetail && cfg.productDetail !== mortgageDetail) return false;
       if (wantsEtezaaz && cfg.etezaaz && cfg.etezaaz !== 'نعم') return false;
+      
+      // التحقق من العمر حسب نوع الاحتساب (هجري أو ميلادي)
+      if(birthY && birthM && birthD){
+        const ageCalcType = cfg.ageCalcType || 'hijri';
+        const clientAge = getClientAge(birthY, birthM, birthD, ageCalcType);
+        const maxAge = cfg.maxAge || 60;
+        if(clientAge > maxAge) return false;
+      }
 
       return true;
     });
@@ -1796,6 +1831,54 @@
     }
   }
 
+  // تحويل التاريخ الهجري إلى ميلادي (تقريبي)
+  function hijriToGregorian(hy, hm, hd){
+    // معادلة تقريبية للتحويل
+    const jd = Math.floor((11 * hy + 3) / 30) + 354 * hy + 30 * hm - Math.floor((hm - 1) / 2) + hd + 1948440 - 385;
+    const l = jd + 68569;
+    const n = Math.floor(4 * l / 146097);
+    const l2 = l - Math.floor((146097 * n + 3) / 4);
+    const i = Math.floor(4000 * (l2 + 1) / 1461001);
+    const l3 = l2 - Math.floor(1461 * i / 4) + 31;
+    const j = Math.floor(80 * l3 / 2447);
+    const gd = l3 - Math.floor(2447 * j / 80);
+    const l4 = Math.floor(j / 11);
+    const gm = j + 2 - 12 * l4;
+    const gy = 100 * (n - 49) + i + l4;
+    return { y: gy, m: gm, d: gd };
+  }
+
+  // حساب العمر بالسنوات الميلادية
+  function getGregorianAge(birthHijriY, birthHijriM, birthHijriD){
+    const birthG = hijriToGregorian(birthHijriY, birthHijriM, birthHijriD);
+    const now = new Date();
+    let age = now.getFullYear() - birthG.y;
+    const monthDiff = (now.getMonth() + 1) - birthG.m;
+    if(monthDiff < 0 || (monthDiff === 0 && now.getDate() < birthG.d)){
+      age--;
+    }
+    return age;
+  }
+
+  // حساب العمر بالسنوات الهجرية
+  function getHijriAge(birthHijriY, birthHijriM, birthHijriD){
+    const nowH = getHijriNowParts();
+    let age = nowH.y - birthHijriY;
+    const monthDiff = nowH.m - birthHijriM;
+    if(monthDiff < 0 || (monthDiff === 0 && nowH.d < birthHijriD)){
+      age--;
+    }
+    return age;
+  }
+
+  // حساب العمر حسب نوع الاحتساب (هجري أو ميلادي)
+  function getClientAge(birthHijriY, birthHijriM, birthHijriD, ageCalcType){
+    if(ageCalcType === 'gregorian'){
+      return getGregorianAge(birthHijriY, birthHijriM, birthHijriD);
+    }
+    return getHijriAge(birthHijriY, birthHijriM, birthHijriD);
+  }
+
   function monthsDiffHijri(fromY,fromM,fromD,toY,toM,toD){
     let months = (toY*12 + toM) - (fromY*12 + fromM);
     if(toD < fromD) months -= 1;
@@ -1808,9 +1891,7 @@
 
   const generalQuestions = [
     { id:'clientName',label:'تعرفنا بأسمك  ',type:'text' },
-    { id:'birthDay',label:'اختر يوم الميلاد هجري:',type:'select',options:Array.from({length:30},(_,i)=>i+1),default:1 },
-    { id:'birthMonth',label:'اختر شهر الميلاد هجري:',type:'select',options:Array.from({length:12},(_,i)=>i+1),default:1 },
-    { id:'birthYear',label:'اختر سنة الميلاد هجري:',type:'select',options:Array.from({length:61},(_,i)=>1430 - i),default:1412 },
+    { id:'birthDate',label:'تاريخ الميلاد هجري:',type:'birthdate' },
     { id:'jobType',label:'نوع الوظيفة',type:'select',options:['عسكري','مدني (قطاع حكومي)','خاص (شبه حكومي)','خاص (شركة معتمدة)','خاص (شركة غير معتمدة)','متقاعد','✨ اكتشف هنا ربما لجهتك عرض'] },
     {
       id:'specialOfferCategory',
@@ -2264,6 +2345,56 @@
     div.classList.add('fade-in');
     div.innerHTML = `<label>${q.label}</label>`;
 
+    // نوع خاص لتاريخ الميلاد (يوم + شهر + سنة في صفحة واحدة)
+    if(q.type === 'birthdate'){
+      const birthDiv = document.createElement('div');
+      birthDiv.style.cssText = 'display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin-top:8px;';
+      
+      // اختيار اليوم
+      const daySelect = document.createElement('select');
+      daySelect.id = 'birthDay';
+      daySelect.style.cssText = 'flex:1; min-width:80px;';
+      daySelect.innerHTML = '<option value="">اليوم</option>';
+      for(let i=1; i<=30; i++) daySelect.innerHTML += `<option value="${i}">${i}</option>`;
+      
+      // اختيار الشهر
+      const monthSelect = document.createElement('select');
+      monthSelect.id = 'birthMonth';
+      monthSelect.style.cssText = 'flex:1; min-width:80px;';
+      monthSelect.innerHTML = '<option value="">الشهر</option>';
+      const hijriMonths = ['محرم','صفر','ربيع أول','ربيع ثاني','جمادى أولى','جمادى الثانية','رجب','شعبان','رمضان','شوال','ذو القعدة','ذو الحجة'];
+      for(let i=1; i<=12; i++) monthSelect.innerHTML += `<option value="${i}">${i} - ${hijriMonths[i-1]}</option>`;
+      
+      // اختيار السنة
+      const yearSelect = document.createElement('select');
+      yearSelect.id = 'birthYear';
+      yearSelect.style.cssText = 'flex:1; min-width:100px;';
+      yearSelect.innerHTML = '<option value="">السنة</option>';
+      for(let y=1430; y>=1370; y--) yearSelect.innerHTML += `<option value="${y}">${y}</option>`;
+      
+      birthDiv.appendChild(daySelect);
+      birthDiv.appendChild(monthSelect);
+      birthDiv.appendChild(yearSelect);
+      div.appendChild(birthDiv);
+      
+      // الانتقال التلقائي عند اكتمال التاريخ
+      const checkBirthComplete = () => {
+        if(daySelect.value && monthSelect.value && yearSelect.value){
+          answers.birthDay = daySelect.value;
+          answers.birthMonth = monthSelect.value;
+          answers.birthYear = yearSelect.value;
+          step++;
+          showQuestion();
+        }
+      };
+      daySelect.onchange = checkBirthComplete;
+      monthSelect.onchange = checkBirthComplete;
+      yearSelect.onchange = checkBirthComplete;
+      
+      cont.appendChild(div);
+      return;
+    }
+    
     if(q.type === 'select'){
       const sel = document.createElement('select');
       sel.id = q.id;
@@ -2299,12 +2430,46 @@
           sel.innerHTML += `<option value="${opt}">${opt}</option>`;
         });
       }
+      // الانتقال التلقائي عند اختيار قيمة من القائمة
+      sel.onchange = function(){
+        if(this.value){
+          answers[q.id] = this.value;
+          
+          // التحقق من المنتج غير المفعل
+          if(q.id === 'financeType'){
+            if(!isFinanceProductEnabled(this.value)){
+              showComingSoonForProduct(this.value);
+              return;
+            }
+            if(['شراء مديونية تمويل عقاري','بطاقات الإتمان','تمويل نقاط البيع','تمويل المؤسسات','تمويل الأسطول'].includes(this.value)){
+              showComingSoonForProduct(this.value);
+              return;
+            }
+          }
+          
+          step++;
+          showQuestion();
+        }
+      };
       div.appendChild(sel);
     } else {
-      div.innerHTML += `<input type="${q.type}" id="${q.id}" ${q.default ? `value="${q.default}"` : ''}>`;
+      const inp = document.createElement('input');
+      inp.type = q.type;
+      inp.id = q.id;
+      if(q.default) inp.value = q.default;
+      div.appendChild(inp);
     }
 
     cont.appendChild(div);
+    
+    // إخفاء زر التالي للقوائم المنسدلة (الانتقال تلقائي)
+    // إظهاره فقط للحقول النصية والرقمية
+    const nextBtn = document.getElementById('nextButton');
+    if(q.type === 'select' || q.type === 'birthdate'){
+      nextBtn.style.display = 'none';
+    } else {
+      nextBtn.style.display = 'inline-flex';
+    }
   }
 
   function nextQuestion(){
