@@ -3213,6 +3213,10 @@
       }
     }
 
+    // التحقق من وجود قيم سالبة في الأقساط (عجز)
+    const hasNegativeInstalment = finalPhases.some(p => p.inst < 0);
+    const minInstalment = Math.min(...finalPhases.map(p => p.inst));
+    
     const totalInst = finalPhases.reduce((s,p)=>s + p.inst * (p.to - p.from + 1), 0);
     const profitFactor = (years * profitMargin / 100) + 1;
     const netFinance = totalInst / profitFactor;
@@ -3343,6 +3347,21 @@
         <div class="result-greeting-sub">🎉 خلصنا الحسبة وجاك الخبر الحلو!</div>
       </div>
     `;
+    
+    // رسالة تنبيه عند وجود عجز في الأقساط
+    if (hasNegativeInstalment) {
+      html += `
+        <div style="background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); border: 2px solid #ef4444; border-radius: 16px; padding: 20px; margin-bottom: 16px; text-align: center;">
+          <div style="font-size: 40px; margin-bottom: 10px;">⚠️</div>
+          <div style="font-size: 18px; font-weight: 800; color: #dc2626; margin-bottom: 8px;">للأسف يا ${name} معليش!</div>
+          <div style="font-size: 15px; color: #991b1b; line-height: 1.8;">
+            عندك عجز بالأقساط أو التزاماتك لا تسمح بالحصول على هذا التمويل.<br>
+            <strong>العجز الشهري: ${Math.abs(minInstalment).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ريال</strong><br>
+            <span style="font-size: 13px;">يرجى مراجعة الالتزامات أو تقليل مدة التمويل أو انتظار انتهاء بعض الالتزامات.</span>
+          </div>
+        </div>
+      `;
+    }
     
     html += `<div style="font-size:13px; color:#64748b; text-align:right; margin-bottom:8px;">تاريخ ووقت الحسبة: ${calcDateTimeStr}</div>`;
 
@@ -4424,4 +4443,4 @@ ${contact}`.trim();
 </script>
 
 </body>
-</html> 
+</html>
