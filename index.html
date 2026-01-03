@@ -2158,6 +2158,27 @@
     return Math.max(0, months);
   }
 
+  // ====== جدول الرواتب العسكرية الرسمي ======
+  const militarySalaryTable = {
+    // الضباط
+    'ملازم': { allowance: 380, salaries: [7590,7970,8350,8730,9110,9490,9870,10250,10630,11010,11390,11770,12150,12530,12910] },
+    'ملازم أول': { allowance: 440, salaries: [8835,9275,9715,10155,10595,11035,11475,11915,12355,12795,13235,13675,14115,14555,14995] },
+    'نقيب': { allowance: 495, salaries: [10600,11095,11590,12085,12580,13075,13570,13835,14100,14365,14630,14895,15160,15425,15690] },
+    'رائد': { allowance: 265, salaries: [13515,13780,14045,14310,14575,14840,15105,15370,15635,15900,16165,16430,16695,16960,17225] },
+    'مقدم': { allowance: 470, salaries: [14645,15115,15585,16055,16525,16995,17465,17935,18405,18875,19345,19815,20285,20755] },
+    'عقيد': { allowance: 590, salaries: [16520,17110,17700,18290,18880,19470,20060,20650,21240,21830,22420,23010,23600] },
+    'عميد': { allowance: 650, salaries: [18800,19450,20100,20750,21400,22050,22700,23350,24000,24650,25300,25950] },
+    'لواء': { allowance: 730, salaries: [21390,22120,22850,23580,24310,25040,25770,26500,27230,27960,28690] },
+    // الأفراد
+    'جندي': { allowance: 130, salaries: [3220,3350,3480,3610,3740,3870,4000,4130,4260,4390,4520,4650,4780,4910,5040] },
+    'جندي أول': { allowance: 145, salaries: [3395,3540,3685,3830,3975,4120,4265,4410,4555,4700,4845,4990,5135,5280,5425] },
+    'عريف': { allowance: 175, salaries: [3765,3940,4115,4290,4465,4640,4815,4990,5165,5340,5515,5690,5865,6040,6215] },
+    'وكيل رقيب': { allowance: 210, salaries: [4455,4665,4875,5085,5295,5505,5715,5925,6135,6345,6555,6765,6975,7185,7395] },
+    'رقيب': { allowance: 250, salaries: [5260,5510,5760,6010,6260,6510,6760,7010,7260,7510,7760,8010,8260,8510,8760] },
+    'رقيب أول': { allowance: 300, salaries: [6180,6480,6780,7080,7380,7680,7980,8280,8580,8880,9180,9480,9780,10080,10380] },
+    'رئيس رقباء': { allowance: 360, salaries: [7215,7575,7935,8295,8655,9015,9375,9735,10095,10455,10815,11175,11535,11895,12255] }
+  };
+
   // ====== أسئلة الحاسبة ======
   let answers = { commitments: [] }, step = 0, commitmentStep = 0, currentCommitment = {};
   let hasStarted = false;
@@ -2744,32 +2765,92 @@
     showQuestion();
   }
 
-  // ====== (إضافة) تقدير راتب التقاعد للعسكري (بدون سؤال العميل عن الأساسي) ======
-  function estimateMilitaryPensionFromAnswers(currentNetSalary){
-    // إذا ما فيه ممتد أو ما فيه تاريخ تعيين -> نرجع 0
-    if(answers.jobType !== 'عسكري') return 0;
-    if(answers.extendAfterRetirement !== 'نعم') return 0;
+  // ====== حساب راتب التقاعد العسكري بالمعادلة الرسمية ======
+  // المعادلة: (الراتب الأساسي الأخير × عدد أشهر الخدمة) ÷ 420
+  function estimateMilitaryPensionFromAnswers(){
+    // إذا ما فيه ممتد أو ما فيه تاريخ تعيين -> نرجع كائن فارغ
+    if(answers.jobType !== 'عسكري') return { pension: 0, formula: '' };
+    if(answers.extendAfterRetirement !== 'نعم') return { pension: 0, formula: '' };
 
     const ad = parseInt(answers.appointDay || '0', 10);
     const am = parseInt(answers.appointMonth || '0', 10);
     const ay = parseInt(answers.appointYear || '0', 10);
-    if(!ad || !am || !ay) return 0;
+    if(!ad || !am || !ay) return { pension: 0, formula: '' };
+
+    const rank = answers.militaryRank || 'جندي';
+    const rankData = militarySalaryTable[rank];
+    if(!rankData) return { pension: 0, formula: '' };
 
     const info = getMilitaryTimingInfoFromAnswers(answers);
+    const nowH = getHijriNowParts();
+    
+    // حساب سنوات الخدمة الحالية (من تاريخ التعيين إلى اليوم)
+    const currentServiceMonths = monthsDiffHijri(ay, am, ad, nowH.y, nowH.m, nowH.d);
+    const currentServiceYears = Math.floor(currentServiceMonths / 12);
+    
+    // تاريخ التقاعد (حسب الرتبة)
     const retY = info.birth.y + info.rankAge;
     const retM = info.birth.m;
     const retD = info.birth.d;
+    
+    // إجمالي سنوات الخدمة عند التقاعد
+    const totalServiceMonths = monthsDiffHijri(ay, am, ad, retY, retM, retD);
+    const totalServiceYears = Math.floor(totalServiceMonths / 12);
+    
+    // السنوات المتبقية للتقاعد
+    const yearsToRetirement = totalServiceYears - currentServiceYears;
+    
+    // تحديد سنة الخدمة الحالية في الرتبة (افتراضياً سنة 1 إذا لم نعرف)
+    // نفترض أن العميل في السنة الأولى من رتبته الحالية
+    // ونحسب الراتب الأساسي عند التقاعد بإضافة العلاوات
+    
+    // الراتب الأساسي الحالي (افتراضياً السنة الأولى)
+    const currentBasicSalary = rankData.salaries[0];
+    
+    // حساب الراتب الأساسي عند التقاعد
+    // نضيف العلاوات السنوية للسنوات المتبقية
+    let futureYearIndex = Math.min(yearsToRetirement, rankData.salaries.length - 1);
+    let basicSalaryAtRetirement = rankData.salaries[futureYearIndex];
+    
+    // إذا تجاوزت السنوات الجدول، نستخدم آخر راتب + العلاوات الإضافية
+    if(yearsToRetirement > rankData.salaries.length - 1){
+      const extraYears = yearsToRetirement - (rankData.salaries.length - 1);
+      basicSalaryAtRetirement = rankData.salaries[rankData.salaries.length - 1] + (extraYears * rankData.allowance);
+    }
+    
+    // التأكد من أن الراتب لا يتجاوز الحد الأقصى للرتبة
+    const maxSalary = rankData.salaries[rankData.salaries.length - 1];
+    basicSalaryAtRetirement = Math.min(basicSalaryAtRetirement, maxSalary + (10 * rankData.allowance));
+    
+    // المعادلة الرسمية: (الراتب الأساسي الأخير × عدد أشهر الخدمة) ÷ 420
+    let pension = (basicSalaryAtRetirement * totalServiceMonths) / 420;
+    
+    // المعاش لا يتجاوز الراتب الأساسي الأخير
+    pension = Math.min(pension, basicSalaryAtRetirement);
+    
+    // إعداد معادلة الحساب للمسؤول
+    const formula = `معادلة حساب راتب التقاعد:
+الرتبة: ${rank}
+تاريخ التعيين: ${ay}/${String(am).padStart(2,'0')}/${String(ad).padStart(2,'0')}
+سنوات الخدمة الحالية: ${currentServiceYears} سنة
+سنوات الخدمة عند التقاعد: ${totalServiceYears} سنة (${totalServiceMonths} شهر)
+الراتب الأساسي الحالي (سنة 1): ${currentBasicSalary.toLocaleString()} ريال
+العلاوة السنوية: ${rankData.allowance} ريال
+الراتب الأساسي عند التقاعد: ${basicSalaryAtRetirement.toLocaleString()} ريال
 
-    // مدة الخدمة بالأشهر من التعيين إلى تاريخ التقاعد (هجري)
-    const serviceMonths = monthsDiffHijri(ay, am, ad, retY, retM, retD);
-
-    // بديل "الأساسي" = الصافي × معامل تقديري
-    const basic = Number(currentNetSalary || 0) * Number(retirementSettings.basicMultiplier || 1.0);
-
-    // معادلة تقديرية بنفس هيكل المعادلة: الأساسي × (أشهر الخدمة / 420)
-    const pension = Math.min(basic, basic * (serviceMonths / 420));
-
-    return Math.max(0, pension);
+المعادلة: (الراتب الأساسي الأخير × أشهر الخدمة) ÷ 420
+= (${basicSalaryAtRetirement.toLocaleString()} × ${totalServiceMonths}) ÷ 420
+= ${pension.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ريال`;
+    
+    return {
+      pension: Math.max(0, pension),
+      basicSalaryAtRetirement,
+      totalServiceMonths,
+      totalServiceYears,
+      currentServiceYears,
+      yearsToRetirement,
+      formula
+    };
   }
 
   // ====== الحسبة ======
@@ -2810,7 +2891,9 @@
     const timing = getMilitaryTimingInfoFromAnswers(answers);
     const isExtended = (answers.jobType === 'عسكري' && answers.extendAfterRetirement === 'نعم');
     const preRetMonths = isExtended ? Math.min(months, timing.rankRemainingMonths) : months;
-    const pensionSalaryEst = isExtended ? estimateMilitaryPensionFromAnswers(salary) : 0;
+    const pensionResult = isExtended ? estimateMilitaryPensionFromAnswers() : { pension: 0, formula: '' };
+    const pensionSalaryEst = pensionResult.pension;
+    const retirementFormula = pensionResult.formula;
 
     // ==== التمويل الاستهلاكي (موجود كما هو) ====
     if (isConsumer) {
@@ -3297,6 +3380,11 @@
         ? `${remainingYears} سنة و ${remainingMonthsLeft} شهر`
         : `${remainingMonthsLeft} شهر`;
       
+      // الحصول على معلومات الراتب الأساسي عند التقاعد
+      const basicAtRetirement = pensionResult.basicSalaryAtRetirement || 0;
+      const totalServiceYears = pensionResult.totalServiceYears || 0;
+      const totalServiceMonths = pensionResult.totalServiceMonths || 0;
+      
       html += `
         <div class="retirement-card">
           <div class="retirement-title">🎖️ معلومات التقاعد يا ${name}</div>
@@ -3305,8 +3393,20 @@
             <span class="retirement-value">✅ نعم</span>
           </div>
           <div class="retirement-row">
-            <span>راتبك المتوقع بعد التقاعد</span>
-            <span class="retirement-value">${pensionSalaryEst.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ريال</span>
+            <span>الرتبة العسكرية</span>
+            <span class="retirement-value">${answers.militaryRank || 'غير محدد'}</span>
+          </div>
+          <div class="retirement-row">
+            <span>سنوات الخدمة عند التقاعد</span>
+            <span class="retirement-value">${totalServiceYears} سنة (${totalServiceMonths} شهر)</span>
+          </div>
+          <div class="retirement-row">
+            <span>الراتب الأساسي عند التقاعد</span>
+            <span class="retirement-value">${basicAtRetirement.toLocaleString()} ريال</span>
+          </div>
+          <div class="retirement-row" style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-radius: 12px; padding: 10px; margin-top: 8px;">
+            <span style="font-weight: 800; color: #92400e;">راتب التقاعد المتوقع</span>
+            <span class="retirement-value" style="font-size: 18px; color: #92400e; font-weight: 900;">${pensionSalaryEst.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ريال</span>
           </div>
           <div class="retirement-row">
             <span>تتقاعد يا ${name} بعد عمر طويل بالطاعة بعد</span>
@@ -3316,8 +3416,13 @@
             <span>تاريخ التقاعد المتوقع (هجري)</span>
             <span class="retirement-value">${timing.rankRetHijriStr}</span>
           </div>
-          <div style="margin-top:10px; font-size:13px; color:#065f46; text-align:right;">
-            📝 الأقساط قبل التقاعد على راتبك الحالي، وبعد التقاعد على راتب التقاعد التقديري.
+          <div style="margin-top:12px; font-size:12px; color:#065f46; text-align:right; background: #ecfdf5; padding: 10px; border-radius: 10px;">
+            <strong>📊 المعادلة الرسمية:</strong><br>
+            راتب التقاعد = (الراتب الأساسي الأخير × أشهر الخدمة) ÷ 420<br>
+            = (${basicAtRetirement.toLocaleString()} × ${totalServiceMonths}) ÷ 420 = <strong>${pensionSalaryEst.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ريال</strong>
+          </div>
+          <div style="margin-top:8px; font-size:12px; color:#6b7280; text-align:right;">
+            📝 الأقساط قبل التقاعد على راتبك الحالي، وبعد التقاعد على راتب التقاعد.
           </div>
         </div>
       `;
@@ -3474,26 +3579,7 @@
     // عرض قسم التسويق والتقييم
     updateMarketingAndRatingDisplay();
 
-    // حساب معادلة التقاعد للمسؤول
-    let retirementFormula = '';
-    if(isExtended && answers.jobType === 'عسكري'){
-      const ad = parseInt(answers.appointDay || '0', 10);
-      const am = parseInt(answers.appointMonth || '0', 10);
-      const ay = parseInt(answers.appointYear || '0', 10);
-      const retY = timing.birth.y + timing.rankAge;
-      const serviceMonths = monthsDiffHijri(ay, am, ad, retY, timing.birth.m, timing.birth.d);
-      const basicEst = salary * (retirementSettings.basicMultiplier || 1.0);
-      
-      retirementFormula = `معادلة حساب راتب التقاعد:
-• الراتب الصافي: ${salary.toLocaleString()} ريال
-• معامل الأساسي: ${retirementSettings.basicMultiplier || 1.0}
-• الراتب الأساسي التقديري: ${basicEst.toFixed(0)} ريال (الصافي × المعامل)
-• تاريخ التعيين: ${ay}/${am}/${ad}
-• تاريخ التقاعد المتوقع: ${timing.rankRetHijriStr}
-• مدة الخدمة بالأشهر: ${serviceMonths} شهر
-• المعادلة: راتب التقاعد = الأساسي × (أشهر الخدمة / 420)
-• راتب التقاعد التقديري: ${basicEst.toFixed(0)} × (${serviceMonths} / 420) = ${pensionSalaryEst.toFixed(0)} ريال`;
-    }
+    // معادلة التقاعد موجودة في pensionResult.formula
     
     // حفظ آخر نتيجة (لاستخدام "النتيجة للعميل" + الأرشيف)
     answers._lastCalc = {
@@ -4326,7 +4412,3 @@ ${contact}`.trim();
     updateDateTime();
     setInterval(updateDateTime, 1000);
   });
-</script>
-
-</body>
-</html>
