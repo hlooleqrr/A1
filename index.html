@@ -16,23 +16,26 @@
       color: #111827;
     }
     header {
-      background: linear-gradient(135deg, #0f172a, #1e3a8a);
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #3b82f6 100%);
       color: #fff;
-      padding: 14px 10px;
+      padding: 16px 10px;
       position: sticky;
       top: 0;
       z-index: 10;
+      box-shadow: 0 4px 20px rgba(15, 23, 42, 0.3);
     }
     header h1 {
       margin: 0;
-      font-size: 24px;
-      font-weight: 700;
-      letter-spacing: 0.03em;
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.2);
     }
     header p {
-      margin: 4px 0 0;
-      font-size: 16px;
+      margin: 6px 0 0;
+      font-size: 15px;
       opacity: 0.95;
+      font-weight: 300;
     }
     .top-bar {
       display: flex;
@@ -48,13 +51,19 @@
       padding: 0 10px;
     }
     .card {
-      background: #ffffff;
-      border-radius: 18px;
-      padding: 18px 16px;
-      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
-      margin-bottom: 14px;
+      background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+      border-radius: 20px;
+      padding: 20px 18px;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08), 0 4px 6px rgba(15, 23, 42, 0.04);
+      margin-bottom: 16px;
       text-align: center;
       width: 100%;
+      border: 1px solid rgba(255,255,255,0.8);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 40px rgba(15, 23, 42, 0.12), 0 6px 10px rgba(15, 23, 42, 0.06);
     }
 
     button, .btn {
@@ -70,14 +79,19 @@
       transition: transform .12s ease, box-shadow .12s ease, background .12s ease, opacity .12s ease;
     }
     button.primary, .btn.primary {
-      background: #2563eb;
+      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
       color: #ffffff;
-      box-shadow: 0 8px 16px rgba(37, 99, 235, 0.35);
+      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.4);
+      font-weight: 600;
     }
     button.primary:hover, .btn.primary:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 10px 22px rgba(37, 99, 235, 0.45);
-      background: #1d4ed8;
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(37, 99, 235, 0.5);
+      background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+    }
+    button.primary:active, .btn.primary:active {
+      transform: translateY(0);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
     }
     button.secondary, .btn.secondary {
       background: #e0f2fe;
@@ -184,13 +198,19 @@
     .bank-card {
       display: flex;
       align-items: center;
-      gap: 12px;
-      padding: 12px;
-      border-radius: 16px;
-      background: #eff6ff;
-      border: 1px dashed #2563eb;
-      margin: 8px 0 12px;
+      gap: 14px;
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+      border: 2px solid #3b82f6;
+      margin: 10px 0 14px;
       text-align: right;
+      box-shadow: 0 6px 20px rgba(59, 130, 246, 0.2);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .bank-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(59, 130, 246, 0.25);
     }
     .bank-logo {
       width: 48px;
@@ -222,29 +242,44 @@
 
     /* ====== تحسين شكل النتيجة ====== */
     .result-main-block {
-      background: radial-gradient(circle at top, #e0f2fe 0, #ffffff 60%);
-      border-radius: 18px;
-      padding: 12px 14px;
-      margin-top: 4px;
+      background: linear-gradient(135deg, #e0f2fe 0%, #dbeafe 30%, #ffffff 100%);
+      border-radius: 20px;
+      padding: 16px 18px;
+      margin-top: 6px;
       text-align: right;
-      border: 1px solid #bfdbfe;
+      border: 2px solid #93c5fd;
+      box-shadow: 0 8px 25px rgba(37, 99, 235, 0.15);
+      position: relative;
+      overflow: hidden;
+    }
+    .result-main-block::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
+      pointer-events: none;
     }
     .result-main-title {
-      font-size: 14px;
+      font-size: 15px;
       color: #1d4ed8;
-      margin-bottom: 2px;
+      margin-bottom: 4px;
       display:flex;
       align-items:center;
       gap:8px;
-      font-weight: 900;
+      font-weight: 800;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.05);
     }
     .result-amount-main {
-      font-size: 30px;
+      font-size: 34px;
       font-weight: 900;
       color: #1e40af;
-      margin: 2px 0 6px;
-      letter-spacing: .2px;
+      margin: 4px 0 8px;
+      letter-spacing: .3px;
       line-height: 1.2;
+      text-shadow: 0 2px 4px rgba(30, 64, 175, 0.2);
     }
     .result-amount-sub {
       font-size: 13px;
@@ -530,6 +565,9 @@
         النتيجة النهائية مصممة بحيث تقدر تصوّر الشاشة أو تحفظها كصورة .
       </div>
 
+      <!-- عرض تقييمات العملاء -->
+      <div id="publicRatings"></div>
+
       <!-- (تم نقل أيقونة دخول المسؤول لتكون داخل ▫️ أدوات المسؤول تحت الفوتر) -->
     </div>
   </div>
@@ -565,6 +603,25 @@
         <button class="secondary small" onclick="saveResultAsImage()">📸 حفظ النتيجة كصورة</button>
         <button class="secondary small" onclick="shareResultOnWhatsApp()">📲 مشاركة واتساب</button>
         <button class="primary small" onclick="resetCalc(); showPage('calculator');">🔁 إعادة حسبة جديدة</button>
+      </div>
+    </div>
+
+    <!-- نموذج التقييم -->
+    <div id="ratingForm" class="card fade-in" style="margin-top:16px; background:linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border:1px solid #86efac;">
+      <h3 style="margin:0 0 12px 0; font-size:16px; color:#166534;">⭐ شاركنا رأيك!</h3>
+      <p style="font-size:13px; color:#166534; margin-bottom:12px;">كيف كانت تجربتك مع منصة FINO؟</p>
+      <div id="ratingStars" style="display:flex; gap:8px; justify-content:center; margin-bottom:12px;">
+        <span class="rating-star" data-star="1" onclick="selectStar(1)" style="font-size:28px; cursor:pointer; transition:transform 0.2s;">☆</span>
+        <span class="rating-star" data-star="2" onclick="selectStar(2)" style="font-size:28px; cursor:pointer; transition:transform 0.2s;">☆</span>
+        <span class="rating-star" data-star="3" onclick="selectStar(3)" style="font-size:28px; cursor:pointer; transition:transform 0.2s;">☆</span>
+        <span class="rating-star" data-star="4" onclick="selectStar(4)" style="font-size:28px; cursor:pointer; transition:transform 0.2s;">☆</span>
+        <span class="rating-star" data-star="5" onclick="selectStar(5)" style="font-size:28px; cursor:pointer; transition:transform 0.2s;">☆</span>
+      </div>
+      <input type="text" id="ratingName" placeholder="اسمك (اختياري)" style="margin-bottom:8px;">
+      <textarea id="ratingComment" placeholder="اكتب تعليقك هنا..." rows="2" style="width:100%; padding:10px; border:1px solid #86efac; border-radius:8px; resize:none;"></textarea>
+      <button class="primary small" onclick="submitClientRating()" style="margin-top:10px; background:linear-gradient(135deg, #22c55e 0%, #16a34a 100%);">إرسال التقييم</button>
+      <div id="ratingSuccess" style="display:none; margin-top:10px; padding:10px; background:#dcfce7; border-radius:8px; color:#166534; text-align:center;">
+        شكراً لك! تم إرسال تقييمك بنجاح 🙏
       </div>
     </div>
   </div>
@@ -613,7 +670,12 @@
       <div style="display:flex; gap:10px; justify-content:flex-end; flex-wrap:wrap; margin-top:10px;">
         <button class="primary small" onclick="showPage('admin')">تعديل النسب</button>
         <button class="secondary small" onclick="showPage('adminProducts')">إدارة منتجات التمويل</button>
+        <button class="secondary small" onclick="showPage('adminJobTypes')">إدارة أنواع الوظائف</button>
+        <button class="secondary small" onclick="showPage('adminBanks')">إدارة البنوك والشعارات</button>
+        <button class="secondary small" onclick="showPage('adminOffers')">العروض الخاصة للجهات</button>
         <button class="secondary small" onclick="showPage('adminArchive')">سجل نتائج العملاء</button>
+        <button class="secondary small" onclick="showPage('adminRatings')">إدارة التقييمات</button>
+        <button class="secondary small" onclick="showPage('adminSecurity')">سجل الأمان</button>
         <button class="secondary small" onclick="backToLanding()">رجوع</button>
       </div>
     </div>
@@ -1068,9 +1130,196 @@
   </div>
 </div>
 
+<!-- صفحة إدارة أنواع الوظائف -->
+<div id="adminJobTypesPage" class="page">
+  <div class="card fade-in">
+    <h2 style="margin-top:0; font-size:19px; color:#111827;">إدارة أنواع الوظائف</h2>
+    <p style="font-size:13px; color:#6b7280; text-align:right;">
+      من هنا تضيف وتعدل وتحذف أنواع الوظائف التي تظهر للعميل.
+    </p>
+    <div class="admin-grid" style="margin-top:10px;">
+      <div>
+        <label>اسم نوع الوظيفة</label>
+        <input id="newJobTypeName" type="text" placeholder="مثال: قطاع صحي">
+      </div>
+      <div>
+        <label>سن التقاعد (اختياري)</label>
+        <input id="newJobTypeRetAge" type="number" min="50" max="70" placeholder="60">
+      </div>
+    </div>
+    <div style="margin-top:10px; display:flex; gap:10px; justify-content:flex-end;">
+      <button class="primary small" onclick="addJobType()">إضافة</button>
+    </div>
+    <div style="margin-top:16px; overflow-x:auto;">
+      <table class="admin-table" id="jobTypesTable">
+        <thead>
+          <tr><th>نوع الوظيفة</th><th>سن التقاعد</th><th>تحكم</th></tr>
+        </thead>
+        <tbody id="jobTypesBody"></tbody>
+      </table>
+    </div>
+    <div style="margin-top:12px;">
+      <button class="secondary small" onclick="showPage('adminHub')">رجوع</button>
+    </div>
+  </div>
+</div>
+
+<!-- صفحة إدارة البنوك والشعارات -->
+<div id="adminBanksPage" class="page">
+  <div class="card fade-in">
+    <h2 style="margin-top:0; font-size:19px; color:#111827;">إدارة البنوك والشعارات</h2>
+    <p style="font-size:13px; color:#6b7280; text-align:right;">
+      من هنا تضيف وتعدل البنوك وشركات التمويل مع شعاراتها.
+    </p>
+    <div class="admin-grid" style="margin-top:10px;">
+      <div>
+        <label>اسم البنك / شركة التمويل</label>
+        <input id="newBankName" type="text" placeholder="مثال: بنك جديد">
+      </div>
+      <div>
+        <label>رابط الشعار (URL)</label>
+        <input id="newBankLogo" type="text" placeholder="img/bank.png أو رابط خارجي">
+      </div>
+    </div>
+    <div style="margin-top:10px; display:flex; gap:10px; justify-content:flex-end;">
+      <button class="primary small" onclick="addBank()">إضافة</button>
+    </div>
+    <div style="margin-top:16px; overflow-x:auto;">
+      <table class="admin-table" id="banksTable">
+        <thead>
+          <tr><th>الشعار</th><th>اسم البنك</th><th>رابط الشعار</th><th>تحكم</th></tr>
+        </thead>
+        <tbody id="banksBody"></tbody>
+      </table>
+    </div>
+    <div style="margin-top:12px;">
+      <button class="secondary small" onclick="showPage('adminHub')">رجوع</button>
+    </div>
+  </div>
+</div>
+
+<!-- صفحة إدارة التقييمات -->
+<div id="adminRatingsPage" class="page">
+  <div class="card fade-in">
+    <h2 style="margin-top:0; font-size:19px; color:#111827;">إدارة تقييمات العملاء</h2>
+    <p style="font-size:13px; color:#6b7280; text-align:right;">
+      هنا تظهر تقييمات العملاء. يمكنك الموافقة على نشرها في الصفحة الرئيسية أو حذفها.
+    </p>
+    <div style="margin-top:16px; overflow-x:auto;">
+      <table class="admin-table" id="ratingsTable">
+        <thead>
+          <tr><th>الاسم</th><th>التقييم</th><th>التعليق</th><th>التاريخ</th><th>الحالة</th><th>تحكم</th></tr>
+        </thead>
+        <tbody id="ratingsBody"></tbody>
+      </table>
+    </div>
+    <div style="margin-top:12px;">
+      <button class="secondary small" onclick="showPage('adminHub')">رجوع</button>
+    </div>
+  </div>
+</div>
+
+<!-- صفحة العروض الخاصة للجهات -->
+<div id="adminOffersPage" class="page">
+  <div class="card fade-in">
+    <h2 style="margin-top:0; font-size:19px; color:#111827;">العروض الخاصة للجهات</h2>
+    <p style="font-size:13px; color:#6b7280; text-align:right;">
+      من هنا تضيف عروض خاصة لجهات عمل محددة. عندما يختار العميل "اكتشف هنا ربما لجهتك عرض" ستظهر له الجهات المسجلة هنا.
+    </p>
+    <form id="specialOfferForm" onsubmit="saveSpecialOffer(event)" style="margin-top:16px;">
+      <div class="admin-grid">
+        <div>
+          <label>القطاع</label>
+          <select id="offerSector" required>
+            <option value="">اختر...</option>
+            <option>قطاع عسكري</option>
+            <option>قطاع حكومي</option>
+            <option>قطاع خاص</option>
+            <option>متقاعدين</option>
+          </select>
+        </div>
+        <div>
+          <label>جهة العمل</label>
+          <input type="text" id="offerEntity" placeholder="مثلاً: وزارة الداخلية" required>
+        </div>
+        <div>
+          <label>نوع التمويل</label>
+          <select id="offerFinanceType" required>
+            <option value="">اختر...</option>
+            <option>تمويل شخصي/تأجيري</option>
+            <option>تمويل استهلاكي</option>
+            <option>تمويل عقاري</option>
+          </select>
+        </div>
+        <div>
+          <label>نسبة هامش الربح %</label>
+          <input type="number" step="0.01" id="offerRate" placeholder="مثلاً: 3.5" required>
+        </div>
+        <div>
+          <label>البنك / شركة التمويل</label>
+          <select id="offerBank" required>
+            <option value="">اختر...</option>
+            <option>البنك الأهلي السعودي</option>
+            <option>مصرف الراجحي</option>
+            <option>بنك الرياض</option>
+            <option>بنك ساب</option>
+            <option>البنك العربي الوطني</option>
+            <option>مصرف الإنماء</option>
+          </select>
+        </div>
+        <div>
+          <label>العمر الأقصى (سنة)</label>
+          <input type="number" id="offerMaxAge" placeholder="60" value="60">
+        </div>
+        <div style="grid-column: span 2;">
+          <label>ملاحظة العرض (تظهر للعميل)</label>
+          <input type="text" id="offerNote" placeholder="مثلاً: عرض خاص لمنسوبي وزارة الداخلية">
+        </div>
+      </div>
+      <div style="margin-top:12px; display:flex; gap:8px; justify-content:flex-end;">
+        <button type="submit" class="primary small">حفظ العرض</button>
+        <button type="button" class="secondary small" onclick="clearOfferForm()">إلغاء</button>
+      </div>
+    </form>
+    <div style="margin-top:16px; overflow-x:auto;">
+      <table class="admin-table" id="offersTable">
+        <thead>
+          <tr><th>القطاع</th><th>جهة العمل</th><th>التمويل</th><th>البنك</th><th>النسبة %</th><th>العمر الأقصى</th><th>الملاحظة</th><th>تحكم</th></tr>
+        </thead>
+        <tbody id="offersBody"></tbody>
+      </table>
+    </div>
+    <div style="margin-top:12px;">
+      <button class="secondary small" onclick="showPage('adminHub')">رجوع</button>
+    </div>
+  </div>
+</div>
+
+<!-- صفحة سجل الأمان -->
+<div id="adminSecurityPage" class="page">
+  <div class="card fade-in">
+    <h2 style="margin-top:0; font-size:19px; color:#111827;">سجل الأمان</h2>
+    <p style="font-size:13px; color:#6b7280; text-align:right;">
+      هنا تظهر محاولات الدخول الخاطئة ومعلومات الجهاز.
+    </p>
+    <div style="margin-top:16px; overflow-x:auto;">
+      <table class="admin-table" id="securityTable">
+        <thead>
+          <tr><th>التاريخ/الوقت</th><th>نوع المحاولة</th><th>الرمز المدخل</th><th>نوع الجهاز</th><th>المتصفح</th><th>الموقع</th></tr>
+        </thead>
+        <tbody id="securityBody"></tbody>
+      </table>
+    </div>
+    <div style="margin-top:12px; display:flex; gap:8px;">
+      <button class="secondary small" onclick="clearSecurityLog()">مسح السجل</button>
+      <button class="secondary small" onclick="showPage('adminHub')">رجوع</button>
+    </div>
+  </div>
+</div>
+
 <script>
   function showPage(name) {
-    ['landing','calculator','result','adminLogin','adminHub','admin','adminProducts','adminArchive','comingSoon'].forEach(id => {
+    ['landing','calculator','result','adminLogin','adminHub','admin','adminProducts','adminArchive','comingSoon','adminJobTypes','adminBanks','adminRatings','adminOffers','adminSecurity'].forEach(id => {
       const el = document.getElementById(id + 'Page');
       if (!el) return;
       el.classList.toggle('active', id === name);
@@ -1311,13 +1560,20 @@
     const err = document.getElementById('adminLoginError');
     if (pin === ADMIN_PIN) {
       err.style.display = 'none';
+      // تسجيل دخول ناجح
+      logSecurityEvent('دخول ناجح', pin);
       showPage('adminHub');
       // تحديث الأرشيف أيضاً
       renderArchiveTable();
       // (إضافة) تحديث إدارة المنتجات
       renderFinanceProductsTable();
       loadRetirementSettingsToUI();
+      // تحديث الإدارات الجديدة
+      renderOffersTable();
+      renderSecurityTable();
     } else {
+      // تسجيل محاولة دخول فاشلة
+      logSecurityEvent('محاولة فاشلة', pin);
       err.style.display = 'block';
     }
   }
@@ -1796,6 +2052,11 @@
     },
     { id:'bundle',label:'هل ترغب في دفعة مقدمة من سكني؟',type:'select',options:['نعم','لا'],show:a=>a.supported==='مدعوم' },
     { id:'salary',label:'كم الراتب الشهري الصافي؟',type:'number' },
+    { id:'currentBank',label:'راتبك الحين على أي بنك؟',type:'select',options:[
+      'مصرف الراجحي','البنك الأهلي السعودي','بنك الرياض','بنك البلاد','بنك الإنماء',
+      'البنك السعودي للاستثمار','البنك السعودي الفرنسي','بنك الجزيرة','بنك العربي الوطني',
+      'بنك ساب','بنك الأول','بنك آخر'
+    ] },
 
     /* (إضافة) دمج الدعم الشهري مع الراتب + استقطاع 65% */
     {
@@ -1940,21 +2201,59 @@
     return result.trim();
   }
 
+  // دالة تحويل الأرقام إلى حروف عربية محسّنة
   function numberToArabicWords(n){
-    if (n < 1000) return `${n} ريال`;
+    if(n === 0) return 'صفر ريال';
+    if(n < 0) return 'سالب ' + numberToArabicWords(-n);
+    
+    const ones = ['', 'واحد', 'اثنان', 'ثلاثة', 'أربعة', 'خمسة', 'ستة', 'سبعة', 'ثمانية', 'تسعة', 'عشرة',
+                  'أحد عشر', 'اثنا عشر', 'ثلاثة عشر', 'أربعة عشر', 'خمسة عشر', 'ستة عشر', 'سبعة عشر', 'ثمانية عشر', 'تسعة عشر'];
+    const tens = ['', '', 'عشرون', 'ثلاثون', 'أربعون', 'خمسون', 'ستون', 'سبعون', 'ثمانون', 'تسعون'];
+    const hundreds = ['', 'مائة', 'مائتان', 'ثلاثمائة', 'أربعمائة', 'خمسمائة', 'ستمائة', 'سبعمائة', 'ثمانمائة', 'تسعمائة'];
+    
+    function convertHundreds(num) {
+      if(num === 0) return '';
+      if(num < 20) return ones[num];
+      if(num < 100) {
+        const t = Math.floor(num / 10);
+        const o = num % 10;
+        if(o === 0) return tens[t];
+        return ones[o] + ' و' + tens[t];
+      }
+      const h = Math.floor(num / 100);
+      const rest = num % 100;
+      if(rest === 0) return hundreds[h];
+      return hundreds[h] + ' و' + convertHundreds(rest);
+    }
+    
     let parts = [];
+    
+    // الملايين
     if(n >= 1_000_000){
       let mil = Math.floor(n / 1_000_000);
-      parts.push(mil === 1 ? "مليون" : mil === 2 ? "مليونان" : mil <= 10 ? `${mil} ملايين` : `${mil} مليون`);
+      if(mil === 1) parts.push('مليون');
+      else if(mil === 2) parts.push('مليونان');
+      else if(mil >= 3 && mil <= 10) parts.push(convertHundreds(mil) + ' ملايين');
+      else parts.push(convertHundreds(mil) + ' مليون');
       n %= 1_000_000;
     }
+    
+    // الآلاف
     if(n >= 1000){
       let th = Math.floor(n / 1000);
-      parts.push(th === 1 ? "ألف" : th === 2 ? "ألفان" : th <= 10 ? `${th} آلاف` : `${th} ألف`);
+      if(th === 1) parts.push('ألف');
+      else if(th === 2) parts.push('ألفان');
+      else if(th >= 3 && th <= 10) parts.push(convertHundreds(th) + ' آلاف');
+      else parts.push(convertHundreds(th) + ' ألف');
       n %= 1000;
     }
-    if(n > 0) parts.push(`${n}`);
-    return parts.join(" و ") + " ريال";
+    
+    // المئات والعشرات والآحاد
+    if(n > 0){
+      parts.push(convertHundreds(n));
+    }
+    
+    return parts.join(' و') + ' ريال';
   }
 
   // دعم سكني شهري حسب الجدول (20 سنة = 240 شهر)
@@ -2400,10 +2699,19 @@
       const resultCard = document.getElementById('resultCard');
 
       let html = '';
+      // رسائل تسويقية سعودية مرحة
+      const marketingMessages = [
+        `ماشاء الله عليك يا ${name}! 👏 العرض جايك نار 🔥`,
+        `ياهلا وغلا يا ${name}! 🌟 شوف النتيجة الحلوة`,
+        `أبشر يا ${name}! 😎 التمويل جاهز لك`,
+        `تستاهل الأفضل يا ${name}! ✨ شوف عرضك`
+      ];
+      const randomMsg = marketingMessages[Math.floor(Math.random() * marketingMessages.length)];
+      
       html += `<h2 style="margin:0 0 6px; font-size:18px; text-align:right; color:#111827;">نتيجة الحسبة (التقريبية)</h2>`;
       html += `<div style="font-size:12px; color:#6b7280; text-align:right; margin-bottom:4px;">تاريخ ووقت الحسبة: ${calcDateTimeStr}</div>`;
       html += `<div class="result-header">
-        <div class="client-chip">مرحباً ومسهلا يا ${name}</div>
+        <div class="client-chip" style="background: linear-gradient(135deg, #10b981, #059669); font-size:16px;">${randomMsg}</div>
         <div style="text-align:right;">
           <span class="badge-mode">تمويل استهلاكي - نظام 11.67%</span><br>
           <span class="badge-duration">مدة التمويل: ${duration}</span>
@@ -2426,7 +2734,7 @@
 
       html += `
         <div class="result-main-block">
-          <div class="result-main-title">💳 التمويل الصافي </div>
+          <div class="result-main-title">💰 التمويل الصافي</div>
           <div class="result-amount-main">${finalNetFixed.replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ريال</div>
           <div class="result-amount-sub">التمويل الصافي بعد الرسوم الإدارية والضريبة ورسوم السلع.</div>
 
@@ -2732,11 +3040,20 @@
     const resultCard = document.getElementById('resultCard');
     let html = '';
 
+    // رسائل تسويقية سعودية مرحة
+    const marketingMessages = [
+      `ماشاء الله عليك يا ${name}! 👏 العرض جايك نار 🔥`,
+      `ياهلا وغلا يا ${name}! 🌟 شوف النتيجة الحلوة`,
+      `أبشر يا ${name}! 😎 التمويل جاهز لك`,
+      `تستاهل الأفضل يا ${name}! ✨ شوف عرضك`
+    ];
+    const randomMsg = marketingMessages[Math.floor(Math.random() * marketingMessages.length)];
+    
     html += `<h2 style="margin:0 0 6px; font-size:18px; text-align:right; color:#111827;">نتيجة الحسبة (التقريبية)</h2>`;
     html += `<div style="font-size:12px; color:#6b7280; text-align:right; margin-bottom:4px;">تاريخ ووقت الحسبة: ${calcDateTimeStr}</div>`;
 
     html += `<div class="result-header">
-      <div class="client-chip">مرحباً ومسهلا يا ${name}</div>
+      <div class="client-chip" style="background: linear-gradient(135deg, #10b981, #059669); font-size:16px;">${randomMsg}</div>
       <div style="text-align:right;">
         <span class="badge-mode">${answers.calcMode === 'ترشيح بنك مناسب تلقائياً' ? 'الحسبة مع ترشيح بنك مناسب' : 'الحسبة على النسبة المدخلة'}</span><br>
         <span class="badge-duration">مدة التمويل: ${duration}</span>
@@ -2776,7 +3093,7 @@
     // ====== كتلة النتيجة الأساسية ( ) ======
     html += `
       <div class="result-main-block">
-        <div class="result-main-title">⭐ ${mainShownLabel} ( )</div>
+        <div class="result-main-title">💰 ${mainShownLabel}</div>
         <div class="result-amount-main">${fmtMoney(mainShownValue).replace(' ريال','')} ريال</div>
     `;
 
@@ -3233,6 +3550,445 @@ ${contact}`.trim();
     });
   }
 
+  // ====== إدارة أنواع الوظائف ======
+  let jobTypes = JSON.parse(localStorage.getItem('finoJobTypes')) || [
+    { name: 'عسكري', retirementAge: 55 },
+    { name: 'مدني (قطاع حكومي)', retirementAge: 60 },
+    { name: 'خاص (شبه حكومي)', retirementAge: 60 },
+    { name: 'خاص (شركة معتمدة)', retirementAge: 60 },
+    { name: 'خاص (شركة غير معتمدة)', retirementAge: 60 },
+    { name: 'متقاعد', retirementAge: 0 }
+  ];
+
+  function saveJobTypes() {
+    localStorage.setItem('finoJobTypes', JSON.stringify(jobTypes));
+  }
+
+  function renderJobTypesTable() {
+    const tbody = document.getElementById('jobTypesBody');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+    jobTypes.forEach((jt, i) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${jt.name}</td>
+        <td>${jt.retirementAge || '-'}</td>
+        <td>
+          <button class="secondary small" onclick="editJobType(${i})">تعديل</button>
+          <button class="secondary small" onclick="deleteJobType(${i})">حذف</button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function addJobType() {
+    const name = document.getElementById('newJobTypeName').value.trim();
+    const retAge = parseInt(document.getElementById('newJobTypeRetAge').value) || 60;
+    if (!name) { alert('أدخل اسم نوع الوظيفة'); return; }
+    jobTypes.push({ name, retirementAge: retAge });
+    saveJobTypes();
+    renderJobTypesTable();
+    updateJobTypeSelects();
+    document.getElementById('newJobTypeName').value = '';
+    document.getElementById('newJobTypeRetAge').value = '';
+  }
+
+  function editJobType(i) {
+    const newName = prompt('اسم نوع الوظيفة:', jobTypes[i].name);
+    if (newName) {
+      const newAge = prompt('سن التقاعد:', jobTypes[i].retirementAge);
+      jobTypes[i].name = newName;
+      jobTypes[i].retirementAge = parseInt(newAge) || 60;
+      saveJobTypes();
+      renderJobTypesTable();
+      updateJobTypeSelects();
+    }
+  }
+
+  function deleteJobType(i) {
+    if (confirm('هل تريد حذف هذا النوع؟')) {
+      jobTypes.splice(i, 1);
+      saveJobTypes();
+      renderJobTypesTable();
+      updateJobTypeSelects();
+    }
+  }
+
+  function updateJobTypeSelects() {
+    // تحديث قوائم الوظائف في الأسئلة ولوحة المسؤول
+    const adminSelect = document.getElementById('adminJobType');
+    if (adminSelect) {
+      const currentVal = adminSelect.value;
+      adminSelect.innerHTML = '<option value="">الكل</option>';
+      jobTypes.forEach(jt => {
+        adminSelect.innerHTML += `<option>${jt.name}</option>`;
+      });
+      adminSelect.value = currentVal;
+    }
+  }
+
+  // ====== إدارة البنوك ======
+  let banksList = JSON.parse(localStorage.getItem('finoBanksList')) || [
+    { name: 'البنك الأهلي السعودي', logo: 'img/alahli.png' },
+    { name: 'مصرف الراجحي', logo: 'img/alrajhi.png' },
+    { name: 'بنك الرياض', logo: 'img/riyad.png' },
+    { name: 'بنك ساب', logo: 'img/sab.png' },
+    { name: 'البنك العربي الوطني', logo: 'img/anb.png' },
+    { name: 'مصرف الإنماء', logo: 'img/alinma.png' },
+    { name: 'البنك السعودي الفرنسي', logo: 'img/bsf.png' },
+    { name: 'البنك السعودي للاستثمار', logo: 'img/saib.png' },
+    { name: 'بنك البلاد', logo: 'img/bilad.png' },
+    { name: 'بنك الجزيرة', logo: 'img/jazira.png' }
+  ];
+
+  function saveBanksList() {
+    localStorage.setItem('finoBanksList', JSON.stringify(banksList));
+  }
+
+  function renderBanksTable() {
+    const tbody = document.getElementById('banksBody');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+    banksList.forEach((b, i) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td><img src="${b.logo}" style="width:40px;height:40px;border-radius:8px;object-fit:contain;background:#f8fafc;" onerror="this.src='img/default-bank.png'"></td>
+        <td>${b.name}</td>
+        <td style="font-size:11px;color:#6b7280;">${b.logo}</td>
+        <td>
+          <button class="secondary small" onclick="editBank(${i})">تعديل</button>
+          <button class="secondary small" onclick="deleteBank(${i})">حذف</button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function addBank() {
+    const name = document.getElementById('newBankName').value.trim();
+    const logo = document.getElementById('newBankLogo').value.trim() || 'img/default-bank.png';
+    if (!name) { alert('أدخل اسم البنك'); return; }
+    banksList.push({ name, logo });
+    saveBanksList();
+    renderBanksTable();
+    updateBankSelects();
+    document.getElementById('newBankName').value = '';
+    document.getElementById('newBankLogo').value = '';
+  }
+
+  function editBank(i) {
+    const newName = prompt('اسم البنك:', banksList[i].name);
+    if (newName) {
+      const newLogo = prompt('رابط الشعار:', banksList[i].logo);
+      banksList[i].name = newName;
+      banksList[i].logo = newLogo || 'img/default-bank.png';
+      saveBanksList();
+      renderBanksTable();
+      updateBankSelects();
+    }
+  }
+
+  function deleteBank(i) {
+    if (confirm('هل تريد حذف هذا البنك؟')) {
+      banksList.splice(i, 1);
+      saveBanksList();
+      renderBanksTable();
+      updateBankSelects();
+    }
+  }
+
+  function updateBankSelects() {
+    const adminSelect = document.getElementById('adminBankName');
+    if (adminSelect) {
+      const currentVal = adminSelect.value;
+      adminSelect.innerHTML = '<option value="">اختر...</option>';
+      banksList.forEach(b => {
+        adminSelect.innerHTML += `<option>${b.name}</option>`;
+      });
+      adminSelect.value = currentVal;
+    }
+  }
+
+  // ====== إدارة التقييمات ======
+  let ratings = JSON.parse(localStorage.getItem('finoRatings')) || [];
+
+  function saveRatings() {
+    localStorage.setItem('finoRatings', JSON.stringify(ratings));
+  }
+
+  function renderRatingsTable() {
+    const tbody = document.getElementById('ratingsBody');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+    if (ratings.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#6b7280;">لا توجد تقييمات حتى الآن</td></tr>';
+      return;
+    }
+    ratings.forEach((r, i) => {
+      const tr = document.createElement('tr');
+      const stars = '⭐'.repeat(r.stars);
+      tr.innerHTML = `
+        <td>${r.name}</td>
+        <td>${stars}</td>
+        <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;">${r.comment}</td>
+        <td style="font-size:11px;">${r.date}</td>
+        <td>${r.approved ? '<span style="color:#059669;">منشور</span>' : '<span style="color:#d97706;">بانتظار الموافقة</span>'}</td>
+        <td>
+          ${!r.approved ? `<button class="primary small" onclick="approveRating(${i})">نشر</button>` : ''}
+          <button class="secondary small" onclick="deleteRating(${i})">حذف</button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function approveRating(i) {
+    ratings[i].approved = true;
+    saveRatings();
+    renderRatingsTable();
+    renderPublicRatings();
+  }
+
+  function deleteRating(i) {
+    if (confirm('هل تريد حذف هذا التقييم؟')) {
+      ratings.splice(i, 1);
+      saveRatings();
+      renderRatingsTable();
+      renderPublicRatings();
+    }
+  }
+
+  function submitRating(name, stars, comment) {
+    ratings.push({
+      name: name || 'عميل',
+      stars: stars || 5,
+      comment: comment || '',
+      date: new Date().toLocaleDateString('ar-SA'),
+      approved: false
+    });
+    saveRatings();
+  }
+
+  // دوال تقييم العميل
+  let selectedStars = 0;
+
+  function selectStar(n) {
+    selectedStars = n;
+    const stars = document.querySelectorAll('.rating-star');
+    stars.forEach((star, i) => {
+      if (i < n) {
+        star.textContent = '★';
+        star.style.color = '#f59e0b';
+        star.style.transform = 'scale(1.1)';
+      } else {
+        star.textContent = '☆';
+        star.style.color = '#9ca3af';
+        star.style.transform = 'scale(1)';
+      }
+    });
+  }
+
+  function submitClientRating() {
+    if (selectedStars === 0) {
+      alert('يرجى اختيار عدد النجوم');
+      return;
+    }
+    const name = document.getElementById('ratingName').value.trim() || 'عميل';
+    const comment = document.getElementById('ratingComment').value.trim();
+    submitRating(name, selectedStars, comment);
+    
+    // إخفاء النموذج وإظهار رسالة النجاح
+    document.getElementById('ratingStars').style.display = 'none';
+    document.getElementById('ratingName').style.display = 'none';
+    document.getElementById('ratingComment').style.display = 'none';
+    document.querySelector('#ratingForm button').style.display = 'none';
+    document.getElementById('ratingSuccess').style.display = 'block';
+    
+    // إعادة تعيين النجوم
+    selectedStars = 0;
+  }
+
+  function renderPublicRatings() {
+    const container = document.getElementById('publicRatings');
+    if (!container) return;
+    const approved = ratings.filter(r => r.approved);
+    if (approved.length === 0) {
+      container.innerHTML = '';
+      return;
+    }
+    container.innerHTML = '<div style="margin-top:20px;"><h3 style="font-size:16px;color:#111827;margin-bottom:10px;">آراء العملاء</h3><div id="ratingsSlider" style="display:flex;gap:10px;overflow-x:auto;padding:10px 0;"></div></div>';
+    const slider = document.getElementById('ratingsSlider');
+    approved.slice(0, 10).forEach(r => {
+      const card = document.createElement('div');
+      card.style.cssText = 'min-width:200px;background:#f8fafc;border-radius:12px;padding:12px;border:1px solid #e5e7eb;';
+      card.innerHTML = `
+        <div style="font-weight:600;color:#111827;">${r.name}</div>
+        <div style="color:#f59e0b;">${'⭐'.repeat(r.stars)}</div>
+        <div style="font-size:13px;color:#6b7280;margin-top:6px;">${r.comment}</div>
+      `;
+      slider.appendChild(card);
+    });
+  }
+
+  // ====== إدارة العروض الخاصة ======
+  let specialOffers = JSON.parse(localStorage.getItem('finoSpecialOffers')) || [];
+
+  function saveSpecialOffers() {
+    localStorage.setItem('finoSpecialOffers', JSON.stringify(specialOffers));
+  }
+
+  function renderOffersTable() {
+    const tbody = document.getElementById('offersBody');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+    if (specialOffers.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:#6b7280;">لا توجد عروض حتى الآن</td></tr>';
+      return;
+    }
+    specialOffers.forEach((o, i) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${o.sector}</td>
+        <td>${o.entity}</td>
+        <td>${o.financeType}</td>
+        <td>${o.bank}</td>
+        <td>${o.rate}%</td>
+        <td>${o.maxAge || 60}</td>
+        <td style="max-width:150px;overflow:hidden;text-overflow:ellipsis;">${o.note || '-'}</td>
+        <td>
+          <button class="secondary small" onclick="editOffer(${i})">تعديل</button>
+          <button class="secondary small" onclick="deleteOffer(${i})">حذف</button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function saveSpecialOffer(e) {
+    e.preventDefault();
+    const offer = {
+      sector: document.getElementById('offerSector').value,
+      entity: document.getElementById('offerEntity').value.trim(),
+      financeType: document.getElementById('offerFinanceType').value,
+      bank: document.getElementById('offerBank').value,
+      rate: parseFloat(document.getElementById('offerRate').value),
+      maxAge: parseInt(document.getElementById('offerMaxAge').value) || 60,
+      note: document.getElementById('offerNote').value.trim()
+    };
+    const editIdx = document.getElementById('specialOfferForm').dataset.editIndex;
+    if (editIdx !== undefined && editIdx !== '') {
+      specialOffers[parseInt(editIdx)] = offer;
+      delete document.getElementById('specialOfferForm').dataset.editIndex;
+    } else {
+      specialOffers.push(offer);
+    }
+    saveSpecialOffers();
+    renderOffersTable();
+    clearOfferForm();
+  }
+
+  function editOffer(i) {
+    const o = specialOffers[i];
+    document.getElementById('offerSector').value = o.sector;
+    document.getElementById('offerEntity').value = o.entity;
+    document.getElementById('offerFinanceType').value = o.financeType;
+    document.getElementById('offerBank').value = o.bank;
+    document.getElementById('offerRate').value = o.rate;
+    document.getElementById('offerMaxAge').value = o.maxAge || 60;
+    document.getElementById('offerNote').value = o.note || '';
+    document.getElementById('specialOfferForm').dataset.editIndex = i;
+  }
+
+  function deleteOffer(i) {
+    if (confirm('هل تريد حذف هذا العرض؟')) {
+      specialOffers.splice(i, 1);
+      saveSpecialOffers();
+      renderOffersTable();
+    }
+  }
+
+  function clearOfferForm() {
+    document.getElementById('specialOfferForm').reset();
+    delete document.getElementById('specialOfferForm').dataset.editIndex;
+  }
+
+  function getSpecialOfferEntities() {
+    const entities = [];
+    specialOffers.forEach(o => {
+      if (!entities.find(e => e.sector === o.sector && e.entity === o.entity)) {
+        entities.push({ sector: o.sector, entity: o.entity });
+      }
+    });
+    return entities;
+  }
+
+  // ====== سجل الأمان ======
+  let securityLog = JSON.parse(localStorage.getItem('finoSecurityLog')) || [];
+
+  function saveSecurityLog() {
+    localStorage.setItem('finoSecurityLog', JSON.stringify(securityLog));
+  }
+
+  function logSecurityEvent(type, pin) {
+    const ua = navigator.userAgent;
+    let deviceType = 'غير معروف';
+    let browser = 'غير معروف';
+    
+    if (/Mobile|Android|iPhone|iPad/.test(ua)) deviceType = 'جوال';
+    else if (/Tablet|iPad/.test(ua)) deviceType = 'تابلت';
+    else deviceType = 'كمبيوتر';
+    
+    if (/Chrome/.test(ua)) browser = 'Chrome';
+    else if (/Firefox/.test(ua)) browser = 'Firefox';
+    else if (/Safari/.test(ua)) browser = 'Safari';
+    else if (/Edge/.test(ua)) browser = 'Edge';
+    
+    securityLog.unshift({
+      date: new Date().toLocaleString('ar-SA'),
+      type: type,
+      pin: pin ? pin.substring(0, 3) + '***' : '-',
+      device: deviceType,
+      browser: browser,
+      location: '-'
+    });
+    
+    // الاحتفاظ بآخر 100 سجل فقط
+    if (securityLog.length > 100) securityLog = securityLog.slice(0, 100);
+    saveSecurityLog();
+  }
+
+  function renderSecurityTable() {
+    const tbody = document.getElementById('securityBody');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+    if (securityLog.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#6b7280;">لا توجد سجلات</td></tr>';
+      return;
+    }
+    securityLog.forEach(s => {
+      const tr = document.createElement('tr');
+      const typeColor = s.type === 'دخول ناجح' ? '#059669' : '#dc2626';
+      tr.innerHTML = `
+        <td style="font-size:11px;">${s.date}</td>
+        <td style="color:${typeColor};font-weight:600;">${s.type}</td>
+        <td style="font-family:monospace;">${s.pin}</td>
+        <td>${s.device}</td>
+        <td>${s.browser}</td>
+        <td>${s.location}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function clearSecurityLog() {
+    if (confirm('هل تريد مسح سجل الأمان؟')) {
+      securityLog = [];
+      saveSecurityLog();
+      renderSecurityTable();
+    }
+  }
+
   // ====== تشغيل ======
   document.addEventListener('DOMContentLoaded', () => {
     showPage('landing');
@@ -3245,6 +4001,16 @@ ${contact}`.trim();
     renderArchiveTable();
     renderFinanceProductsTable();
     loadRetirementSettingsToUI();
+
+    // تحميل الإدارات الجديدة
+    renderJobTypesTable();
+    renderBanksTable();
+    renderRatingsTable();
+    renderPublicRatings();
+    renderOffersTable();
+    renderSecurityTable();
+    updateJobTypeSelects();
+    updateBankSelects();
 
     updateDateTime();
     setInterval(updateDateTime, 1000);
