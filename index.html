@@ -1952,9 +1952,7 @@
         return (info.rankRemainingMonths > 0 && info.rankRemainingMonths <= (25*12) && info.monthsTo60 > info.rankRemainingMonths);
       }
     },
-    { id:'appointDay',label:'تاريخ التعيين (هجري) - اليوم',type:'select',options:Array.from({length:30},(_,i)=>i+1),default:1, show:a=>a.extendAfterRetirement==='نعم' },
-    { id:'appointMonth',label:'تاريخ التعيين (هجري) - الشهر',type:'select',options:Array.from({length:12},(_,i)=>i+1),default:1, show:a=>a.extendAfterRetirement==='نعم' },
-    { id:'appointYear',label:'تاريخ التعيين (هجري) - السنة',type:'select',options:[],dynamic:true, show:a=>a.extendAfterRetirement==='نعم' },
+    { id:'appointDate',label:'تاريخ التعيين (هجري)✨',type:'appointdate', show:a=>a.extendAfterRetirement==='نعم' },
 
     { id:'months',label:'على كم شهر تريد التمويل؟',type:'select',options:[],dynamic:true },
     { id:'calcMode',label:'كيف تفضّل اختيار النسبة؟',type:'select',options:['أدخل النسبة بنفسي','ترشيح بنك مناسب تلقائياً'] },
@@ -2254,6 +2252,46 @@
           showQuestion();
         }
       });
+    } else if(q.type === 'appointdate'){
+      // تاريخ التعيين في صفحة واحدة
+      const adDiv = document.createElement('div');
+      adDiv.style.cssText = 'display:flex;gap:10px;justify-content:center;flex-wrap:wrap;';
+      
+      // اليوم
+      const daySelectA = document.createElement('select');
+      daySelectA.id = 'appointDay';
+      daySelectA.innerHTML = '<option value="">اليوم</option>';
+      for(let i=1;i<=30;i++) daySelectA.innerHTML += `<option value="${i}">${i}</option>`;
+      
+      // الشهر
+      const monthSelectA = document.createElement('select');
+      monthSelectA.id = 'appointMonth';
+      const hijriMonthsA = ['1 - محرم','2 - صفر','3 - ربيع أول','4 - ربيع ثاني','5 - جمادى أولى','6 - جمادى الثانية','7 - رجب','8 - شعبان','9 - رمضان','10 - شوال','11 - ذو القعدة','12 - ذو الحجة'];
+      monthSelectA.innerHTML = '<option value="">الشهر</option>';
+      hijriMonthsA.forEach((m,i) => monthSelectA.innerHTML += `<option value="${i+1}">${m}</option>`);
+      
+      // السنة
+      const yearSelectA = document.createElement('select');
+      yearSelectA.id = 'appointYear';
+      yearSelectA.innerHTML = '<option value="">السنة</option>';
+      const nowH = getHijriNowParts();
+      for(let y=nowH.y;y>=nowH.y-40;y--) yearSelectA.innerHTML += `<option value="${y}">${y}</option>`;
+      
+      adDiv.appendChild(daySelectA);
+      adDiv.appendChild(monthSelectA);
+      adDiv.appendChild(yearSelectA);
+      div.appendChild(adDiv);
+      
+      // الانتقال التلقائي عند اختيار السنة
+      yearSelectA.addEventListener('change', function(){
+        if(daySelectA.value && monthSelectA.value && yearSelectA.value){
+          answers.appointDay = daySelectA.value;
+          answers.appointMonth = monthSelectA.value;
+          answers.appointYear = yearSelectA.value;
+          step++;
+          showQuestion();
+        }
+      });
     } else if(q.type === 'select'){
       const sel = document.createElement('select');
       sel.id = q.id;
@@ -2278,11 +2316,34 @@
         });
       }
       div.appendChild(sel);
+      
+      // الانتقال التلقائي عند اختيار قيمة
+      sel.addEventListener('change', function(){
+        if(this.value){
+          // حفظ القيمة والانتقال
+          if(step < generalQuestions.length){
+            answers[q.id] = this.value;
+            step++;
+          } else {
+            currentCommitment[q.id] = this.value;
+            commitmentStep++;
+          }
+          showQuestion();
+        }
+      });
     } else {
       div.innerHTML += `<input type="${q.type}" id="${q.id}" ${q.default ? `value="${q.default}"` : ''}>`;
     }
 
     cont.appendChild(div);
+    
+    // إظهار زر التالي فقط عند الضرورة (الأسئلة النصية والرقمية والتواريخ)
+    const nextBtn = document.getElementById('nextButton');
+    if(q.type === 'text' || q.type === 'number' || q.type === 'birthdate' || q.type === 'appointdate'){
+      nextBtn.style.display = 'inline-flex';
+    } else {
+      nextBtn.style.display = 'none';
+    }
   }
 
   function nextQuestion(){
@@ -2799,4 +2860,707 @@
 
         supportText += `
           <div class="support-panel">
-            <div class="support-title">✅ 
+            <div class="support-title">✅ دعم سكني </div>
+            <div class="support-row" style="border-bottom:none;"><span>قيمة الدعم التقديرية</span><strong>${fmtMoney(sup)}</strong></div>
+          </div>
+        `;
+      }
+
+      if (answers.isEtezaaz === 'نعم') {
+        supportEtezaazAdded = ETEZAAZ_FIXED;
+        supportText += `
+          <div class="support-panel" style="margin-top:8px;">
+            <div class="support-title">🛡️ دعم اعتزاز (وزارة الدفاع)</div>
+            <div class="support-row"><span>قيمة الدعم (ثابت)</span><strong>${fmtMoney(ETEZAAZ_FIXED)}</strong></div>
+            <div class="support-row" style="border-bottom:none;"><span>ملاحظة</span><strong>دعم إضافي مستقل لا يتعارض مع دعم سكني</strong></div>
+            <div class="support-badge">⏳ تبدأ الاقساط بعد سنتين</div>
+          </div>
+        `;
+      }
+    }
+
+    const supportTotalAdded = (supportSakaniAdded || 0) + (supportEtezaazAdded || 0);
+
+    const name = answers.clientName || "العميل";
+    const duration = describeMonths(months);
+    const finalNetFixed = finalNet.toFixed(0);
+    const netAfterAdminFixed = netAfterAdmin.toFixed(0);
+    const netWithoutFeesFixed = netWithoutFees.toFixed(0);
+
+    const allNegative = finalPhases.every(p => p.inst <= 0);
+
+    const buyoutAmount = isBuyoutPersonal ? parseFloat(answers.buyoutAmount || '0') : 0;
+    const netAfterBuyout = finalNet - buyoutAmount;
+
+    const matchingBanks = getMatchingBanksForAnswers();
+    const recommendedBank = matchingBanks[0] || null;
+    const altBanks = matchingBanks.slice(1, 4);
+    answers.recommendedBank = answers.recommendedBank || recommendedBank;
+
+    // ====== MAIN DISPLAY VALUE حسب طلبك ======
+    let mainShownValue = Number(finalNetFixed);
+    let mainShownLabel = 'التمويل الصافي';
+
+    // (1) العقاري:   = صافي التمويل + الدعم (لكن لا يتم إضافة الدعم الشهري على الصافي)
+    if(isMortgage){
+      const supportAddedToNet = Number(supportEtezaazAdded || 0) + (housingSupportMonthly > 0 ? 0 : Number(supportSakaniAdded || 0));
+      mainShownValue = Number(finalNetFixed) + supportAddedToNet;
+      mainShownLabel = supportAddedToNet > 0 ? 'صافي التمويل مضاف له الدعم' : 'التمويل الصافي';
+    }
+
+    // (2) شراء المديونية الشخصي:  = ما يصفي للعميل
+    if(isBuyoutPersonal && buyoutAmount > 0){
+      mainShownValue = Number(netAfterBuyout.toFixed(0));
+      mainShownLabel = 'ما يصفي للعميل بعد سداد التمويل القديم';
+    }
+
+    showPage('result');
+    const resultCard = document.getElementById('resultCard');
+    let html = '';
+
+    html += `<h2 style="margin:0 0 6px; font-size:18px; text-align:right; color:#111827;">نتيجة الحسبة (التقريبية)</h2>`;
+    html += `<div style="font-size:12px; color:#6b7280; text-align:right; margin-bottom:4px;">تاريخ ووقت الحسبة: ${calcDateTimeStr}</div>`;
+
+    html += `<div class="result-header">
+      <div class="client-chip">مرحباً ومسهلا يا ${name}</div>
+      <div style="text-align:right;">
+        <span class="badge-mode">${answers.calcMode === 'ترشيح بنك مناسب تلقائياً' ? 'الحسبة مع ترشيح بنك مناسب' : 'الحسبة على النسبة المدخلة'}</span><br>
+        <span class="badge-duration">مدة التمويل: ${duration}</span>
+      </div>
+    </div>`;
+
+    html += `<div style="display:flex; justify-content:flex-end; margin:6px 0 10px;">
+      <span class="badge-duration">نوع التمويل: ${financeType}</span>
+    </div>`;
+
+    if (recommendedBank) {
+      const b = recommendedBank;
+      const logoSrc = bankLogoMap[b.bankName];
+      html += `<div class="bank-card">
+        <div class="bank-logo">${logoSrc ? `<img src="${logoSrc}" alt="${b.bankName}">` : '🏦'}</div>
+        <div style="text-align:right">
+          <div class="bank-text-main">${b.bankName}</div>
+          <div class="bank-text-sub">تم ترشيح هذا البنك/الشركة بناءً على راتبك ونوع التمويل بنسبة هامش ربح تقريبية: <strong>${b.margin}%</strong></div>
+        </div>
+      </div>`;
+    }
+
+    if (allNegative) {
+      html += `<div class="alert-error">نعتذر منك، حسب البيانات المدخلة لا يمكنك الحصول على تمويل.</div>`;
+    }
+
+    // (إضافة) توضيح الممتد للعسكري (عرض فقط إذا اختاره)
+    if(isExtended){
+      html += `
+        <div class="notice-soft" style="margin-bottom:10px;">
+          ملاحظة: تم اختيار <strong>التمويل الممتد</strong> — يتم احتساب الأقساط قبل التقاعد على الراتب الحالي، وبعد التقاعد على راتب التقاعد (تقديري) حسب إعدادات المسؤول.
+          <br>تاريخ التقاعد المتوقع (هجري): <strong>${timing.rankRetHijriStr}</strong>
+        </div>
+      `;
+    }
+
+    // ====== كتلة النتيجة الأساسية ( ) ======
+    html += `
+      <div class="result-main-block">
+        <div class="result-main-title">⭐ ${mainShownLabel} ( )</div>
+        <div class="result-amount-main">${fmtMoney(mainShownValue).replace(' ريال','')} ريال</div>
+    `;
+
+    // تفصيل دعم العقاري تحت بخط أصغر (حسب طلبك)
+    if(isMortgage){
+      const base = Number(finalNetFixed);
+      html += `
+        <div class="result-amount-sub">هذه هي النتيجة التي يبحث عنها العميل: (صافي التمويل + الدعم إن وجد)</div>
+        <div class="result-amount-small">
+          صافي التمويل: <strong>${fmtMoney(base)}</strong><br>
+          ${supportSakaniAdded ? `دعم سكني المضاف: <strong>${fmtMoney(supportSakaniAdded)}</strong><br>` : `دعم سكني المضاف: <strong>لا يوجد</strong><br>`}
+          ${supportEtezaazAdded ? `دعم اعتزاز المضاف: <strong>${fmtMoney(supportEtezaazAdded)}</strong><br>` : `دعم اعتزاز المضاف: <strong>لا يوجد</strong><br>`}
+          ${
+            (housingSupportMonthly > 0)
+              ? `الإجمالي المعروض (لا يشمل الدعم الشهري): <strong>${fmtMoney(mainShownValue)}</strong>`
+              : `الإجمالي (صافي التمويل + الدعم): <strong>${fmtMoney(mainShownValue)}</strong>`
+          }
+        </div>
+      `;
+    } else if(isBuyoutPersonal && buyoutAmount > 0){
+      html += `
+        <div class="result-amount-sub">هذه هي النتيجة التي يبحث عنها العميل: (الصافي بعد سداد التمويل القديم)</div>
+        <div class="result-amount-small">
+          التمويل الصافي قبل السداد: <strong>${fmtMoney(Number(finalNetFixed))}</strong><br>
+          مبلغ السداد المبكر: <strong>${fmtMoney(buyoutAmount)}</strong><br>
+          ما يصفي للعميل: <strong>${fmtMoney(mainShownValue)}</strong>
+        </div>
+      `;
+    } else {
+      html += `<div class="result-amount-sub">التمويل الصافي بعد خصم الرسوم الإدارية والضريبة ${addCommodityFee ? 'ورسوم السلع' : ''}.</div>`;
+    }
+
+    // دعم تفصيلي (لو موجود) يبقى داخل النتيجة
+    if(supportText) html += supportText;
+
+    // مربعات الصافي التفصيلية (تبقى)
+    html += `
+        <div class="dual-main-grid">
+          <div class="dual-box">
+            <div class="dual-box-title">الصافي قبل أي رسوم</div>
+            <div class="dual-box-amount">${netWithoutFeesFixed.replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ر.س</div>
+          </div>
+          <div class="dual-box">
+            <div class="dual-box-title">بعد الرسوم الإدارية + ضريبة القيمة المضافة على الرسوم </div>
+            <div class="dual-box-amount">${netAfterAdminFixed.replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ر.س</div>
+          </div>
+        </div>
+
+        <div style="margin-top:8px; font-size:13px; color:#374151;">
+          التمويل الصافي مكتوب بالحروف:
+          <strong>${numberToArabicWords(parseInt(finalNetFixed))}</strong>
+        </div>
+
+        <div class="result-amount-small" style="margin-top:4px;">
+          نسبة هامش الربح المحتسبة: <strong>${profitMargin}% سنوياً</strong>
+        </div>
+      </div>
+    `;
+
+    // الأقساط
+    html += `
+      <div class="result-section-title">تفاصيل القسط المتوقع حسب الفترات</div>
+      <div class="result-section-box">
+    `;
+    finalPhases.forEach(p=>{
+      html += `
+        <div class="instalment-row">
+          القسط من الشهر <strong>${p.from}</strong> إلى <strong>${p.to}</strong>:
+          <strong>${p.inst.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ريال</strong>
+        </div>
+      `;
+    });
+    html += `</div>`;
+
+    if (altBanks.length > 0) {
+      html += `
+        <div class="result-section-title">٣ بنوك/شركات أخرى منافسة</div>
+        <div class="result-section-box">
+          <ul style="margin:0; padding-right:16px; font-size:13px; color:#4b5563; list-style-type:disc; text-align:right;">
+      `;
+      altBanks.forEach(b => {
+        html += `<li>${b.bankName} - نسبة هامش ربح تقريبية: <strong>${b.margin}%</strong></li>`;
+      });
+      html += `</ul></div>`;
+    }
+
+    // الرسوم والربح
+    html += `
+      <div class="result-section-title">ملخص الأرباح والرسوم</div>
+      <div class="result-section-box">
+        <div class="instalment-row">
+          الربح دون الرسوم:
+          <strong>${(totalInst - netWithoutFees).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ريال</strong>
+        </div>
+        <div class="instalment-row">
+          الربح مع الرسوم:
+          <strong>${totalProfitWithFees.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ريال</strong>
+        </div>
+        <div class="instalment-row">
+          الرسوم الإدارية:
+          <strong>${adminFee.toFixed(0)} ريال</strong>
+          <div class="vat-small">(ضريبة القيمة المضافة لرسوم الادارية): ${vat.toFixed(0)} ريال</div>
+          ${addCommodityFee ? ` + رسوم السلع: <strong>${commodityFee.toFixed(0)} ريال</strong>` : ''}
+        </div>
+        <div class="instalment-row">
+          إجمالي التمويل مع الأرباح :
+          <strong>${totalInst.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ريال</strong>
+        </div>
+      </div>
+      <div style="margin-top:10px; font-size:13px; color:#6b7280; text-align:right;">
+        ⚠️ هذه الحسبة تقريبية ، والنسب الفعلية ومنح التمويل يعتمد على سياسات الجهه الممولة وقت تقديم الطلب.
+🔺تنويه: لسنا جهة تمويلية، دورنا ننجزك مع افضل جهة تمويلية بأسرع وقت وبدون تعقيدات⚡️
+      </div>
+    `;
+
+    // تنبيه للقطاع الخاص (غير مدني وغير عسكري)
+    if (answers.jobType && !['مدني (قطاع حكومي)','عسكري'].includes(answers.jobType)) {
+      html += `
+        <div class="notice-soft">
+          تنبيه: جميع حالات القطاع الخاص (شبه حكومي/معتمد/غير معتمد) تخضع لاعتماد الجهة الممولة وقد تختلف الشروط حسب سياسة كل جهة.
+        </div>
+      `;
+    }
+
+    // تنبيه اعتزاز (طلبك)
+    if (answers.isEtezaaz === 'نعم') {
+      html += `
+        <div class="notice-soft">
+          تنبيه اعتزاز: دعم وزارة الدفاع يبدأ بعد سنتين، ولا تتوفر لدينا تفاصيل دقيقة لقيمة القسط — يرجى التواصل مع جهة عملك لمعرفة التفاصيل الكاملة.
+        </div>
+      `;
+    }
+
+    html += `
+      <div style="margin-top:8px; font-size:14px; font-weight:900; color:#1e3a8a; text-align:center;">
+        تواصل معنا 📞 0506214458
+      </div>
+    `;
+
+    resultCard.innerHTML = html;
+
+    // حفظ آخر نتيجة (لاستخدام "النتيجة للعميل" + الأرشيف)
+    answers._lastCalc = {
+      calcDateTimeStr,
+      clientName: name,
+      financeType: financeType,
+      durationText: duration,
+      months: months,
+      recommendedBankName: (recommendedBank && recommendedBank.bankName) ? recommendedBank.bankName : 'غير محدد',
+      finalNet: Number(finalNetFixed),
+      netWithoutFees: Number(netWithoutFeesFixed),
+      netAfterAdmin: Number(netAfterAdminFixed),
+      totalInst: Number(totalInst.toFixed(0)),
+      adminFee: Number(adminFee.toFixed(0)),
+      vat: Number(vat.toFixed(0)),
+      commodityFee: Number(commodityFee.toFixed(0)),
+      supportSakaniAdded: Number(supportSakaniAdded || 0),
+      supportEtezaazAdded: Number(supportEtezaazAdded || 0),
+      supportTotalAdded: Number(supportTotalAdded || 0),
+      mainShownValue: Number(mainShownValue || 0),
+      mainShownLabel: mainShownLabel || '',
+      hasHousingSupport: (financeType === 'تمويل عقاري' && (answers.supported === 'مدعوم')),
+      housingSupportMonthly: Number(housingSupportMonthly || 0),
+      housingSupportTotalForLoan: Number(housingSupportTotalForLoan || 0),
+      housingSupportLumpSum: Number(housingSupportLumpSum || 0),
+      isEtezaaz: (answers.isEtezaaz === 'نعم'),
+      phases: Array.isArray(finalPhases) ? finalPhases : [],
+      // (إضافة) للتوثيق الداخلي فقط
+      extended: !!isExtended,
+      preRetMonths: preRetMonths,
+      pensionSalaryEst: Number(pensionSalaryEst || 0),
+      retirementHijri: timing.rankRetHijriStr || ''
+    };
+  }
+
+  // حفظ النتيجة كصورة JPG (واضحة + حجم متوسط)
+  function saveResultAsImage() {
+    const card = document.getElementById('resultCard');
+    if (!card) { alert('لم يتم العثور على بطاقة النتيجة.'); return; }
+
+    html2canvas(card, { scale: 2, backgroundColor: '#ffffff', useCORS: true }).then(canvas => {
+      const MAX_W = 1400;
+      let outCanvas = canvas;
+
+      if (canvas.width > MAX_W) {
+        const ratio = MAX_W / canvas.width;
+        const w = Math.round(canvas.width * ratio);
+        const h = Math.round(canvas.height * ratio);
+
+        const tmp = document.createElement('canvas');
+        tmp.width = w; tmp.height = h;
+        const ctx = tmp.getContext('2d');
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+        ctx.drawImage(canvas, 0, 0, w, h);
+        outCanvas = tmp;
+      }
+
+      const link = document.createElement('a');
+      link.download = 'fino-result.jpg';
+      link.href = outCanvas.toDataURL('image/jpeg', 0.92);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }).catch(err => {
+      console.error(err);
+      alert('تعذر حفظ النتيجة كصورة، جرّب من متصفح آخر أو تأكد أن جافاسكربت مفعّل.');
+    });
+  }
+
+  // مشاركة النتيجة على الواتساب (النتيجة الحقيقة)
+  function shareResultOnWhatsApp(){
+    const card = document.getElementById('resultCard');
+    if(!card){ alert('لم يتم العثور على بطاقة النتيجة.'); return; }
+    const text = card.innerText || card.textContent || '';
+    const url = 'https://wa.me/?text=' + encodeURIComponent(text);
+    window.open(url, '_blank');
+  }
+
+  function updateDateTime(){
+    const n = new Date();
+    const dayNames = ['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+    const dayName = dayNames[n.getDay()];
+    const y = n.getFullYear();
+    const m = String(n.getMonth()+1).padStart(2,'0');
+    const d = String(n.getDate()).padStart(2,'0');
+    const hh = String(n.getHours()).padStart(2,'0');
+    const mm = String(n.getMinutes()).padStart(2,'0');
+    const ss = String(n.getSeconds()).padStart(2,'0');
+    const el = document.getElementById('datetime');
+    if (el) el.textContent = `${dayName} ${y}-${m}-${d} ${hh}:${mm}:${ss}`;
+
+    // (إضافة) تحديث الهجري
+    const hEl = document.getElementById('datetimeHijri');
+    if(hEl) hEl.textContent = getHijriNowDisplay();
+  }
+
+  // ====== النتيجة للعميل ======
+  let _clientResultTextCache = '';
+
+  function openClientResultModal(fromAdmin){
+    const lc = answers._lastCalc;
+    if(!lc){
+      alert('لا توجد نتيجة حالياً. احسب أولاً ثم افتح "النتيجة للعميل".');
+      return;
+    }
+    // لازم يكون من المسؤول (بعد تحقق ▫️) أو من لوحة المسؤول
+    if(fromAdmin !== true && _miniAdminVerified !== true){
+      alert('هذه الميزة خاصة بالمسؤول.');
+      return;
+    }
+
+    document.getElementById('clientNetOverride').value = '';
+    document.getElementById('clientInstOverride').value = '';
+    document.getElementById('clientNoteOverride').value = '';
+    document.getElementById('clientResultText').value = '';
+    _clientResultTextCache = '';
+    document.getElementById('clientPreviewCard').innerHTML = `
+      <div class="h">نتيجة الحسبة (التقريبية)</div>
+      <div style="color:#6b7280; font-size:12px;">قم بإنشاء النتيجة المختصرة أولاً لتظهر المعاينة هنا.</div>
+    `;
+    document.getElementById('clientResultModal').style.display = 'block';
+  }
+
+  function closeClientResultModal(){
+    document.getElementById('clientResultModal').style.display = 'none';
+  }
+
+  function generateClientResultText(){
+    const lc = answers._lastCalc;
+    if(!lc){ alert('لا توجد نتيجة.'); return; }
+
+    const netOv = safeNum(document.getElementById('clientNetOverride').value);
+    const instOv = safeNum(document.getElementById('clientInstOverride').value);
+    const note  = (document.getElementById('clientNoteOverride').value || '').trim();
+
+    // الصافي للعميل: إذا كتبته اعتمده، وإلا نعتمد  للنوع:
+    let usedNet = (netOv !== null) ? netOv : lc.finalNet;
+
+    // في العقاري: لا يتم إضافة الدعم الشهري على الصافي
+    let usedNetWithSupport = usedNet;
+    const supportAddedToNet = (lc.supportEtezaazAdded || 0) + ((lc.housingSupportMonthly || 0) > 0 ? 0 : (lc.supportSakaniAdded || 0));
+    if(lc.financeType === 'تمويل عقاري' && supportAddedToNet){
+      usedNetWithSupport = usedNet + supportAddedToNet;
+    }
+
+    const hasMultiPhases = Array.isArray(lc.phases) && lc.phases.length > 1;
+    const singlePhaseInst = (!hasMultiPhases && Array.isArray(lc.phases) && lc.phases[0]) ? Number(lc.phases[0].inst) : null;
+    const usedInst = (instOv !== null) ? instOv : (singlePhaseInst !== null ? singlePhaseInst : null);
+
+    const overrideUsed = (netOv !== null) || (instOv !== null);
+
+    const totalPaid = (usedInst !== null)
+      ? (usedInst * lc.months)
+      : lc.totalInst;
+
+    const computedProfit = totalPaid - usedNet;
+
+    // دعم
+    let supportLines = '';
+    if(lc.supportSakaniAdded){
+      if(lc.housingSupportMonthly > 0){
+        supportLines += `- دعم سكني (شهري) حسب مصفوفة الدعم: ${fmtMoney(lc.housingSupportMonthly)}\n`;
+        supportLines += `- إجمالي دعم سكني (حتى 20 سنة كحد أقصى): ${fmtMoney(lc.supportSakaniAdded)}\n`;
+      } else {
+        supportLines += `- دعم سكني المضاف: ${fmtMoney(lc.supportSakaniAdded)}\n`;
+      }
+    }
+    if(lc.supportEtezaazAdded){
+      supportLines += `- دعم اعتزاز: ${fmtMoney(lc.supportEtezaazAdded)} (دعم إضافي مستقل)\n`;
+      supportLines += `- تنبيه اعتزاز: يبدأ بعد سنتين ولا تتوفر لدينا تفاصيل دقيقة للقسط — تواصل مع جهة عملك.\n`;
+    }
+
+    let instBlock = '';
+    if (usedInst !== null) {
+      instBlock = `القسط الشهري: ${fmtMoney(usedInst)}\n`;
+    } else if (hasMultiPhases) {
+      instBlock = `الأقساط حسب الفترات:\n`;
+      lc.phases.forEach(p=>{
+        instBlock += `- من الشهر ${p.from} إلى ${p.to}: ${fmtMoney(p.inst)}\n`;
+      });
+    } else {
+      instBlock = `القسط الشهري: غير محدد\n`;
+    }
+
+    const feesBlock =
+`تفاصيل الرسوم :
+- الرسوم الإدارية: ${fmtMoney(lc.adminFee)}
+- (ضريبة القيمة المضافة لرسوم الادارية): ${fmtMoney(lc.vat)}${lc.commodityFee ? `\n- رسوم السلع: ${fmtMoney(lc.commodityFee)}` : ''}\n`;
+
+    const profitBlock = overrideUsed
+      ? `الربح ${fmtMoney(computedProfit)}\n`
+      : `الربح مع الرسوم ${fmtMoney(lc.totalInst - lc.finalNet)}\n`;
+
+    const contact = `\nللاستفسار والتقديم: 0506214458\nسرعة تملك العقار والحلول التمويلية\n`;
+
+    const privateNotice = (answers.jobType && !['مدني (قطاع حكومي)','عسكري'].includes(answers.jobType))
+      ? `\nتنبيه: القطاع الخاص بجميع أنواعه لابد اعتماده من الجهة الممولة وقد تختلف الشروط.\n`
+      : '';
+
+    let text =
+`نتيجة الحسبة (التقريبية)
+تاريخ ووقت الحسبة: ${lc.calcDateTimeStr}
+مرحباً ومسهلا يا ${lc.clientName}
+نوع التمويل: ${lc.financeType}
+مدة التمويل: ${lc.durationText}
+اسم البنك/الشركة المرشحة: ${lc.recommendedBankName}
+
+التمويل الصافي: ${fmtMoney(usedNet)}
+`;
+
+    if(lc.financeType === 'تمويل عقاري' && (lc.supportSakaniAdded || lc.supportEtezaazAdded)){
+      if(supportAddedToNet){
+        text += `صافي التمويل مضاف له الدعم: ${fmtMoney(usedNetWithSupport)}\n`;
+      }
+      text += `تفاصيل الدعم:\n${supportLines || '- لا يوجد\n'}`;
+    }
+
+    // (إضافة) توضيح الممتد إن وجد
+    if(lc.extended){
+      text += `\nملاحظة: تم احتساب التمويل على الممتد (تقديري) بعد التقاعد.\n`;
+      if(lc.retirementHijri) text += `تاريخ التقاعد المتوقع (هجري): ${lc.retirementHijri}\n`;
+    }
+
+    text += `
+${instBlock}
+${profitBlock}
+${feesBlock}
+${note ? `ملاحظة: ${note}\n` : ''}${privateNotice}
+⚠️ هذه الحسبة تقريبية، والاعتماد النهائي حسب سياسات الجهة الممولة وقت التقديم. 🔺تنوية/نحن لسنا جهة تمويلية، ودورنا يقتصر على الوساطة وترشيح العروض عبر البنوك وشركات التمويل المرخّصة.. 
+${contact}`.trim();
+
+    _clientResultTextCache = text;
+    lc._lastClientText = text;
+
+    document.getElementById('clientResultText').value = text;
+    renderClientPreviewFromText(text);
+  }
+
+  function renderClientPreviewFromText(text){
+    const lines = String(text||'').split('\n').map(l=>l.trim()).filter(Boolean);
+    if(!lines.length){
+      document.getElementById('clientPreviewCard').innerHTML = `<div class="h">نتيجة الحسبة (التقريبية)</div>`;
+      return;
+    }
+    let html = `<div class="h">${escapeHtml(lines[0])}</div>`;
+    html += `<div class="hr"></div>`;
+    for(let i=1;i<lines.length;i++){
+      const l = lines[i];
+      if(l.includes(':')){
+        const parts = l.split(':');
+        const k = parts.shift();
+        const v = parts.join(':').trim();
+        html += `<div><span class="k">${escapeHtml(k)}:</span> <span class="v">${escapeHtml(v)}</span></div>`;
+      } else {
+        html += `<div>${escapeHtml(l)}</div>`;
+      }
+      if(i===5) html += `<div class="hr"></div>`;
+    }
+    document.getElementById('clientPreviewCard').innerHTML = html;
+  }
+
+  function copyClientResultText(){
+    const ta = document.getElementById('clientResultText');
+    if(!ta.value){ alert('أنشئ النتيجة أولاً.'); return; }
+    ta.select();
+    ta.setSelectionRange(0, 999999);
+    document.execCommand('copy');
+    alert('تم نسخ النتيجة ✅');
+  }
+
+  function shareClientResultOnWhatsApp(){
+    const ta = document.getElementById('clientResultText');
+    const text = (ta && ta.value) ? ta.value : _clientResultTextCache;
+    if(!text){ alert('أنشئ النتيجة أولاً.'); return; }
+    window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
+  }
+
+  function saveClientResultAsImage(){
+    const preview = document.getElementById('clientPreviewCard');
+    const ta = document.getElementById('clientResultText');
+    if(!ta.value){
+      alert('أنشئ النتيجة المختصرة أولاً.');
+      return;
+    }
+
+    html2canvas(preview, { scale: 2, backgroundColor:'#ffffff', useCORS:true }).then(canvas=>{
+      const MAX_W = 1400;
+      let outCanvas = canvas;
+
+      if (canvas.width > MAX_W) {
+        const ratio = MAX_W / canvas.width;
+        const w = Math.round(canvas.width * ratio);
+        const h = Math.round(canvas.height * ratio);
+
+        const tmp = document.createElement('canvas');
+        tmp.width = w; tmp.height = h;
+        const ctx = tmp.getContext('2d');
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+        ctx.drawImage(canvas, 0, 0, w, h);
+        outCanvas = tmp;
+      }
+
+      const link = document.createElement('a');
+      link.download = 'fino-client-result.jpg';
+      link.href = outCanvas.toDataURL('image/jpeg', 0.92);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }).catch(err=>{
+      console.error(err);
+      alert('تعذر حفظ نتيجة العميل كصورة.');
+    });
+  }
+
+  // ====== حاسبة السداد المبكر ======
+  function calculateEarlySettlement() {
+    const financeType = document.getElementById('esFinanceType').value;
+    const originalAmount = parseFloat(document.getElementById('esOriginalAmount').value) || 0;
+    const totalMonths = parseInt(document.getElementById('esTotalMonths').value) || 0;
+    const paidMonths = parseInt(document.getElementById('esPaidMonths').value) || 0;
+    const annualRate = parseFloat(document.getElementById('esAnnualRate').value) || 0;
+    
+    if (!originalAmount || !totalMonths || paidMonths < 0 || !annualRate) {
+      alert('يرجى إدخال جميع البيانات بشكل صحيح');
+      return;
+    }
+    
+    if (paidMonths >= totalMonths) {
+      alert('عدد الأقساط المسددة يجب أن يكون أقل من المدة الكلية');
+      return;
+    }
+    
+    // حساب القسط الشهري (طريقة القسط الثابت)
+    const monthlyRate = annualRate / 100 / 12;
+    const totalProfit = originalAmount * (annualRate / 100) * (totalMonths / 12);
+    const totalWithProfit = originalAmount + totalProfit;
+    const monthlyInstallment = totalWithProfit / totalMonths;
+    
+    // الرصيد المتبقي من الأصل
+    const remainingMonths = totalMonths - paidMonths;
+    const remainingPrincipal = originalAmount * (remainingMonths / totalMonths);
+    
+    // كلفة الأشهر القادمة حسب نظام ساما
+    const penaltyMonths = financeType === 'mortgage' ? 1 : 3;
+    const penaltyCost = remainingPrincipal * (annualRate / 100 / 12) * penaltyMonths;
+    
+    // مبلغ السداد المبكر
+    const earlySettlementAmount = remainingPrincipal + penaltyCost;
+    
+    // الأرباح المتبقية لو أكمل
+    const remainingProfit = totalProfit * (remainingMonths / totalMonths);
+    
+    // المبلغ الموفر
+    const savedAmount = remainingProfit - penaltyCost;
+    const savingPercentage = ((savedAmount / remainingProfit) * 100).toFixed(1);
+    
+    const resultHtml = `
+      <h3 style="margin:0 0 15px; color:#059669;">✅ نتيجة السداد المبكر</h3>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+        <div style="padding:10px; background:#fff; border-radius:10px;">
+          <div style="font-size:12px; color:#6b7280;">الرصيد المتبقي من الأصل</div>
+          <div style="font-size:18px; font-weight:700; color:#111827;">${remainingPrincipal.toLocaleString('ar-SA')} ريال</div>
+        </div>
+        <div style="padding:10px; background:#fff; border-radius:10px;">
+          <div style="font-size:12px; color:#6b7280;">كلفة ${penaltyMonths} أشهر قادمة</div>
+          <div style="font-size:18px; font-weight:700; color:#f59e0b;">${penaltyCost.toLocaleString('ar-SA', {maximumFractionDigits:0})} ريال</div>
+        </div>
+      </div>
+      <div style="margin-top:15px; padding:15px; background:linear-gradient(135deg,#1e3a8a,#3b82f6); border-radius:12px; color:#fff;">
+        <div style="font-size:14px; opacity:0.9;">💰 مبلغ السداد المبكر</div>
+        <div style="font-size:28px; font-weight:900;">${earlySettlementAmount.toLocaleString('ar-SA', {maximumFractionDigits:0})} ريال</div>
+      </div>
+      <div style="margin-top:10px; display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+        <div style="padding:10px; background:#dcfce7; border-radius:10px;">
+          <div style="font-size:12px; color:#166534;">المبلغ الموفر</div>
+          <div style="font-size:16px; font-weight:700; color:#15803d;">${savedAmount.toLocaleString('ar-SA', {maximumFractionDigits:0})} ريال</div>
+        </div>
+        <div style="padding:10px; background:#dbeafe; border-radius:10px;">
+          <div style="font-size:12px; color:#1e40af;">نسبة التوفير</div>
+          <div style="font-size:16px; font-weight:700; color:#1d4ed8;">${savingPercentage}%</div>
+        </div>
+      </div>
+    `;
+    
+    document.getElementById('esResult').innerHTML = resultHtml;
+    document.getElementById('esResult').style.display = 'block';
+  }
+  
+  // ====== الجزيئات المتحركة ======
+  function createParticles() {
+    const container = document.getElementById('particles');
+    if (!container) return;
+    
+    for (let i = 0; i < 50; i++) {
+      const particle = document.createElement('div');
+      particle.className = 'particle';
+      particle.style.left = Math.random() * 100 + '%';
+      particle.style.animationDelay = Math.random() * 20 + 's';
+      particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+      container.appendChild(particle);
+    }
+  }
+  
+  // ====== الترحيب حسب الوقت ======
+  function updateTimeGreeting() {
+    const hour = new Date().getHours();
+    const greetingEl = document.getElementById('timeGreeting');
+    if (!greetingEl) return;
+    
+    let greeting = '';
+    if (hour >= 5 && hour < 12) {
+      greeting = '🌅 صباح الخير';
+    } else if (hour >= 12 && hour < 17) {
+      greeting = '☀️ مساء النور';
+    } else if (hour >= 17 && hour < 21) {
+      greeting = '🌇 مساء الخير';
+    } else {
+      greeting = '🌙 أهلاً بالليل';
+    }
+    greetingEl.textContent = greeting;
+  }
+  
+  // ====== شاشة البداية ======
+  function hideSplashScreen() {
+    const splash = document.getElementById('splashScreen');
+    if (splash) {
+      splash.classList.add('hidden');
+    }
+  }
+
+  // ====== تشغيل ======
+  document.addEventListener('DOMContentLoaded', () => {
+    // إخفاء شاشة البداية بعد 2.5 ثانية
+    setTimeout(hideSplashScreen, 2500);
+    
+    // إنشاء الجزيئات المتحركة
+    createParticles();
+    
+    // تحديث الترحيب حسب الوقت
+    updateTimeGreeting();
+    
+    showPage('landing');
+
+    // (إضافة) تحميل منتجات التمويل + إعدادات التقاعد
+    loadFinanceProducts();
+    loadRetirementSettings();
+
+    loadBankConfigs();
+    renderArchiveTable();
+    renderFinanceProductsTable();
+    loadRetirementSettingsToUI();
+
+    updateDateTime();
+    setInterval(updateDateTime, 1000);
+  });
+</script>
+
+</body>
+</html>
