@@ -72,6 +72,7 @@
     #splashScreen.hidden {
       opacity: 0;
       visibility: hidden;
+      display: none;
     }
     .splash-logo {
       font-size: 60px;
@@ -692,7 +693,7 @@
 <body>
 
 <!-- شاشة البداية -->
-<div id="splashScreen">
+<div id="splashScreen" class="hidden" style="display:none;">
   <div class="splash-logo">FINO</div>
   <div class="splash-text">منصة ترشيح التمويل الذكي</div>
   <div class="splash-loader">
@@ -4375,13 +4376,19 @@ ${contact}`.trim();
     const splash = document.getElementById('splashScreen');
     if (splash) {
       splash.classList.add('hidden');
+      setTimeout(() => { splash.style.display = 'none'; }, 500);
     }
   }
+  
+  // إخفاء شاشة البداية عند تحميل الصفحة بالكامل
+  window.onload = function() {
+    setTimeout(hideSplashScreen, 1000);
+  };
 
   // ====== تشغيل ======
   document.addEventListener('DOMContentLoaded', () => {
     // إخفاء شاشة البداية بعد 2.5 ثانية
-    setTimeout(hideSplashScreen, 2500);
+    setTimeout(hideSplashScreen, 1500);
     
     // إنشاء الجزيئات المتحركة
     createParticles();
@@ -4412,3 +4419,7 @@ ${contact}`.trim();
     updateDateTime();
     setInterval(updateDateTime, 1000);
   });
+</script>
+
+</body>
+</html>
