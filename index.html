@@ -240,58 +240,99 @@
       line-height: 1.5;
     }
 
-    /* ====== تحسين شكل النتيجة ====== */
+    /* ====== تصميم النتيجة الفاخر العالمي ====== */
     .result-main-block {
-      background: linear-gradient(135deg, #e0f2fe 0%, #dbeafe 30%, #ffffff 100%);
-      border-radius: 20px;
-      padding: 16px 18px;
-      margin-top: 6px;
+      background: linear-gradient(145deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+      border-radius: 24px;
+      padding: 24px;
+      margin-top: 12px;
       text-align: right;
-      border: 2px solid #93c5fd;
-      box-shadow: 0 8px 25px rgba(37, 99, 235, 0.15);
+      border: none;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255,255,255,0.1);
       position: relative;
       overflow: hidden;
     }
     .result-main-block::before {
       content: '';
       position: absolute;
-      top: -50%;
-      right: -50%;
-      width: 100%;
-      height: 100%;
-      background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #f59e0b, #eab308, #fbbf24);
+    }
+    .result-main-block::after {
+      content: '';
+      position: absolute;
+      top: -100px;
+      right: -100px;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(251, 191, 36, 0.15) 0%, transparent 70%);
       pointer-events: none;
     }
     .result-main-title {
-      font-size: 15px;
-      color: #1d4ed8;
-      margin-bottom: 4px;
+      font-size: 14px;
+      color: #fbbf24;
+      margin-bottom: 8px;
       display:flex;
       align-items:center;
       gap:8px;
-      font-weight: 800;
-      text-shadow: 0 1px 2px rgba(0,0,0,0.05);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
     .result-amount-main {
-      font-size: 34px;
+      font-size: 42px;
       font-weight: 900;
-      color: #1e40af;
-      margin: 4px 0 8px;
-      letter-spacing: .3px;
-      line-height: 1.2;
-      text-shadow: 0 2px 4px rgba(30, 64, 175, 0.2);
+      background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #d97706 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin: 8px 0 12px;
+      letter-spacing: 1px;
+      line-height: 1.1;
+      text-shadow: none;
     }
     .result-amount-sub {
       font-size: 13px;
-      color: #1d4ed8;
-      margin: 2px 0;
+      color: #94a3b8;
+      margin: 4px 0;
       line-height: 1.6;
     }
     .result-amount-small {
-      font-size: 13px;
-      color: #374151;
-      margin-top: 2px;
+      font-size: 14px;
+      color: #e2e8f0;
+      margin-top: 6px;
       line-height: 1.6;
+      padding: 8px 12px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 10px;
+      border-right: 3px solid #fbbf24;
+    }
+    .result-amount-small strong {
+      color: #fbbf24;
+    }
+
+    /* بطاقة الراتب التقاعدي */
+    .pension-card {
+      background: linear-gradient(135deg, #065f46 0%, #047857 100%);
+      border-radius: 16px;
+      padding: 16px 20px;
+      margin-bottom: 16px;
+      border: none;
+      box-shadow: 0 10px 30px rgba(4, 120, 87, 0.3);
+    }
+    .pension-card-title {
+      font-size: 13px;
+      color: #a7f3d0;
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+    .pension-card-amount {
+      font-size: 28px;
+      font-weight: 900;
+      color: #ffffff;
     }
 
     .support-panel {
@@ -336,27 +377,28 @@
     .dual-main-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit,minmax(180px,1fr));
-      gap: 8px;
-      margin-top: 10px;
+      gap: 12px;
+      margin-top: 16px;
     }
     .dual-box {
-      background: #eff6ff;
+      background: rgba(255,255,255,0.08);
       border-radius: 14px;
-      padding: 8px 10px;
+      padding: 14px 16px;
       font-size: 13px;
       text-align: right;
-      border: 1px solid #dbeafe;
+      border: 1px solid rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
     }
     .dual-box-title {
       font-size: 12px;
-      color: #1d4ed8;
-      margin-bottom: 2px;
-      font-weight: 900;
+      color: #94a3b8;
+      margin-bottom: 4px;
+      font-weight: 600;
     }
     .dual-box-amount {
-      font-size: 18px;
+      font-size: 20px;
       font-weight: 900;
-      color: #1e3a8a;
+      color: #ffffff;
     }
 
     .result-section-title {
@@ -417,6 +459,55 @@
       color: #6b7280;
       font-weight: 600;
       margin-top: 2px;
+    }
+
+    /* زر واتساب مميز */
+    .whatsapp-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 28px;
+      background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
+      color: #ffffff;
+      font-size: 16px;
+      font-weight: 700;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4);
+      transition: all 0.3s ease;
+      text-decoration: none;
+    }
+    .whatsapp-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 35px rgba(37, 211, 102, 0.5);
+    }
+    .whatsapp-btn svg {
+      width: 24px;
+      height: 24px;
+      fill: currentColor;
+    }
+
+    /* بطاقة التواصل */
+    .contact-card {
+      background: linear-gradient(135deg, #1e40af 0%, #1d4ed8 100%);
+      border-radius: 20px;
+      padding: 20px;
+      margin-top: 16px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(30, 64, 175, 0.3);
+    }
+    .contact-card-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 8px;
+    }
+    .contact-card-sub {
+      font-size: 14px;
+      color: #bfdbfe;
+      margin-bottom: 16px;
     }
 
     .admin-grid {
@@ -600,6 +691,10 @@
     <div style="margin-top:10px; display:flex; justify-content:space-between; gap:8px; flex-wrap:wrap;">
       <button class="secondary small" onclick="backToLanding()">🏠 رجوع للرئيسية</button>
       <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <button onclick="sendToWhatsApp()" style="background:linear-gradient(135deg, #25D366 0%, #128C7E 100%); color:white; border:none; padding:10px 16px; border-radius:10px; font-size:14px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:6px; box-shadow:0 4px 12px rgba(37,211,102,0.3);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          تواصل واتساب
+        </button>
         <button class="secondary small" onclick="saveResultAsImage()">📸 حفظ النتيجة كصورة</button>
         <button class="secondary small" onclick="shareResultOnWhatsApp()">📲 مشاركة واتساب</button>
         <button class="primary small" onclick="resetCalc(); showPage('calculator');">🔁 إعادة حسبة جديدة</button>
@@ -667,6 +762,18 @@
       <p style="font-size:13px; color:#6b7280; text-align:right;">
         اختر المطلوب:
       </p>
+      
+      <!-- إعدادات سريعة -->
+      <div style="background:#f8fafc; border-radius:8px; padding:12px; margin-bottom:15px; border:1px solid #e2e8f0;">
+        <div style="font-weight:600; font-size:14px; color:#374151; margin-bottom:8px;">⚙️ إعدادات سريعة</div>
+        <div style="display:flex; gap:15px; flex-wrap:wrap; align-items:center;">
+          <label style="display:flex; align-items:center; gap:6px; font-size:13px; color:#4b5563; cursor:pointer;">
+            <input type="checkbox" id="showRatingToggle" onchange="toggleRatingVisibility()" checked>
+            <span>إظهار نموذج التقييم للعملاء</span>
+          </label>
+        </div>
+      </div>
+      
       <div style="display:flex; gap:10px; justify-content:flex-end; flex-wrap:wrap; margin-top:10px;">
         <button class="primary small" onclick="showPage('admin')">تعديل النسب</button>
         <button class="secondary small" onclick="showPage('adminProducts')">إدارة منتجات التمويل</button>
@@ -1838,6 +1945,7 @@
       recommendedBankName: lc.recommendedBankName || '',
       real: lc,
       clientText: clientText || '',
+      pensionDetails: answers._pensionDetails || null,
     };
 
     const list = loadArchive();
@@ -1909,6 +2017,21 @@
       } else {
         // إذا ما فيه نص مرسل، ننشئ من النتيجة الحقيقة
         generateClientResultText();
+      }
+
+      // إظهار تفاصيل حساب التقاعد للمسؤول
+      if(rec.pensionDetails){
+        const pd = rec.pensionDetails;
+        const pensionInfo = `
+\n📊 تفاصيل حساب الراتب التقاعدي (للمسؤول فقط):
+الرتبة: ${pd.rank}
+سنوات الخدمة: ${pd.serviceYears} سنة (${pd.serviceMonths} شهر)
+الراتب الأساسي: ${pd.basicSalary.toFixed(0)} ريال
+طريقة الحساب: ${pd.formula}
+الراتب التقاعدي المتوقع: ${pd.pension.toFixed(0)} ريال`;
+        
+        const currentText = document.getElementById('clientResultText').value;
+        document.getElementById('clientResultText').value = currentText + pensionInfo;
       }
     }, 200);
   }
@@ -2540,6 +2663,35 @@
     showQuestion();
   }
 
+  // ====== جدول رواتب الرتب العسكرية ======
+  const militarySalaryTable = {
+    // الضباط
+    'ملازم': {base: 7590, increment: 380, maxYears: 13},
+    'ملازم أول': {base: 8835, increment: 440, maxYears: 13},
+    'نقيب': {base: 10600, increment: 495, maxYears: 15},
+    'رائد': {base: 13515, increment: 265, maxYears: 15},
+    'مقدم': {base: 14645, increment: 470, maxYears: 14},
+    'عقيد': {base: 16520, increment: 590, maxYears: 13},
+    'عميد': {base: 18800, increment: 650, maxYears: 12},
+    'لواء': {base: 21390, increment: 730, maxYears: 11},
+    // الأفراد
+    'جندي': {base: 3220, increment: 130, maxYears: 15},
+    'جندي أول': {base: 3395, increment: 145, maxYears: 15},
+    'عريف': {base: 3765, increment: 175, maxYears: 15},
+    'وكيل رقيب': {base: 4455, increment: 210, maxYears: 15},
+    'رقيب': {base: 5260, increment: 250, maxYears: 15},
+    'رقيب أول': {base: 6180, increment: 300, maxYears: 15},
+    'رئيس رقباء': {base: 7215, increment: 360, maxYears: 15}
+  };
+
+  // حساب الراتب الأساسي من الرتبة وسنوات الخدمة
+  function getBasicSalaryFromRank(rank, serviceYears) {
+    const data = militarySalaryTable[rank];
+    if (!data) return 0;
+    const years = Math.min(serviceYears, data.maxYears);
+    return data.base + (data.increment * Math.max(0, years - 1));
+  }
+
   // ====== (إضافة) تقدير راتب التقاعد للعسكري (بدون سؤال العميل عن الأساسي) ======
   function estimateMilitaryPensionFromAnswers(currentNetSalary){
     // إذا ما فيه ممتد أو ما فيه تاريخ تعيين -> نرجع 0
@@ -2558,12 +2710,25 @@
 
     // مدة الخدمة بالأشهر من التعيين إلى تاريخ التقاعد (هجري)
     const serviceMonths = monthsDiffHijri(ay, am, ad, retY, retM, retD);
+    const serviceYears = Math.floor(serviceMonths / 12);
 
-    // بديل "الأساسي" = الصافي × معامل تقديري
-    const basic = Number(currentNetSalary || 0) * Number(retirementSettings.basicMultiplier || 1.0);
+    // حساب الراتب الأساسي من جدول الرواتب
+    const rank = answers.militaryRank || 'جندي';
+    const basicSalary = getBasicSalaryFromRank(rank, serviceYears);
 
-    // معادلة تقديرية بنفس هيكل المعادلة: الأساسي × (أشهر الخدمة / 420)
-    const pension = Math.min(basic, basic * (serviceMonths / 420));
+    // معادلة حساب راتب التقاعد: (الراتب الأساسي الأخير × عدد أشهر الخدمة) ÷ 420
+    // حيث 420 = 35 سنة × 12 شهر (الخدمة الكاملة)
+    const pension = Math.min(basicSalary, (basicSalary * serviceMonths) / 420);
+
+    // حفظ تفاصيل الحساب للمسؤول
+    answers._pensionDetails = {
+      rank: rank,
+      serviceMonths: serviceMonths,
+      serviceYears: serviceYears,
+      basicSalary: basicSalary,
+      pension: Math.max(0, pension),
+      formula: `(الراتب الأساسي ${basicSalary.toFixed(0)} × أشهر الخدمة ${serviceMonths}) ÷ 420 = ${pension.toFixed(0)} ريال`
+    };
 
     return Math.max(0, pension);
   }
@@ -2708,8 +2873,8 @@
       ];
       const randomMsg = marketingMessages[Math.floor(Math.random() * marketingMessages.length)];
       
-      html += `<h2 style="margin:0 0 6px; font-size:18px; text-align:right; color:#111827;">نتيجة الحسبة (التقريبية)</h2>`;
-      html += `<div style="font-size:12px; color:#6b7280; text-align:right; margin-bottom:4px;">تاريخ ووقت الحسبة: ${calcDateTimeStr}</div>`;
+      html += `<h2 style="margin:0 0 6px; font-size:20px; text-align:right; color:#111827; font-weight:800;">نتيجة الحسبة التقريبية</h2>`;
+      html += `<div style="font-size:12px; color:#6b7280; text-align:right; margin-bottom:8px;">تاريخ ووقت الحسبة: ${calcDateTimeStr}</div>`;
       html += `<div class="result-header">
         <div class="client-chip" style="background: linear-gradient(135deg, #10b981, #059669); font-size:16px;">${randomMsg}</div>
         <div style="text-align:right;">
@@ -2717,6 +2882,16 @@
           <span class="badge-duration">مدة التمويل: ${duration}</span>
         </div>
       </div>`;
+
+      // إضافة بطاقة الراتب التقاعدي إذا كان ممتد
+      if (isExtended && pensionSalaryEst > 0) {
+        html += `
+          <div class="pension-card">
+            <div class="pension-card-title">🎯 الراتب التقاعدي المتوقع</div>
+            <div class="pension-card-amount">${pensionSalaryEst.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ريال</div>
+          </div>
+        `;
+      }
 
       if (recommendedBank) {
         const b = recommendedBank;
@@ -3989,6 +4164,55 @@ ${contact}`.trim();
     }
   }
 
+  // ====== إخفاء/إظهار التقييم ======
+  let showRating = localStorage.getItem('finoShowRating') !== 'false';
+
+  function toggleRatingVisibility() {
+    const checkbox = document.getElementById('showRatingToggle');
+    showRating = checkbox.checked;
+    localStorage.setItem('finoShowRating', showRating);
+    updateRatingVisibility();
+  }
+
+  function updateRatingVisibility() {
+    const ratingForm = document.getElementById('ratingForm');
+    if (ratingForm) {
+      ratingForm.style.display = showRating ? 'block' : 'none';
+    }
+  }
+
+  function loadRatingSettings() {
+    showRating = localStorage.getItem('finoShowRating') !== 'false';
+    const checkbox = document.getElementById('showRatingToggle');
+    if (checkbox) checkbox.checked = showRating;
+    updateRatingVisibility();
+  }
+
+  // ====== واتساب ======
+  const whatsappNumber = '966500000000'; // رقم الواتساب
+
+  function sendToWhatsApp() {
+    const lc = answers._lastCalc;
+    if (!lc) {
+      alert('لا توجد نتيجة للإرسال');
+      return;
+    }
+    
+    let message = 'السلام عليكم\nموجه من المنصة\n\n';
+    message += `👤 الاسم: ${lc.clientName || 'عميل'}\n`;
+    message += `💰 التمويل الصافي: ${lc.netFinance ? lc.netFinance.toLocaleString() + ' ريال' : '-'}\n`;
+    message += `📅 المدة: ${lc.duration || '-'}\n`;
+    message += `🏦 البنك المرشح: ${lc.recommendedBankName || '-'}\n`;
+    message += `📊 القسط: ${lc.monthlyInst ? lc.monthlyInst.toLocaleString() + ' ريال' : '-'}\n`;
+    
+    if (lc.pensionSalary && lc.pensionSalary > 0) {
+      message += `\n🎯 الراتب التقاعدي المتوقع: ${lc.pensionSalary.toLocaleString()} ريال\n`;
+    }
+    
+    const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+    window.open(url, '_blank');
+  }
+
   // ====== تشغيل ======
   document.addEventListener('DOMContentLoaded', () => {
     showPage('landing');
@@ -4011,6 +4235,7 @@ ${contact}`.trim();
     renderSecurityTable();
     updateJobTypeSelects();
     updateBankSelects();
+    loadRatingSettings();
 
     updateDateTime();
     setInterval(updateDateTime, 1000);
