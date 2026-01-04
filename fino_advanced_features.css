@@ -1,425 +1,187 @@
-/* FINO Advanced Features CSS */
-/* Seasonal Backgrounds & Themes */
+/* ====== FINO Advanced Features CSS ====== */
 
-/* ===== Base Theme Variables ===== */
-:root {
-  --primary-color: #3b82f6;
-  --secondary-color: #1e40af;
-  --accent-color: #60a5fa;
-  --bg-gradient-start: #0f172a;
-  --bg-gradient-end: #1e293b;
-  --text-color: #f8fafc;
-  --card-bg: rgba(255, 255, 255, 0.1);
+/* الخلفية الشتوية - ثلج */
+.season-winter {
+  background: linear-gradient(-45deg, #0f172a, #1e3a5f, #2d4a7c, #1e3a8a) !important;
 }
 
-/* ===== Theme: Blue (Default) ===== */
-[data-theme="blue"] {
-  --primary-color: #3b82f6;
-  --secondary-color: #1e40af;
-  --accent-color: #60a5fa;
-  --bg-gradient-start: #0f172a;
-  --bg-gradient-end: #1e293b;
-}
-
-/* ===== Theme: Green ===== */
-[data-theme="green"] {
-  --primary-color: #22c55e;
-  --secondary-color: #15803d;
-  --accent-color: #4ade80;
-  --bg-gradient-start: #052e16;
-  --bg-gradient-end: #14532d;
-}
-
-/* ===== Theme: Purple ===== */
-[data-theme="purple"] {
-  --primary-color: #a855f7;
-  --secondary-color: #7e22ce;
-  --accent-color: #c084fc;
-  --bg-gradient-start: #2e1065;
-  --bg-gradient-end: #4c1d95;
-}
-
-/* ===== Theme: Gold ===== */
-[data-theme="gold"] {
-  --primary-color: #f59e0b;
-  --secondary-color: #b45309;
-  --accent-color: #fbbf24;
-  --bg-gradient-start: #451a03;
-  --bg-gradient-end: #78350f;
-}
-
-/* ===== Theme: Dark ===== */
-[data-theme="dark"] {
-  --primary-color: #6b7280;
-  --secondary-color: #374151;
-  --accent-color: #9ca3af;
-  --bg-gradient-start: #030712;
-  --bg-gradient-end: #111827;
-}
-
-/* ===== Seasonal Particles Container ===== */
-.seasonal-particles {
+.snowflake {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
+  color: #fff;
+  font-size: 1em;
+  top: -50px;
   z-index: 0;
-  overflow: hidden;
-}
-
-/* ===== Winter Theme - Snowflakes ===== */
-[data-season="winter"] .seasonal-particles::before,
-[data-season="winter"] .seasonal-particles::after {
-  content: "❄";
-  position: absolute;
-  font-size: 20px;
-  color: rgba(255, 255, 255, 0.8);
-  animation: snowfall 10s linear infinite;
-}
-
-[data-season="winter"] .seasonal-particles::before {
-  left: 10%;
-  animation-delay: 0s;
-}
-
-[data-season="winter"] .seasonal-particles::after {
-  left: 80%;
-  animation-delay: 5s;
+  pointer-events: none;
+  animation: snowfall linear infinite;
+  opacity: 0.8;
 }
 
 @keyframes snowfall {
-  0% {
-    transform: translateY(-100vh) rotate(0deg);
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(100vh) rotate(360deg);
-    opacity: 0.3;
-  }
+  0% { transform: translateY(-50px) rotate(0deg); opacity: 0; }
+  10% { opacity: 0.8; }
+  90% { opacity: 0.8; }
+  100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
 }
 
-/* Snow particles */
-.snow-particle {
-  position: absolute;
-  background: white;
-  border-radius: 50%;
-  opacity: 0.8;
-  animation: snowfall 8s linear infinite;
+/* الخلفية الربيعية */
+.season-spring {
+  background: linear-gradient(-45deg, #064e3b, #047857, #10b981, #34d399) !important;
 }
 
-/* ===== Spring Theme - Flowers ===== */
-[data-season="spring"] .seasonal-particles::before,
-[data-season="spring"] .seasonal-particles::after {
-  content: "🌸";
-  position: absolute;
-  font-size: 24px;
-  animation: flowerfall 12s ease-in-out infinite;
-}
-
-[data-season="spring"] .seasonal-particles::before {
-  left: 20%;
-  animation-delay: 0s;
-}
-
-[data-season="spring"] .seasonal-particles::after {
-  left: 70%;
-  animation-delay: 6s;
-}
-
-@keyframes flowerfall {
-  0% {
-    transform: translateY(-100vh) rotate(0deg) translateX(0);
-    opacity: 1;
-  }
-  50% {
-    transform: translateY(50vh) rotate(180deg) translateX(50px);
-  }
-  100% {
-    transform: translateY(100vh) rotate(360deg) translateX(-50px);
-    opacity: 0.3;
-  }
-}
-
-/* ===== Summer Theme - Sun rays ===== */
-[data-season="summer"] .seasonal-particles {
-  background: radial-gradient(ellipse at top, rgba(255, 200, 50, 0.1) 0%, transparent 70%);
-}
-
-[data-season="summer"] .seasonal-particles::before {
-  content: "☀️";
-  position: absolute;
-  top: 5%;
-  right: 10%;
-  font-size: 40px;
-  animation: sunpulse 3s ease-in-out infinite;
-}
-
-@keyframes sunpulse {
-  0%, 100% {
-    transform: scale(1);
-    filter: brightness(1);
-  }
-  50% {
-    transform: scale(1.1);
-    filter: brightness(1.2);
-  }
-}
-
-/* ===== Autumn Theme - Leaves ===== */
-[data-season="autumn"] .seasonal-particles::before,
-[data-season="autumn"] .seasonal-particles::after {
-  content: "🍂";
-  position: absolute;
-  font-size: 28px;
-  animation: leaffall 15s ease-in-out infinite;
-}
-
-[data-season="autumn"] .seasonal-particles::before {
-  left: 15%;
-  animation-delay: 0s;
-}
-
-[data-season="autumn"] .seasonal-particles::after {
-  left: 75%;
-  animation-delay: 7s;
-  content: "🍁";
+.spring-leaf {
+  position: fixed;
+  font-size: 1.5em;
+  top: -50px;
+  z-index: 0;
+  pointer-events: none;
+  animation: leaffall linear infinite;
+  opacity: 0.7;
 }
 
 @keyframes leaffall {
-  0% {
-    transform: translateY(-100vh) rotate(0deg) translateX(0);
-    opacity: 1;
-  }
-  25% {
-    transform: translateY(25vh) rotate(90deg) translateX(100px);
-  }
-  50% {
-    transform: translateY(50vh) rotate(180deg) translateX(-50px);
-  }
-  75% {
-    transform: translateY(75vh) rotate(270deg) translateX(80px);
-  }
-  100% {
-    transform: translateY(100vh) rotate(360deg) translateX(0);
-    opacity: 0.3;
-  }
+  0% { transform: translateY(-50px) rotate(0deg) translateX(0); opacity: 0; }
+  10% { opacity: 0.7; }
+  50% { transform: translateY(50vh) rotate(180deg) translateX(50px); }
+  90% { opacity: 0.7; }
+  100% { transform: translateY(100vh) rotate(360deg) translateX(-50px); opacity: 0; }
 }
 
-/* ===== PWA Install Banner ===== */
-.pwa-install-banner {
+/* الخلفية الصيفية */
+.season-summer {
+  background: linear-gradient(-45deg, #f59e0b, #d97706, #ea580c, #dc2626) !important;
+}
+
+.summer-ray {
   position: fixed;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-  color: white;
-  padding: 15px 25px;
-  border-radius: 15px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-  z-index: 10000;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  max-width: 90%;
-  text-align: center;
-  animation: slideDown 0.5s ease-out;
+  width: 3px;
+  height: 100px;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.6), transparent);
+  top: -100px;
+  z-index: 0;
+  pointer-events: none;
+  animation: sunray linear infinite;
+  opacity: 0.4;
 }
 
-@keyframes slideDown {
-  from {
-    transform: translateX(-50%) translateY(-100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(-50%) translateY(0);
-    opacity: 1;
-  }
+@keyframes sunray {
+  0% { transform: translateY(-100px); opacity: 0; }
+  10% { opacity: 0.4; }
+  90% { opacity: 0.4; }
+  100% { transform: translateY(100vh); opacity: 0; }
 }
 
-.pwa-install-banner h4 {
-  margin: 0;
-  font-size: 16px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
+/* الخلفية الخريفية */
+.season-autumn {
+  background: linear-gradient(-45deg, #78350f, #92400e, #b45309, #d97706) !important;
 }
 
-.pwa-install-banner p {
-  margin: 0;
-  font-size: 12px;
-  opacity: 0.9;
-}
-
-.pwa-install-banner .banner-buttons {
-  display: flex;
-  gap: 10px;
-  margin-top: 5px;
-}
-
-.pwa-install-banner button {
-  padding: 8px 20px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: bold;
-  transition: all 0.3s ease;
-}
-
-.pwa-install-banner .install-btn {
-  background: white;
-  color: var(--primary-color);
-}
-
-.pwa-install-banner .install-btn:hover {
-  transform: scale(1.05);
-  box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
-}
-
-.pwa-install-banner .later-btn {
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
-}
-
-.pwa-install-banner .later-btn:hover {
-  background: rgba(255, 255, 255, 0.3);
-}
-
-/* ===== Admin Panel Enhancements ===== */
-.admin-section {
-  background: var(--card-bg);
-  border-radius: 15px;
-  padding: 20px;
-  margin-bottom: 20px;
-}
-
-.admin-section h3 {
-  color: var(--accent-color);
-  margin-bottom: 15px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.admin-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 15px;
-}
-
-.admin-stat-card {
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 10px;
-  padding: 15px;
-  text-align: center;
-  transition: all 0.3s ease;
-}
-
-.admin-stat-card:hover {
-  transform: translateY(-5px);
-  background: rgba(255, 255, 255, 0.1);
-}
-
-.admin-stat-card .stat-number {
-  font-size: 2em;
-  font-weight: bold;
-  color: var(--accent-color);
-}
-
-.admin-stat-card .stat-label {
-  font-size: 0.9em;
+.autumn-leaf {
+  position: fixed;
+  font-size: 1.8em;
+  top: -50px;
+  z-index: 0;
+  pointer-events: none;
+  animation: autumnfall linear infinite;
   opacity: 0.8;
 }
 
-/* ===== Responsive Adjustments ===== */
+@keyframes autumnfall {
+  0% { transform: translateY(-50px) rotate(0deg) translateX(0); opacity: 0; }
+  10% { opacity: 0.8; }
+  25% { transform: translateY(25vh) rotate(90deg) translateX(30px); }
+  50% { transform: translateY(50vh) rotate(180deg) translateX(-30px); }
+  75% { transform: translateY(75vh) rotate(270deg) translateX(30px); }
+  90% { opacity: 0.8; }
+  100% { transform: translateY(100vh) rotate(360deg) translateX(0); opacity: 0; }
+}
+
+/* نظام الثيمات */
+body.theme-default {
+  background: linear-gradient(-45deg, #0f172a, #1e3a8a, #1e40af, #3b82f6) !important;
+  background-size: 400% 400% !important;
+  animation: gradientBG 15s ease infinite !important;
+}
+
+body.theme-green {
+  background: linear-gradient(-45deg, #064e3b, #047857, #059669, #10b981) !important;
+  background-size: 400% 400% !important;
+  animation: gradientBG 15s ease infinite !important;
+}
+
+body.theme-purple {
+  background: linear-gradient(-45deg, #4c1d95, #5b21b6, #6d28d9, #8b5cf6) !important;
+  background-size: 400% 400% !important;
+  animation: gradientBG 15s ease infinite !important;
+}
+
+body.theme-gold {
+  background: linear-gradient(-45deg, #78350f, #92400e, #b45309, #f59e0b) !important;
+  background-size: 400% 400% !important;
+  animation: gradientBG 15s ease infinite !important;
+}
+
+body.theme-dark {
+  background: linear-gradient(-45deg, #0f172a, #1e293b, #334155, #475569) !important;
+  background-size: 400% 400% !important;
+  animation: gradientBG 15s ease infinite !important;
+}
+
+/* متغيرات الثيمات */
+.theme-default { --primary-color: #3b82f6; --primary-dark: #1d4ed8; --accent-color: #f59e0b; }
+.theme-green { --primary-color: #10b981; --primary-dark: #047857; --accent-color: #f59e0b; }
+.theme-purple { --primary-color: #8b5cf6; --primary-dark: #6d28d9; --accent-color: #f59e0b; }
+.theme-gold { --primary-color: #f59e0b; --primary-dark: #d97706; --accent-color: #3b82f6; }
+.theme-dark { --primary-color: #60a5fa; --primary-dark: #3b82f6; --accent-color: #fbbf24; --bg-card: rgba(30, 41, 59, 0.95); }
+
+.theme-dark .card { background: var(--bg-card) !important; color: #f3f4f6 !important; }
+.theme-dark input, .theme-dark select, .theme-dark textarea { background: #1e293b !important; color: #f3f4f6 !important; border-color: #475569 !important; }
+
+/* لوحة تحكم المسؤول */
+.admin-panel { background: linear-gradient(135deg, #f8fafc, #f1f5f9); border-radius: 20px; padding: 20px; margin-bottom: 15px; border: 2px solid #e2e8f0; }
+.admin-panel-title { font-size: 18px; font-weight: 800; color: #1e293b; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+
+/* قائمة الأسئلة */
+.question-item { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px 15px; margin-bottom: 8px; display: flex; align-items: center; gap: 12px; cursor: grab; transition: all 0.2s ease; }
+.question-item:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); transform: translateY(-2px); }
+.question-btn { padding: 6px 10px; border-radius: 8px; border: none; font-size: 12px; cursor: pointer; }
+.question-btn-edit { background: #dbeafe; color: #1d4ed8; }
+.question-btn-hide { background: #fef3c7; color: #92400e; }
+
+/* إحصائيات الزوار */
+.visitor-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 15px; }
+.visitor-stat-card { background: linear-gradient(135deg, #eff6ff, #dbeafe); border-radius: 15px; padding: 15px; text-align: center; border: 2px solid #bfdbfe; }
+.visitor-stat-number { font-size: 28px; font-weight: 900; color: #1d4ed8; margin-bottom: 5px; }
+.visitor-stat-label { font-size: 12px; color: #64748b; }
+
+/* الإعلانات */
+.ad-card { background: linear-gradient(135deg, #fef3c7, #fde68a); border: 2px solid #f59e0b; border-radius: 16px; padding: 15px; margin: 12px 0; text-align: center; }
+.ad-title { font-size: 18px; font-weight: 800; color: #92400e; margin-bottom: 8px; }
+.ad-cta { display: inline-block; background: linear-gradient(135deg, #f59e0b, #d97706); color: #fff; padding: 10px 25px; border-radius: 25px; font-weight: 700; text-decoration: none; }
+
+/* ملاحظات البنوك */
+.bank-note { display: inline-flex; align-items: center; gap: 5px; background: #fef3c7; color: #92400e; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; margin-top: 5px; }
+
+/* تاريخ انتهاء التمويل */
+.result-end-date { background: linear-gradient(135deg, #ecfdf5, #d1fae5); border-radius: 15px; padding: 12px 15px; margin-top: 12px; border: 2px solid #6ee7b7; text-align: center; }
+.result-end-date-title { font-size: 14px; color: #047857; margin-bottom: 8px; font-weight: 700; }
+.result-end-date-value { font-size: 18px; font-weight: 900; color: #065f46; margin-bottom: 5px; }
+
+/* رسائل الترحيب */
+.welcome-banner { background: linear-gradient(135deg, #fef3c7, #fde68a); border-radius: 20px; padding: 20px; margin-bottom: 15px; text-align: center; border: 2px solid #fcd34d; animation: welcomePulse 2s ease-in-out infinite; }
+@keyframes welcomePulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
+
+/* ويدجت الطقس */
+.weather-widget { background: linear-gradient(135deg, #eff6ff, #dbeafe); border-radius: 15px; padding: 12px 15px; display: flex; align-items: center; gap: 12px; border: 2px solid #bfdbfe; margin-bottom: 10px; }
+.weather-temp { font-size: 20px; font-weight: 900; color: #1d4ed8; }
+
+/* شاشة البداية */
+.splash-phone { width: 200px; height: 400px; background: linear-gradient(135deg, #1e293b, #334155); border-radius: 30px; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,0.5); animation: phoneFloat 3s ease-in-out infinite; }
+@keyframes phoneFloat { 0%, 100% { transform: translateY(0) rotate(-5deg); } 50% { transform: translateY(-20px) rotate(5deg); } }
+.splash-money { position: absolute; font-size: 40px; animation: moneyFly 2s ease-out infinite; }
+@keyframes moneyFly { 0% { transform: translateY(0) scale(1); opacity: 1; } 100% { transform: translateY(-100px) scale(0.5); opacity: 0; } }
+
+/* Responsive */
 @media (max-width: 768px) {
-  .pwa-install-banner {
-    top: 10px;
-    padding: 12px 15px;
-  }
-  
-  .pwa-install-banner h4 {
-    font-size: 14px;
-  }
-  
-  .pwa-install-banner p {
-    font-size: 11px;
-  }
-  
-  .admin-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-/* ===== Loading Animation ===== */
-.loading-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.8);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 99999;
-}
-
-.loading-spinner {
-  width: 50px;
-  height: 50px;
-  border: 4px solid rgba(255, 255, 255, 0.3);
-  border-top-color: var(--primary-color);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* ===== Toast Notifications ===== */
-.toast-container {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  z-index: 99999;
-}
-
-.toast {
-  background: var(--primary-color);
-  color: white;
-  padding: 15px 25px;
-  border-radius: 10px;
-  margin-top: 10px;
-  animation: toastIn 0.3s ease-out;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
-}
-
-.toast.success {
-  background: #22c55e;
-}
-
-.toast.error {
-  background: #ef4444;
-}
-
-.toast.warning {
-  background: #f59e0b;
-}
-
-@keyframes toastIn {
-  from {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
+  .visitor-stats { grid-template-columns: repeat(2, 1fr); }
+  .question-item { flex-direction: column; align-items: flex-start; }
 }
