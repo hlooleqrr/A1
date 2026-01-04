@@ -2865,9 +2865,21 @@
           supported = answers.supported,
           bundle = answers.bundle;
 
-    let profitMargin = parseFloat(answers.profitMargin);
-    if (!profitMargin || isNaN(profitMargin)) {
-      alert('نسبة هامش الربح غير صحيحة.');
+    // تنظيف ومعالجة النسبة المدخلة
+    let profitMarginRaw = String(answers.profitMargin || '').trim();
+    // استبدال الفاصلة العربية بالنقطة الإنجليزية
+    profitMarginRaw = profitMarginRaw.replace(/٫/g, '.').replace(/،/g, '.').replace(/,/g, '.');
+    // إزالة أي أحرف غير رقمية ما عدا النقطة
+    profitMarginRaw = profitMarginRaw.replace(/[^0-9.]/g, '');
+    let profitMargin = parseFloat(profitMarginRaw);
+    
+    console.log('النسبة المدخلة الأصلية:', answers.profitMargin);
+    console.log('النسبة بعد التنظيف:', profitMarginRaw);
+    console.log('النسبة كرقم:', profitMargin);
+    
+    if (!profitMargin || isNaN(profitMargin) || profitMargin <= 0) {
+      alert('نسبة هامش الربح غير صحيحة. يرجى إدخال رقم صحيح مثل 5.20');
+      console.error('خطأ في النسبة:', answers.profitMargin, '->', profitMargin);
       return;
     }
 
@@ -4443,4 +4455,4 @@ ${contact}`.trim();
 </script>
 
 </body>
-</html> 
+</html>
