@@ -19,9 +19,10 @@
     /* الخلفية المتحركة */
     body {
       font-family: 'Tajawal', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-      background: linear-gradient(-45deg, #0f172a, #1e3a8a, #1e40af, #3b82f6);
+      background: var(--main-bg, linear-gradient(-45deg, #0f172a, #1e3a8a, #1e40af, #3b82f6));
       background-size: 400% 400%;
       animation: gradientBG 15s ease infinite;
+      transition: background 0.5s ease;
       margin: 0;
       text-align: center;
       font-size: 20px;
@@ -1067,6 +1068,10 @@
             <label>العمر الأقصى (سنة)</label>
             <input id="adminMaxAge" type="number" min="50" max="80" placeholder="60" />
           </div>
+          <div style="grid-column:1/-1;">
+            <label>ملاحظة للعميل (اختياري) <span style="color:#6b7280; font-size:11px;">تظهر في صفحة النتيجة</span></label>
+            <input id="adminBankNote" type="text" placeholder="مثال: عرض نهاية العام - نسبة مميزة حتى 31 ديسمبر" />
+          </div>
         </div>
         <input type="hidden" id="adminEditIndex" value="" />
         <div style="text-align:left; margin-top:10px;">
@@ -1091,6 +1096,7 @@
             <th>النسبة %</th>
             <th>احتساب العمر</th>
             <th>العمر الأقصى</th>
+            <th>ملاحظة</th>
             <th>تحكم</th>
           </tr>
         </thead>
@@ -1110,6 +1116,53 @@
 
   <!-- (إضافة) إدارة منتجات التمويل -->
   <div id="adminProductsPage" class="page">
+    <!-- قسم إضافة جهة تمويلية جديدة -->
+    <div class="card fade-in" style="margin-bottom:15px; border-right:4px solid #f59e0b;">
+      <h2 style="margin-top:0; font-size:19px; color:#111827;">🏦 إضافة جهة تمويلية جديدة</h2>
+      <p style="font-size:13px; color:#6b7280; text-align:right;">
+        أضف بنك أو شركة تمويل جديدة وستظهر فوراً في قائمة "تعديل النسب" وفي الحاسبة.
+      </p>
+      <form id="addBankForm" onsubmit="addNewBank(event)">
+        <div class="admin-grid">
+          <div>
+            <label>اسم الجهة (البنك/الشركة)</label>
+            <input id="newBankName" type="text" placeholder="مثال: شركة تسهيل" required />
+          </div>
+          <div>
+            <label>نوع الجهة</label>
+            <select id="newBankType">
+              <option value="بنك">بنك</option>
+              <option value="شركة تمويل">شركة تمويل</option>
+            </select>
+          </div>
+          <div>
+            <label>رابط الشعار (اختياري)</label>
+            <input id="newBankLogo" type="text" placeholder="https://example.com/logo.png" />
+          </div>
+          <div>
+            <label>ملاحظة (اختياري)</label>
+            <input id="newBankNote" type="text" placeholder="مثال: عرض نهاية العام" />
+          </div>
+        </div>
+        <div style="text-align:left; margin-top:10px; display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;">
+          <button type="submit" class="primary small">➕ إضافة الجهة</button>
+        </div>
+      </form>
+      
+      <h3 style="font-size:16px; margin-top:20px; color:#374151;">الجهات التمويلية الحالية:</h3>
+      <table class="admin-table" id="banksListTable">
+        <thead>
+          <tr>
+            <th>الجهة</th>
+            <th>النوع</th>
+            <th>ملاحظة</th>
+            <th>تحكم</th>
+          </tr>
+        </thead>
+        <tbody id="banksListBody"></tbody>
+      </table>
+    </div>
+
     <div class="card fade-in">
       <h2 style="margin-top:0; font-size:19px; color:#111827;">إدارة منتجات التمويل</h2>
       <p style="font-size:13px; color:#6b7280; text-align:right;">
@@ -1135,6 +1188,19 @@
             <label>رسالة عند عدم التفعيل (اختياري)</label>
             <input id="fpMessage" type="text" placeholder="مثال: نعتذر منك، هذا المنتج غير متاح حالياً." />
           </div>
+          
+          <div>
+            <label>نسبة الاستقطاع من الراتب (%) <span style="color:#6b7280; font-size:11px;">❓</span></label>
+            <input id="fpDeductionRate" type="number" min="0" max="100" step="1" placeholder="مثال: 33" />
+          </div>
+          
+          <div style="grid-column:1/-1;">
+            <label>أسئلة إضافية للمنتج (اختياري)</label>
+            <div id="fpCustomQuestionsContainer" style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:10px; margin-top:5px;">
+              <div id="fpCustomQuestionsList"></div>
+              <button type="button" class="secondary small" onclick="addCustomQuestionField()" style="margin-top:8px;">➕ إضافة سؤال</button>
+            </div>
+          </div>
         </div>
 
         <input type="hidden" id="fpEditIndex" value="" />
@@ -1150,7 +1216,8 @@
           <tr>
             <th>اسم المنتج</th>
             <th>الحالة</th>
-            <th>رسالة الإيقاف</th>
+            <th>نسبة الاستقطاع</th>
+            <th>أسئلة إضافية</th>
             <th>تحكم</th>
           </tr>
         </thead>
@@ -1847,7 +1914,7 @@
 
 <script>
   function showPage(name) {
-    ['landing','calculator','result','adminLogin','adminHub','admin','adminProducts','adminArchive','comingSoon','earlySettlement','adminRatings','adminOffers','adminMarketing','adminQuestions','adminVisitors','adminClientResults','adminAds','adminSettings'].forEach(id => {
+    ['landing','calculator','result','adminLogin','adminHub','admin','adminProducts','adminArchive','comingSoon','earlySettlement','adminRatings','adminOffers','adminMarketing','adminQuestions','adminVisitors','adminClientResults','adminAds','adminSettings','adminThemes'].forEach(id => {
       const el = document.getElementById(id + 'Page');
       if (!el) return;
       el.classList.toggle('active', id === name);
@@ -1864,6 +1931,11 @@
       // تهيئة الميزات المتقدمة
       if (typeof initAdminHub === 'function') initAdminHub();
       if (typeof applyAllSettings === 'function') applyAllSettings();
+      
+      // تهيئة صفحة إدارة الأسئلة
+      if (name === 'adminQuestions' && typeof renderQuestionsList === 'function') {
+        renderQuestionsList();
+      }
     }
   }
 
@@ -1956,6 +2028,7 @@
         <td>${cfg.margin}</td>
         <td>${cfg.ageCalcType === 'gregorian' ? 'ميلادي' : 'هجري'}</td>
         <td>${cfg.maxAge || 60}</td>
+        <td style="max-width:120px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${cfg.bankNote || ''}">${cfg.bankNote || '-'}</td>
         <td>
           <button class="btn small secondary" onclick="editBankConfig(${index})">تعديل</button>
           <button class="btn small secondary" onclick="deleteBankConfig(${index})">حذف</button>
@@ -1979,6 +2052,7 @@
     document.getElementById('adminEtezaaz').value = '';
     document.getElementById('adminAgeCalcType').value = 'hijri';
     document.getElementById('adminMaxAge').value = '';
+    document.getElementById('adminBankNote').value = '';
     document.getElementById('adminEditIndex').value = '';
   }
 
@@ -1997,6 +2071,7 @@
     const etezaaz = document.getElementById('adminEtezaaz').value;
     const ageCalcType = document.getElementById('adminAgeCalcType').value;
     const maxAge = parseInt(document.getElementById('adminMaxAge').value || '60');
+    const bankNote = (document.getElementById('adminBankNote').value || '').trim();
     const editIndex = document.getElementById('adminEditIndex').value;
 
     if (!bankName || !margin || !minSalary || !maxSalary) {
@@ -2010,6 +2085,7 @@
     if (maxMonths) cfg.maxMonths = maxMonths;
     if (productDetail) cfg.productDetail = productDetail;
     if (etezaaz) cfg.etezaaz = etezaaz;
+    if (bankNote) cfg.bankNote = bankNote;
     cfg.ageCalcType = ageCalcType || 'hijri';
     cfg.maxAge = maxAge || 60;
 
@@ -2036,6 +2112,7 @@
     document.getElementById('adminEtezaaz').value = cfg.etezaaz || '';
     document.getElementById('adminAgeCalcType').value = cfg.ageCalcType || 'hijri';
     document.getElementById('adminMaxAge').value = cfg.maxAge || '';
+    document.getElementById('adminBankNote').value = cfg.bankNote || '';
     document.getElementById('adminEditIndex').value = index;
   }
 
@@ -2206,6 +2283,77 @@
     document.getElementById('fpEnabled').value = 'true';
     document.getElementById('fpMessage').value = '';
     document.getElementById('fpEditIndex').value = '';
+    document.getElementById('fpDeductionRate').value = '';
+    document.getElementById('fpCustomQuestionsList').innerHTML = '';
+  }
+  
+  // دالة إضافة حقل سؤال مخصص جديد
+  let customQuestionCounter = 0;
+  function addCustomQuestionField(questionData = null) {
+    const container = document.getElementById('fpCustomQuestionsList');
+    const idx = customQuestionCounter++;
+    
+    const questionDiv = document.createElement('div');
+    questionDiv.className = 'custom-question-item';
+    questionDiv.id = `customQ_${idx}`;
+    questionDiv.style.cssText = 'background:#fff; border:1px solid #e2e8f0; border-radius:6px; padding:10px; margin-bottom:8px;';
+    
+    questionDiv.innerHTML = `
+      <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:flex-start;">
+        <div style="flex:2; min-width:200px;">
+          <label style="font-size:12px; color:#374151;">نص السؤال</label>
+          <input type="text" class="cq-label" placeholder="مثال: هل يوجد لديك دفعة مقدمة؟" value="${questionData?.label || ''}" style="width:100%;" />
+        </div>
+        <div style="flex:1; min-width:120px;">
+          <label style="font-size:12px; color:#374151;">نوع الإجابة</label>
+          <select class="cq-type" style="width:100%;">
+            <option value="text" ${questionData?.type==='text'?'selected':''}>نص</option>
+            <option value="number" ${questionData?.type==='number'?'selected':''}>رقم</option>
+            <option value="select" ${questionData?.type==='select'?'selected':''}>اختيار</option>
+          </select>
+        </div>
+        <div style="flex:1; min-width:150px;" class="cq-options-container" ${questionData?.type!=='select'?'style="display:none;"':''}>
+          <label style="font-size:12px; color:#374151;">الخيارات (مفصولة بفاصلة)</label>
+          <input type="text" class="cq-options" placeholder="نعم,لا" value="${questionData?.options?.join(',') || ''}" style="width:100%;" />
+        </div>
+        <div style="display:flex; align-items:flex-end;">
+          <button type="button" onclick="removeCustomQuestion(${idx})" style="background:#ef4444; color:#fff; border:none; border-radius:4px; padding:6px 10px; cursor:pointer;">❌</button>
+        </div>
+      </div>
+    `;
+    
+    container.appendChild(questionDiv);
+    
+    // إظهار/إخفاء حقل الخيارات حسب النوع
+    const typeSelect = questionDiv.querySelector('.cq-type');
+    const optionsContainer = questionDiv.querySelector('.cq-options-container');
+    typeSelect.addEventListener('change', function() {
+      optionsContainer.style.display = this.value === 'select' ? 'block' : 'none';
+    });
+  }
+  
+  function removeCustomQuestion(idx) {
+    const el = document.getElementById(`customQ_${idx}`);
+    if(el) el.remove();
+  }
+  
+  function getCustomQuestionsFromForm() {
+    const questions = [];
+    const items = document.querySelectorAll('.custom-question-item');
+    items.forEach(item => {
+      const label = item.querySelector('.cq-label')?.value?.trim();
+      const type = item.querySelector('.cq-type')?.value || 'text';
+      const optionsStr = item.querySelector('.cq-options')?.value?.trim();
+      
+      if(label) {
+        const q = { label, type };
+        if(type === 'select' && optionsStr) {
+          q.options = optionsStr.split(',').map(o => o.trim()).filter(o => o);
+        }
+        questions.push(q);
+      }
+    });
+    return questions;
   }
 
   function saveFinanceProduct(e){
@@ -2213,6 +2361,8 @@
     const name = (document.getElementById('fpName').value || '').trim();
     const enabled = (document.getElementById('fpEnabled').value === 'true');
     const message = (document.getElementById('fpMessage').value || '').trim();
+    const deductionRate = parseFloat(document.getElementById('fpDeductionRate').value) || 0;
+    const customQuestions = getCustomQuestionsFromForm();
     const editIndex = document.getElementById('fpEditIndex').value;
 
     if(!name){
@@ -2220,7 +2370,7 @@
       return;
     }
 
-    const item = { name, enabled, message };
+    const item = { name, enabled, message, deductionRate, customQuestions };
 
     if(editIndex === ''){
       // منع تكرار نفس الاسم
@@ -2255,10 +2405,13 @@
     
     products.forEach((p, idx)=>{
       const tr = document.createElement('tr');
+      const questionsCount = (p.customQuestions && p.customQuestions.length) ? p.customQuestions.length : 0;
+      const deductionDisplay = p.deductionRate ? `${p.deductionRate}%` : '-';
       tr.innerHTML = `
         <td>${escapeHtml(p.name || '')}</td>
         <td>${p.enabled ? '✅ مفعّل' : '❌ غير مفعّل'}</td>
-        <td style="text-align:right;">${escapeHtml(p.message || '')}</td>
+        <td style="text-align:center;">${deductionDisplay}</td>
+        <td style="text-align:center;">${questionsCount > 0 ? `📝 ${questionsCount}` : '-'}</td>
         <td>
           <button class="secondary small" style="padding:4px 8px; font-size:12px;" onclick="editFinanceProduct(${idx})">✏️</button>
           <button class="secondary small" style="padding:4px 8px; font-size:12px;" onclick="deleteFinanceProduct(${idx})">🗑️</button>
@@ -2274,7 +2427,15 @@
     document.getElementById('fpName').value = p.name || '';
     document.getElementById('fpEnabled').value = p.enabled ? 'true' : 'false';
     document.getElementById('fpMessage').value = p.message || '';
+    document.getElementById('fpDeductionRate').value = p.deductionRate || '';
     document.getElementById('fpEditIndex').value = idx;
+    
+    // تحميل الأسئلة المخصصة
+    document.getElementById('fpCustomQuestionsList').innerHTML = '';
+    customQuestionCounter = 0;
+    if(p.customQuestions && p.customQuestions.length > 0) {
+      p.customQuestions.forEach(q => addCustomQuestionField(q));
+    }
   }
 
   function deleteFinanceProduct(idx){
@@ -2586,6 +2747,47 @@
       show:a=>a.financeType==='تمويل عقاري' && a.supported==='مدعوم' && a.jobType==='عسكري'
     },
     { id:'bundle',label:'هل ترغب في دفعة مقدمة من سكني؟',type:'select',options:['نعم','لا'],show:a=>a.supported==='مدعوم' },
+    
+    /* (إضافة) أسئلة ديناميكية حسب نوع المنتج العقاري */
+    {
+      id:'propertyValue',
+      label:'كم قيمة العقار الذي تحتاجه؟ (ريال)',
+      type:'number',
+      show:a=>a.financeType==='تمويل عقاري' && ['وحدة جاهزة من السوق','مشاريع الخارطة','تحت الانشاء (بيت تملكه عظم)'].includes(a.mortgageProductType)
+    },
+    {
+      id:'landValue',
+      label:'كم قيمة الأرض التي تحتاجها؟ (ريال)',
+      type:'number',
+      show:a=>a.financeType==='تمويل عقاري' && a.mortgageProductType==='ارض (سكنية)'
+    },
+    {
+      id:'buildingCost',
+      label:'كم تكلفة البناء المتوقعة؟ (ريال)',
+      type:'number',
+      show:a=>a.financeType==='تمويل عقاري' && ['بناء ذاتي','ارض وقرض (ارض وبناء ذاتي)'].includes(a.mortgageProductType)
+    },
+    {
+      id:'hasDownPayment',
+      label:'هل لديك دفعة مقدمة خاصة بك؟',
+      type:'select',
+      options:['نعم','لا'],
+      show:a=>a.financeType==='تمويل عقاري' && ['ارض (سكنية)','وحدة جاهزة من السوق','مشاريع الخارطة'].includes(a.mortgageProductType)
+    },
+    {
+      id:'downPaymentPercent',
+      label:'كم نسبة الدفعة المقدمة؟ (%)',
+      type:'select',
+      options:['10%','15%','20%','25%','30%','35%','40%','50%'],
+      show:a=>a.hasDownPayment==='نعم'
+    },
+    {
+      id:'mortgageValue',
+      label:'كم قيمة العقار المرهون؟ (ريال)',
+      type:'number',
+      show:a=>a.financeType==='تمويل عقاري' && a.mortgageProductType==='رهن'
+    },
+    
     { id:'salary',label:'كم الراتب الشهري الصافي؟',type:'number' },
 
     /* (إضافة) دمج الدعم الشهري مع الراتب + استقطاع 65% */
@@ -3420,11 +3622,13 @@
       if (recommendedBank) {
         const b = recommendedBank;
         const logoSrc = bankLogoMap[b.bankName];
+        const bankNoteHtml = b.bankNote ? `<div style="margin-top:8px; background:linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); padding:8px 12px; border-radius:8px; font-size:12px; color:#92400e;"><strong>📌 ملاحظة:</strong> ${b.bankNote}</div>` : '';
         html += `<div class="bank-card">
           <div class="bank-logo">${logoSrc ? `<img src="${logoSrc}" alt="${b.bankName}">` : '🏦'}</div>
           <div style="text-align:right">
             <div class="bank-text-main">${b.bankName}</div>
             <div class="bank-text-sub">تم ترشيح هذا البنك/الشركة بناءً على راتبك ونوع التمويل بنسبة هامش ربح تقريبية: <strong>${b.margin}%</strong></div>
+            ${bankNoteHtml}
           </div>
         </div>`;
       }
@@ -3798,11 +4002,13 @@
     if (recommendedBank) {
       const b = recommendedBank;
       const logoSrc = bankLogoMap[b.bankName];
+      const bankNoteHtml = b.bankNote ? `<div style="margin-top:8px; background:linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); padding:8px 12px; border-radius:8px; font-size:12px; color:#92400e;"><strong>📌 ملاحظة:</strong> ${b.bankNote}</div>` : '';
       html += `<div class="bank-card">
         <div class="bank-logo">${logoSrc ? `<img src="${logoSrc}" alt="${b.bankName}">` : '🏦'}</div>
         <div style="text-align:right">
           <div class="bank-text-main">${b.bankName}</div>
           <div class="bank-text-sub">تم ترشيح هذا البنك/الشركة بناءً على راتبك ونوع التمويل بنسبة هامش ربح تقريبية: <strong>${b.margin}%</strong></div>
+          ${bankNoteHtml}
         </div>
       </div>`;
     }
@@ -4904,6 +5110,129 @@ ${contact}`.trim();
     setTimeout(hideSplashScreen, 1000);
   };
 
+  // ====== إدارة الجهات التمويلية (البنوك) ======
+  let customBanks = [];
+  const CUSTOM_BANKS_KEY = 'finoCustomBanks';
+  
+  function loadCustomBanks() {
+    try {
+      const saved = localStorage.getItem(CUSTOM_BANKS_KEY);
+      if (saved) customBanks = JSON.parse(saved);
+    } catch(e) { console.error('خطأ في تحميل الجهات:', e); }
+  }
+  
+  function saveCustomBanks() {
+    localStorage.setItem(CUSTOM_BANKS_KEY, JSON.stringify(customBanks));
+  }
+  
+  function addNewBank(e) {
+    e.preventDefault();
+    const name = document.getElementById('newBankName').value.trim();
+    const type = document.getElementById('newBankType').value;
+    const logo = document.getElementById('newBankLogo').value.trim();
+    const note = document.getElementById('newBankNote').value.trim();
+    
+    if (!name) { alert('يرجى إدخال اسم الجهة'); return; }
+    
+    // التحقق من عدم التكرار
+    const exists = customBanks.find(b => b.name === name);
+    if (exists) { alert('هذه الجهة موجودة مسبقاً'); return; }
+    
+    customBanks.push({ name, type, logo, note, createdAt: Date.now() });
+    saveCustomBanks();
+    updateBankDropdowns();
+    renderBanksList();
+    
+    // مسح النموذج
+    document.getElementById('newBankName').value = '';
+    document.getElementById('newBankLogo').value = '';
+    document.getElementById('newBankNote').value = '';
+    
+    alert('تمت إضافة الجهة بنجاح! ستظهر الآن في قائمة تعديل النسب.');
+  }
+  
+  function deleteCustomBank(index) {
+    if (!confirm('هل أنت متأكد من حذف هذه الجهة؟')) return;
+    customBanks.splice(index, 1);
+    saveCustomBanks();
+    updateBankDropdowns();
+    renderBanksList();
+  }
+  
+  function renderBanksList() {
+    const tbody = document.getElementById('banksListBody');
+    if (!tbody) return;
+    
+    // البنوك الافتراضية
+    const defaultBanks = [
+      'البنك الأهلي السعودي', 'مصرف الراجحي', 'بنك الرياض', 'بنك ساب',
+      'البنك العربي الوطني', 'مصرف الإنماء', 'البنك السعودي الفرنسي',
+      'البنك السعودي للاستثمار', 'بنك البلاد', 'بنك الجزيرة', 'بنك الخليج الدولي'
+    ];
+    
+    let html = '';
+    
+    // عرض البنوك الافتراضية
+    defaultBanks.forEach(name => {
+      html += `<tr style="background:#f8fafc;">
+        <td>${name}</td>
+        <td>بنك</td>
+        <td>-</td>
+        <td><span style="color:#9ca3af; font-size:12px;">افتراضي</span></td>
+      </tr>`;
+    });
+    
+    // عرض الجهات المضافة
+    customBanks.forEach((bank, idx) => {
+      html += `<tr style="background:#fef3c7;">
+        <td><strong>${bank.name}</strong></td>
+        <td>${bank.type}</td>
+        <td>${bank.note || '-'}</td>
+        <td>
+          <button class="secondary small" onclick="deleteCustomBank(${idx})" style="padding:4px 8px;">🗑️ حذف</button>
+        </td>
+      </tr>`;
+    });
+    
+    tbody.innerHTML = html;
+  }
+  
+  function updateBankDropdowns() {
+    const select = document.getElementById('adminBankName');
+    if (!select) return;
+    
+    // حفظ القيمة الحالية
+    const currentValue = select.value;
+    
+    // البنوك الافتراضية
+    const defaultBanks = [
+      'البنك الأهلي السعودي', 'مصرف الراجحي', 'بنك الرياض', 'بنك ساب',
+      'البنك العربي الوطني', 'مصرف الإنماء', 'البنك السعودي الفرنسي',
+      'البنك السعودي للاستثمار', 'بنك البلاد', 'بنك الجزيرة', 'بنك الخليج الدولي'
+    ];
+    
+    let html = '<option value="">اختر...</option>';
+    
+    // إضافة البنوك الافتراضية
+    defaultBanks.forEach(name => {
+      html += `<option value="${name}">${name}</option>`;
+    });
+    
+    // إضافة الجهات المخصصة
+    if (customBanks.length > 0) {
+      html += '<optgroup label="--- الجهات المضافة ---">';
+      customBanks.forEach(bank => {
+        html += `<option value="${bank.name}">${bank.name} (${bank.type})</option>`;
+      });
+      html += '</optgroup>';
+    }
+    
+    select.innerHTML = html;
+    
+    // استعادة القيمة
+    if (currentValue) select.value = currentValue;
+  }
+  
   // ====== تشغيل ======
   document.addEventListener('DOMContentLoaded', () => {
     // إخفاء شاشة البداية بعد 2.5 ثانية
@@ -4924,6 +5253,11 @@ ${contact}`.trim();
     loadBankConfigs();
     renderArchiveTable();
     renderFinanceProductsTable();
+    
+    // تحميل الجهات التمويلية المخصصة
+    loadCustomBanks();
+    updateBankDropdowns();
+    renderBanksList();
     loadRetirementSettingsToUI();
     
     // تحميل التقييمات والعروض والتسويق
@@ -5157,14 +5491,46 @@ ${contact}`.trim();
   }
   
   // ====== نظام الثيمات ======
+  const themeColors = {
+    default: 'linear-gradient(-45deg, #0f172a, #1e3a8a, #1e40af, #3b82f6)',
+    green: 'linear-gradient(-45deg, #064e3b, #047857, #059669, #10b981)',
+    purple: 'linear-gradient(-45deg, #4c1d95, #5b21b6, #6d28d9, #8b5cf6)',
+    gold: 'linear-gradient(-45deg, #78350f, #92400e, #b45309, #f59e0b)',
+    dark: 'linear-gradient(-45deg, #0f172a, #1e293b, #334155, #475569)'
+  };
+  
   function applyTheme(theme) {
     const body = document.body;
     ['default', 'green', 'purple', 'gold', 'dark'].forEach(t => {
       body.classList.remove('theme-' + t);
     });
     body.classList.add('theme-' + theme);
+    
+    // تغيير الخلفية مباشرة باستخدام CSS variable و style مباشر
+    if (themeColors[theme]) {
+      document.documentElement.style.setProperty('--main-bg', themeColors[theme]);
+      body.style.setProperty('background', themeColors[theme], 'important');
+      body.style.backgroundSize = '400% 400%';
+      body.style.animation = 'gradientBG 15s ease infinite';
+    }
+    
     localStorage.setItem('finoTheme', theme);
+    
+    // إظهار رسالة تأكيد
+    const themeNames = { default: 'أزرق', green: 'أخضر', purple: 'بنفسجي', gold: 'ذهبي', dark: 'داكن' };
+    showToast('تم تطبيق الثيم ' + themeNames[theme] + ' بنجاح! 🎨');
   }
+  
+  // تحميل الثيم المحفوظ عند بدء الصفحة
+  (function loadSavedTheme() {
+    const savedTheme = localStorage.getItem('finoTheme');
+    if (savedTheme && themeColors[savedTheme]) {
+      document.body.classList.add('theme-' + savedTheme);
+      document.body.style.background = themeColors[savedTheme];
+      document.body.style.backgroundSize = '400% 400%';
+      document.body.style.animation = 'gradientBG 15s ease infinite';
+    }
+  })();
   
   // ====== نظام الخلفيات الموسمية ======
   const seasons = {
@@ -5379,26 +5745,65 @@ ${contact}`.trim();
     
     const customQ = loadCustomQuestions();
     
-    container.innerHTML = questions.map((q, i) => {
-      const isHidden = customQ.hidden.includes(i);
-      const customLabel = customQ.labels[i] || q.label;
+    // دمج الأسئلة العامة وأسئلة الالتزامات
+    const allQuestions = [
+      ...generalQuestions.map((q, i) => ({ ...q, originalIndex: i, category: 'general' })),
+      ...commitmentQuestions.map((q, i) => ({ ...q, originalIndex: i, category: 'commitment' }))
+    ];
+    
+    let html = '<h4 style="margin-bottom:10px; color:#1f2937;">📋 الأسئلة الأساسية</h4>';
+    
+    generalQuestions.forEach((q, i) => {
+      const isHidden = customQ.hidden.includes('general_' + i);
+      const customLabel = customQ.labels['general_' + i] || q.label;
       
-      return `
-        <div class="question-item ${isHidden ? 'question-hidden' : ''}" data-index="${i}">
+      html += `
+        <div class="question-item ${isHidden ? 'question-hidden' : ''}" data-index="general_${i}">
           <span class="question-drag-handle">☰</span>
           <span class="question-text">${i + 1}. ${customLabel}</span>
           <div class="question-actions">
-            <button class="question-btn question-btn-edit" onclick="editQuestionLabel(${i})">تعديل</button>
-            <button class="question-btn question-btn-hide" onclick="toggleQuestionVisibility(${i})">${isHidden ? 'إظهار' : 'إخفاء'}</button>
+            <button class="question-btn question-btn-edit" onclick="editQuestionLabel('general_${i}')">تعديل</button>
+            <button class="question-btn question-btn-hide" onclick="toggleQuestionVisibility('general_${i}')">${isHidden ? 'إظهار' : 'إخفاء'}</button>
           </div>
         </div>
       `;
-    }).join('');
+    });
+    
+    html += '<h4 style="margin:20px 0 10px 0; color:#1f2937;">📋 أسئلة الالتزامات</h4>';
+    
+    commitmentQuestions.forEach((q, i) => {
+      const isHidden = customQ.hidden.includes('commitment_' + i);
+      const customLabel = customQ.labels['commitment_' + i] || q.label;
+      
+      html += `
+        <div class="question-item ${isHidden ? 'question-hidden' : ''}" data-index="commitment_${i}">
+          <span class="question-drag-handle">☰</span>
+          <span class="question-text">${i + 1}. ${customLabel}</span>
+          <div class="question-actions">
+            <button class="question-btn question-btn-edit" onclick="editQuestionLabel('commitment_${i}')">تعديل</button>
+            <button class="question-btn question-btn-hide" onclick="toggleQuestionVisibility('commitment_${i}')">${isHidden ? 'إظهار' : 'إخفاء'}</button>
+          </div>
+        </div>
+      `;
+    });
+    
+    container.innerHTML = html;
   }
   
   function editQuestionLabel(index) {
     const customQ = loadCustomQuestions();
-    const currentLabel = customQ.labels[index] || questions[index].label;
+    
+    // تحديد السؤال الصحيح بناءً على الفهرس
+    let currentLabel;
+    if (typeof index === 'string' && index.startsWith('general_')) {
+      const i = parseInt(index.replace('general_', ''));
+      currentLabel = customQ.labels[index] || generalQuestions[i].label;
+    } else if (typeof index === 'string' && index.startsWith('commitment_')) {
+      const i = parseInt(index.replace('commitment_', ''));
+      currentLabel = customQ.labels[index] || commitmentQuestions[i].label;
+    } else {
+      currentLabel = customQ.labels[index] || '';
+    }
     const newLabel = prompt('أدخل نص السؤال الجديد:', currentLabel);
     
     if (newLabel && newLabel.trim()) {
