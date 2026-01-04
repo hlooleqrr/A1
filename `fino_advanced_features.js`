@@ -1,0 +1,648 @@
+// ====== FINO Advanced Features JavaScript ======
+
+// ====== نظام PWA ======
+let deferredPrompt;
+let pwaInstalled = false;
+
+// تسجيل Service Worker
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then(registration => {
+        console.log('FINO SW: تم التسجيل بنجاح', registration.scope);
+      })
+      .catch(err => {
+        console.log('FINO SW: فشل التسجيل', err);
+      });
+  });
+}
+
+// التقاط حدث التثبيت
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  showInstallPrompt();
+});
+
+// التحقق من التثبيت
+window.addEventListener('appinstalled', () => {
+  pwaInstalled = true;
+  hideInstallPrompt();
+  console.log('FINO: تم تثبيت التطبيق');
+});
+
+function showInstallPrompt() {
+  const banner = document.getElementById('pwaInstallBanner');
+  if (banner && !pwaInstalled) {
+    banner.style.display = 'block';
+  }
+}
+
+function hideInstallPrompt() {
+  const banner = document.getElementById('pwaInstallBanner');
+  if (banner) {
+    banner.style.display = 'none';
+  }
+}
+
+function installPWA() {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then((choiceResult) => {
+      if (choiceResult.outcome === 'accepted') {
+        console.log('FINO: قبل المستخدم التثبيت');
+      }
+      deferredPrompt = null;
+    });
+  }
+}
+
+function dismissInstallPrompt() {
+  hideInstallPrompt();
+  localStorage.setItem('pwaPromptDismissed', 'true');
+}
+
+// ====== نظام الخلفيات المتحركة الموسمية ======
+const SEASON_KEY = 'finoSeasonTheme';
+const THEME_KEY = 'finoTheme';
+
+const seasons = {
+  winter: {
+    name: 'شتوي',
+    class: 'season-winter',
+    particles: ['❄️', '❅', '❆', '✻', '✼'],
+    particleClass: 'snowflake'
+  },
+  spring: {
+    name: 'ربيعي',
+    class: 'season-spring',
+    particles: ['🌸', '🌺', '🌷', '🌼', '🍀', '🌿'],
+    particleClass: 'spring-leaf'
+  },
+  summer: {
+    name: 'صيفي',
+    class: 'season-summer',
+    particles: ['☀️', '🌞', '✨'],
+    particleClass: 'summer-ray'
+  },
+  autumn: {
+    name: 'خريفي',
+    class: 'season-autumn',
+    particles: ['🍂', '🍁', '🍃', '🌾'],
+    particleClass: 'autumn-leaf'
+  },
+  default: {
+    name: 'افتراضي',
+    class: '',
+    particles: [],
+    particleClass: 'particle'
+  }
+};
+
+function loadSeasonTheme() {
+  const saved = localStorage.getItem(SEASON_KEY);
+  return saved || 'default';
+}
+
+function saveSeasonTheme(season) {
+  localStorage.setItem(SEASON_KEY, season);
+}
+
+function applySeasonTheme(season) {
+  const body = document.body;
+  
+  // إزالة جميع classes الموسمية
+  Object.values(seasons).forEach(s => {
+    if (s.class) body.classList.remove(s.class);
+  });
+  
+  // إزالة الجزيئات القديمة
+  document.querySelectorAll('.season-particle').forEach(el => el.remove());
+  
+  // تطبيق الموسم الجديد
+  const seasonData = seasons[season];
+  if (seasonData && seasonData.class) {
+    body.classList.add(seasonData.class);
+    createSeasonParticles(seasonData);
+  }
+  
+  saveSeasonTheme(season);
+}
+
+function createSeasonParticles(seasonData) {
+  if (!seasonData.particles.length) return;
+  
+  const container = document.getElementById('particles') || document.body;
+  
+  for (let i = 0; i < 30; i++) {
+    const particle = document.createElement('div');
+    particle.className = `season-particle ${seasonData.particleClass}`;
+    particle.textContent = seasonData.particles[Math.floor(Math.random() * seasonData.particles.length)];
+    particle.style.left = Math.random() * 100 + '%';
+    particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+    particle.style.animationDelay = Math.random() * 10 + 's';
+    particle.style.fontSize = (Math.random() * 1 + 0.8) + 'em';
+    container.appendChild(particle);
+  }
+}
+
+// ====== نظام الثيمات ======
+const themes = {
+  default: 'افتراضي (أزرق)',
+  green: 'أخضر',
+  purple: 'بنفسجي',
+  gold: 'ذهبي',
+  dark: 'داكن'
+};
+
+function loadTheme() {
+  return localStorage.getItem(THEME_KEY) || 'default';
+}
+
+function saveTheme(theme) {
+  localStorage.setItem(THEME_KEY, theme);
+}
+
+function applyTheme(theme) {
+  const body = document.body;
+  
+  // إزالة جميع classes الثيمات
+  Object.keys(themes).forEach(t => {
+    body.classList.remove(`theme-${t}`);
+  });
+  
+  // تطبيق الثيم الجديد
+  body.classList.add(`theme-${theme}`);
+  saveTheme(theme);
+}
+
+// ====== نظام تتبع الزوار ======
+const VISITORS_KEY = 'finoVisitors';
+const RESULTS_KEY = 'finoClientResults';
+
+function trackVisitor() {
+  const visitors = loadVisitors();
+  const now = new Date();
+  const today = now.toISOString().split('T')[0];
+  
+  const visitor = {
+    id: generateVisitorId(),
+    timestamp: now.toISOString(),
+    date: today,
+    time: now.toLocaleTimeString('ar-SA'),
+    userAgent: navigator.userAgent,
+    screenSize: `${screen.width}x${screen.height}`,
+    language: navigator.language,
+    referrer: document.referrer || 'مباشر'
+  };
+  
+  visitors.unshift(visitor);
+  
+  // الاحتفاظ بآخر 1000 زائر فقط
+  if (visitors.length > 1000) {
+    visitors.length = 1000;
+  }
+  
+  saveVisitors(visitors);
+  updateVisitorStats();
+}
+
+function generateVisitorId() {
+  return 'v_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+}
+
+function loadVisitors() {
+  try {
+    const data = localStorage.getItem(VISITORS_KEY);
+    return data ? JSON.parse(data) : [];
+  } catch (e) {
+    return [];
+  }
+}
+
+function saveVisitors(visitors) {
+  localStorage.setItem(VISITORS_KEY, JSON.stringify(visitors));
+}
+
+function getVisitorStats() {
+  const visitors = loadVisitors();
+  const now = new Date();
+  const today = now.toISOString().split('T')[0];
+  const thisWeek = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+  const thisMonth = now.toISOString().substr(0, 7);
+  
+  return {
+    total: visitors.length,
+    today: visitors.filter(v => v.date === today).length,
+    thisWeek: visitors.filter(v => v.date >= thisWeek).length,
+    thisMonth: visitors.filter(v => v.date.startsWith(thisMonth)).length
+  };
+}
+
+function updateVisitorStats() {
+  const stats = getVisitorStats();
+  
+  const totalEl = document.getElementById('visitorTotal');
+  const todayEl = document.getElementById('visitorToday');
+  const weekEl = document.getElementById('visitorWeek');
+  const monthEl = document.getElementById('visitorMonth');
+  
+  if (totalEl) totalEl.textContent = stats.total;
+  if (todayEl) todayEl.textContent = stats.today;
+  if (weekEl) weekEl.textContent = stats.thisWeek;
+  if (monthEl) monthEl.textContent = stats.thisMonth;
+}
+
+// ====== نظام حفظ نتائج العملاء العشوائية ======
+function saveClientResult(result) {
+  const results = loadClientResults();
+  
+  const record = {
+    id: 'r_' + Date.now(),
+    timestamp: new Date().toISOString(),
+    clientName: result.clientName || 'غير محدد',
+    financeType: result.financeType || '',
+    amount: result.finalNet || 0,
+    bank: result.recommendedBankName || '',
+    salary: result.salary || 0,
+    months: result.months || 0
+  };
+  
+  results.unshift(record);
+  
+  // الاحتفاظ بآخر 500 نتيجة
+  if (results.length > 500) {
+    results.length = 500;
+  }
+  
+  saveClientResults(results);
+}
+
+function loadClientResults() {
+  try {
+    const data = localStorage.getItem(RESULTS_KEY);
+    return data ? JSON.parse(data) : [];
+  } catch (e) {
+    return [];
+  }
+}
+
+function saveClientResults(results) {
+  localStorage.setItem(RESULTS_KEY, JSON.stringify(results));
+}
+
+// ====== نظام الإعلانات المستهدفة ======
+const ADS_KEY = 'finoTargetedAds';
+
+function loadTargetedAds() {
+  try {
+    const data = localStorage.getItem(ADS_KEY);
+    return data ? JSON.parse(data) : getDefaultAds();
+  } catch (e) {
+    return getDefaultAds();
+  }
+}
+
+function saveTargetedAds(ads) {
+  localStorage.setItem(ADS_KEY, JSON.stringify(ads));
+}
+
+function getDefaultAds() {
+  return [
+    {
+      id: 'ad1',
+      title: 'عرض خاص للرواتب العالية',
+      text: 'احصل على نسبة مميزة للتمويل العقاري',
+      targetType: 'salary',
+      targetMin: 15000,
+      targetMax: 999999,
+      financeType: '',
+      bank: '',
+      enabled: true,
+      link: '',
+      linkText: 'تواصل معنا'
+    }
+  ];
+}
+
+function getMatchingAds(salary, amount, financeType, bank) {
+  const ads = loadTargetedAds();
+  
+  return ads.filter(ad => {
+    if (!ad.enabled) return false;
+    
+    // فلترة حسب الراتب
+    if (ad.targetType === 'salary') {
+      if (salary < ad.targetMin || salary > ad.targetMax) return false;
+    }
+    
+    // فلترة حسب المبلغ
+    if (ad.targetType === 'amount') {
+      if (amount < ad.targetMin || amount > ad.targetMax) return false;
+    }
+    
+    // فلترة حسب نوع التمويل
+    if (ad.financeType && financeType && ad.financeType !== financeType) return false;
+    
+    // فلترة حسب البنك
+    if (ad.bank && bank && ad.bank !== bank) return false;
+    
+    return true;
+  });
+}
+
+// ====== نظام إدارة الأسئلة ======
+const QUESTIONS_KEY = 'finoCustomQuestions';
+
+function loadCustomQuestions() {
+  try {
+    const data = localStorage.getItem(QUESTIONS_KEY);
+    return data ? JSON.parse(data) : null;
+  } catch (e) {
+    return null;
+  }
+}
+
+function saveCustomQuestions(questions) {
+  localStorage.setItem(QUESTIONS_KEY, JSON.stringify(questions));
+}
+
+function getQuestionOrder() {
+  const custom = loadCustomQuestions();
+  if (custom && custom.order) {
+    return custom.order;
+  }
+  return null;
+}
+
+function getHiddenQuestions() {
+  const custom = loadCustomQuestions();
+  if (custom && custom.hidden) {
+    return custom.hidden;
+  }
+  return [];
+}
+
+function isQuestionHidden(questionId) {
+  return getHiddenQuestions().includes(questionId);
+}
+
+function toggleQuestionVisibility(questionId) {
+  const custom = loadCustomQuestions() || { order: [], hidden: [], labels: {} };
+  
+  if (custom.hidden.includes(questionId)) {
+    custom.hidden = custom.hidden.filter(id => id !== questionId);
+  } else {
+    custom.hidden.push(questionId);
+  }
+  
+  saveCustomQuestions(custom);
+}
+
+function updateQuestionLabel(questionId, newLabel) {
+  const custom = loadCustomQuestions() || { order: [], hidden: [], labels: {} };
+  custom.labels[questionId] = newLabel;
+  saveCustomQuestions(custom);
+}
+
+function getQuestionLabel(questionId, defaultLabel) {
+  const custom = loadCustomQuestions();
+  if (custom && custom.labels && custom.labels[questionId]) {
+    return custom.labels[questionId];
+  }
+  return defaultLabel;
+}
+
+// ====== نظام ملاحظات البنوك ======
+const BANK_NOTES_KEY = 'finoBankNotes';
+
+function loadBankNotes() {
+  try {
+    const data = localStorage.getItem(BANK_NOTES_KEY);
+    return data ? JSON.parse(data) : {};
+  } catch (e) {
+    return {};
+  }
+}
+
+function saveBankNotes(notes) {
+  localStorage.setItem(BANK_NOTES_KEY, JSON.stringify(notes));
+}
+
+function getBankNote(bankName) {
+  const notes = loadBankNotes();
+  return notes[bankName] || null;
+}
+
+function setBankNote(bankName, note, noteType) {
+  const notes = loadBankNotes();
+  notes[bankName] = { text: note, type: noteType || 'info' };
+  saveBankNotes(notes);
+}
+
+function deleteBankNote(bankName) {
+  const notes = loadBankNotes();
+  delete notes[bankName];
+  saveBankNotes(notes);
+}
+
+// ====== نظام احتساب العمر (ميلادي/هجري) للبنوك ======
+const BANK_AGE_CALC_KEY = 'finoBankAgeCalc';
+
+function loadBankAgeCalcSettings() {
+  try {
+    const data = localStorage.getItem(BANK_AGE_CALC_KEY);
+    return data ? JSON.parse(data) : {};
+  } catch (e) {
+    return {};
+  }
+}
+
+function saveBankAgeCalcSettings(settings) {
+  localStorage.setItem(BANK_AGE_CALC_KEY, JSON.stringify(settings));
+}
+
+function getBankAgeCalcType(bankName) {
+  const settings = loadBankAgeCalcSettings();
+  return settings[bankName] || 'hijri';
+}
+
+function setBankAgeCalcType(bankName, calcType) {
+  const settings = loadBankAgeCalcSettings();
+  settings[bankName] = calcType;
+  saveBankAgeCalcSettings(settings);
+}
+
+// ====== نظام تخصيص المنصة ======
+const PLATFORM_SETTINGS_KEY = 'finoPlatformSettings';
+
+function loadPlatformSettings() {
+  try {
+    const data = localStorage.getItem(PLATFORM_SETTINGS_KEY);
+    return data ? JSON.parse(data) : getDefaultPlatformSettings();
+  } catch (e) {
+    return getDefaultPlatformSettings();
+  }
+}
+
+function savePlatformSettings(settings) {
+  localStorage.setItem(PLATFORM_SETTINGS_KEY, JSON.stringify(settings));
+}
+
+function getDefaultPlatformSettings() {
+  return {
+    platformName: 'منصة FINO',
+    platformSubtitle: 'منصة ذكية تحسب لك التمويل وتُرشّح البنك الأنسب',
+    welcomeMessage: 'نورت المنصة يا {name}',
+    showWeather: false,
+    showSplash: true,
+    splashDuration: 2000,
+    showRetirementFormula: false, // إخفاء معادلة التقاعد
+    showEndDate: true, // عرض تاريخ انتهاء التمويل
+    endDateMessage: 'الله يطول بعمرنا ويبارك لنا'
+  };
+}
+
+function applyPlatformSettings() {
+  const settings = loadPlatformSettings();
+  
+  // تحديث اسم المنصة
+  const titleEl = document.querySelector('header h1');
+  if (titleEl && settings.platformName) {
+    titleEl.textContent = settings.platformName;
+  }
+  
+  // تحديث العنوان الفرعي
+  const subtitleEl = document.querySelector('header p');
+  if (subtitleEl && settings.platformSubtitle) {
+    subtitleEl.textContent = settings.platformSubtitle;
+  }
+  
+  // تحديث عنوان الصفحة
+  if (settings.platformName) {
+    document.title = settings.platformName + ' - حاسبة التمويل الذكية';
+  }
+}
+
+// ====== نظام الطقس ======
+async function fetchWeather() {
+  const settings = loadPlatformSettings();
+  if (!settings.showWeather) return;
+  
+  try {
+    // استخدام API مجاني للطقس
+    const response = await fetch('https://api.open-meteo.com/v1/forecast?latitude=24.7136&longitude=46.6753&current_weather=true');
+    const data = await response.json();
+    
+    if (data.current_weather) {
+      displayWeather(data.current_weather);
+    }
+  } catch (e) {
+    console.log('FINO: تعذر جلب بيانات الطقس', e);
+  }
+}
+
+function displayWeather(weather) {
+  const container = document.getElementById('weatherWidget');
+  if (!container) return;
+  
+  const temp = Math.round(weather.temperature);
+  const weatherCode = weather.weathercode;
+  
+  let icon = '☀️';
+  let desc = 'صحو';
+  
+  if (weatherCode >= 1 && weatherCode <= 3) {
+    icon = '⛅';
+    desc = 'غائم جزئياً';
+  } else if (weatherCode >= 45 && weatherCode <= 48) {
+    icon = '🌫️';
+    desc = 'ضباب';
+  } else if (weatherCode >= 51 && weatherCode <= 67) {
+    icon = '🌧️';
+    desc = 'ممطر';
+  } else if (weatherCode >= 71 && weatherCode <= 77) {
+    icon = '❄️';
+    desc = 'ثلج';
+  } else if (weatherCode >= 80 && weatherCode <= 82) {
+    icon = '🌦️';
+    desc = 'زخات مطر';
+  } else if (weatherCode >= 95) {
+    icon = '⛈️';
+    desc = 'عاصفة رعدية';
+  }
+  
+  container.innerHTML = `
+    <div class="weather-widget">
+      <div class="weather-icon">${icon}</div>
+      <div class="weather-info">
+        <div class="weather-temp">${temp}°C</div>
+        <div class="weather-desc">${desc}</div>
+        <div class="weather-location">الرياض</div>
+      </div>
+    </div>
+  `;
+  container.style.display = 'block';
+}
+
+// ====== حساب تاريخ انتهاء التمويل ======
+function calculateFinanceEndDate(months) {
+  const now = new Date();
+  const endDate = new Date(now.getTime() + months * 30 * 24 * 60 * 60 * 1000);
+  
+  // التاريخ الميلادي
+  const gregorianDate = endDate.toLocaleDateString('ar-SA', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+  
+  // التاريخ الهجري
+  let hijriDate = '';
+  try {
+    hijriDate = endDate.toLocaleDateString('ar-SA-u-ca-islamic-umalqura', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  } catch (e) {
+    hijriDate = 'غير متاح';
+  }
+  
+  return {
+    gregorian: gregorianDate,
+    hijri: hijriDate,
+    date: endDate
+  };
+}
+
+// ====== تهيئة الميزات المتقدمة ======
+function initAdvancedFeatures() {
+  // تتبع الزائر
+  trackVisitor();
+  
+  // تطبيق الموسم المحفوظ
+  const savedSeason = loadSeasonTheme();
+  applySeasonTheme(savedSeason);
+  
+  // تطبيق الثيم المحفوظ
+  const savedTheme = loadTheme();
+  applyTheme(savedTheme);
+  
+  // تطبيق إعدادات المنصة
+  applyPlatformSettings();
+  
+  // جلب الطقس
+  fetchWeather();
+  
+  // تحديث إحصائيات الزوار
+  updateVisitorStats();
+  
+  // التحقق من PWA
+  if (!localStorage.getItem('pwaPromptDismissed')) {
+    setTimeout(showInstallPrompt, 3000);
+  }
+}
+
+// تشغيل عند تحميل الصفحة
+document.addEventListener('DOMContentLoaded', initAdvancedFeatures);
