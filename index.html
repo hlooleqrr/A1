@@ -2680,11 +2680,31 @@
           if(step < generalQuestions.length){
             answers[q.id] = this.value;
             step++;
+            showQuestion();
           } else {
-            currentCommitment[q.id] = this.value;
-            commitmentStep++;
+            // التعامل مع أسئلة الالتزامات
+            if(q.id === 'more'){
+              // حفظ الالتزام الحالي أولاً (بدون حقل more)
+              answers.commitments.push({...currentCommitment});
+              currentCommitment = {};
+              
+              if(this.value === 'نعم'){
+                // إعادة بدء أسئلة الالتزامات لالتزام جديد
+                commitmentStep = 0;
+                showQuestion();
+              } else {
+                // انتهاء الالتزامات - عرض النتيجة
+                document.getElementById('nextButton').style.display = 'none';
+                console.log('=== انتهت الالتزامات (من change event) - سيتم استدعاء calculate() ===');
+                console.log('الالتزامات النهائية:', answers.commitments);
+                calculate();
+              }
+            } else {
+              currentCommitment[q.id] = this.value;
+              commitmentStep++;
+              showQuestion();
+            }
           }
-          showQuestion();
         }
       });
     } else {
@@ -4487,4 +4507,4 @@ ${contact}`.trim();
 </script>
 
 </body>
-</html> 
+</html>
