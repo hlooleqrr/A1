@@ -1,235 +1,245 @@
-// FINO Advanced Features JavaScript
-// PWA, Themes, Seasonal Effects, and More
+// ====== FINO Advanced Features JavaScript ======
 
-// ===== PWA Installation =====
+// ====== نظام PWA ======
 let deferredPrompt;
+let pwaInstalled = false;
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then(registration => console.log('FINO SW: تم التسجيل بنجاح', registration.scope))
+      .catch(err => console.log('FINO SW: فشل التسجيل', err));
+  });
+}
 
 window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
   deferredPrompt = e;
-  showInstallBanner();
+  showInstallPrompt();
 });
 
-function showInstallBanner() {
-  // Check if already installed or dismissed
-  if (localStorage.getItem('pwaInstallDismissed')) {
-    const dismissedTime = parseInt(localStorage.getItem('pwaInstallDismissed'));
-    if (Date.now() - dismissedTime < 7 * 24 * 60 * 60 * 1000) {
-      return; // Don't show for 7 days after dismissal
-    }
+window.addEventListener('appinstalled', () => {
+  pwaInstalled = true;
+  hideInstallPrompt();
+  console.log('FINO: تم تثبيت التطبيق');
+});
+
+function showInstallPrompt() {
+  const banner = document.getElementById('pwaInstallBanner');
+  if (banner && !pwaInstalled && !localStorage.getItem('pwaPromptDismissed')) {
+    banner.style.display = 'block';
   }
-  
-  const banner = document.createElement('div');
-  banner.className = 'pwa-install-banner';
-  banner.innerHTML = `
-    <h4>📱 أضف المنصة لشاشتك الرئيسية</h4>
-    <p>استخدم المنصة كتطبيق بدون الحاجة للمتصفح</p>
-    <div class="banner-buttons">
-      <button class="install-btn" onclick="installPWA()">تثبيت التطبيق</button>
-      <button class="later-btn" onclick="dismissInstallBanner()">لاحقاً</button>
-    </div>
-  `;
-  document.body.appendChild(banner);
+}
+
+function hideInstallPrompt() {
+  const banner = document.getElementById('pwaInstallBanner');
+  if (banner) banner.style.display = 'none';
 }
 
 function installPWA() {
   if (deferredPrompt) {
     deferredPrompt.prompt();
     deferredPrompt.userChoice.then((choiceResult) => {
-      if (choiceResult.outcome === 'accepted') {
-        console.log('User accepted the install prompt');
-        showToast('تم تثبيت التطبيق بنجاح! 🎉', 'success');
-      }
+      if (choiceResult.outcome === 'accepted') console.log('FINO: قبل المستخدم التثبيت');
       deferredPrompt = null;
-      removeInstallBanner();
     });
   }
 }
 
-function dismissInstallBanner() {
-  localStorage.setItem('pwaInstallDismissed', Date.now().toString());
-  removeInstallBanner();
+function dismissInstallPrompt() {
+  hideInstallPrompt();
+  localStorage.setItem('pwaPromptDismissed', 'true');
 }
 
-function removeInstallBanner() {
-  const banner = document.querySelector('.pwa-install-banner');
-  if (banner) {
-    banner.style.animation = 'slideUp 0.3s ease-out forwards';
-    setTimeout(() => banner.remove(), 300);
+// ====== نظام الخلفيات المتحركة الموسمية ======
+const SEASON_KEY = 'finoSeasonTheme';
+const THEME_KEY = 'finoTheme';
+
+const seasons = {
+  winter: { name: 'شتوي', class: 'season-winter', particles: ['❄️', '❅', '❆', '✻', '✼'], particleClass: 'snowflake' },
+  spring: { name: 'ربيعي', class: 'season-spring', particles: ['🌸', '🌺', '🌷', '🌼', '🍀', '🌿'], particleClass: 'spring-leaf' },
+  summer: { name: 'صيفي', class: 'season-summer', particles: ['☀️', '🌞', '✨'], particleClass: 'summer-ray' },
+  autumn: { name: 'خريفي', class: 'season-autumn', particles: ['🍂', '🍁', '🍃', '🌾'], particleClass: 'autumn-leaf' },
+  default: { name: 'افتراضي', class: '', particles: [], particleClass: 'particle' }
+};
+
+function loadSeasonTheme() { return localStorage.getItem(SEASON_KEY) || 'default'; }
+function saveSeasonTheme(season) { localStorage.setItem(SEASON_KEY, season); }
+
+function applySeasonTheme(season) {
+  const body = document.body;
+  Object.values(seasons).forEach(s => { if (s.class) body.classList.remove(s.class); });
+  document.querySelectorAll('.season-particle').forEach(el => el.remove());
+  const seasonData = seasons[season];
+  if (seasonData && seasonData.class) {
+    body.classList.add(seasonData.class);
+    createSeasonParticles(seasonData);
   }
+  saveSeasonTheme(season);
 }
 
-// ===== Theme Management =====
-function setTheme(themeName) {
-  document.documentElement.setAttribute('data-theme', themeName);
-  localStorage.setItem('finoTheme', themeName);
-  showToast(`تم تغيير الثيم إلى: ${getThemeDisplayName(themeName)}`, 'success');
-}
-
-function getThemeDisplayName(theme) {
-  const names = {
-    'blue': 'أزرق',
-    'green': 'أخضر',
-    'purple': 'بنفسجي',
-    'gold': 'ذهبي',
-    'dark': 'داكن'
-  };
-  return names[theme] || theme;
-}
-
-function loadSavedTheme() {
-  const savedTheme = localStorage.getItem('finoTheme') || 'blue';
-  document.documentElement.setAttribute('data-theme', savedTheme);
-}
-
-// ===== Seasonal Effects =====
-function setSeason(seasonName) {
-  document.documentElement.setAttribute('data-season', seasonName);
-  localStorage.setItem('finoSeason', seasonName);
-  
-  // Add or update seasonal particles container
-  let particlesContainer = document.querySelector('.seasonal-particles');
-  if (!particlesContainer) {
-    particlesContainer = document.createElement('div');
-    particlesContainer.className = 'seasonal-particles';
-    document.body.insertBefore(particlesContainer, document.body.firstChild);
-  }
-  
-  // Clear existing particles
-  particlesContainer.innerHTML = '';
-  
-  // Add season-specific particles
-  if (seasonName === 'winter') {
-    createSnowParticles(particlesContainer);
-  }
-  
-  showToast(`تم تغيير الخلفية إلى: ${getSeasonDisplayName(seasonName)}`, 'success');
-}
-
-function getSeasonDisplayName(season) {
-  const names = {
-    'none': 'بدون',
-    'winter': 'شتوي ❄️',
-    'spring': 'ربيعي 🌸',
-    'summer': 'صيفي ☀️',
-    'autumn': 'خريفي 🍂'
-  };
-  return names[season] || season;
-}
-
-function createSnowParticles(container) {
-  for (let i = 0; i < 50; i++) {
+function createSeasonParticles(seasonData) {
+  if (!seasonData.particles.length) return;
+  const container = document.getElementById('particles') || document.body;
+  for (let i = 0; i < 30; i++) {
     const particle = document.createElement('div');
-    particle.className = 'snow-particle';
+    particle.className = `season-particle ${seasonData.particleClass}`;
+    particle.textContent = seasonData.particles[Math.floor(Math.random() * seasonData.particles.length)];
     particle.style.left = Math.random() * 100 + '%';
-    particle.style.width = Math.random() * 5 + 2 + 'px';
-    particle.style.height = particle.style.width;
-    particle.style.animationDuration = Math.random() * 5 + 5 + 's';
-    particle.style.animationDelay = Math.random() * 5 + 's';
+    particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+    particle.style.animationDelay = Math.random() * 10 + 's';
+    particle.style.fontSize = (Math.random() * 1 + 0.8) + 'em';
     container.appendChild(particle);
   }
 }
 
-function loadSavedSeason() {
-  const savedSeason = localStorage.getItem('finoSeason') || 'none';
-  if (savedSeason !== 'none') {
-    setSeason(savedSeason);
-  }
+// ====== نظام الثيمات والألوان ======
+function applyTheme(theme) {
+  const body = document.body;
+  const themes = ['default', 'green', 'purple', 'gold', 'dark'];
+  themes.forEach(t => body.classList.remove(`theme-${t}`));
+  body.classList.add(`theme-${theme}`);
+  localStorage.setItem(THEME_KEY, theme);
 }
 
-// ===== Toast Notifications =====
-function showToast(message, type = 'info') {
-  let container = document.querySelector('.toast-container');
-  if (!container) {
-    container = document.createElement('div');
-    container.className = 'toast-container';
-    document.body.appendChild(container);
-  }
-  
-  const toast = document.createElement('div');
-  toast.className = `toast ${type}`;
-  toast.textContent = message;
-  container.appendChild(toast);
-  
-  setTimeout(() => {
-    toast.style.animation = 'toastOut 0.3s ease-out forwards';
-    setTimeout(() => toast.remove(), 300);
-  }, 3000);
+function applyCustomColors(primary, secondary, accent) {
+  const root = document.documentElement;
+  if (primary) root.style.setProperty('--primary-color', primary);
+  if (secondary) root.style.setProperty('--secondary-color', secondary);
+  if (accent) root.style.setProperty('--accent-color', accent);
 }
 
-// ===== Visitor Tracking =====
+// ====== نظام تتبع الزوار ======
+const VISITORS_KEY = 'finoVisitors';
+const RESULTS_KEY = 'finoClientResults';
+
 function trackVisitor() {
-  const today = new Date().toDateString();
-  const visitData = JSON.parse(localStorage.getItem('finoVisitorData') || '{}');
-  
-  if (!visitData.total) visitData.total = 0;
-  if (!visitData.dates) visitData.dates = {};
-  
-  // Increment total
-  visitData.total++;
-  
-  // Track by date
-  if (!visitData.dates[today]) {
-    visitData.dates[today] = 0;
-  }
-  visitData.dates[today]++;
-  
-  localStorage.setItem('finoVisitorData', JSON.stringify(visitData));
-}
-
-function getVisitorStats() {
-  const visitData = JSON.parse(localStorage.getItem('finoVisitorData') || '{}');
-  const today = new Date().toDateString();
-  const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-  const monthAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-  
-  let todayCount = visitData.dates?.[today] || 0;
-  let weekCount = 0;
-  let monthCount = 0;
-  
-  if (visitData.dates) {
-    Object.keys(visitData.dates).forEach(dateStr => {
-      const date = new Date(dateStr);
-      if (date >= weekAgo) weekCount += visitData.dates[dateStr];
-      if (date >= monthAgo) monthCount += visitData.dates[dateStr];
-    });
-  }
-  
-  return {
-    total: visitData.total || 0,
-    today: todayCount,
-    week: weekCount,
-    month: monthCount
+  const visitors = loadVisitors();
+  const now = new Date();
+  const visitor = {
+    id: 'v_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+    timestamp: now.toISOString(),
+    date: now.toISOString().split('T')[0],
+    time: now.toLocaleTimeString('ar-SA'),
+    userAgent: navigator.userAgent,
+    screenSize: `${screen.width}x${screen.height}`,
+    referrer: document.referrer || 'مباشر'
   };
+  visitors.unshift(visitor);
+  if (visitors.length > 1000) visitors.length = 1000;
+  localStorage.setItem(VISITORS_KEY, JSON.stringify(visitors));
+  updateVisitorStats();
 }
 
-// ===== Service Worker Registration =====
-function registerServiceWorker() {
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw.js')
-      .then(registration => {
-        console.log('ServiceWorker registered:', registration.scope);
-      })
-      .catch(error => {
-        console.log('ServiceWorker registration failed:', error);
-      });
-  }
+function loadVisitors() {
+  try { return JSON.parse(localStorage.getItem(VISITORS_KEY)) || []; } catch (e) { return []; }
 }
 
-// ===== Initialize on Load =====
+function updateVisitorStats() {
+  const visitors = loadVisitors();
+  const now = new Date();
+  const today = now.toISOString().split('T')[0];
+  const stats = {
+    total: visitors.length,
+    today: visitors.filter(v => v.date === today).length,
+    week: visitors.filter(v => new Date(v.timestamp) > new Date(now - 7*24*60*60*1000)).length,
+    month: visitors.filter(v => v.date.startsWith(now.toISOString().substr(0, 7))).length
+  };
+  if (document.getElementById('visitorTotal')) document.getElementById('visitorTotal').textContent = stats.total;
+  if (document.getElementById('visitorToday')) document.getElementById('visitorToday').textContent = stats.today;
+  if (document.getElementById('visitorWeek')) document.getElementById('visitorWeek').textContent = stats.week;
+  if (document.getElementById('visitorMonth')) document.getElementById('visitorMonth').textContent = stats.month;
+  renderVisitorsTable(visitors);
+}
+
+function renderVisitorsTable(visitors) {
+  const tbody = document.querySelector('#visitorsTable tbody');
+  if (!tbody) return;
+  tbody.innerHTML = '';
+  visitors.slice(0, 50).forEach(v => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${v.date}</td><td><LaTex>${v.time}</td><td>$</LaTex>{v.referrer}</td><td>${v.screenSize}</td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+// ====== إدارة الجهات والمنتجات ======
+const BANKS_KEY = 'finoBanks';
+
+function loadDynamicBanks() {
+  try {
+    const banks = JSON.parse(localStorage.getItem(BANKS_KEY));
+    return banks || [
+      { id: 'rajhi', name: 'مصرف الراجحي', logo: '' },
+      { id: 'ahli', name: 'البنك الأهلي السعودي', logo: '' },
+      { id: 'riyad', name: 'بنك الرياض', logo: '' },
+      { id: 'alinma', name: 'مصرف الإنماء', logo: '' },
+      { id: 'bilad', name: 'بنك البلاد', logo: '' }
+    ];
+  } catch (e) { return []; }
+}
+
+function addNewBank() {
+  const name = prompt('أدخل اسم الجهة التمويلية الجديدة:');
+  if (!name) return;
+  const banks = loadDynamicBanks();
+  const id = 'bank_' + Date.now();
+  banks.push({ id, name, logo: '' });
+  localStorage.setItem(BANKS_KEY, JSON.stringify(banks));
+  updateAllBankDropdowns();
+  alert('تمت إضافة الجهة بنجاح!');
+}
+
+function updateAllBankDropdowns() {
+  const banks = loadDynamicBanks();
+  const dropdowns = ['adminBankName', 'adBank'];
+  dropdowns.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const currentVal = el.value;
+    el.innerHTML = '<option value="">اختر الجهة...</option>';
+    banks.forEach(bank => {
+      el.innerHTML += `<option value="${bank.name}">${bank.name}</option>`;
+    });
+    el.value = currentVal;
+  });
+}
+
+// ====== إعدادات المنصة ======
+const SETTINGS_KEY = 'finoPlatformSettings';
+
+function loadPlatformSettings() {
+  try {
+    const defaults = {
+      platformName: 'منصة FINO',
+      platformSubtitle: 'منصة ذكية تحسب لك التمويل',
+      primaryColor: '#1e3a8a',
+      secondaryColor: '#3b82f6',
+      accentColor: '#f59e0b',
+      activeTheme: 'default',
+      activeSeason: 'default'
+    };
+    const saved = JSON.parse(localStorage.getItem(SETTINGS_KEY));
+    return { ...defaults, ...saved };
+  } catch (e) { return {}; }
+}
+
+function applyAllSettings() {
+  const s = loadPlatformSettings();
+  document.querySelectorAll('.platform-name').forEach(el => el.textContent = s.platformName);
+  document.querySelectorAll('.platform-subtitle').forEach(el => el.textContent = s.platformSubtitle);
+  document.title = s.platformName;
+  applyCustomColors(s.primaryColor, s.secondaryColor, s.accentColor);
+  applyTheme(s.activeTheme);
+  applySeasonTheme(s.activeSeason);
+}
+
+// ====== تهيئة عند التحميل ======
 document.addEventListener('DOMContentLoaded', () => {
-  loadSavedTheme();
-  loadSavedSeason();
   trackVisitor();
-  registerServiceWorker();
+  applyAllSettings();
+  const installBtn = document.getElementById('pwaInstallBtn');
+  if (installBtn) installBtn.onclick = installPWA;
+  const dismissBtn = document.getElementById('pwaDismissBtn');
+  if (dismissBtn) dismissBtn.onclick = dismissInstallPrompt;
 });
-
-// ===== Export functions for global use =====
-window.finoAdvanced = {
-  setTheme,
-  setSeason,
-  showToast,
-  getVisitorStats,
-  installPWA,
-  dismissInstallBanner
-};
