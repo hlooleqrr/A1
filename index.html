@@ -1847,11 +1847,24 @@
 
 <script>
   function showPage(name) {
-    ['landing','calculator','result','adminLogin','adminHub','admin','adminProducts','adminArchive','comingSoon','earlySettlement','adminRatings','adminOffers','adminMarketing','adminQuestions'].forEach(id => {
+    ['landing','calculator','result','adminLogin','adminHub','admin','adminProducts','adminArchive','comingSoon','earlySettlement','adminRatings','adminOffers','adminMarketing','adminQuestions','adminVisitors','adminClientResults','adminAds','adminSettings'].forEach(id => {
       const el = document.getElementById(id + 'Page');
       if (!el) return;
       el.classList.toggle('active', id === name);
     });
+    
+    // تهيئة لوحة المسؤول عند فتحها
+    if (name === 'adminHub' || name.startsWith('admin')) {
+      // تهيئة البيانات الأساسية
+      if (typeof renderBankTable === 'function') renderBankTable();
+      if (typeof renderFinanceProductsTable === 'function') renderFinanceProductsTable();
+      if (typeof renderArchiveTable === 'function') renderArchiveTable();
+      if (typeof loadRetirementSettingsToUI === 'function') loadRetirementSettingsToUI();
+      
+      // تهيئة الميزات المتقدمة
+      if (typeof initAdminHub === 'function') initAdminHub();
+      if (typeof applyAllSettings === 'function') applyAllSettings();
+    }
   }
 
   function backToLanding() { showPage('landing'); }
@@ -1859,6 +1872,9 @@
   function startClientFlow() {
     showPage('calculator');
     resetCalc();
+    
+    // تتبع بدء الحسبة
+    if (typeof trackVisitor === 'function') trackVisitor();
   }
 
   function backToFinanceType(){
@@ -2074,11 +2090,6 @@
     if (pin === ADMIN_PIN) {
       err.style.display = 'none';
       showPage('adminHub');
-      // تحديث الأرشيف أيضاً
-      renderArchiveTable();
-      // (إضافة) تحديث إدارة المنتجات
-      renderFinanceProductsTable();
-      loadRetirementSettingsToUI();
     } else {
       err.style.display = 'block';
     }
@@ -2219,28 +2230,38 @@
         return;
       }
       financeProducts.push(item);
-    } else {
+    }else{
       financeProducts[parseInt(editIndex)] = item;
     }
 
     saveFinanceProducts();
+    // مزامنة مع النظام الديناميكي
+    localStorage.setItem('finoProducts', JSON.stringify(financeProducts));
+    
     renderFinanceProductsTable();
     clearFinanceProductForm();
+    
+    // تحديث الأسئلة والقوائم
+    if (typeof updateAllBankDropdowns === 'function') updateAllBankDropdowns();
   }
 
   function renderFinanceProductsTable(){
     const tbody = document.querySelector('#financeProductsTable tbody');
     if(!tbody) return;
     tbody.innerHTML = '';
-    (financeProducts || []).forEach((p, idx)=>{
+    
+    // استخدام المنتجات الديناميكية إذا وجدت
+    const products = (typeof loadDynamicProducts === 'function') ? loadDynamicProducts() : (financeProducts || []);
+    
+    products.forEach((p, idx)=>{
       const tr = document.createElement('tr');
       tr.innerHTML = `
         <td>${escapeHtml(p.name || '')}</td>
-        <td>${p.enabled ? 'مفعّل' : 'غير مفعّل'}</td>
+        <td>${p.enabled ? '✅ مفعّل' : '❌ غير مفعّل'}</td>
         <td style="text-align:right;">${escapeHtml(p.message || '')}</td>
         <td>
-          <button class="btn small secondary" onclick="editFinanceProduct(${idx})">تعديل</button>
-          <button class="btn small secondary" onclick="deleteFinanceProduct(${idx})">حذف</button>
+          <button class="secondary small" style="padding:4px 8px; font-size:12px;" onclick="editFinanceProduct(${idx})">✏️</button>
+          <button class="secondary small" style="padding:4px 8px; font-size:12px;" onclick="deleteFinanceProduct(${idx})">🗑️</button>
         </td>
       `;
       tbody.appendChild(tr);
@@ -2257,10 +2278,16 @@
   }
 
   function deleteFinanceProduct(idx){
-    if(!confirm('متأكد من حذف هذا المنتج؟')) return;
+    if(!confirm('هل أنت متأكد من حذف هذا المنتج؟')) return;
     financeProducts.splice(idx, 1);
     saveFinanceProducts();
+    // مزامنة مع النظام الديناميكي
+    localStorage.setItem('finoProducts', JSON.stringify(financeProducts));
+    
     renderFinanceProductsTable();
+    
+    // تحديث الأسئلة والقوائم
+    if (typeof updateAllBankDropdowns === 'function') updateAllBankDropdowns();
   }
 
   // ====== (إضافة) إعدادات تقديرية للتقاعد (معامل) ======
@@ -2978,6 +3005,12 @@
         for(let i=1; i<=limit; i++){
           sel.innerHTML += `<option value="${i}">${i} شهر</option>`;
         }
+      } else if (q.id === 'financeType' && typeof loadDynamicProducts === 'function') {
+        const products = loadDynamicProducts();
+        sel.innerHTML = '<option value="">اختر...</option>';
+        products.filter(p => p.enabled).forEach(p => {
+          sel.innerHTML += `<option value="${p.name}">${p.name}</option>`;
+        });
       } else if(q.dynamic && q.id === 'appointYear'){
         const nowH = getHijriNowParts();
         const start = Math.max(1300, nowH.y - 40);
@@ -4009,14 +4042,56 @@
     resultCard.innerHTML = html;
     
     // (إضافة) حفظ النتيجة في سجل العشوائية
-    saveClientResultToLog({
-      clientName: name,
-      financeType: financeType,
-      finalNet: Number(finalNetFixed),
-      recommendedBankName: recommendedBank?.bankName || '',
-      salary: salary,
-      months: months
-    });
+    if (typeof saveClientResult === 'function') {
+      saveClientResult({
+        clientName: name,
+        financeType: financeType,
+        finalNet: Number(finalNetFixed),
+        recommendedBankName: recommendedBank?.bankName || '',
+        salary: salary,
+        months: months
+      });
+    }
+    
+    // جلب الإعلانات المستهدفة
+    if (typeof getMatchingAds === 'function') {
+      const ads = getMatchingAds(salary, Number(finalNetFixed), financeType, recommendedBank?.bankName);
+      if (ads.length > 0) {
+        const adsHtml = `
+          <div class="targeted-ads-container" style="margin-top:20px;">
+            ${ads.map(ad => `
+              <div class="ad-card fade-in" style="background:white; padding:15px; border-radius:12px; border:1px solid #e5e7eb; margin-bottom:10px; position:relative;">
+                <div class="ad-badge" style="position:absolute; top:10px; left:10px; background:var(--accent-color); color:white; font-size:10px; padding:2px 8px; border-radius:10px;">إعلان مميز</div>
+                <h4 style="margin:0 0 5px; color:var(--primary-color);">${ad.title}</h4>
+                <p style="margin:0 0 10px; font-size:13px; color:#4b5563;">${ad.text}</p>
+                <button class="secondary small" onclick="window.open('${ad.link || '#'}')">${ad.linkText || 'اكتشف المزيد'}</button>
+              </div>
+            `).join('')}
+          </div>
+        `;
+        resultCard.innerHTML += adsHtml;
+      }
+    }
+
+    // حساب تاريخ انتهاء التمويل
+    if (typeof calculateFinanceEndDate === 'function') {
+      const endDate = calculateFinanceEndDate(months);
+      const settings = JSON.parse(localStorage.getItem('finoPlatformSettings')) || {};
+      const endDateHtml = `
+        <div class="end-date-box fade-in" style="margin-top:20px; padding:15px; background:rgba(30,58,138,0.05); border-radius:12px; border-right:4px solid var(--primary-color);">
+          <div style="font-weight:bold; color:var(--primary-color); margin-bottom:5px;">📅 تاريخ انتهاء التمويل المتوقع:</div>
+          <div style="font-size:15px; color:#1e293b;">
+            <strong>${endDate.hijri}</strong> (هجري)
+            <br>
+            <span style="font-size:13px; color:#64748b;">الموافق: ${endDate.gregorian} (ميلادي)</span>
+          </div>
+          <div style="font-size:12px; color:#94a3b8; margin-top:8px; font-style:italic;">
+            ${settings.endDateMessage || 'الله يطول بعمرنا ويبارك لنا'}
+          </div>
+        </div>
+      `;
+      resultCard.innerHTML += endDateHtml;
+    }
     
     // عرض العروض الخاصة
     showSpecialOffers(financeType, Number(finalNetFixed));
@@ -5494,7 +5569,6 @@ ${contact}`.trim();
     });
   }
 </script>
-...
-<script src="fino_advanced_features.js"></script>
+
 </body>
 </html>
