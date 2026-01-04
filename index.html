@@ -63,56 +63,184 @@
       100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; }
     }
     
-    /* شاشة البداية */
+    /* شاشة البداية - أنيميشن جوال آيفون مع مال */
     #splashScreen {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: linear-gradient(135deg, #0f172a, #1e3a8a);
+      background: linear-gradient(135deg, #0f172a, #1e3a8a, #3b82f6);
+      background-size: 200% 200%;
+      animation: splashGradient 3s ease infinite;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       z-index: 9999;
-      transition: opacity 0.5s ease, visibility 0.5s ease;
+      transition: opacity 0.8s ease, visibility 0.8s ease;
+    }
+    @keyframes splashGradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
     #splashScreen.hidden {
       opacity: 0;
       visibility: hidden;
-      display: none;
     }
-    .splash-logo {
-      font-size: 60px;
+    
+    /* حاوية الجوال */
+    .splash-phone-container {
+      position: relative;
+      margin-bottom: 30px;
+    }
+    
+    /* شكل الجوال آيفون */
+    .splash-phone {
+      width: 120px;
+      height: 240px;
+      background: linear-gradient(145deg, #2d2d2d, #1a1a1a);
+      border-radius: 25px;
+      position: relative;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.5), inset 0 0 0 3px #3a3a3a;
+      animation: phoneFloat 2s ease-in-out infinite, phoneUnlock 0.8s ease-out;
+      overflow: hidden;
+    }
+    @keyframes phoneFloat {
+      0%, 100% { transform: translateY(0) rotateZ(0deg); }
+      50% { transform: translateY(-10px) rotateZ(2deg); }
+    }
+    @keyframes phoneUnlock {
+      0% { transform: scale(0.5) rotateY(90deg); opacity: 0; }
+      50% { transform: scale(1.1) rotateY(-10deg); opacity: 1; }
+      100% { transform: scale(1) rotateY(0deg); opacity: 1; }
+    }
+    
+    /* النوتش */
+    .phone-notch {
+      width: 50px;
+      height: 18px;
+      background: #1a1a1a;
+      border-radius: 0 0 12px 12px;
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+    }
+    
+    /* شاشة الجوال */
+    .phone-screen {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      right: 8px;
+      bottom: 8px;
+      background: linear-gradient(180deg, #3b82f6, #1e40af);
+      border-radius: 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .phone-logo {
+      font-size: 28px;
       font-weight: 900;
       color: #fff;
-      text-shadow: 0 0 30px rgba(59, 130, 246, 0.8);
-      animation: pulse 2s ease-in-out infinite;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+      animation: logoGlow 1.5s ease-in-out infinite;
     }
+    @keyframes logoGlow {
+      0%, 100% { text-shadow: 0 2px 10px rgba(255,255,255,0.3); }
+      50% { text-shadow: 0 2px 20px rgba(255,255,255,0.8), 0 0 30px rgba(59,130,246,0.5); }
+    }
+    .phone-tagline {
+      font-size: 8px;
+      color: rgba(255,255,255,0.9);
+      margin-top: 5px;
+    }
+    
+    /* زر الجوال */
+    .phone-button {
+      width: 35px;
+      height: 4px;
+      background: #4a4a4a;
+      border-radius: 2px;
+      position: absolute;
+      bottom: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    
+    /* جزيئات المال */
+    .money-particles {
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+    .money {
+      position: absolute;
+      font-size: 30px;
+      top: 50%;
+      left: 50%;
+      animation: moneyFly 2s ease-out infinite;
+      animation-delay: var(--delay);
+      opacity: 0;
+    }
+    @keyframes moneyFly {
+      0% { 
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 0;
+      }
+      20% {
+        opacity: 1;
+        transform: translate(calc(-50% + var(--x)), -80%) scale(1);
+      }
+      100% { 
+        transform: translate(calc(-50% + var(--x) * 2), -200%) scale(0.5) rotate(360deg);
+        opacity: 0;
+      }
+    }
+    
     .splash-text {
-      color: rgba(255,255,255,0.8);
-      font-size: 18px;
-      margin-top: 20px;
+      color: rgba(255,255,255,0.9);
+      font-size: 16px;
+      margin-top: 10px;
+      animation: textPulse 1.5s ease-in-out infinite;
+    }
+    @keyframes textPulse {
+      0%, 100% { opacity: 0.7; }
+      50% { opacity: 1; }
     }
     .splash-loader {
       width: 200px;
       height: 4px;
       background: rgba(255,255,255,0.2);
       border-radius: 4px;
-      margin-top: 30px;
+      margin-top: 20px;
       overflow: hidden;
     }
     .splash-loader-bar {
       width: 0%;
       height: 100%;
-      background: linear-gradient(90deg, #f59e0b, #fbbf24);
+      background: linear-gradient(90deg, #f59e0b, #fbbf24, #f59e0b);
+      background-size: 200% 100%;
       border-radius: 4px;
-      animation: loading 2s ease-in-out forwards;
+      animation: loading 2.5s ease-in-out forwards, shimmer 1s linear infinite;
     }
     @keyframes loading {
       0% { width: 0%; }
       100% { width: 100%; }
+    }
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
     }
     @keyframes pulse {
       0%, 100% { transform: scale(1); }
@@ -701,10 +829,27 @@
 </head>
 <body>
 
-<!-- شاشة البداية -->
-<div id="splashScreen" class="hidden" style="display:none;">
-  <div class="splash-logo">FINO</div>
-  <div class="splash-text">منصة ترشيح التمويل الذكي</div>
+<!-- شاشة البداية - أنيميشن جوال آيفون مع مال -->
+<div id="splashScreen">
+  <div class="splash-phone-container">
+    <div class="splash-phone">
+      <div class="phone-notch"></div>
+      <div class="phone-screen">
+        <div class="phone-logo">FINO</div>
+        <div class="phone-tagline">حاسبة التمويل الذكية</div>
+      </div>
+      <div class="phone-button"></div>
+    </div>
+    <div class="money-particles">
+      <span class="money" style="--delay:0s;--x:-50px;">💵</span>
+      <span class="money" style="--delay:0.2s;--x:50px;">💰</span>
+      <span class="money" style="--delay:0.4s;--x:-30px;">💵</span>
+      <span class="money" style="--delay:0.6s;--x:70px;">💰</span>
+      <span class="money" style="--delay:0.8s;--x:-70px;">💵</span>
+      <span class="money" style="--delay:1s;--x:30px;">💰</span>
+    </div>
+  </div>
+  <div class="splash-text">جاري تحميل المنصة...</div>
   <div class="splash-loader">
     <div class="splash-loader-bar"></div>
   </div>
@@ -866,49 +1011,116 @@
 
   <!-- لوحة المسؤول (Hub) -->
   <div id="adminHubPage" class="page">
-    <div class="card fade-in">
-      <h2 style="margin-top:0; font-size:19px; color:#111827;">🔧 لوحة المسؤول المتقدمة</h2>
-      <p style="font-size:13px; color:#6b7280; text-align:right;">
-        اختر القسم المطلوب:
+    <div class="card fade-in" style="background:linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border:none;">
+      <h2 style="margin-top:0; font-size:22px; color:#f8fafc; text-align:center;">🔧 لوحة التحكم المتقدمة</h2>
+      <p style="font-size:13px; color:#94a3b8; text-align:center; margin-bottom:20px;">
+        مرحباً بك في لوحة التحكم - اختر القسم المطلوب
       </p>
       
       <!-- إحصائيات الزوار -->
-      <div class="visitor-stats" style="margin:15px 0;">
-        <div class="visitor-stat-card">
-          <div class="visitor-stat-number" id="visitorTotal">0</div>
-          <div class="visitor-stat-label">إجمالي الزوار</div>
+      <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:10px; margin-bottom:20px;">
+        <div style="background:linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); padding:15px; border-radius:12px; text-align:center;">
+          <div style="font-size:28px; font-weight:900; color:#fff;" id="visitorTotal">0</div>
+          <div style="font-size:11px; color:#bfdbfe;">إجمالي الزوار</div>
         </div>
-        <div class="visitor-stat-card">
-          <div class="visitor-stat-number" id="visitorToday">0</div>
-          <div class="visitor-stat-label">اليوم</div>
+        <div style="background:linear-gradient(135deg, #10b981 0%, #047857 100%); padding:15px; border-radius:12px; text-align:center;">
+          <div style="font-size:28px; font-weight:900; color:#fff;" id="visitorToday">0</div>
+          <div style="font-size:11px; color:#a7f3d0;">اليوم</div>
         </div>
-        <div class="visitor-stat-card">
-          <div class="visitor-stat-number" id="visitorWeek">0</div>
-          <div class="visitor-stat-label">هذا الأسبوع</div>
+        <div style="background:linear-gradient(135deg, #f59e0b 0%, #d97706 100%); padding:15px; border-radius:12px; text-align:center;">
+          <div style="font-size:28px; font-weight:900; color:#fff;" id="visitorWeek">0</div>
+          <div style="font-size:11px; color:#fde68a;">هذا الأسبوع</div>
         </div>
-        <div class="visitor-stat-card">
-          <div class="visitor-stat-number" id="visitorMonth">0</div>
-          <div class="visitor-stat-label">هذا الشهر</div>
+        <div style="background:linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%); padding:15px; border-radius:12px; text-align:center;">
+          <div style="font-size:28px; font-weight:900; color:#fff;" id="visitorMonth">0</div>
+          <div style="font-size:11px; color:#ddd6fe;">هذا الشهر</div>
         </div>
       </div>
       
-      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:10px; margin-top:15px;">
-        <button class="primary small" onclick="showPage('admin')" style="justify-content:center;">🏦 تعديل النسب</button>
-        <button class="secondary small" onclick="showPage('adminProducts')" style="justify-content:center;">📦 إدارة المنتجات</button>
-        <button class="secondary small" onclick="showPage('adminQuestions')" style="justify-content:center;">❓ إدارة الأسئلة</button>
-        <button class="secondary small" onclick="showPage('adminArchive')" style="justify-content:center;">🗂️ سجل النتائج</button>
-        <button class="secondary small" onclick="showPage('adminVisitors')" style="justify-content:center;">👥 تتبع الزوار</button>
-        <button class="secondary small" onclick="showPage('adminClientResults')" style="justify-content:center;">📊 نتائج العشوائية</button>
-        <button class="secondary small" onclick="showPage('adminRatings')" style="justify-content:center;">⭐ التقييمات</button>
-        <button class="secondary small" onclick="showPage('adminOffers')" style="justify-content:center;">🎁 العروض</button>
-        <button class="secondary small" onclick="showPage('adminAds')" style="justify-content:center;">📰 الإعلانات</button>
-        <button class="secondary small" onclick="showPage('adminMarketing')" style="justify-content:center;">📢 التسويق</button>
-        <button class="secondary small" onclick="showPage('adminThemes')" style="justify-content:center;">🎨 الثيمات</button>
-        <button class="secondary small" onclick="showPage('adminSettings')" style="justify-content:center;">⚙️ الإعدادات</button>
+      <!-- قسم البنوك والمنتجات -->
+      <div style="margin-bottom:15px;">
+        <div style="font-size:12px; color:#94a3b8; margin-bottom:8px; padding-right:5px;">🏦 البنوك والمنتجات</div>
+        <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:8px;">
+          <button onclick="showPage('admin')" style="background:linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%); color:#fff; border:none; padding:12px; border-radius:10px; font-size:13px; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:4px;">
+            <span style="font-size:20px;">🏦</span>
+            <span>تعديل النسب</span>
+          </button>
+          <button onclick="showPage('adminProducts')" style="background:linear-gradient(135deg, #0891b2 0%, #0e7490 100%); color:#fff; border:none; padding:12px; border-radius:10px; font-size:13px; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:4px;">
+            <span style="font-size:20px;">📦</span>
+            <span>إدارة المنتجات</span>
+          </button>
+          <button onclick="showPage('adminQuestions')" style="background:linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%); color:#fff; border:none; padding:12px; border-radius:10px; font-size:13px; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:4px;">
+            <span style="font-size:20px;">❓</span>
+            <span>إدارة الأسئلة</span>
+          </button>
+        </div>
       </div>
       
-      <div style="margin-top:15px; text-align:center;">
-        <button class="secondary small" onclick="backToLanding()">🏠 رجوع للرئيسية</button>
+      <!-- قسم الإحصائيات والسجلات -->
+      <div style="margin-bottom:15px;">
+        <div style="font-size:12px; color:#94a3b8; margin-bottom:8px; padding-right:5px;">📊 الإحصائيات والسجلات</div>
+        <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:8px;">
+          <button onclick="showPage('adminArchive')" style="background:rgba(255,255,255,0.1); color:#fff; border:1px solid rgba(255,255,255,0.2); padding:12px; border-radius:10px; font-size:13px; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:4px;">
+            <span style="font-size:20px;">🗂️</span>
+            <span>سجل النتائج</span>
+          </button>
+          <button onclick="showPage('adminVisitors')" style="background:rgba(255,255,255,0.1); color:#fff; border:1px solid rgba(255,255,255,0.2); padding:12px; border-radius:10px; font-size:13px; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:4px;">
+            <span style="font-size:20px;">👥</span>
+            <span>تتبع الزوار</span>
+          </button>
+          <button onclick="showPage('adminClientResults')" style="background:rgba(255,255,255,0.1); color:#fff; border:1px solid rgba(255,255,255,0.2); padding:12px; border-radius:10px; font-size:13px; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:4px;">
+            <span style="font-size:20px;">📊</span>
+            <span>نتائج العشوائية</span>
+          </button>
+        </div>
+      </div>
+      
+      <!-- قسم التسويق والإعلانات -->
+      <div style="margin-bottom:15px;">
+        <div style="font-size:12px; color:#94a3b8; margin-bottom:8px; padding-right:5px;">📢 التسويق والإعلانات</div>
+        <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:8px;">
+          <button onclick="showPage('adminRatings')" style="background:rgba(255,255,255,0.1); color:#fff; border:1px solid rgba(255,255,255,0.2); padding:10px; border-radius:10px; font-size:12px; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:4px;">
+            <span style="font-size:18px;">⭐</span>
+            <span>التقييمات</span>
+          </button>
+          <button onclick="showPage('adminOffers')" style="background:rgba(255,255,255,0.1); color:#fff; border:1px solid rgba(255,255,255,0.2); padding:10px; border-radius:10px; font-size:12px; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:4px;">
+            <span style="font-size:18px;">🎁</span>
+            <span>العروض</span>
+          </button>
+          <button onclick="showPage('adminAds')" style="background:rgba(255,255,255,0.1); color:#fff; border:1px solid rgba(255,255,255,0.2); padding:10px; border-radius:10px; font-size:12px; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:4px;">
+            <span style="font-size:18px;">📰</span>
+            <span>الإعلانات</span>
+          </button>
+          <button onclick="showPage('adminMarketing')" style="background:rgba(255,255,255,0.1); color:#fff; border:1px solid rgba(255,255,255,0.2); padding:10px; border-radius:10px; font-size:12px; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:4px;">
+            <span style="font-size:18px;">📢</span>
+            <span>التسويق</span>
+          </button>
+        </div>
+      </div>
+      
+      <!-- قسم الإعدادات -->
+      <div style="margin-bottom:15px;">
+        <div style="font-size:12px; color:#94a3b8; margin-bottom:8px; padding-right:5px;">⚙️ الإعدادات والتخصيص</div>
+        <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:8px;">
+          <button onclick="showPage('adminThemes')" style="background:linear-gradient(135deg, #ec4899 0%, #be185d 100%); color:#fff; border:none; padding:12px; border-radius:10px; font-size:13px; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:4px;">
+            <span style="font-size:20px;">🎨</span>
+            <span>الثيمات</span>
+          </button>
+          <button onclick="showPage('adminTexts')" style="background:linear-gradient(135deg, #14b8a6 0%, #0d9488 100%); color:#fff; border:none; padding:12px; border-radius:10px; font-size:13px; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:4px;">
+            <span style="font-size:20px;">✏️</span>
+            <span>محرر النصوص</span>
+          </button>
+          <button onclick="showPage('adminSettings')" style="background:linear-gradient(135deg, #64748b 0%, #475569 100%); color:#fff; border:none; padding:12px; border-radius:10px; font-size:13px; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:4px;">
+            <span style="font-size:20px;">⚙️</span>
+            <span>الإعدادات</span>
+          </button>
+        </div>
+      </div>
+      
+      <div style="margin-top:20px; text-align:center;">
+        <button onclick="backToLanding()" style="background:linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color:#fff; border:none; padding:12px 30px; border-radius:10px; font-size:14px; cursor:pointer;">
+          🏠 رجوع للرئيسية
+        </button>
       </div>
     </div>
   </div>
@@ -1332,6 +1544,15 @@
         <strong>ℹ️ ملاحظة:</strong> حسب نظام ساما، مبلغ السداد المبكر = الرصيد المتبقي من الأصل + كلفة 3 أشهر قادمة (للشخصي) أو شهر واحد (للعقاري)
       </div>
       
+      <!-- تنبيه شرط السنتين للعقاري -->
+      <div id="earlySettlementWarningBox" style="margin-top:10px; padding:12px; background:#fef2f2; border-radius:10px; border:1px solid #fca5a5; text-align:right; font-size:13px;">
+        <strong>⚠️ تنبيه للتمويل العقاري:</strong>
+        <span id="earlySettlementWarningText">أكثر جهات التمويل يشترطون انتهاء سنتين من الأقساط للسماح بالسداد المبكر. راجع العقد.</span>
+        <div style="margin-top:8px; font-size:12px; color:#991b1b;">
+          <strong>📊 طريقة الحساب للعقاري:</strong> <span id="earlySettlementFormulaText">أرباح سنتين + أرباح 3 أشهر (رسوم إدارية)</span>
+        </div>
+      </div>
+      
       <div style="margin-top:15px;">
         <button class="secondary small" onclick="showPage('landing')">🏠 رجوع للرئيسية</button>
       </div>
@@ -1642,6 +1863,23 @@
             <input id="adLinkText" type="text" placeholder="تواصل معنا">
           </div>
           <div>
+            <label>رسالة مخصصة (اختياري)</label>
+            <input id="adCustomMessage" type="text" placeholder="مثال: ماشاء الله يحتاج لك سفرية!">
+            <div style="font-size:11px; color:#6b7280;">استخدم {name} لاسم العميل و {amount} للمبلغ</div>
+          </div>
+          <div>
+            <label>نوع الرسالة</label>
+            <select id="adMessageType">
+              <option value="text">نص فقط</option>
+              <option value="link">رابط</option>
+              <option value="video">فيديو</option>
+            </select>
+          </div>
+          <div>
+            <label>رابط الفيديو (إن وجد)</label>
+            <input id="adVideoUrl" type="url" placeholder="https://youtube.com/...">
+          </div>
+          <div>
             <label>الحالة</label>
             <select id="adEnabled">
               <option value="true">مفعّل</option>
@@ -1708,6 +1946,82 @@
     </div>
   </div>
 
+  <!-- صفحة محرر النصوص -->
+  <div id="adminTextsPage" class="page">
+    <div class="card fade-in">
+      <h2 style="margin-top:0; font-size:19px; color:#111827;">✏️ محرر النصوص والرسائل</h2>
+      <p style="font-size:13px; color:#6b7280; text-align:right;">
+        تعديل جميع النصوص والرسائل في المنصة.
+      </p>
+      
+      <!-- رسائل الترحيب -->
+      <div style="margin-top:15px; padding:15px; background:#f0fdf4; border-radius:12px; border:1px solid #86efac;">
+        <h4 style="margin:0 0 10px; font-size:15px; color:#166534;">👋 رسائل الترحيب</h4>
+        <div class="admin-grid">
+          <div>
+            <label>رسالة الترحيب الرئيسية</label>
+            <input id="textWelcome" type="text" value="نورت المنصة يا {name}">
+            <div style="font-size:11px; color:#6b7280;">استخدم {name} لاسم العميل</div>
+          </div>
+          <div>
+            <label>رسالة نتيجة الحسبة</label>
+            <input id="textResultGreeting" type="text" value="أرحب يا {name}! خلصنا الحسبة وجاك الخبر الحلو!">
+          </div>
+        </div>
+      </div>
+      
+      <!-- رسائل النتيجة -->
+      <div style="margin-top:15px; padding:15px; background:#eff6ff; border-radius:12px; border:1px solid #93c5fd;">
+        <h4 style="margin:0 0 10px; font-size:15px; color:#1e40af;">📊 رسائل النتيجة</h4>
+        <div class="admin-grid">
+          <div>
+            <label>رسالة انتهاء التمويل</label>
+            <input id="textFinanceEnd" type="text" value="الله يطول بعمرنا ويبارك لنا">
+          </div>
+          <div>
+            <label>رسالة العجز</label>
+            <input id="textDeficit" type="text" value="للأسف يا {name} معليش! عندك عجز بالأقساط.">
+          </div>
+          <div>
+            <label>رسالة التقاعد</label>
+            <input id="textRetirement" type="text" value="تتقاعد يا {name} بعد عمر طويل بالطاعة">
+          </div>
+          <div>
+            <label>رسالة التواصل</label>
+            <input id="textContact" type="text" value="تواصل معنا 📞 0506214458">
+          </div>
+        </div>
+      </div>
+      
+      <!-- رسائل التنبيهات -->
+      <div style="margin-top:15px; padding:15px; background:#fef3c7; border-radius:12px; border:1px solid #fcd34d;">
+        <h4 style="margin:0 0 10px; font-size:15px; color:#92400e;">⚠️ رسائل التنبيهات</h4>
+        <div class="admin-grid">
+          <div>
+            <label>تنبيه الحسبة التقريبية</label>
+            <textarea id="textDisclaimer" rows="2">هذه الحسبة تقريبية، والنسب الفعلية ومنح التمويل يعتمد على سياسات الجهة الممولة.</textarea>
+          </div>
+          <div>
+            <label>تنبيه القطاع الخاص</label>
+            <textarea id="textPrivateSector" rows="2">جميع حالات القطاع الخاص تخضع لاعتماد الجهة الممولة.</textarea>
+          </div>
+        </div>
+      </div>
+      
+      <!-- رسائل مخصصة حسب الصفحة -->
+      <div style="margin-top:15px; padding:15px; background:#fdf4ff; border-radius:12px; border:1px solid #e879f9;">
+        <h4 style="margin:0 0 10px; font-size:15px; color:#86198f;">📝 رسائل مخصصة حسب الصفحة</h4>
+        <div id="customPageMessages"></div>
+        <button type="button" class="secondary small" onclick="addCustomPageMessage()" style="margin-top:10px;">➕ إضافة رسالة مخصصة</button>
+      </div>
+      
+      <div style="margin-top:15px; display:flex; gap:10px; justify-content:flex-end;">
+        <button class="primary small" onclick="saveCustomTexts()">💾 حفظ النصوص</button>
+        <button class="secondary small" onclick="showPage('adminHub')">🔙 رجوع</button>
+      </div>
+    </div>
+  </div>
+
   <!-- صفحة الإعدادات العامة -->
   <div id="adminSettingsPage" class="page">
     <div class="card fade-in">
@@ -1758,6 +2072,86 @@
           <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
             <input type="checkbox" id="settingsShowEndDate" onchange="savePlatformSettingsFromUI()" checked>
             <span>عرض تاريخ انتهاء التمويل</span>
+          </label>
+        </div>
+        <div>
+          <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+            <input type="checkbox" id="settingsShowEarlySettlement" onchange="savePlatformSettingsFromUI()" checked>
+            <span>عرض حاسبة السداد المبكر</span>
+          </label>
+        </div>
+      </div>
+      
+      <!-- إعدادات شاشة البداية -->
+      <div style="margin-top:20px; padding:15px; background:#f0f9ff; border-radius:12px; border:1px solid #bae6fd;">
+        <h4 style="margin:0 0 10px; font-size:15px; color:#0369a1;">📱 إعدادات شاشة البداية</h4>
+        <div class="admin-grid">
+          <div>
+            <label>مدة عرض شاشة البداية (بالملي ثانية)</label>
+            <input id="settingsSplashDuration" type="number" value="2500" min="1000" max="10000">
+          </div>
+          <div>
+            <label>رابط صورة مخصصة (اختياري)</label>
+            <input id="settingsSplashImage" type="text" placeholder="https://example.com/image.gif">
+          </div>
+          <div>
+            <label>رابط فيديو مخصص (اختياري)</label>
+            <input id="settingsSplashVideo" type="text" placeholder="https://example.com/video.mp4">
+          </div>
+        </div>
+      </div>
+      
+      <!-- إعدادات الصور المتحركة للصفحات -->
+      <div style="margin-top:20px; padding:15px; background:#fef3c7; border-radius:12px; border:1px solid #fcd34d;">
+        <h4 style="margin:0 0 10px; font-size:15px; color:#92400e;">🌟 الصور المتحركة للصفحات</h4>
+        <div class="admin-grid">
+          <div>
+            <label>صورة عامة لكل الصفحات</label>
+            <input id="settingsGlobalImage" type="text" placeholder="رابط الصورة المتحركة أو الثابتة">
+          </div>
+          <div>
+            <label>صورة صفحة البداية</label>
+            <input id="settingsHomeImage" type="text" placeholder="رابط الصورة">
+          </div>
+          <div>
+            <label>صورة صفحة النتيجة</label>
+            <input id="settingsResultImage" type="text" placeholder="رابط الصورة">
+          </div>
+          <div>
+            <label>صورة صفحة الحاسبة</label>
+            <input id="settingsCalcImage" type="text" placeholder="رابط الصورة">
+          </div>
+        </div>
+      </div>
+      
+      <!-- إدارة أنواع الوظائف -->
+      <div style="margin-top:20px; padding:15px; background:#ecfdf5; border-radius:12px; border:1px solid #6ee7b7;">
+        <h4 style="margin:0 0 10px; font-size:15px; color:#065f46;">👤 إدارة أنواع الوظائف</h4>
+        <div style="display:flex; gap:8px; margin-bottom:10px;">
+          <input id="newJobTypeName" type="text" placeholder="اسم نوع الوظيفة الجديد" style="flex:1;">
+          <input id="newJobTypeLogo" type="text" placeholder="رابط الشعار (اختياري)" style="flex:1;">
+          <button class="primary small" onclick="addJobType()">➕ إضافة</button>
+        </div>
+        <div id="jobTypesList" style="max-height:200px; overflow-y:auto;"></div>
+      </div>
+      
+      <!-- إعدادات حاسبة السداد المبكر -->
+      <div style="margin-top:20px; padding:15px; background:#fef2f2; border-radius:12px; border:1px solid #fca5a5;">
+        <h4 style="margin:0 0 10px; font-size:15px; color:#991b1b;">💰 إعدادات حاسبة السداد المبكر</h4>
+        <div class="admin-grid">
+          <div>
+            <label>رسالة تنبيه العقاري (شرط سنتين)</label>
+            <input id="settingsEarlySettlementWarning" type="text" value="أكثر جهات التمويل يشترطون انتهاء سنتين من الأقساط للسماح بالسداد المبكر. راجع العقد.">
+          </div>
+          <div>
+            <label>طريقة حساب العقاري</label>
+            <input id="settingsEarlySettlementFormula" type="text" value="أرباح سنتين + أرباح 3 أشهر (رسوم إدارية)">
+          </div>
+        </div>
+        <div style="margin-top:10px;">
+          <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+            <input type="checkbox" id="settingsShowEarlyWarning" checked>
+            <span>عرض تنبيه شرط السنتين للعقاري</span>
           </label>
         </div>
       </div>
@@ -1914,7 +2308,7 @@
 
 <script>
   function showPage(name) {
-    ['landing','calculator','result','adminLogin','adminHub','admin','adminProducts','adminArchive','comingSoon','earlySettlement','adminRatings','adminOffers','adminMarketing','adminQuestions','adminVisitors','adminClientResults','adminAds','adminSettings','adminThemes'].forEach(id => {
+    ['landing','calculator','result','adminLogin','adminHub','admin','adminProducts','adminArchive','comingSoon','earlySettlement','adminRatings','adminOffers','adminMarketing','adminQuestions','adminVisitors','adminClientResults','adminAds','adminSettings','adminThemes','adminTexts'].forEach(id => {
       const el = document.getElementById(id + 'Page');
       if (!el) return;
       el.classList.toggle('active', id === name);
@@ -4137,16 +4531,57 @@
       </div>
     `;
 
-    // الأقساط
+    // الأقساط مع الفترات التفصيلية
     html += `
       <div class="result-section-title">تفاصيل القسط المتوقع حسب الفترات</div>
       <div class="result-section-box">
     `;
-    finalPhases.forEach(p=>{
+    
+    // تحضير أسباب الفترات
+    const phaseReasons = [];
+    let currentPhaseIndex = 0;
+    
+    // التزامات العميل لتحديد الأسباب
+    const commitments = [];
+    if (answers.hasPersonalLoan === 'نعم' && answers.personalLoanMonths > 0) {
+      commitments.push({ type: 'قرض شخصي', months: parseInt(answers.personalLoanMonths) || 0 });
+    }
+    if (answers.hasCarLoan === 'نعم' && answers.carLoanMonths > 0) {
+      commitments.push({ type: 'قرض سيارة', months: parseInt(answers.carLoanMonths) || 0 });
+    }
+    if (answers.hasCreditCard === 'نعم' && answers.creditCardMonths > 0) {
+      commitments.push({ type: 'بطاقة ائتمانية', months: parseInt(answers.creditCardMonths) || 0 });
+    }
+    if (answers.hasOtherLoan === 'نعم' && answers.otherLoanMonths > 0) {
+      commitments.push({ type: 'قرض آخر', months: parseInt(answers.otherLoanMonths) || 0 });
+    }
+    
+    // ترتيب الالتزامات حسب الأشهر المتبقية
+    commitments.sort((a, b) => a.months - b.months);
+    
+    finalPhases.forEach((p, idx) => {
+      let reason = '';
+      
+      if (idx === 0 && commitments.length > 0) {
+        reason = `(فترة الالتزامات الحالية)`;
+      } else if (idx < commitments.length) {
+        const prevCommitment = commitments[idx - 1];
+        if (prevCommitment) {
+          reason = `(بعد انتهاء ${prevCommitment.type})`;
+        }
+      } else if (isExtended && idx === finalPhases.length - 1) {
+        reason = `(فترة التقاعد)`;
+      } else if (idx === finalPhases.length - 1 && commitments.length > 0) {
+        reason = `(بعد انتهاء جميع الالتزامات)`;
+      }
+      
       html += `
-        <div class="instalment-row">
-          القسط من الشهر <strong>${p.from}</strong> إلى <strong>${p.to}</strong>:
-          <strong>${p.inst.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ريال</strong>
+        <div class="instalment-row" style="border-bottom:1px dashed #e5e7eb; padding-bottom:8px; margin-bottom:8px;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span>القسط من الشهر <strong>${p.from}</strong> إلى <strong>${p.to}</strong>:</span>
+            <strong style="color:#1e40af;">${p.inst.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ريال</strong>
+          </div>
+          ${reason ? `<div style="font-size:11px; color:#6b7280; margin-top:4px;">📌 ${reason}</div>` : ''}
         </div>
       `;
     });
@@ -4225,15 +4660,23 @@
       `;
     }
     
-    // (إضافة) الإعلانات المستهدفة
+    // (إضافة) الإعلانات المستهدفة مع الرسائل المخصصة
     const matchingAds = getMatchingAds(salary, Number(finalNetFixed), financeType, recommendedBank?.bankName || '');
     if (matchingAds.length > 0) {
       matchingAds.forEach(ad => {
+        // استبدال المتغيرات في الرسالة المخصصة
+        let customMsg = ad.customMessage || '';
+        if (customMsg) {
+          customMsg = customMsg.replace(/{name}/g, name).replace(/{amount}/g, fmtMoney(Number(finalNetFixed)));
+        }
+        
         html += `
-          <div class="ad-card">
-            <div class="ad-title">${ad.title}</div>
-            <div class="ad-text">${ad.text}</div>
-            ${ad.link ? `<a href="${ad.link}" target="_blank" class="ad-cta">${ad.linkText || 'تواصل معنا'}</a>` : ''}
+          <div class="ad-card" style="background:linear-gradient(135deg,#fef3c7,#fde68a); border:2px solid #f59e0b; padding:15px; border-radius:15px; margin-top:12px;">
+            <div class="ad-title" style="font-size:16px; font-weight:800; color:#92400e; margin-bottom:8px;">🌟 ${ad.title}</div>
+            <div class="ad-text" style="font-size:14px; color:#78350f; margin-bottom:10px;">${ad.text}</div>
+            ${customMsg ? `<div style="background:#fff; padding:10px; border-radius:10px; font-size:15px; font-weight:700; color:#1e40af; text-align:center; margin-bottom:10px;">💬 ${customMsg}</div>` : ''}
+            ${ad.videoUrl ? `<div style="margin-bottom:10px;"><a href="${ad.videoUrl}" target="_blank" style="display:inline-flex; align-items:center; gap:5px; background:#ef4444; color:#fff; padding:8px 15px; border-radius:8px; text-decoration:none; font-size:13px;">🎥 شاهد الفيديو</a></div>` : ''}
+            ${ad.link ? `<a href="${ad.link}" target="_blank" class="ad-cta" style="display:inline-block; background:#1e40af; color:#fff; padding:8px 20px; border-radius:8px; text-decoration:none; font-size:13px;">${ad.linkText || 'تواصل معنا'}</a>` : ''}
           </div>
         `;
       });
@@ -5101,13 +5544,32 @@ ${contact}`.trim();
     const splash = document.getElementById('splashScreen');
     if (splash) {
       splash.classList.add('hidden');
-      setTimeout(() => { splash.style.display = 'none'; }, 500);
+      setTimeout(() => { splash.style.display = 'none'; }, 800);
     }
   }
   
   // إخفاء شاشة البداية عند تحميل الصفحة بالكامل
+  // يمكن للمسؤول تعديل مدة العرض من الإعدادات
+  const SPLASH_SETTINGS_KEY = 'finoSplashSettings';
+  function getSplashSettings() {
+    try {
+      const saved = localStorage.getItem(SPLASH_SETTINGS_KEY);
+      if (saved) return JSON.parse(saved);
+    } catch(e) {}
+    return { enabled: true, duration: 2500, customImage: '', customVideo: '' };
+  }
+  
+  function saveSplashSettings(settings) {
+    localStorage.setItem(SPLASH_SETTINGS_KEY, JSON.stringify(settings));
+  }
+  
   window.onload = function() {
-    setTimeout(hideSplashScreen, 1000);
+    const splashSettings = getSplashSettings();
+    if (splashSettings.enabled) {
+      setTimeout(hideSplashScreen, splashSettings.duration);
+    } else {
+      hideSplashScreen();
+    }
   };
 
   // ====== إدارة الجهات التمويلية (البنوك) ======
@@ -5619,6 +6081,9 @@ ${contact}`.trim();
       bank: document.getElementById('adBank').value,
       link: document.getElementById('adLink').value,
       linkText: document.getElementById('adLinkText').value || 'تواصل معنا',
+      customMessage: document.getElementById('adCustomMessage')?.value || '',
+      messageType: document.getElementById('adMessageType')?.value || 'text',
+      videoUrl: document.getElementById('adVideoUrl')?.value || '',
       enabled: document.getElementById('adEnabled').value === 'true'
     };
     
@@ -5645,6 +6110,9 @@ ${contact}`.trim();
     document.getElementById('adBank').value = '';
     document.getElementById('adLink').value = '';
     document.getElementById('adLinkText').value = '';
+    if (document.getElementById('adCustomMessage')) document.getElementById('adCustomMessage').value = '';
+    if (document.getElementById('adMessageType')) document.getElementById('adMessageType').value = 'text';
+    if (document.getElementById('adVideoUrl')) document.getElementById('adVideoUrl').value = '';
     document.getElementById('adEnabled').value = 'true';
   }
   
@@ -5663,6 +6131,9 @@ ${contact}`.trim();
     document.getElementById('adBank').value = ad.bank || '';
     document.getElementById('adLink').value = ad.link || '';
     document.getElementById('adLinkText').value = ad.linkText || '';
+    if (document.getElementById('adCustomMessage')) document.getElementById('adCustomMessage').value = ad.customMessage || '';
+    if (document.getElementById('adMessageType')) document.getElementById('adMessageType').value = ad.messageType || 'text';
+    if (document.getElementById('adVideoUrl')) document.getElementById('adVideoUrl').value = ad.videoUrl || '';
     document.getElementById('adEnabled').value = ad.enabled ? 'true' : 'false';
   }
   
@@ -5866,6 +6337,17 @@ ${contact}`.trim();
     const el6 = document.getElementById('settingsShowSplash');
     const el7 = document.getElementById('settingsShowRetirementFormula');
     const el8 = document.getElementById('settingsShowEndDate');
+    const el9 = document.getElementById('settingsShowEarlySettlement');
+    const el10 = document.getElementById('settingsSplashDuration');
+    const el11 = document.getElementById('settingsSplashImage');
+    const el12 = document.getElementById('settingsSplashVideo');
+    const el13 = document.getElementById('settingsGlobalImage');
+    const el14 = document.getElementById('settingsHomeImage');
+    const el15 = document.getElementById('settingsResultImage');
+    const el16 = document.getElementById('settingsCalcImage');
+    const el17 = document.getElementById('settingsEarlySettlementWarning');
+    const el18 = document.getElementById('settingsEarlySettlementFormula');
+    const el19 = document.getElementById('settingsShowEarlyWarning');
     
     if (el1) el1.value = settings.platformName;
     if (el2) el2.value = settings.platformSubtitle;
@@ -5875,9 +6357,23 @@ ${contact}`.trim();
     if (el6) el6.checked = settings.showSplash;
     if (el7) el7.checked = settings.showRetirementFormula;
     if (el8) el8.checked = settings.showEndDate;
+    if (el9) el9.checked = settings.showEarlySettlement !== false;
+    if (el10) el10.value = settings.splashDuration || 2500;
+    if (el11) el11.value = settings.splashImage || '';
+    if (el12) el12.value = settings.splashVideo || '';
+    if (el13) el13.value = settings.globalImage || '';
+    if (el14) el14.value = settings.homeImage || '';
+    if (el15) el15.value = settings.resultImage || '';
+    if (el16) el16.value = settings.calcImage || '';
+    if (el17) el17.value = settings.earlySettlementWarning || 'أكثر جهات التمويل يشترطون انتهاء سنتين من الأقساط للسماح بالسداد المبكر. راجع العقد.';
+    if (el18) el18.value = settings.earlySettlementFormula || 'أرباح سنتين + أرباح 3 أشهر (رسوم إدارية)';
+    if (el19) el19.checked = settings.showEarlyWarning !== false;
     
     // تطبيق الإعدادات
     applyPlatformSettings(settings);
+    
+    // تحميل قائمة أنواع الوظائف
+    renderJobTypesList();
   }
   
   function savePlatformSettingsFromUI() {
@@ -5889,11 +6385,34 @@ ${contact}`.trim();
       showWeather: document.getElementById('settingsShowWeather')?.checked || false,
       showSplash: document.getElementById('settingsShowSplash')?.checked || false,
       showRetirementFormula: document.getElementById('settingsShowRetirementFormula')?.checked || false,
-      showEndDate: document.getElementById('settingsShowEndDate')?.checked || false
+      showEndDate: document.getElementById('settingsShowEndDate')?.checked || false,
+      showEarlySettlement: document.getElementById('settingsShowEarlySettlement')?.checked !== false,
+      // إعدادات شاشة البداية
+      splashDuration: parseInt(document.getElementById('settingsSplashDuration')?.value) || 2500,
+      splashImage: document.getElementById('settingsSplashImage')?.value || '',
+      splashVideo: document.getElementById('settingsSplashVideo')?.value || '',
+      // الصور المتحركة للصفحات
+      globalImage: document.getElementById('settingsGlobalImage')?.value || '',
+      homeImage: document.getElementById('settingsHomeImage')?.value || '',
+      resultImage: document.getElementById('settingsResultImage')?.value || '',
+      calcImage: document.getElementById('settingsCalcImage')?.value || '',
+      // إعدادات السداد المبكر
+      earlySettlementWarning: document.getElementById('settingsEarlySettlementWarning')?.value || '',
+      earlySettlementFormula: document.getElementById('settingsEarlySettlementFormula')?.value || '',
+      showEarlyWarning: document.getElementById('settingsShowEarlyWarning')?.checked !== false
     };
     
     savePlatformSettings(settings);
     applyPlatformSettings(settings);
+    
+    // حفظ إعدادات شاشة البداية
+    saveSplashSettings({
+      enabled: settings.showSplash,
+      duration: settings.splashDuration,
+      customImage: settings.splashImage,
+      customVideo: settings.splashVideo
+    });
+    
     alert('تم حفظ الإعدادات.');
   }
   
@@ -5908,7 +6427,182 @@ ${contact}`.trim();
     if (settings.platformName) {
       document.title = settings.platformName + ' - حاسبة التمويل الذكية';
     }
+    
+    // إخفاء/إظهار حاسبة السداد المبكر
+    const earlySettlementBtn = document.getElementById('earlySettlementBtn');
+    if (earlySettlementBtn) {
+      earlySettlementBtn.style.display = settings.showEarlySettlement !== false ? 'inline-flex' : 'none';
+    }
+    
+    // تحديث تنبيه السداد المبكر للعقاري
+    const warningBox = document.getElementById('earlySettlementWarningBox');
+    const warningText = document.getElementById('earlySettlementWarningText');
+    const formulaText = document.getElementById('earlySettlementFormulaText');
+    
+    if (warningBox) {
+      warningBox.style.display = settings.showEarlyWarning !== false ? 'block' : 'none';
+    }
+    if (warningText && settings.earlySettlementWarning) {
+      warningText.textContent = settings.earlySettlementWarning;
+    }
+    if (formulaText && settings.earlySettlementFormula) {
+      formulaText.textContent = settings.earlySettlementFormula;
+    }
   }
+  
+  // ====== محرر النصوص ======
+  const CUSTOM_TEXTS_KEY = 'finoCustomTexts';
+  let customPageMessages = [];
+  
+  function loadCustomTexts() {
+    try {
+      const saved = localStorage.getItem(CUSTOM_TEXTS_KEY);
+      if (saved) {
+        const data = JSON.parse(saved);
+        // تحميل النصوص إلى الحقول
+        if (data.welcome && document.getElementById('textWelcome')) document.getElementById('textWelcome').value = data.welcome;
+        if (data.resultGreeting && document.getElementById('textResultGreeting')) document.getElementById('textResultGreeting').value = data.resultGreeting;
+        if (data.financeEnd && document.getElementById('textFinanceEnd')) document.getElementById('textFinanceEnd').value = data.financeEnd;
+        if (data.deficit && document.getElementById('textDeficit')) document.getElementById('textDeficit').value = data.deficit;
+        if (data.retirement && document.getElementById('textRetirement')) document.getElementById('textRetirement').value = data.retirement;
+        if (data.contact && document.getElementById('textContact')) document.getElementById('textContact').value = data.contact;
+        if (data.disclaimer && document.getElementById('textDisclaimer')) document.getElementById('textDisclaimer').value = data.disclaimer;
+        if (data.privateSector && document.getElementById('textPrivateSector')) document.getElementById('textPrivateSector').value = data.privateSector;
+        if (data.pageMessages) customPageMessages = data.pageMessages;
+        renderCustomPageMessages();
+      }
+    } catch(e) { console.error('خطأ في تحميل النصوص:', e); }
+  }
+  
+  function saveCustomTexts() {
+    const data = {
+      welcome: document.getElementById('textWelcome')?.value || '',
+      resultGreeting: document.getElementById('textResultGreeting')?.value || '',
+      financeEnd: document.getElementById('textFinanceEnd')?.value || '',
+      deficit: document.getElementById('textDeficit')?.value || '',
+      retirement: document.getElementById('textRetirement')?.value || '',
+      contact: document.getElementById('textContact')?.value || '',
+      disclaimer: document.getElementById('textDisclaimer')?.value || '',
+      privateSector: document.getElementById('textPrivateSector')?.value || '',
+      pageMessages: customPageMessages
+    };
+    localStorage.setItem(CUSTOM_TEXTS_KEY, JSON.stringify(data));
+    alert('تم حفظ النصوص.');
+  }
+  
+  function addCustomPageMessage() {
+    customPageMessages.push({
+      id: 'msg_' + Date.now(),
+      page: 'landing',
+      text: 'رسالة جديدة',
+      enabled: true
+    });
+    renderCustomPageMessages();
+  }
+  
+  function deleteCustomPageMessage(id) {
+    customPageMessages = customPageMessages.filter(m => m.id !== id);
+    renderCustomPageMessages();
+  }
+  
+  function renderCustomPageMessages() {
+    const container = document.getElementById('customPageMessages');
+    if (!container) return;
+    
+    if (customPageMessages.length === 0) {
+      container.innerHTML = '<p style="font-size:13px; color:#6b7280;">لا توجد رسائل مخصصة بعد.</p>';
+      return;
+    }
+    
+    container.innerHTML = customPageMessages.map((msg, idx) => `
+      <div style="display:flex; gap:10px; align-items:center; padding:10px; background:rgba(255,255,255,0.7); border-radius:8px; margin-bottom:8px;">
+        <select onchange="customPageMessages[${idx}].page = this.value" style="flex:0 0 120px;">
+          <option value="landing" ${msg.page === 'landing' ? 'selected' : ''}>الرئيسية</option>
+          <option value="calculator" ${msg.page === 'calculator' ? 'selected' : ''}>الحاسبة</option>
+          <option value="result" ${msg.page === 'result' ? 'selected' : ''}>النتيجة</option>
+        </select>
+        <input type="text" value="${escapeHtml(msg.text)}" onchange="customPageMessages[${idx}].text = this.value" style="flex:1;">
+        <label style="display:flex; align-items:center; gap:4px; cursor:pointer;">
+          <input type="checkbox" ${msg.enabled ? 'checked' : ''} onchange="customPageMessages[${idx}].enabled = this.checked">
+          <span style="font-size:12px;">مفعل</span>
+        </label>
+        <button onclick="deleteCustomPageMessage('${msg.id}')" style="background:#ef4444; color:#fff; border:none; border-radius:4px; padding:4px 8px; cursor:pointer;">🗑️</button>
+      </div>
+    `).join('');
+  }
+  
+  // ====== إدارة أنواع الوظائف ======
+  const JOB_TYPES_KEY = 'finoJobTypes';
+  let customJobTypes = [];
+  
+  // أنواع الوظائف الأساسية
+  const defaultJobTypes = [
+    { id: 'government', name: 'حكومي', logo: '', canDelete: false },
+    { id: 'military', name: 'عسكري', logo: '', canDelete: false },
+    { id: 'private', name: 'قطاع خاص', logo: '', canDelete: false },
+    { id: 'retired', name: 'متقاعد', logo: '', canDelete: false }
+  ];
+  
+  function loadJobTypes() {
+    try {
+      const saved = localStorage.getItem(JOB_TYPES_KEY);
+      if (saved) customJobTypes = JSON.parse(saved);
+    } catch(e) { console.error('خطأ في تحميل أنواع الوظائف:', e); }
+  }
+  
+  function saveJobTypes() {
+    localStorage.setItem(JOB_TYPES_KEY, JSON.stringify(customJobTypes));
+  }
+  
+  function getAllJobTypes() {
+    return [...defaultJobTypes, ...customJobTypes];
+  }
+  
+  function addJobType() {
+    const nameEl = document.getElementById('newJobTypeName');
+    const logoEl = document.getElementById('newJobTypeLogo');
+    const name = nameEl?.value?.trim();
+    const logo = logoEl?.value?.trim() || '';
+    
+    if (!name) {
+      alert('يرجى إدخال اسم نوع الوظيفة');
+      return;
+    }
+    
+    const id = 'custom_' + Date.now();
+    customJobTypes.push({ id, name, logo, canDelete: true });
+    saveJobTypes();
+    renderJobTypesList();
+    
+    if (nameEl) nameEl.value = '';
+    if (logoEl) logoEl.value = '';
+    
+    alert('تم إضافة نوع الوظيفة: ' + name);
+  }
+  
+  function deleteJobType(id) {
+    if (!confirm('هل أنت متأكد من حذف هذا النوع؟')) return;
+    customJobTypes = customJobTypes.filter(j => j.id !== id);
+    saveJobTypes();
+    renderJobTypesList();
+  }
+  
+  function renderJobTypesList() {
+    const container = document.getElementById('jobTypesList');
+    if (!container) return;
+    
+    const allTypes = getAllJobTypes();
+    container.innerHTML = allTypes.map(job => `
+      <div style="display:flex; align-items:center; gap:10px; padding:8px; background:rgba(255,255,255,0.5); border-radius:8px; margin-bottom:5px;">
+        ${job.logo ? `<img src="${escapeHtml(job.logo)}" style="width:24px; height:24px; border-radius:4px;">` : '<span style="width:24px; height:24px; background:#e5e7eb; border-radius:4px; display:flex; align-items:center; justify-content:center;">👤</span>'}
+        <span style="flex:1; font-size:14px;">${escapeHtml(job.name)}</span>
+        ${job.canDelete ? `<button onclick="deleteJobType('${job.id}')" style="background:#ef4444; color:#fff; border:none; border-radius:4px; padding:4px 8px; font-size:12px; cursor:pointer;">🗑️ حذف</button>` : '<span style="font-size:11px; color:#6b7280;">أساسي</span>'}
+      </div>
+    `).join('');
+  }
+  
+  // تحميل أنواع الوظائف عند بدء التطبيق
+  loadJobTypes();
   
   // ====== حساب تاريخ انتهاء التمويل ======
   function calculateFinanceEndDate(months) {
