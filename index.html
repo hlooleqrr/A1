@@ -2546,6 +2546,8 @@
       if(q.show && !q.show(currentCommitment)){ commitmentStep++; showQuestion(); return; }
     }else{
       document.getElementById('nextButton').style.display = 'none';
+      console.log('=== انتهت الأسئلة - سيتم استدعاء calculate() ===');
+      console.log('الإجابات النهائية:', answers);
       calculate();
       return;
     }
@@ -2583,14 +2585,27 @@
       bdDiv.appendChild(yearSelect);
       div.appendChild(bdDiv);
       
+      // حفظ القيم فور اختيارها
+      daySelect.addEventListener('change', function(){
+        console.log('Day selected:', this.value);
+      });
+      monthSelect.addEventListener('change', function(){
+        console.log('Month selected:', this.value);
+      });
+      
       // الانتقال التلقائي عند اختيار السنة
       yearSelect.addEventListener('change', function(){
+        console.log('Year selected:', this.value);
+        console.log('All values - Day:', daySelect.value, 'Month:', monthSelect.value, 'Year:', yearSelect.value);
         if(daySelect.value && monthSelect.value && yearSelect.value){
           answers.birthDay = daySelect.value;
           answers.birthMonth = monthSelect.value;
           answers.birthYear = yearSelect.value;
+          console.log('Birth date saved:', answers.birthDay, answers.birthMonth, answers.birthYear);
           step++;
           showQuestion();
+        } else {
+          console.log('Missing values - please select all fields');
         }
       });
     } else if(q.type === 'appointdate'){
@@ -2688,13 +2703,20 @@
   }
 
   function nextQuestion(){
+    console.log('=== nextQuestion called ===');
     const q = step < generalQuestions.length ? generalQuestions[step] : commitmentQuestions[commitmentStep];
+    console.log('Current question:', q.id, 'type:', q.type, 'step:', step);
     
     // دعم نوع birthdate
     if(q.type === 'birthdate'){
+      console.log('Processing birthdate question...');
       const day = document.getElementById('birthDay');
       const month = document.getElementById('birthMonth');
       const year = document.getElementById('birthYear');
+      console.log('Birth date values - Day:', day ? day.value : 'null', 'Month:', month ? month.value : 'null', 'Year:', year ? year.value : 'null');
+      console.log('Day element:', day, 'selectedIndex:', day ? day.selectedIndex : 'null');
+      console.log('Month element:', month, 'selectedIndex:', month ? month.selectedIndex : 'null');
+      console.log('Year element:', year, 'selectedIndex:', year ? year.selectedIndex : 'null');
       if(!day.value || !month.value || !year.value){
         alert('يرجى اختيار تاريخ الميلاد كاملاً');
         return;
@@ -2759,6 +2781,8 @@
           return;
         }else{
           document.getElementById('nextButton').style.display = 'none';
+          console.log('=== انتهت الالتزامات - سيتم استدعاء calculate() ===');
+          console.log('الإجابات النهائية:', answers);
           calculate();
           return;
         }
@@ -2858,12 +2882,20 @@
 
   // ====== الحسبة ======
   function calculate(){
+    console.log('========== بدء الحساب ==========');
+    console.log('جميع الإجابات:', JSON.stringify(answers, null, 2));
+    
     const salary = parseFloat(answers.salary),
           months = parseInt(answers.months),
           years  = months / 12,
           financeType = answers.financeType,
           supported = answers.supported,
           bundle = answers.bundle;
+    
+    console.log('الراتب:', salary);
+    console.log('المدة:', months);
+    console.log('نوع التمويل:', financeType);
+    console.log('الدعم:', supported);
 
     // تنظيف ومعالجة النسبة المدخلة
     let profitMarginRaw = String(answers.profitMargin || '').trim();
