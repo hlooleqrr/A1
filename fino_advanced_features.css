@@ -1,127 +1,425 @@
-/* ====== FINO Advanced Features CSS ====== */
+/* FINO Advanced Features CSS */
+/* Seasonal Backgrounds & Themes */
 
+/* ===== Base Theme Variables ===== */
 :root {
-  --primary-color: #1e3a8a;
-  --secondary-color: #3b82f6;
-  --accent-color: #f59e0b;
-  --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  --primary-color: #3b82f6;
+  --secondary-color: #1e40af;
+  --accent-color: #60a5fa;
+  --bg-gradient-start: #0f172a;
+  --bg-gradient-end: #1e293b;
+  --text-color: #f8fafc;
+  --card-bg: rgba(255, 255, 255, 0.1);
 }
 
-/* نظام الثيمات */
-body.theme-green { --primary-color: #065f46; --secondary-color: #10b981; }
-body.theme-purple { --primary-color: #5b21b6; --secondary-color: #8b5cf6; }
-body.theme-gold { --primary-color: #854d0e; --secondary-color: #eab308; }
-body.theme-dark { 
-  --primary-color: #1e293b; 
-  --secondary-color: #475569; 
-  --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-  color: #f1f5f9;
+/* ===== Theme: Blue (Default) ===== */
+[data-theme="blue"] {
+  --primary-color: #3b82f6;
+  --secondary-color: #1e40af;
+  --accent-color: #60a5fa;
+  --bg-gradient-start: #0f172a;
+  --bg-gradient-end: #1e293b;
 }
 
-/* تحسينات الواجهة */
-body {
-  background: var(--bg-gradient);
-  transition: all 0.5s ease;
-  min-height: 100vh;
-  position: relative;
-  overflow-x: hidden;
+/* ===== Theme: Green ===== */
+[data-theme="green"] {
+  --primary-color: #22c55e;
+  --secondary-color: #15803d;
+  --accent-color: #4ade80;
+  --bg-gradient-start: #052e16;
+  --bg-gradient-end: #14532d;
 }
 
-.card {
-  backdrop-filter: blur(10px);
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+/* ===== Theme: Purple ===== */
+[data-theme="purple"] {
+  --primary-color: #a855f7;
+  --secondary-color: #7e22ce;
+  --accent-color: #c084fc;
+  --bg-gradient-start: #2e1065;
+  --bg-gradient-end: #4c1d95;
 }
 
-/* نظام الخلفيات المتحركة */
-#particles {
+/* ===== Theme: Gold ===== */
+[data-theme="gold"] {
+  --primary-color: #f59e0b;
+  --secondary-color: #b45309;
+  --accent-color: #fbbf24;
+  --bg-gradient-start: #451a03;
+  --bg-gradient-end: #78350f;
+}
+
+/* ===== Theme: Dark ===== */
+[data-theme="dark"] {
+  --primary-color: #6b7280;
+  --secondary-color: #374151;
+  --accent-color: #9ca3af;
+  --bg-gradient-start: #030712;
+  --bg-gradient-end: #111827;
+}
+
+/* ===== Seasonal Particles Container ===== */
+.seasonal-particles {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   pointer-events: none;
-  z-index: -1;
+  z-index: 0;
+  overflow: hidden;
 }
 
-.season-particle {
+/* ===== Winter Theme - Snowflakes ===== */
+[data-season="winter"] .seasonal-particles::before,
+[data-season="winter"] .seasonal-particles::after {
+  content: "❄";
   position: absolute;
-  top: -20px;
-  user-select: none;
-  z-index: -1;
-  animation: fall linear infinite;
+  font-size: 20px;
+  color: rgba(255, 255, 255, 0.8);
+  animation: snowfall 10s linear infinite;
 }
 
-@keyframes fall {
-  0% { transform: translateY(-20px) rotate(0deg); opacity: 0; }
-  10% { opacity: 1; }
-  90% { opacity: 1; }
-  100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+[data-season="winter"] .seasonal-particles::before {
+  left: 10%;
+  animation-delay: 0s;
 }
 
-/* تأثيرات المواسم */
-.season-winter { background: linear-gradient(to bottom, #e0f2fe, #f1f5f9); }
-.season-spring { background: linear-gradient(to bottom, #f0fdf4, #f1f5f9); }
-.season-summer { background: linear-gradient(to bottom, #fffbeb, #f1f5f9); }
-.season-autumn { background: linear-gradient(to bottom, #fff7ed, #f1f5f9); }
+[data-season="winter"] .seasonal-particles::after {
+  left: 80%;
+  animation-delay: 5s;
+}
 
-/* بانر PWA */
-#pwaInstallBanner {
-  display: none;
-  background: var(--primary-color);
+@keyframes snowfall {
+  0% {
+    transform: translateY(-100vh) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(360deg);
+    opacity: 0.3;
+  }
+}
+
+/* Snow particles */
+.snow-particle {
+  position: absolute;
+  background: white;
+  border-radius: 50%;
+  opacity: 0.8;
+  animation: snowfall 8s linear infinite;
+}
+
+/* ===== Spring Theme - Flowers ===== */
+[data-season="spring"] .seasonal-particles::before,
+[data-season="spring"] .seasonal-particles::after {
+  content: "🌸";
+  position: absolute;
+  font-size: 24px;
+  animation: flowerfall 12s ease-in-out infinite;
+}
+
+[data-season="spring"] .seasonal-particles::before {
+  left: 20%;
+  animation-delay: 0s;
+}
+
+[data-season="spring"] .seasonal-particles::after {
+  left: 70%;
+  animation-delay: 6s;
+}
+
+@keyframes flowerfall {
+  0% {
+    transform: translateY(-100vh) rotate(0deg) translateX(0);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(50vh) rotate(180deg) translateX(50px);
+  }
+  100% {
+    transform: translateY(100vh) rotate(360deg) translateX(-50px);
+    opacity: 0.3;
+  }
+}
+
+/* ===== Summer Theme - Sun rays ===== */
+[data-season="summer"] .seasonal-particles {
+  background: radial-gradient(ellipse at top, rgba(255, 200, 50, 0.1) 0%, transparent 70%);
+}
+
+[data-season="summer"] .seasonal-particles::before {
+  content: "☀️";
+  position: absolute;
+  top: 5%;
+  right: 10%;
+  font-size: 40px;
+  animation: sunpulse 3s ease-in-out infinite;
+}
+
+@keyframes sunpulse {
+  0%, 100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  50% {
+    transform: scale(1.1);
+    filter: brightness(1.2);
+  }
+}
+
+/* ===== Autumn Theme - Leaves ===== */
+[data-season="autumn"] .seasonal-particles::before,
+[data-season="autumn"] .seasonal-particles::after {
+  content: "🍂";
+  position: absolute;
+  font-size: 28px;
+  animation: leaffall 15s ease-in-out infinite;
+}
+
+[data-season="autumn"] .seasonal-particles::before {
+  left: 15%;
+  animation-delay: 0s;
+}
+
+[data-season="autumn"] .seasonal-particles::after {
+  left: 75%;
+  animation-delay: 7s;
+  content: "🍁";
+}
+
+@keyframes leaffall {
+  0% {
+    transform: translateY(-100vh) rotate(0deg) translateX(0);
+    opacity: 1;
+  }
+  25% {
+    transform: translateY(25vh) rotate(90deg) translateX(100px);
+  }
+  50% {
+    transform: translateY(50vh) rotate(180deg) translateX(-50px);
+  }
+  75% {
+    transform: translateY(75vh) rotate(270deg) translateX(80px);
+  }
+  100% {
+    transform: translateY(100vh) rotate(360deg) translateX(0);
+    opacity: 0.3;
+  }
+}
+
+/* ===== PWA Install Banner ===== */
+.pwa-install-banner {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
   color: white;
-  padding: 15px;
+  padding: 15px 25px;
+  border-radius: 15px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  max-width: 90%;
   text-align: center;
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  animation: slideDown 0.5s ease-out;
 }
 
-.pwa-buttons {
-  margin-top: 10px;
+@keyframes slideDown {
+  from {
+    transform: translateX(-50%) translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+}
+
+.pwa-install-banner h4 {
+  margin: 0;
+  font-size: 16px;
   display: flex;
-  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.pwa-install-banner p {
+  margin: 0;
+  font-size: 12px;
+  opacity: 0.9;
+}
+
+.pwa-install-banner .banner-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 5px;
+}
+
+.pwa-install-banner button {
+  padding: 8px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.pwa-install-banner .install-btn {
+  background: white;
+  color: var(--primary-color);
+}
+
+.pwa-install-banner .install-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
+}
+
+.pwa-install-banner .later-btn {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.pwa-install-banner .later-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* ===== Admin Panel Enhancements ===== */
+.admin-section {
+  background: var(--card-bg);
+  border-radius: 15px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.admin-section h3 {
+  color: var(--accent-color);
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
   gap: 10px;
 }
 
-/* تحسينات لوحة المسؤول */
-.admin-hub-grid {
+.admin-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 15px;
-  margin-top: 20px;
 }
 
-.admin-icon-card {
-  background: white;
-  padding: 20px;
-  border-radius: 15px;
+.admin-stat-card {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  padding: 15px;
   text-align: center;
-  cursor: pointer;
-  transition: transform 0.3s ease;
-  border: 1px solid #e2e8f0;
+  transition: all 0.3s ease;
 }
 
-.admin-icon-card:hover {
+.admin-stat-card:hover {
   transform: translateY(-5px);
-  border-color: var(--secondary-color);
+  background: rgba(255, 255, 255, 0.1);
 }
 
-.admin-icon-card i {
-  font-size: 30px;
-  margin-bottom: 10px;
-  display: block;
+.admin-stat-card .stat-number {
+  font-size: 2em;
+  font-weight: bold;
+  color: var(--accent-color);
 }
 
-/* الإعلانات المستهدفة */
-.ad-card {
-  border-right: 4px solid var(--accent-color) !important;
-  animation: slideIn 0.5s ease-out;
+.admin-stat-card .stat-label {
+  font-size: 0.9em;
+  opacity: 0.8;
 }
 
-@keyframes slideIn {
-  from { transform: translateX(50px); opacity: 0; }
-  to { transform: translateX(0); opacity: 1; }
+/* ===== Responsive Adjustments ===== */
+@media (max-width: 768px) {
+  .pwa-install-banner {
+    top: 10px;
+    padding: 12px 15px;
+  }
+  
+  .pwa-install-banner h4 {
+    font-size: 14px;
+  }
+  
+  .pwa-install-banner p {
+    font-size: 11px;
+  }
+  
+  .admin-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ===== Loading Animation ===== */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 99999;
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top-color: var(--primary-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ===== Toast Notifications ===== */
+.toast-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 99999;
+}
+
+.toast {
+  background: var(--primary-color);
+  color: white;
+  padding: 15px 25px;
+  border-radius: 10px;
+  margin-top: 10px;
+  animation: toastIn 0.3s ease-out;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+}
+
+.toast.success {
+  background: #22c55e;
+}
+
+.toast.error {
+  background: #ef4444;
+}
+
+.toast.warning {
+  background: #f59e0b;
+}
+
+@keyframes toastIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
