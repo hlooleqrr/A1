@@ -1,0 +1,127 @@
+/* ====== FINO Advanced Features CSS ====== */
+
+:root {
+  --primary-color: #1e3a8a;
+  --secondary-color: #3b82f6;
+  --accent-color: #f59e0b;
+  --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+}
+
+/* نظام الثيمات */
+body.theme-green { --primary-color: #065f46; --secondary-color: #10b981; }
+body.theme-purple { --primary-color: #5b21b6; --secondary-color: #8b5cf6; }
+body.theme-gold { --primary-color: #854d0e; --secondary-color: #eab308; }
+body.theme-dark { 
+  --primary-color: #1e293b; 
+  --secondary-color: #475569; 
+  --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  color: #f1f5f9;
+}
+
+/* تحسينات الواجهة */
+body {
+  background: var(--bg-gradient);
+  transition: all 0.5s ease;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.card {
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+/* نظام الخلفيات المتحركة */
+#particles {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.season-particle {
+  position: absolute;
+  top: -20px;
+  user-select: none;
+  z-index: -1;
+  animation: fall linear infinite;
+}
+
+@keyframes fall {
+  0% { transform: translateY(-20px) rotate(0deg); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+}
+
+/* تأثيرات المواسم */
+.season-winter { background: linear-gradient(to bottom, #e0f2fe, #f1f5f9); }
+.season-spring { background: linear-gradient(to bottom, #f0fdf4, #f1f5f9); }
+.season-summer { background: linear-gradient(to bottom, #fffbeb, #f1f5f9); }
+.season-autumn { background: linear-gradient(to bottom, #fff7ed, #f1f5f9); }
+
+/* بانر PWA */
+#pwaInstallBanner {
+  display: none;
+  background: var(--primary-color);
+  color: white;
+  padding: 15px;
+  text-align: center;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.pwa-buttons {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+/* تحسينات لوحة المسؤول */
+.admin-hub-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.admin-icon-card {
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  border: 1px solid #e2e8f0;
+}
+
+.admin-icon-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--secondary-color);
+}
+
+.admin-icon-card i {
+  font-size: 30px;
+  margin-bottom: 10px;
+  display: block;
+}
+
+/* الإعلانات المستهدفة */
+.ad-card {
+  border-right: 4px solid var(--accent-color) !important;
+  animation: slideIn 0.5s ease-out;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(50px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
