@@ -6977,22 +6977,19 @@
 
       if(q.dynamic && q.id === 'months'){
         const isMainQuestion = (step < generalQuestions.length);
-        const isMortgage = answers.financeType === 'تمويل عقاري';
         const isCommitmentMortgage = currentCommitment.type === 'قرض عقاري';
         
-        let limit, defaultValue;
+        let limit;
         if(isMainQuestion){
           limit = getMaxAllowedMonths();
-          // القيمة الافتراضية: عقاري = 239، غيره = 60
-          defaultValue = isMortgage ? Math.min(239, limit) : Math.min(60, limit);
         } else {
-          // التزامات: عقاري = 240، غيره = 60
+          // التزامات: عقاري = 360، غيره = 60
           limit = isCommitmentMortgage ? 360 : 60;
-          defaultValue = isCommitmentMortgage ? 240 : 60;
         }
         
+        // القيمة الافتراضية دائماً 1 شهر
         for(let i=1; i<=limit; i++){
-          const selected = (i === defaultValue) ? ' selected' : '';
+          const selected = (i === 1) ? ' selected' : '';
           sel.innerHTML += `<option value="${i}"${selected}>${i} شهر</option>`;
         }
       } else if (q.id === 'financeType' && typeof loadDynamicProducts === 'function') {
@@ -7912,15 +7909,18 @@
     const jobTypeLabel = answers.jobType || 'غير محدد';
     
     html += `<div class="result-header">
-      <div class="client-chip">${jobTypeIcon} ${name} <span style="font-size:11px; color:#6b7280; margin-right:5px;">(${jobTypeLabel})</span></div>
+      <div class="client-chip">${jobTypeIcon} ${name} <span style="font-size:11px; color:#6b7280; margin-right:5px;">${jobTypeLabel}</span></div>
       <div style="text-align:right;">
-        <span class="badge-mode">${answers.calcMode === 'ترشيح بنك مناسب تلقائياً' ? '🏦 ترشيح بنك مناسب' : '📊 الحسبة على النسبة المدخلة'}</span><br>
-        <span class="badge-duration">📅 مدة التمويل: ${duration}</span>
+        <span class="badge-mode">${answers.calcMode === 'ترشيح بنك مناسب تلقائياً' ? 'ترشيح بنك مناسب' : 'الحسبة على النسبة المدخلة'}</span><br>
+        <span class="badge-duration">مدة التمويل: ${duration}</span>
       </div>
     </div>`;
 
-    html += `<div style="display:flex; justify-content:flex-end; margin:6px 0 10px;">
-      <span class="badge-duration">💳 نوع التمويل: ${financeType}</span>
+    // إضافة اسم المنتج إذا كان موجوداً
+    const productName = answers.mortgageProductType || '';
+    html += `<div style="display:flex; flex-direction:column; align-items:flex-end; margin:6px 0 10px; gap:4px;">
+      <span class="badge-duration">نوع التمويل: ${financeType}</span>
+      ${productName ? `<span class="badge-duration" style="background:#e0f2fe; color:#0369a1;">المنتج: ${productName}</span>` : ''}
     </div>`;
 
     if (recommendedBank) {
@@ -8027,7 +8027,7 @@
     // ====== كتلة النتيجة الأساسية ( ) ======
     html += `
       <div class="result-main-block">
-        <div class="result-main-title">⭐ ${mainShownLabel} ( )</div>
+        <div class="result-main-title">${mainShownLabel}</div>
         <div class="result-amount-main">${fmtMoney(mainShownValue).replace(' ريال','')} ريال</div>
     `;
 
@@ -9784,7 +9784,8 @@ ${contact}`.trim();
   document.addEventListener('DOMContentLoaded', () => {
     // إخفاء شاشة البداية حسب الإعدادات
     const splashSettings = getSplashSettings();
-    const splashDuration = splashSettings.duration || 2500;
+    // تحويل الثواني إلى ميلي ثانية (القيمة المحفوظة بالثواني)
+    const splashDuration = (splashSettings.duration || 3) * 1000;
     if (splashSettings.enabled !== false) {
       setTimeout(hideSplashScreen, splashDuration);
     } else {
@@ -10620,9 +10621,9 @@ ${contact}`.trim();
   function loadCustomQuestions() {
     try {
       const data = localStorage.getItem(QUESTIONS_KEY);
-      return data ? JSON.parse(data) : { hidden: [], labels: {} };
+      return data ? JSON.parse(data) : { hidden: [], labels: {}, order: [] };
     } catch (e) {
-      return { hidden: [], labels: {} };
+      return { hidden: [], labels: {}, order: [] };
     }
   }
   
@@ -10653,6 +10654,8 @@ ${contact}`.trim();
           <span class="question-drag-handle">☰</span>
           <span class="question-text">${i + 1}. ${customLabel}</span>
           <div class="question-actions">
+            <button class="question-btn" onclick="moveQuestionUp('general', ${i})" style="padding:4px 8px; font-size:11px;" ${i === 0 ? 'disabled' : ''}>⬆️</button>
+            <button class="question-btn" onclick="moveQuestionDown('general', ${i})" style="padding:4px 8px; font-size:11px;" ${i === generalQuestions.length - 1 ? 'disabled' : ''}>⬇️</button>
             <button class="question-btn question-btn-edit" onclick="editQuestionLabel('general_${i}')">تعديل</button>
             <button class="question-btn question-btn-hide" onclick="toggleQuestionVisibility('general_${i}')">${isHidden ? 'إظهار' : 'إخفاء'}</button>
           </div>
@@ -10671,6 +10674,8 @@ ${contact}`.trim();
           <span class="question-drag-handle">☰</span>
           <span class="question-text">${i + 1}. ${customLabel}</span>
           <div class="question-actions">
+            <button class="question-btn" onclick="moveQuestionUp('commitment', ${i})" style="padding:4px 8px; font-size:11px;" ${i === 0 ? 'disabled' : ''}>⬆️</button>
+            <button class="question-btn" onclick="moveQuestionDown('commitment', ${i})" style="padding:4px 8px; font-size:11px;" ${i === commitmentQuestions.length - 1 ? 'disabled' : ''}>⬇️</button>
             <button class="question-btn question-btn-edit" onclick="editQuestionLabel('commitment_${i}')">تعديل</button>
             <button class="question-btn question-btn-hide" onclick="toggleQuestionVisibility('commitment_${i}')">${isHidden ? 'إظهار' : 'إخفاء'}</button>
           </div>
@@ -10716,6 +10721,47 @@ ${contact}`.trim();
     saveCustomQuestions(customQ);
     renderQuestionsList();
     showToast('تم حفظ التغييرات! ✅');
+  }
+  
+  // دالة تحريك السؤال لأعلى
+  function moveQuestionUp(category, index) {
+    if (index <= 0) return;
+    
+    const questions = category === 'general' ? generalQuestions : commitmentQuestions;
+    
+    // تبديل السؤال مع السؤال الذي قبله
+    const temp = questions[index];
+    questions[index] = questions[index - 1];
+    questions[index - 1] = temp;
+    
+    // حفظ الترتيب الجديد
+    saveQuestionsOrder(category, questions);
+    renderQuestionsList();
+    showToast('تم تحريك السؤال لأعلى ⬆️');
+  }
+  
+  // دالة تحريك السؤال لأسفل
+  function moveQuestionDown(category, index) {
+    const questions = category === 'general' ? generalQuestions : commitmentQuestions;
+    
+    if (index >= questions.length - 1) return;
+    
+    // تبديل السؤال مع السؤال الذي بعده
+    const temp = questions[index];
+    questions[index] = questions[index + 1];
+    questions[index + 1] = temp;
+    
+    // حفظ الترتيب الجديد
+    saveQuestionsOrder(category, questions);
+    renderQuestionsList();
+    showToast('تم تحريك السؤال لأسفل ⬇️');
+  }
+  
+  // حفظ ترتيب الأسئلة
+  function saveQuestionsOrder(category, questions) {
+    const orderKey = category === 'general' ? 'finoGeneralQuestionsOrder' : 'finoCommitmentQuestionsOrder';
+    const order = questions.map(q => q.id);
+    localStorage.setItem(orderKey, JSON.stringify(order));
   }
   
   // ====== نظام الأسئلة المخصصة للمنتجات ======
