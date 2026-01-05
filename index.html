@@ -1351,8 +1351,9 @@
       position: absolute;
       border-radius: 50%;
       filter: blur(80px);
-      opacity: 0.5;
-      animation: orbFloat 10s ease-in-out infinite;
+      opacity: 0;
+      animation: none;
+      display: none;
     }
     .landing-orb-1 {
       width: 400px;
@@ -1465,7 +1466,7 @@
     }
     .landing-logo {
       position: relative;
-      display: inline-block;
+      display: none;
       margin-bottom: 15px;
     }
     .logo-main {
@@ -1696,6 +1697,7 @@
     
     /* شعارات البنوك */
     .landing-banks {
+      display: none;
       margin-top: 25px;
       padding-top: 20px;
       border-top: 1px solid rgba(255,255,255,0.2);
@@ -2078,7 +2080,7 @@
       <!-- زر البدء -->
       <button class="landing-start-btn" onclick="startClientFlow()">
         <span class="btn-text">ابدأ بأسم الله</span>
-        <span class="btn-icon">🚀</span>
+        
         <span class="btn-shine"></span>
       </button>
       
@@ -3255,6 +3257,29 @@
                 <option value="شراء مديونية">شراء مديونية</option>
               </select>
             </div>
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px;">
+            <div>
+              <label style="font-size:12px; color:#374151;">🎯 المستهدف (جهة التمويل):</label>
+              <select id="newProductQuestionTarget" style="width:100%; padding:8px; border:1px solid #d1d5db; border-radius:8px; font-size:13px;">
+                <option value="all">جميع الجهات</option>
+                <!-- سيتم تحميل الجهات ديناميكياً -->
+              </select>
+            </div>
+            <div>
+              <label style="font-size:12px; color:#374151;">👁️ إظهار/إخفاء:</label>
+              <select id="newProductQuestionVisibility" style="width:100%; padding:8px; border:1px solid #d1d5db; border-radius:8px; font-size:13px;">
+                <option value="show">ظاهر</option>
+                <option value="hide">مخفي</option>
+              </select>
+            </div>
+          </div>
+          <div style="margin-top:10px;">
+            <label style="font-size:12px; color:#374151;">📌 إظهار الإجابة في النتيجة:</label>
+            <select id="newProductQuestionShowInResult" style="width:100%; padding:8px; border:1px solid #d1d5db; border-radius:8px; font-size:13px;">
+              <option value="yes">نعم - إظهار الإجابة في النتيجة</option>
+              <option value="no">لا - لا تظهر في النتيجة</option>
+            </select>
           </div>
           <div id="productQuestionOptionsDiv" style="display:none;">
             <label style="font-size:12px; color:#374151;">الخيارات (مفصولة بفاصلة):</label>
@@ -4930,6 +4955,10 @@
       if (typeof applyAllSettings === 'function') applyAllSettings();
       if (name === 'adminQuestions' && typeof renderQuestionsList === 'function') {
         renderQuestionsList();
+        // تحميل جهات التمويل في القائمة المنسدلة
+        if (typeof loadFinanceEntitiesForQuestions === 'function') {
+          loadFinanceEntitiesForQuestions();
+        }
       }
     }
   };
@@ -4962,19 +4991,19 @@
   // شعارات البنوك وشركات التمويل - يمكن تعديلها من لوحة التحكم
   const BANK_LOGOS_KEY = 'fino_bank_logos';
   const defaultBankLogos = {
-    // البنوك المحلية
-    'مصرف الراجحي': 'bank_logos/alrajhi.png',
-    'البنك الأهلي السعودي': 'bank_logos/snb.png',
-    'بنك الرياض': 'bank_logos/riyad.png',
-    'البنك السعودي الأول': 'bank_logos/sabb.png',
-    'البنك العربي الوطني': 'bank_logos/anb.png',
-    'مصرف الإنماء': 'bank_logos/alinma.png',
-    'البنك السعودي الفرنسي': 'bank_logos/snb.png',
-    'البنك السعودي للاستثمار': 'bank_logos/snb.png',
-    'بنك البلاد': 'bank_logos/albilad.png',
-    'بنك الجزيرة': 'bank_logos/aljazira.png',
-    'بنك الخليج الدولي': 'bank_logos/snb.png',
-    'بنك ساب': 'bank_logos/sabb.png',
+    // البنوك المحلية - روابط مباشرة
+    'مصرف الراجحي': 'https://www.alrajhibank.com.sa/themes/custom/alrajhi_theme/logo.svg',
+    'البنك الأهلي السعودي': 'https://www.snb.com/themes/custom/snb_theme/logo.svg',
+    'بنك الرياض': 'https://www.riyadbank.com/themes/custom/riyadbank_theme/logo.svg',
+    'البنك السعودي الأول': 'https://www.sab.com/themes/custom/sab_theme/logo.svg',
+    'البنك العربي الوطني': 'https://www.anb.com.sa/themes/custom/anb_theme/logo.svg',
+    'مصرف الإنماء': 'https://www.alinma.com/themes/custom/alinma_theme/logo.svg',
+    'البنك السعودي الفرنسي': 'https://www.alfransi.com.sa/themes/custom/alfransi_theme/logo.svg',
+    'البنك السعودي للاستثمار': '',
+    'بنك البلاد': 'https://www.bankalbilad.com/themes/custom/bankalbilad_theme/logo.svg',
+    'بنك الجزيرة': 'https://www.baj.com.sa/themes/custom/baj_theme/logo.svg',
+    'بنك الخليج الدولي': '',
+    'بنك ساب': 'https://www.sab.com/themes/custom/sab_theme/logo.svg',
     // شركات التمويل
     'عبداللطيف جميل للتمويل': '',
     'شركة تسهيل': '',
@@ -5318,6 +5347,52 @@
     bankConfigs.splice(index, 1);
     saveBankConfigs();
     renderBankTable();
+  }
+
+  // دالة للحصول على النسبة المناسبة لبنك معين حسب بيانات العميل
+  function getBankRateForClient(bankName, clientAnswers) {
+    const salary = parseFloat(clientAnswers.salary || '0');
+    if (!salary || !bankName) return null;
+
+    let fType;
+    if (clientAnswers.financeType === 'شراء مديونية تمويل شخصي') fType = 'buyoutPersonal';
+    else if (clientAnswers.financeType === 'شراء مديونية تمويل عقاري') fType = 'buyoutMortgage';
+    else if (clientAnswers.financeType === 'تمويل استهلاكي') fType = 'consumer';
+    else if (clientAnswers.financeType && (clientAnswers.financeType.includes('شخصي') || clientAnswers.financeType === 'تمويل التأجيري')) fType = 'personal';
+    else if (clientAnswers.financeType && clientAnswers.financeType.includes('عقاري')) fType = 'mortgage';
+    else fType = 'personal';
+
+    const supp = clientAnswers.supported || 'الكل';
+    const jobType = clientAnswers.jobType || '';
+    const months = parseInt(clientAnswers.months || '0');
+
+    // البحث عن النسبة المناسبة للبنك
+    const matchingConfigs = bankConfigs.filter(cfg => {
+      if (cfg.bankName !== bankName) return false;
+      if (cfg.financeType !== fType) return false;
+      if (!(salary >= cfg.minSalary && salary <= cfg.maxSalary)) return false;
+      if (!(cfg.supportedType === 'الكل' || cfg.supportedType === supp)) return false;
+      if (cfg.jobType && cfg.jobType !== 'الكل' && jobType && cfg.jobType !== jobType) return false;
+      if (cfg.minMonths && months && months < cfg.minMonths) return false;
+      if (cfg.maxMonths && months && months > cfg.maxMonths) return false;
+      return true;
+    });
+
+    if (matchingConfigs.length > 0) {
+      // إرجاع أقل نسبة
+      matchingConfigs.sort((a, b) => a.margin - b.margin);
+      return matchingConfigs[0].margin;
+    }
+    return null;
+  }
+
+  // دالة للحصول على جميع البنوك المتاحة مع نسبها
+  function getAllBanksWithRates(clientAnswers) {
+    const uniqueBanks = [...new Set(bankConfigs.map(cfg => cfg.bankName))];
+    return uniqueBanks.map(bankName => {
+      const rate = getBankRateForClient(bankName, clientAnswers);
+      return { bankName, rate };
+    }).filter(b => b.rate !== null);
   }
 
   function getMatchingBanksForAnswers() {
@@ -6439,9 +6514,16 @@
       // فحص الأسئلة المخصصة للمنتجات
       const productQuestions = loadProductQuestions();
       const currentProduct = answers.financeType;
-      const relevantQuestions = productQuestions.filter(pq => 
-        pq.enabled && (pq.product === 'all' || pq.product === currentProduct)
-      );
+      const selectedBank = answers.selectedFinanceEntity || answers.currentBank || '';
+      const relevantQuestions = productQuestions.filter(pq => {
+        // فحص التفعيل
+        if (!pq.enabled) return false;
+        // فحص المنتج
+        if (pq.product !== 'all' && pq.product !== currentProduct) return false;
+        // فحص جهة التمويل المستهدفة
+        if (pq.target && pq.target !== 'all' && pq.target !== selectedBank) return false;
+        return true;
+      });
       
       // التحقق من الأسئلة المخصصة التي لم تُجب بعد
       if (!window.productQuestionStep) window.productQuestionStep = 0;
@@ -6570,36 +6652,18 @@
         }
       });
     } else if(q.type === 'financeEntitySelect'){
-      // عرض جميع جهات التمويل المخزنة مع نسبها
+      // عرض جميع جهات التمويل المخزنة مع نسبها من إعدادات البنوك
       const entitiesContainer = document.createElement('div');
       entitiesContainer.style.cssText = 'max-height:400px; overflow-y:auto; margin-top:10px;';
       
-      // الحصول على جميع البنوك والنسب المخزنة
-      const savedRates = JSON.parse(localStorage.getItem('fino_bank_rates') || '{}');
-      const customBanks = JSON.parse(localStorage.getItem('fino_custom_banks') || '[]');
       const bankLogos = typeof getBankLogos === 'function' ? getBankLogos() : {};
       
-      // البنوك الافتراضية
-      const defaultBanks = [
-        'البنك الأهلي السعودي', 'مصرف الراجحي', 'بنك الرياض', 'بنك ساب',
-        'البنك العربي الوطني', 'مصرف الإنماء', 'البنك السعودي الفرنسي',
-        'البنك السعودي للاستثمار', 'بنك البلاد', 'بنك الجزيرة'
-      ];
+      // الحصول على جميع البنوك الفريدة من إعدادات البنوك
+      const uniqueBanks = [...new Set(bankConfigs.map(cfg => cfg.bankName))];
       
-      // دمج البنوك الافتراضية والمضافة
-      const allBanks = [...defaultBanks, ...customBanks.map(b => b.name)];
-      
-      // الحصول على نوع التمويل المختار
-      const financeType = answers.financeType || 'تمويل شخصي';
-      const financeTypeKey = financeType.includes('عقار') ? 'mortgage' : 'personal';
-      
-      allBanks.forEach(bankName => {
-        const bankRate = savedRates[bankName];
-        let rate = null;
-        
-        if (bankRate) {
-          rate = financeTypeKey === 'mortgage' ? bankRate.mortgageRate : bankRate.personalRate;
-        }
+      uniqueBanks.forEach(bankName => {
+        // الحصول على النسبة المناسبة حسب بيانات العميل
+        const rate = getBankRateForClient(bankName, answers);
         
         const card = document.createElement('div');
         card.style.cssText = 'display:flex; align-items:center; padding:15px; margin:10px 0; background:linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-radius:12px; cursor:pointer; transition:all 0.3s; border:2px solid transparent;';
@@ -7833,9 +7897,18 @@
 
     // إضافة إجابات الأسئلة المخصصة للمنتجات في النتيجة
     const productQuestions = loadProductQuestions();
-    const relevantProductQuestions = productQuestions.filter(pq => 
-      pq.enabled && (pq.product === 'all' || pq.product === financeType)
-    );
+    const selectedBank = answers.selectedFinanceEntity || answers.currentBank || '';
+    const relevantProductQuestions = productQuestions.filter(pq => {
+      // فحص التفعيل
+      if (!pq.enabled) return false;
+      // فحص المنتج
+      if (pq.product !== 'all' && pq.product !== financeType) return false;
+      // فحص جهة التمويل المستهدفة
+      if (pq.target && pq.target !== 'all' && pq.target !== selectedBank) return false;
+      // فحص إظهار في النتيجة
+      if (pq.showInResult === 'no') return false;
+      return true;
+    });
     
     if (relevantProductQuestions.length > 0) {
       let productAnswersHtml = '';
@@ -9410,7 +9483,7 @@ ${contact}`.trim();
     // تحميل الميزات المتقدمة
     loadAdvancedFeatures();
     
-    // تحميل الواجهات المحفوظة بعد تأخير لضمان تحميل الدوال
+    // تحميل الواجهات المحفوظة وإعدادات المنصة بعد تأخير لضمان تحميل الدوال
     setTimeout(function() {
       console.log('Attempting to load saved interface images...');
       if (typeof loadSavedInterfaceImages === 'function') {
@@ -9422,6 +9495,17 @@ ${contact}`.trim();
         }
       } else {
         console.warn('loadSavedInterfaceImages function not found');
+      }
+      
+      // تحميل وتطبيق إعدادات المنصة (الاسم، الخلفية، إلخ)
+      if (typeof loadPlatformSettings === 'function' && typeof applyPlatformSettings === 'function') {
+        try {
+          const platformSettings = loadPlatformSettings();
+          applyPlatformSettings(platformSettings);
+          console.log('Successfully applied platform settings');
+        } catch (err) {
+          console.error('Error applying platform settings:', err);
+        }
       }
     }, 500);
   });
@@ -9921,16 +10005,8 @@ ${contact}`.trim();
         img.src = imageData.data;
       });
     } else if (type === 'homeBg') {
-      const landingPage = document.getElementById('landingPage');
-      if (landingPage) {
-        landingPage.style.backgroundImage = `url(${imageData.data})`;
-        landingPage.style.backgroundSize = 'cover';
-        landingPage.style.backgroundPosition = 'center';
-        landingPage.style.backgroundRepeat = 'no-repeat';
-        console.log('Applied homeBg to landingPage');
-      } else {
-        console.error('landingPage not found!');
-      }
+      // تم تعطيل تحميل صورة الصفحة الرئيسية - استخدم الخلفية العامة بدلاً منها
+      console.log('homeBg disabled - use global background instead');
     } else if (type === 'resultBg') {
       const resultPage = document.getElementById('resultPage');
       if (resultPage) {
@@ -10324,6 +10400,9 @@ ${contact}`.trim();
     const type = document.getElementById('newProductQuestionType').value;
     const product = document.getElementById('newProductQuestionProduct').value;
     const optionsInput = document.getElementById('newProductQuestionOptions').value;
+    const target = document.getElementById('newProductQuestionTarget')?.value || 'all';
+    const visibility = document.getElementById('newProductQuestionVisibility')?.value || 'show';
+    const showInResult = document.getElementById('newProductQuestionShowInResult')?.value || 'yes';
     
     if (!text) {
       showToast('يرجى إدخال نص السؤال', 'error');
@@ -10337,7 +10416,10 @@ ${contact}`.trim();
       type: type,
       product: product,
       options: type === 'select' ? optionsInput.split(',').map(o => o.trim()).filter(o => o) : [],
-      enabled: true
+      target: target,
+      visibility: visibility,
+      showInResult: showInResult,
+      enabled: visibility === 'show'
     };
     
     questions.push(newQuestion);
@@ -10346,11 +10428,29 @@ ${contact}`.trim();
     // إعادة تعيين الحقول
     document.getElementById('newProductQuestionText').value = '';
     document.getElementById('newProductQuestionOptions').value = '';
+    if (document.getElementById('newProductQuestionTarget')) document.getElementById('newProductQuestionTarget').value = 'all';
+    if (document.getElementById('newProductQuestionVisibility')) document.getElementById('newProductQuestionVisibility').value = 'show';
+    if (document.getElementById('newProductQuestionShowInResult')) document.getElementById('newProductQuestionShowInResult').value = 'yes';
     
     renderProductQuestionsList();
     showToast('تم إضافة السؤال بنجاح! ✅');
   }
   
+  // دالة تحميل جهات التمويل في القائمة المنسدلة للأسئلة
+  function loadFinanceEntitiesForQuestions() {
+    const select = document.getElementById('newProductQuestionTarget');
+    if (!select) return;
+    
+    // الحصول على جميع الجهات الفريدة من إعدادات البنوك
+    const uniqueBanks = [...new Set(bankConfigs.map(cfg => cfg.bankName))];
+    
+    // إعادة بناء القائمة
+    select.innerHTML = '<option value="all">جميع الجهات</option>';
+    uniqueBanks.forEach(bank => {
+      select.innerHTML += `<option value="${bank}">${bank}</option>`;
+    });
+  }
+
   function renderProductQuestionsList() {
     const container = document.getElementById('productQuestionsList');
     if (!container) return;
@@ -10364,12 +10464,17 @@ ${contact}`.trim();
     
     let html = '';
     questions.forEach((q, i) => {
+      const targetLabel = q.target === 'all' ? 'جميع الجهات' : q.target;
+      const showInResultLabel = q.showInResult === 'yes' ? '✅ تظهر في النتيجة' : '❌ لا تظهر';
       html += `
         <div class="question-item ${!q.enabled ? 'question-hidden' : ''}" style="margin-bottom:8px;">
           <span class="question-text" style="flex:1;">
             ${q.text}
             <span style="font-size:11px; color:#6b7280; display:block;">
               المنتج: ${q.product === 'all' ? 'الكل' : q.product} | النوع: ${q.type === 'text' ? 'نص' : q.type === 'number' ? 'رقم' : 'قائمة'}
+            </span>
+            <span style="font-size:11px; color:#3b82f6; display:block;">
+              🎯 المستهدف: ${targetLabel} | ${showInResultLabel}
             </span>
           </span>
           <div class="question-actions">
@@ -10572,7 +10677,7 @@ ${contact}`.trim();
     // تحديث اسم المنصة
     const titleEl = document.getElementById('platformTitle');
     if (titleEl && settings.platformName) {
-      titleEl.textContent = settings.platformName + ' 🚀';
+      titleEl.textContent = settings.platformName;
     }
     
     // تحديث عنوان الصفحة
@@ -11907,18 +12012,42 @@ ${contact}`.trim();
     const logos = getBankLogos();
     const mainBanks = ['مصرف الراجحي', 'البنك الأهلي السعودي', 'بنك الرياض', 'مصرف الإنماء', 'بنك البلاد'];
     
+    // شعارات احتياطية بالنص إذا لم تتوفر الصور
+    const bankTextLogos = {
+      'مصرف الراجحي': '🏦 الراجحي',
+      'البنك الأهلي السعودي': '🏦 SNB',
+      'بنك الرياض': '🏦 الرياض',
+      'مصرف الإنماء': '🏦 الإنماء',
+      'بنك البلاد': '🏦 البلاد'
+    };
+    
     container.innerHTML = '';
     mainBanks.forEach(bank => {
       const logo = logos[bank];
-      if (logo) {
+      if (logo && logo.startsWith('http')) {
         const img = document.createElement('img');
         img.src = logo;
         img.alt = bank;
         img.title = bank;
-        img.style.cssText = 'height:30px; width:auto; opacity:0.7; filter:grayscale(30%); transition:all 0.3s;';
-        img.onmouseover = function() { this.style.opacity = '1'; this.style.filter = 'grayscale(0%)'; this.style.transform = 'scale(1.1)'; };
-        img.onmouseout = function() { this.style.opacity = '0.7'; this.style.filter = 'grayscale(30%)'; this.style.transform = 'scale(1)'; };
+        img.style.cssText = 'height:30px; width:auto; opacity:0.85; filter:brightness(1.1); transition:all 0.3s; background:rgba(255,255,255,0.9); padding:5px 10px; border-radius:8px;';
+        img.onmouseover = function() { this.style.opacity = '1'; this.style.transform = 'scale(1.1)'; };
+        img.onmouseout = function() { this.style.opacity = '0.85'; this.style.transform = 'scale(1)'; };
+        img.onerror = function() {
+          // إذا فشل تحميل الصورة، استخدم النص
+          const span = document.createElement('span');
+          span.textContent = bankTextLogos[bank] || bank;
+          span.style.cssText = 'background:rgba(255,255,255,0.9); padding:8px 12px; border-radius:8px; font-size:12px; font-weight:bold; color:#1e3a8a;';
+          this.replaceWith(span);
+        };
         container.appendChild(img);
+      } else {
+        // عرض اسم البنك كنص إذا لم يكن هناك شعار
+        const span = document.createElement('span');
+        span.textContent = bankTextLogos[bank] || bank;
+        span.style.cssText = 'background:rgba(255,255,255,0.9); padding:8px 12px; border-radius:8px; font-size:12px; font-weight:bold; color:#1e3a8a; transition:all 0.3s;';
+        span.onmouseover = function() { this.style.transform = 'scale(1.05)'; this.style.background = 'rgba(255,255,255,1)'; };
+        span.onmouseout = function() { this.style.transform = 'scale(1)'; this.style.background = 'rgba(255,255,255,0.9)'; };
+        container.appendChild(span);
       }
     });
   }
