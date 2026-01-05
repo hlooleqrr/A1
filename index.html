@@ -3250,11 +3250,7 @@
               <label style="font-size:12px; color:#374151;">يظهر لمنتج:</label>
               <select id="newProductQuestionProduct" style="width:100%; padding:8px; border:1px solid #d1d5db; border-radius:8px; font-size:13px;">
                 <option value="all">جميع المنتجات</option>
-                <option value="تمويل شخصي">تمويل شخصي</option>
-                <option value="تمويل استهلاكي">تمويل استهلاكي</option>
-                <option value="تمويل تأجيري">تمويل تأجيري</option>
-                <option value="تمويل عقاري">تمويل عقاري</option>
-                <option value="شراء مديونية">شراء مديونية</option>
+                <!-- سيتم تحميل المنتجات ديناميكياً -->
               </select>
             </div>
           </div>
@@ -3274,12 +3270,25 @@
               </select>
             </div>
           </div>
-          <div style="margin-top:10px;">
-            <label style="font-size:12px; color:#374151;">📌 إظهار الإجابة في النتيجة:</label>
-            <select id="newProductQuestionShowInResult" style="width:100%; padding:8px; border:1px solid #d1d5db; border-radius:8px; font-size:13px;">
-              <option value="yes">نعم - إظهار الإجابة في النتيجة</option>
-              <option value="no">لا - لا تظهر في النتيجة</option>
-            </select>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px;">
+            <div>
+              <label style="font-size:12px; color:#374151;">👷 نوع الوظيفة:</label>
+              <select id="newProductQuestionJobType" style="width:100%; padding:8px; border:1px solid #d1d5db; border-radius:8px; font-size:13px;">
+                <option value="all">جميع الوظائف</option>
+                <option value="حكومي">حكومي</option>
+                <option value="عسكري">عسكري</option>
+                <option value="قطاع خاص">قطاع خاص</option>
+                <option value="متقاعد">متقاعد</option>
+                <option value="صاحب عمل حر">صاحب عمل حر</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size:12px; color:#374151;">📌 إظهار الإجابة في النتيجة:</label>
+              <select id="newProductQuestionShowInResult" style="width:100%; padding:8px; border:1px solid #d1d5db; border-radius:8px; font-size:13px;">
+                <option value="yes">نعم</option>
+                <option value="no">لا</option>
+              </select>
+            </div>
           </div>
           <div id="productQuestionOptionsDiv" style="display:none;">
             <label style="font-size:12px; color:#374151;">الخيارات (مفصولة بفاصلة):</label>
@@ -4959,6 +4968,10 @@
         if (typeof loadFinanceEntitiesForQuestions === 'function') {
           loadFinanceEntitiesForQuestions();
         }
+        // تحميل المنتجات في القائمة المنسدلة
+        if (typeof loadProductsForQuestions === 'function') {
+          loadProductsForQuestions();
+        }
       }
     }
   };
@@ -4991,21 +5004,32 @@
   // شعارات البنوك وشركات التمويل - يمكن تعديلها من لوحة التحكم
   const BANK_LOGOS_KEY = 'fino_bank_logos';
   const defaultBankLogos = {
-    // البنوك المحلية - روابط مباشرة
-    'مصرف الراجحي': 'https://www.alrajhibank.com.sa/themes/custom/alrajhi_theme/logo.svg',
-    'البنك الأهلي السعودي': 'https://www.snb.com/themes/custom/snb_theme/logo.svg',
-    'بنك الرياض': 'https://www.riyadbank.com/themes/custom/riyadbank_theme/logo.svg',
-    'البنك السعودي الأول': 'https://www.sab.com/themes/custom/sab_theme/logo.svg',
-    'البنك العربي الوطني': 'https://www.anb.com.sa/themes/custom/anb_theme/logo.svg',
-    'مصرف الإنماء': 'https://www.alinma.com/themes/custom/alinma_theme/logo.svg',
-    'البنك السعودي الفرنسي': 'https://www.alfransi.com.sa/themes/custom/alfransi_theme/logo.svg',
-    'البنك السعودي للاستثمار': '',
-    'بنك البلاد': 'https://www.bankalbilad.com/themes/custom/bankalbilad_theme/logo.svg',
-    'بنك الجزيرة': 'https://www.baj.com.sa/themes/custom/baj_theme/logo.svg',
-    'بنك الخليج الدولي': '',
-    'بنك ساب': 'https://www.sab.com/themes/custom/sab_theme/logo.svg',
+    // البنوك المحلية
+    'مصرف الراجحي': 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Al_Rajhi_Bank_Logo.svg/200px-Al_Rajhi_Bank_Logo.svg.png',
+    'البنك الأهلي السعودي': 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Saudi_National_Bank_Logo.svg/200px-Saudi_National_Bank_Logo.svg.png',
+    'بنك الرياض': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Riyad_Bank_logo.svg/200px-Riyad_Bank_logo.svg.png',
+    'البنك السعودي الأول': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Saudi_Awwal_Bank_logo.svg/200px-Saudi_Awwal_Bank_logo.svg.png',
+    'البنك العربي الوطني': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Arab_National_Bank_logo.svg/200px-Arab_National_Bank_logo.svg.png',
+    'مصرف الإنماء': 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Alinma_Bank_logo.svg/200px-Alinma_Bank_logo.svg.png',
+    'البنك السعودي الفرنسي': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Banque_Saudi_Fransi_logo.svg/200px-Banque_Saudi_Fransi_logo.svg.png',
+    'البنك السعودي للاستثمار': 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Saudi_Investment_Bank_logo.svg/200px-Saudi_Investment_Bank_logo.svg.png',
+    'بنك البلاد': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Bank_Albilad_logo.svg/200px-Bank_Albilad_logo.svg.png',
+    'بنك الجزيرة': 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Bank_AlJazira_logo.svg/200px-Bank_AlJazira_logo.svg.png',
+    'بنك الخليج الدولي': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Gulf_International_Bank_logo.svg/200px-Gulf_International_Bank_logo.svg.png',
+    'بنك ساب': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Saudi_Awwal_Bank_logo.svg/200px-Saudi_Awwal_Bank_logo.svg.png',
+    // البنوك الرقمية
+    'بنك STC': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/STC_Pay_logo.svg/200px-STC_Pay_logo.svg.png',
+    'بنك D360': '',
+    'بنك فيجن': '',
+    // البنوك الأجنبية
+    'بنك الإمارات دبي الوطني': 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Emirates_NBD_logo.svg/200px-Emirates_NBD_logo.svg.png',
+    'بنك المشرق': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Mashreq_Bank_logo.svg/200px-Mashreq_Bank_logo.svg.png',
+    'بنك البحرين الوطني': '',
+    'البنك الأول (FAB)': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/First_Abu_Dhabi_Bank_logo.svg/200px-First_Abu_Dhabi_Bank_logo.svg.png',
+    'بنك HSBC': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/HSBC_logo_%282018%29.svg/200px-HSBC_logo_%282018%29.svg.png',
+    'ستاندرد تشارترد': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Standard_Chartered_%282021%29.svg/200px-Standard_Chartered_%282021%29.svg.png',
     // شركات التمويل
-    'عبداللطيف جميل للتمويل': '',
+    'عبداللطيف جميل للتمويل': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Abdul_Latif_Jameel_logo.svg/200px-Abdul_Latif_Jameel_logo.svg.png',
     'شركة تسهيل': '',
     'شركة نايفات': '',
     'شركة اليسر': '',
@@ -6204,13 +6228,14 @@
 
     { id:'months',label:'على كم شهر تريد التمويل؟',type:'select',options:[],dynamic:true },
     { id:'calcMode',label:'كيف تفضّل اختيار النسبة؟',type:'select',options:['أدخل النسبة بنفسي','نسبة على جهة تمويل معينة','ترشيح بنك مناسب تلقائياً'] },
-    { id:'profitMargin',label:'نسبة هامش الربح السنوي (%)؟',type:'number' },
+    { id:'profitMargin',label:'نسبة هامش الربح السنوي (%)؟',type:'number',show:a=>a.calcMode==='أدخل النسبة بنفسي' },
     /* سؤال البنك - يظهر فقط عند اختيار "أدخل النسبة بنفسي" */
     {
       id:'currentBank',
       label:'اذكر البنك الذي عليه هذه النسبة',
       type:'select',
       options:[
+        // البنوك المحلية
         'البنك الأهلي السعودي',
         'مصرف الراجحي',
         'بنك الرياض',
@@ -6221,6 +6246,30 @@
         'البنك السعودي للاستثمار',
         'بنك البلاد',
         'بنك الجزيرة',
+        'البنك السعودي الأول',
+        'بنك الخليج الدولي',
+        // البنوك الرقمية
+        'بنك STC',
+        'بنك D360',
+        'بنك فيجن',
+        // فروع البنوك الأجنبية
+        'بنك الإمارات دبي الوطني',
+        'بنك المشرق',
+        'بنك HSBC',
+        'بنك Citibank',
+        // شركات التمويل
+        'عبداللطيف جميل للتمويل',
+        'شركة تسهيل',
+        'شركة نايفات',
+        'شركة اليسر',
+        'دويتشه الخليج للتمويل',
+        'شركة أملاك العالمية',
+        'شركة دار التمليك',
+        'شركة بداية للتمويل',
+        'شركة كوارا للتمويل',
+        'شركة إمكان للتمويل',
+        'شركة الأمثل للتمويل',
+        'شركة الأولى للتمويل',
         'بنك آخر'
       ],
       show:a=>a.calcMode==='أدخل النسبة بنفسي'
@@ -6515,6 +6564,7 @@
       const productQuestions = loadProductQuestions();
       const currentProduct = answers.financeType;
       const selectedBank = answers.selectedFinanceEntity || answers.currentBank || '';
+      const clientJobType = answers.jobType || '';
       const relevantQuestions = productQuestions.filter(pq => {
         // فحص التفعيل
         if (!pq.enabled) return false;
@@ -6522,6 +6572,8 @@
         if (pq.product !== 'all' && pq.product !== currentProduct) return false;
         // فحص جهة التمويل المستهدفة
         if (pq.target && pq.target !== 'all' && pq.target !== selectedBank) return false;
+        // فحص نوع الوظيفة
+        if (pq.jobType && pq.jobType !== 'all' && pq.jobType !== clientJobType) return false;
         return true;
       });
       
@@ -6652,14 +6704,47 @@
         }
       });
     } else if(q.type === 'financeEntitySelect'){
-      // عرض جميع جهات التمويل المخزنة مع نسبها من إعدادات البنوك
+      // عرض جميع جهات التمويل مع نسبها
       const entitiesContainer = document.createElement('div');
       entitiesContainer.style.cssText = 'max-height:400px; overflow-y:auto; margin-top:10px;';
       
       const bankLogos = typeof getBankLogos === 'function' ? getBankLogos() : {};
       
-      // الحصول على جميع البنوك الفريدة من إعدادات البنوك
-      const uniqueBanks = [...new Set(bankConfigs.map(cfg => cfg.bankName))];
+      // قائمة كاملة بجميع البنوك وشركات التمويل
+      const allFinanceEntities = [
+        // البنوك المحلية
+        'البنك الأهلي السعودي', 'مصرف الراجحي', 'بنك الرياض', 'البنك السعودي الأول',
+        'البنك العربي الوطني', 'مصرف الإنماء', 'البنك السعودي الفرنسي',
+        'البنك السعودي للاستثمار', 'بنك البلاد', 'بنك الجزيرة', 'بنك الخليج الدولي',
+        'بنك ساب',
+        // البنوك الرقمية
+        'بنك STC', 'بنك D360', 'بنك فيجن',
+        // فروع البنوك الأجنبية
+        'بنك الإمارات دبي الوطني', 'بنك المشرق', 'بنك البحرين الوطني',
+        'البنك الأول (FAB)', 'بنك HSBC', 'بنك Citibank',
+        // شركات التمويل العقاري
+        'أملاك العالمية للتمويل', 'شركة دار التمليك', 'شركة سهل للتمويل',
+        'شركة مسار النمو للتمويل', 'شركة عبداللطيف جميل للتمويل العقاري',
+        'شركة بداية للتمويل', 'الشركة السعودية لإعادة التمويل العقاري',
+        // شركات التمويل الاستهلاكي والإيجار
+        'شركة النايفات للتمويل', 'شركة ينال للتمويل', 'شركة اليسر للإجارة والتمويل',
+        'شركة آجل للخدمات التمويلية', 'الشركة الوطنية للتمويل', 'شركة المرابحة المرنة للتمويل',
+        'شركة كرناف للتمويل', 'شركة الجاسرية للتمويل', 'شركة متاجر للتمويل',
+        'شركة تسهيل للتمويل', 'شركة السعودي الفرنسي للتأجير التمويلي',
+        'شركة الأولى للتمويل', 'شركة الجبر للتمويل', 'شركة موني للتمويل',
+        'شركة كوارا للتمويل', 'شركة إمكان للتمويل', 'شركة الأمثل للتمويل',
+        'شركة دويتشه الخليج للتمويل', 'شركة الراجحي للتمويل', 'شركة الأهلي للتمويل',
+        'شركة التسهيلات المالية', 'شركة رسن للتمويل', 'شركة لندو للتمويل',
+        // شركات التمويل الجماعي والتقنية المالية
+        'شركة فندينغ سوق للتمويل', 'شركة منافع للتمويل', 'شركة سلفة للتمويل',
+        'شركة تمارا للتمويل', 'شركة تابي للتمويل', 'شركة سبوتي للتمويل',
+        'شركة بوست باي للتمويل', 'شركة قسطها للتمويل', 'شركة حصيل للتمويل',
+        'شركة ليندا للتمويل', 'شركة فرصة للتمويل', 'شركة سكوبير للتمويل'
+      ];
+      
+      // دمج البنوك المخزنة في bankConfigs مع القائمة الكاملة
+      const banksFromConfigs = [...new Set(bankConfigs.map(cfg => cfg.bankName))];
+      const uniqueBanks = [...new Set([...allFinanceEntities, ...banksFromConfigs])];
       
       uniqueBanks.forEach(bankName => {
         // الحصول على النسبة المناسبة حسب بيانات العميل
@@ -7134,6 +7219,12 @@
       if (consumerInst + totalCommits > maxAll) {
         showPage('result');
         const name = answers.clientName || 'العميل';
+        // أيقونة نوع الوظيفة لنتيجة العجز
+        const deficitJobIcon = answers.jobType === 'عسكري' ? '🎖️' : 
+                               answers.jobType === 'حكومي' ? '👔' : 
+                               answers.jobType === 'قطاع خاص' ? '🏢' : 
+                               answers.jobType === 'متقاعد' ? '🧓' : '👤';
+        const deficitJobLabel = answers.jobType || 'غير محدد';
         const resultCard = document.getElementById('resultCard');
         resultCard.innerHTML = `
           <h2 style="margin:0 0 6px; font-size:18px; text-align:right; color:#111827;">
@@ -7143,7 +7234,7 @@
             تاريخ ووقت الحسبة: ${calcDateTimeStr}
           </div>
           <div class="result-header">
-            <div class="client-chip">مرحباً ومسهلا يا ${name}</div>
+            <div class="client-chip">${deficitJobIcon} مرحباً ومسهلا يا ${name} <span style="font-size:11px; color:#6b7280; margin-right:5px;">(${deficitJobLabel})</span></div>
             <div style="text-align:right;">
               <span class="badge-mode">تمويل استهلاكي - نظام 11.67%</span><br>
               <span class="badge-duration">مدة التمويل: ${describeMonths(months)}</span>
@@ -7215,11 +7306,18 @@
       showPage('result');
       const resultCard = document.getElementById('resultCard');
 
+      // أيقونة نوع الوظيفة للتمويل الاستهلاكي
+      const consumerJobIcon = answers.jobType === 'عسكري' ? '🎖️' : 
+                              answers.jobType === 'حكومي' ? '👔' : 
+                              answers.jobType === 'قطاع خاص' ? '🏢' : 
+                              answers.jobType === 'متقاعد' ? '🧓' : '👤';
+      const consumerJobLabel = answers.jobType || 'غير محدد';
+      
       let html = '';
       html += `<h2 style="margin:0 0 6px; font-size:18px; text-align:right; color:#111827;">نتيجة الحسبة (التقريبية)</h2>`;
       html += `<div style="font-size:12px; color:#6b7280; text-align:right; margin-bottom:4px;">تاريخ ووقت الحسبة: ${calcDateTimeStr}</div>`;
       html += `<div class="result-header">
-        <div class="client-chip">مرحباً ومسهلا يا ${name}</div>
+        <div class="client-chip">${consumerJobIcon} مرحباً ومسهلا يا ${name} <span style="font-size:11px; color:#6b7280; margin-right:5px;">(${consumerJobLabel})</span></div>
         <div style="text-align:right;">
           <span class="badge-mode">تمويل استهلاكي - نظام 11.67%</span><br>
           <span class="badge-duration">مدة التمويل: ${duration}</span>
@@ -7228,12 +7326,16 @@
 
       if (recommendedBank) {
         const b = recommendedBank;
-        const logoSrc = bankLogoMap[b.bankName];
+        // الحصول على شعار البنك من الدالة المخصصة
+        const logoSrc = typeof getBankLogo === 'function' ? getBankLogo(b.bankName) : (bankLogoMap[b.bankName] || '');
         const bankNoteHtml = b.bankNote ? `<div style="margin-top:8px; background:linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); padding:8px 12px; border-radius:8px; font-size:12px; color:#92400e;"><strong>📌 ملاحظة:</strong> ${b.bankNote}</div>` : '';
         html += `<div class="bank-card">
-          <div class="bank-logo">${logoSrc ? `<img src="${logoSrc}" alt="${b.bankName}">` : '🏦'}</div>
-          <div style="text-align:right">
-            <div class="bank-text-main">${b.bankName}</div>
+          <div class="bank-logo">${logoSrc ? `<img src="${logoSrc}" alt="${b.bankName}" style="width:60px; height:60px; object-fit:contain; border-radius:10px;">` : '🏦'}</div>
+          <div style="text-align:right; flex:1;">
+            <div class="bank-text-main" style="display:flex; align-items:center; gap:8px; justify-content:flex-end;">
+              <span>${b.bankName}</span>
+              ${logoSrc ? `<img src="${logoSrc}" style="width:24px; height:24px; object-fit:contain; border-radius:4px;">` : ''}
+            </div>
             <div class="bank-text-sub">تم ترشيح هذا البنك/الشركة بناءً على راتبك ونوع التمويل بنسبة هامش ربح تقريبية: <strong>${b.margin}%</strong></div>
             ${bankNoteHtml}
           </div>
@@ -7594,8 +7696,15 @@
     
     html += `<div style="font-size:13px; color:#64748b; text-align:right; margin-bottom:8px;">تاريخ ووقت الحسبة: ${calcDateTimeStr}</div>`;
 
+    // أيقونة نوع الوظيفة
+    const jobTypeIcon = answers.jobType === 'عسكري' ? '🎖️' : 
+                        answers.jobType === 'حكومي' ? '👔' : 
+                        answers.jobType === 'قطاع خاص' ? '🏢' : 
+                        answers.jobType === 'متقاعد' ? '🧓' : '👤';
+    const jobTypeLabel = answers.jobType || 'غير محدد';
+    
     html += `<div class="result-header">
-      <div class="client-chip">👤 ${name}</div>
+      <div class="client-chip">${jobTypeIcon} ${name} <span style="font-size:11px; color:#6b7280; margin-right:5px;">(${jobTypeLabel})</span></div>
       <div style="text-align:right;">
         <span class="badge-mode">${answers.calcMode === 'ترشيح بنك مناسب تلقائياً' ? '🏦 ترشيح بنك مناسب' : '📊 الحسبة على النسبة المدخلة'}</span><br>
         <span class="badge-duration">📅 مدة التمويل: ${duration}</span>
@@ -7608,12 +7717,16 @@
 
     if (recommendedBank) {
       const b = recommendedBank;
-      const logoSrc = bankLogoMap[b.bankName];
+      // الحصول على شعار البنك من الدالة المخصصة
+      const logoSrc = typeof getBankLogo === 'function' ? getBankLogo(b.bankName) : (bankLogoMap[b.bankName] || '');
       const bankNoteHtml = b.bankNote ? `<div style="margin-top:8px; background:linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); padding:8px 12px; border-radius:8px; font-size:12px; color:#92400e;"><strong>📌 ملاحظة:</strong> ${b.bankNote}</div>` : '';
       html += `<div class="bank-card">
-        <div class="bank-logo">${logoSrc ? `<img src="${logoSrc}" alt="${b.bankName}">` : '🏦'}</div>
-        <div style="text-align:right">
-          <div class="bank-text-main">${b.bankName}</div>
+        <div class="bank-logo">${logoSrc ? `<img src="${logoSrc}" alt="${b.bankName}" style="width:60px; height:60px; object-fit:contain; border-radius:10px;">` : '🏦'}</div>
+        <div style="text-align:right; flex:1;">
+          <div class="bank-text-main" style="display:flex; align-items:center; gap:8px; justify-content:flex-end;">
+            <span>${b.bankName}</span>
+            ${logoSrc ? `<img src="${logoSrc}" style="width:24px; height:24px; object-fit:contain; border-radius:4px;">` : ''}
+          </div>
           <div class="bank-text-sub">تم ترشيح هذا البنك/الشركة بناءً على راتبك ونوع التمويل بنسبة هامش ربح تقريبية: <strong>${b.margin}%</strong></div>
           ${bankNoteHtml}
         </div>
@@ -7898,6 +8011,7 @@
     // إضافة إجابات الأسئلة المخصصة للمنتجات في النتيجة
     const productQuestions = loadProductQuestions();
     const selectedBank = answers.selectedFinanceEntity || answers.currentBank || '';
+    const clientJobType = answers.jobType || '';
     const relevantProductQuestions = productQuestions.filter(pq => {
       // فحص التفعيل
       if (!pq.enabled) return false;
@@ -7905,6 +8019,8 @@
       if (pq.product !== 'all' && pq.product !== financeType) return false;
       // فحص جهة التمويل المستهدفة
       if (pq.target && pq.target !== 'all' && pq.target !== selectedBank) return false;
+      // فحص نوع الوظيفة
+      if (pq.jobType && pq.jobType !== 'all' && pq.jobType !== clientJobType) return false;
       // فحص إظهار في النتيجة
       if (pq.showInResult === 'no') return false;
       return true;
@@ -10403,6 +10519,7 @@ ${contact}`.trim();
     const target = document.getElementById('newProductQuestionTarget')?.value || 'all';
     const visibility = document.getElementById('newProductQuestionVisibility')?.value || 'show';
     const showInResult = document.getElementById('newProductQuestionShowInResult')?.value || 'yes';
+    const jobType = document.getElementById('newProductQuestionJobType')?.value || 'all';
     
     if (!text) {
       showToast('يرجى إدخال نص السؤال', 'error');
@@ -10419,6 +10536,7 @@ ${contact}`.trim();
       target: target,
       visibility: visibility,
       showInResult: showInResult,
+      jobType: jobType,
       enabled: visibility === 'show'
     };
     
@@ -10431,6 +10549,7 @@ ${contact}`.trim();
     if (document.getElementById('newProductQuestionTarget')) document.getElementById('newProductQuestionTarget').value = 'all';
     if (document.getElementById('newProductQuestionVisibility')) document.getElementById('newProductQuestionVisibility').value = 'show';
     if (document.getElementById('newProductQuestionShowInResult')) document.getElementById('newProductQuestionShowInResult').value = 'yes';
+    if (document.getElementById('newProductQuestionJobType')) document.getElementById('newProductQuestionJobType').value = 'all';
     
     renderProductQuestionsList();
     showToast('تم إضافة السؤال بنجاح! ✅');
@@ -10441,13 +10560,69 @@ ${contact}`.trim();
     const select = document.getElementById('newProductQuestionTarget');
     if (!select) return;
     
-    // الحصول على جميع الجهات الفريدة من إعدادات البنوك
-    const uniqueBanks = [...new Set(bankConfigs.map(cfg => cfg.bankName))];
+    // قائمة كاملة بجميع البنوك وشركات التمويل
+    const allFinanceEntities = [
+      // البنوك المحلية
+      'البنك الأهلي السعودي', 'مصرف الراجحي', 'بنك الرياض', 'البنك السعودي الأول',
+      'البنك العربي الوطني', 'مصرف الإنماء', 'البنك السعودي الفرنسي',
+      'البنك السعودي للاستثمار', 'بنك البلاد', 'بنك الجزيرة', 'بنك الخليج الدولي',
+      'بنك ساب',
+      // البنوك الرقمية
+      'بنك STC', 'بنك D360', 'بنك فيجن',
+      // فروع البنوك الأجنبية
+      'بنك الإمارات دبي الوطني', 'بنك المشرق', 'بنك البحرين الوطني',
+      'البنك الأول (FAB)', 'بنك HSBC', 'بنك Citibank',
+      // شركات التمويل العقاري
+      'أملاك العالمية للتمويل', 'شركة دار التمليك', 'شركة سهل للتمويل',
+      'شركة مسار النمو للتمويل', 'شركة عبداللطيف جميل للتمويل العقاري',
+      'شركة بداية للتمويل', 'الشركة السعودية لإعادة التمويل العقاري',
+      // شركات التمويل الاستهلاكي والإيجار
+      'شركة النايفات للتمويل', 'شركة ينال للتمويل', 'شركة اليسر للإجارة والتمويل',
+      'شركة آجل للخدمات التمويلية', 'الشركة الوطنية للتمويل', 'شركة المرابحة المرنة للتمويل',
+      'شركة كرناف للتمويل', 'شركة الجاسرية للتمويل', 'شركة متاجر للتمويل',
+      'شركة تسهيل للتمويل', 'شركة السعودي الفرنسي للتأجير التمويلي',
+      'شركة الأولى للتمويل', 'شركة الجبر للتمويل', 'شركة موني للتمويل',
+      'شركة كوارا للتمويل', 'شركة إمكان للتمويل', 'شركة الأمثل للتمويل',
+      'شركة دويتشه الخليج للتمويل', 'شركة الراجحي للتمويل', 'شركة الأهلي للتمويل',
+      'شركة التسهيلات المالية', 'شركة رسن للتمويل', 'شركة لندو للتمويل',
+      // شركات التمويل الجماعي والتقنية المالية
+      'شركة فندينغ سوق للتمويل', 'شركة منافع للتمويل', 'شركة سلفة للتمويل',
+      'شركة تمارا للتمويل', 'شركة تابي للتمويل', 'شركة سبوتي للتمويل',
+      'شركة بوست باي للتمويل', 'شركة قسطها للتمويل', 'شركة حصيل للتمويل',
+      'شركة ليندا للتمويل', 'شركة فرصة للتمويل', 'شركة سكوبير للتمويل'
+    ];
+    
+    // دمج البنوك المخزنة في bankConfigs مع القائمة الكاملة
+    const banksFromConfigs = [...new Set(bankConfigs.map(cfg => cfg.bankName))];
+    const uniqueBanks = [...new Set([...allFinanceEntities, ...banksFromConfigs])];
     
     // إعادة بناء القائمة
     select.innerHTML = '<option value="all">جميع الجهات</option>';
     uniqueBanks.forEach(bank => {
       select.innerHTML += `<option value="${bank}">${bank}</option>`;
+    });
+  }
+
+  // دالة تحميل المنتجات في القائمة المنسدلة للأسئلة
+  function loadProductsForQuestions() {
+    const select = document.getElementById('newProductQuestionProduct');
+    if (!select) return;
+    
+    // الحصول على المنتجات الديناميكية
+    const products = (typeof loadDynamicProducts === 'function') ? loadDynamicProducts() : [];
+    
+    // إعادة بناء القائمة
+    select.innerHTML = '<option value="all">جميع المنتجات</option>';
+    
+    // إضافة المنتجات الافتراضية
+    const defaultProducts = ['تمويل شخصي', 'تمويل استهلاكي', 'تمويل تأجيري', 'تمويل عقاري', 'شراء مديونية'];
+    
+    // دمج المنتجات الديناميكية مع الافتراضية
+    const productNames = products.map(p => p.name);
+    const allProducts = [...new Set([...defaultProducts, ...productNames])];
+    
+    allProducts.forEach(name => {
+      select.innerHTML += `<option value="${name}">${name}</option>`;
     });
   }
 
@@ -10466,6 +10641,7 @@ ${contact}`.trim();
     questions.forEach((q, i) => {
       const targetLabel = q.target === 'all' ? 'جميع الجهات' : q.target;
       const showInResultLabel = q.showInResult === 'yes' ? '✅ تظهر في النتيجة' : '❌ لا تظهر';
+      const jobTypeLabel = q.jobType === 'all' || !q.jobType ? 'جميع الوظائف' : q.jobType;
       html += `
         <div class="question-item ${!q.enabled ? 'question-hidden' : ''}" style="margin-bottom:8px;">
           <span class="question-text" style="flex:1;">
@@ -10474,7 +10650,7 @@ ${contact}`.trim();
               المنتج: ${q.product === 'all' ? 'الكل' : q.product} | النوع: ${q.type === 'text' ? 'نص' : q.type === 'number' ? 'رقم' : 'قائمة'}
             </span>
             <span style="font-size:11px; color:#3b82f6; display:block;">
-              🎯 المستهدف: ${targetLabel} | ${showInResultLabel}
+              🎯 المستهدف: ${targetLabel} | 👷 الوظيفة: ${jobTypeLabel} | ${showInResultLabel}
             </span>
           </span>
           <div class="question-actions">
