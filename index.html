@@ -7165,6 +7165,24 @@
     console.log('نوع التمويل:', financeType);
     console.log('الدعم:', supported);
 
+    // ====== معالجة ترشيح البنك تلقائياً ======
+    // إذا كان المستخدم اختار "ترشيح بنك مناسب تلقائياً"، نحصل على النسبة من البنك المرشح
+    if (answers.calcMode === 'ترشيح بنك مناسب تلقائياً') {
+      console.log('وضع ترشيح البنك تلقائياً - جاري البحث عن أفضل بنك...');
+      const matchingBanks = getMatchingBanksForAnswers();
+      console.log('البنوك المطابقة:', matchingBanks);
+      if (matchingBanks && matchingBanks.length > 0) {
+        const bestBank = matchingBanks[0];
+        answers.profitMargin = bestBank.margin;
+        answers.recommendedBank = bestBank;
+        console.log('تم اختيار البنك:', bestBank.bankName, 'بنسبة:', bestBank.margin);
+      } else {
+        // إذا لم يتم العثور على بنك مطابق، نستخدم نسبة افتراضية
+        answers.profitMargin = 5.0;
+        console.log('لم يتم العثور على بنك مطابق، استخدام نسبة افتراضية: 5.0%');
+      }
+    }
+
     // تنظيف ومعالجة النسبة المدخلة
     let profitMarginRaw = String(answers.profitMargin || '').trim();
     // استبدال الفاصلة العربية بالنقطة الإنجليزية
