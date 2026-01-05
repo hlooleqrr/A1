@@ -2523,6 +2523,19 @@
             <label>ملاحظة للعميل (اختياري) <span style="color:#6b7280; font-size:11px;">تظهر في صفحة النتيجة</span></label>
             <input id="adminBankNote" type="text" placeholder="مثال: عرض نهاية العام - نسبة مميزة حتى 31 ديسمبر" />
           </div>
+          <div>
+            <label>تاريخ انتهاء النسبة (اختياري) <span style="color:#6b7280; font-size:11px;">للتنبيه</span></label>
+            <select id="adminRateExpiry" style="width:100%;">
+              <option value="">بدون تاريخ انتهاء</option>
+              <option value="7">بعد 7 أيام</option>
+              <option value="14">بعد 14 يوم</option>
+              <option value="30">بعد 30 يوم (شهر)</option>
+              <option value="60">بعد 60 يوم (شهرين)</option>
+              <option value="90">بعد 90 يوم (3 أشهر)</option>
+              <option value="custom">تاريخ مخصص...</option>
+            </select>
+            <input id="adminRateExpiryCustom" type="date" style="display:none; width:100%; margin-top:5px;" />
+          </div>
         </div>
         <input type="hidden" id="adminEditIndex" value="" />
         <div style="text-align:left; margin-top:10px;">
@@ -2714,6 +2727,7 @@
             <label>جهة التمويل (البنك/الشركة) <span style="color:#ef4444;">*</span></label>
             <select id="fpFinanceEntity" style="width:100%; padding:10px; border:1px solid #d1d5db; border-radius:8px;">
               <option value="">اختر جهة التمويل...</option>
+              <option value="الكل" style="background:#dcfce7; font-weight:bold;">✅ الكل (جميع جهات التمويل)</option>
               <option value="البنك الأهلي السعودي">البنك الأهلي السعودي</option>
               <option value="مصرف الراجحي">مصرف الراجحي</option>
               <option value="بنك الرياض">بنك الرياض</option>
@@ -5236,13 +5250,35 @@
     try {
       const saved = localStorage.getItem('stBankConfigs');
       if (saved) {
-        bankConfigs = JSON.parse(saved);
+        const savedConfigs = JSON.parse(saved);
+        // دمج النسب الافتراضية الجديدة مع المحفوظة
+        // إضافة النسب الجديدة التي لا توجد في المحفوظة
+        const mergedConfigs = [...savedConfigs];
+        defaultBankConfigs.forEach(defaultCfg => {
+          // التحقق من عدم وجود نفس التكوين
+          const exists = savedConfigs.some(saved => 
+            saved.bankName === defaultCfg.bankName &&
+            saved.financeType === defaultCfg.financeType &&
+            saved.minSalary === defaultCfg.minSalary &&
+            saved.maxSalary === defaultCfg.maxSalary &&
+            saved.jobType === defaultCfg.jobType &&
+            saved.minMonths === defaultCfg.minMonths &&
+            saved.maxMonths === defaultCfg.maxMonths &&
+            saved.etezaaz === defaultCfg.etezaaz &&
+            saved.productDetail === defaultCfg.productDetail
+          );
+          if (!exists) {
+            mergedConfigs.push(defaultCfg);
+          }
+        });
+        bankConfigs = mergedConfigs;
+        saveBankConfigs();
       } else {
-        bankConfigs = defaultBankConfigs;
+        bankConfigs = [...defaultBankConfigs];
         saveBankConfigs();
       }
     } catch (e) {
-      bankConfigs = defaultBankConfigs;
+      bankConfigs = [...defaultBankConfigs];
     }
     renderBankTable();
   }
@@ -5303,6 +5339,9 @@
     document.getElementById('adminAgeCalcType').value = 'hijri';
     document.getElementById('adminMaxAge').value = '';
     document.getElementById('adminBankNote').value = '';
+    document.getElementById('adminRateExpiry').value = '';
+    document.getElementById('adminRateExpiryCustom').value = '';
+    document.getElementById('adminRateExpiryCustom').style.display = 'none';
     document.getElementById('adminEditIndex').value = '';
   }
 
@@ -5322,7 +5361,20 @@
     const ageCalcType = document.getElementById('adminAgeCalcType').value;
     const maxAge = parseInt(document.getElementById('adminMaxAge').value || '60');
     const bankNote = (document.getElementById('adminBankNote').value || '').trim();
+    const rateExpirySelect = document.getElementById('adminRateExpiry').value;
+    const rateExpiryCustom = document.getElementById('adminRateExpiryCustom').value;
     const editIndex = document.getElementById('adminEditIndex').value;
+    
+    // حساب تاريخ انتهاء النسبة
+    let rateExpiryDate = null;
+    if (rateExpirySelect === 'custom' && rateExpiryCustom) {
+      rateExpiryDate = rateExpiryCustom;
+    } else if (rateExpirySelect && rateExpirySelect !== '') {
+      const days = parseInt(rateExpirySelect);
+      const expiry = new Date();
+      expiry.setDate(expiry.getDate() + days);
+      rateExpiryDate = expiry.toISOString().split('T')[0];
+    }
 
     if (!bankName || !margin || !minSalary || !maxSalary) {
       alert('رجاءً أكمل جميع الحقول الأساسية.');
@@ -5336,6 +5388,7 @@
     if (productDetail) cfg.productDetail = productDetail;
     if (etezaaz) cfg.etezaaz = etezaaz;
     if (bankNote) cfg.bankNote = bankNote;
+    if (rateExpiryDate) cfg.rateExpiryDate = rateExpiryDate;
     cfg.ageCalcType = ageCalcType || 'hijri';
     cfg.maxAge = maxAge || 60;
 
@@ -5363,6 +5416,18 @@
     document.getElementById('adminAgeCalcType').value = cfg.ageCalcType || 'hijri';
     document.getElementById('adminMaxAge').value = cfg.maxAge || '';
     document.getElementById('adminBankNote').value = cfg.bankNote || '';
+    // تحميل تاريخ انتهاء النسبة
+    const rateExpiryEl = document.getElementById('adminRateExpiry');
+    const rateExpiryCustomEl = document.getElementById('adminRateExpiryCustom');
+    if (cfg.rateExpiryDate) {
+      rateExpiryEl.value = 'custom';
+      rateExpiryCustomEl.value = cfg.rateExpiryDate;
+      rateExpiryCustomEl.style.display = 'block';
+    } else {
+      rateExpiryEl.value = '';
+      rateExpiryCustomEl.value = '';
+      rateExpiryCustomEl.style.display = 'none';
+    }
     document.getElementById('adminEditIndex').value = index;
   }
 
@@ -5437,20 +5502,37 @@
     const mortgageDetail = answers.mortgageProductType || '';
     const wantsEtezaaz = (answers.financeType === 'تمويل عقاري' && answers.supported === 'مدعوم' && answers.isEtezaaz === 'نعم');
 
+    console.log('بحث عن بنوك مطابقة:', { fType, salary, supp, jobType, months });
+
     const list = bankConfigs.filter(cfg => {
+      // فحص نوع التمويل
       if (cfg.financeType !== fType) return false;
+      
+      // فحص الراتب
       if (!(salary >= cfg.minSalary && salary <= cfg.maxSalary)) return false;
+      
+      // فحص الدعم
       if (!(cfg.supportedType === 'الكل' || cfg.supportedType === supp)) return false;
 
-      if (cfg.jobType && jobType && cfg.jobType !== jobType) return false;
+      // فحص نوع الوظيفة - الكل يعني متاح لجميع الوظائف
+      if (cfg.jobType && cfg.jobType !== 'الكل' && jobType && cfg.jobType !== jobType) return false;
+      
+      // فحص المدة بالأشهر
       if (cfg.minMonths && months && months < cfg.minMonths) return false;
       if (cfg.maxMonths && months && months > cfg.maxMonths) return false;
+      
+      // فحص تفاصيل المنتج
       if (cfg.productDetail && mortgageDetail && cfg.productDetail !== mortgageDetail) return false;
+      
+      // فحص برنامج اعتزاز
       if (wantsEtezaaz && cfg.etezaaz && cfg.etezaaz !== 'نعم') return false;
 
       return true;
     });
 
+    console.log('البنوك المطابقة قبل الترتيب:', list.length);
+    
+    // ترتيب حسب النسبة الأقل
     list.sort((a,b)=> a.margin - b.margin);
     return list;
   }
@@ -6044,7 +6126,7 @@
   let generalQuestions = [
     { id:'clientName',label:'تعرفنا بأسمك  ',type:'text' },
     { id:'birthDate',label:'تاريخ الميلاد هجري\u2728',type:'birthdate' },
-    { id:'jobType',label:'نوع الوظيفة',type:'select',options: ['حكومي', 'عسكري', 'قطاع خاص', 'متقاعد'] },
+    { id:'jobType',label:'نوع الوظيفة',type:'select',options: function() { return typeof getJobTypeOptions === 'function' ? getJobTypeOptions() : ['حكومي', 'عسكري', 'قطاع خاص', 'متقاعد']; } },
     {
       id:'militaryRank',
       label:'اذكر الرتبة العسكرية',
@@ -6278,7 +6360,8 @@
     {
       id:'selectedFinanceEntity',
       label:'اختر جهة التمويل',
-      type:'financeEntitySelect',
+      type:'select',
+      options: () => getAllFinanceEntities(),
       show:a=>a.calcMode==='نسبة على جهة تمويل معينة'
     },
     {
@@ -6744,7 +6827,9 @@
       
       // دمج البنوك المخزنة في bankConfigs مع القائمة الكاملة
       const banksFromConfigs = [...new Set(bankConfigs.map(cfg => cfg.bankName))];
-      const uniqueBanks = [...new Set([...allFinanceEntities, ...banksFromConfigs])];
+      // إضافة الجهات المخصصة من localStorage
+      const customBanks = JSON.parse(localStorage.getItem('fino_custom_banks') || '[]').map(b => b.name);
+      const uniqueBanks = [...new Set([...allFinanceEntities, ...banksFromConfigs, ...customBanks])];
       
       uniqueBanks.forEach(bankName => {
         // الحصول على النسبة المناسبة حسب بيانات العميل
@@ -6820,7 +6905,9 @@
           sel.innerHTML += `<option value="${y}">${y}</option>`;
         }
       } else {
-        q.options.forEach(opt => {
+        // دعم الخيارات الديناميكية (دالة أو مصفوفة)
+        const optionsList = typeof q.options === 'function' ? q.options() : q.options;
+        optionsList.forEach(opt => {
           sel.innerHTML += `<option value="${opt}">${opt}</option>`;
         });
       }
@@ -7738,6 +7825,27 @@
       // الحصول على شعار البنك من الدالة المخصصة
       const logoSrc = typeof getBankLogo === 'function' ? getBankLogo(b.bankName) : (bankLogoMap[b.bankName] || '');
       const bankNoteHtml = b.bankNote ? `<div style="margin-top:8px; background:linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); padding:8px 12px; border-radius:8px; font-size:12px; color:#92400e;"><strong>📌 ملاحظة:</strong> ${b.bankNote}</div>` : '';
+      
+      // تنبيه اقتراب انتهاء صلاحية النسبة
+      let rateExpiryHtml = '';
+      if (b.rateExpiryDate) {
+        const expiryDate = new Date(b.rateExpiryDate);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        expiryDate.setHours(0, 0, 0, 0);
+        const diffTime = expiryDate - today;
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        
+        if (diffDays <= 10 && diffDays > 0) {
+          rateExpiryHtml = `<div style="margin-top:8px; background:linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%); padding:8px 12px; border-radius:8px; font-size:12px; color:#991b1b; border:1px solid #fca5a5;">
+            <strong>⚠️ تنبيه:</strong> هذه النسبة صالحة لمدة <strong>${diffDays} يوم</strong> فقط! قد تتغير بعد ذلك.
+          </div>`;
+        } else if (diffDays <= 0) {
+          rateExpiryHtml = `<div style="margin-top:8px; background:linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%); padding:8px 12px; border-radius:8px; font-size:12px; color:#991b1b; border:1px solid #fca5a5;">
+            <strong>⚠️ تنبيه:</strong> هذه النسبة <strong>منتهية الصلاحية</strong>! يرجى التأكد من جهة التمويل.
+          </div>`;
+        }
+      }
       html += `<div class="bank-card">
         <div class="bank-logo">${logoSrc ? `<img src="${logoSrc}" alt="${b.bankName}" style="width:60px; height:60px; object-fit:contain; border-radius:10px;">` : '🏦'}</div>
         <div style="text-align:right; flex:1;">
@@ -7747,6 +7855,7 @@
           </div>
           <div class="bank-text-sub">تم ترشيح هذا البنك/الشركة بناءً على راتبك ونوع التمويل بنسبة هامش ربح تقريبية: <strong>${b.margin}%</strong></div>
           ${bankNoteHtml}
+          ${rateExpiryHtml}
         </div>
       </div>`;
     }
@@ -12739,27 +12848,71 @@ ${contact}`.trim();
     
     // تحديث قائمة جهات التمويل بالجهات المخصصة
     updateFinanceEntityDropdown();
+    
+    // إظهار حقل التاريخ المخصص عند اختيار "تاريخ مخصص"
+    const rateExpirySelect = document.getElementById('adminRateExpiry');
+    const rateExpiryCustom = document.getElementById('adminRateExpiryCustom');
+    if (rateExpirySelect && rateExpiryCustom) {
+      rateExpirySelect.addEventListener('change', function() {
+        if (this.value === 'custom') {
+          rateExpiryCustom.style.display = 'block';
+          rateExpiryCustom.focus();
+        } else {
+          rateExpiryCustom.style.display = 'none';
+          rateExpiryCustom.value = '';
+        }
+      });
+    }
   });
   
+  function getAllFinanceEntities() {
+    const defaultEntities = [
+      'البنك الأهلي السعودي', 'مصرف الراجحي', 'بنك الرياض', 'بنك ساب', 'البنك العربي الوطني',
+      'مصرف الإنماء', 'البنك السعودي الفرنسي', 'البنك السعودي للاستثمار', 'بنك البلاد',
+      'بنك الجزيرة', 'شركة تسهيل', 'شركة نايفات', 'شركة اليسر'
+    ];
+    const customBanks = JSON.parse(localStorage.getItem('fino_custom_banks') || '[]');
+    const customEntities = customBanks.map(b => b.name);
+    
+    // دمج وإزالة التكرار
+    return [...new Set([...defaultEntities, ...customEntities])];
+  }
+
   function updateFinanceEntityDropdown() {
     const entitySelect = document.getElementById('fpFinanceEntity');
     if (!entitySelect) return;
     
-    const customBanks = JSON.parse(localStorage.getItem('fino_custom_banks') || '[]');
+    const allEntities = getAllFinanceEntities();
     const lastOption = entitySelect.lastElementChild;
     
-    // إزالة الجهات المخصصة السابقة
-    const customOptions = entitySelect.querySelectorAll('option[data-custom="true"]');
-    customOptions.forEach(opt => opt.remove());
+    // إزالة الخيارات الحالية باستثناء الأول والأخير (إضافة جهة جديدة)
+    const firstOption = entitySelect.firstElementChild;
+    const allOptions = Array.from(entitySelect.options);
     
-    // إضافة الجهات المخصصة
-    customBanks.forEach(bank => {
-      const opt = document.createElement('option');
-      opt.value = bank.name;
-      opt.textContent = bank.name;
-      opt.dataset.custom = 'true';
-      entitySelect.insertBefore(opt, lastOption);
+    // الاحتفاظ بـ "اختر جهة التمويل" و "الكل" و "إضافة جهة جديدة"
+    entitySelect.innerHTML = '';
+    entitySelect.appendChild(firstOption);
+    
+    const allOpt = document.createElement('option');
+    allOpt.value = 'الكل';
+    allOpt.textContent = '✅ الكل (جميع جهات التمويل)';
+    allOpt.style.background = '#dcfce7';
+    allOpt.style.fontWeight = 'bold';
+    entitySelect.appendChild(allOpt);
+    
+    allEntities.forEach(name => {
+      if (name !== 'الكل') {
+        const opt = document.createElement('option');
+        opt.value = name;
+        opt.textContent = name;
+        entitySelect.appendChild(opt);
+      }
     });
+    
+    const newOpt = document.createElement('option');
+    newOpt.value = 'جهة جديدة';
+    newOpt.textContent = '➕ إضافة جهة جديدة';
+    entitySelect.appendChild(newOpt);
   }
   
   // دالة تحديث جميع قوائم البنوك وجهات التمويل
