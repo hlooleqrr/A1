@@ -5120,6 +5120,96 @@
   // خريطة الشعارات القديمة للتوافق العكسي
   const bankLogoMap = getBankLogos();
 
+  // ====== الدالة المركزية لقائمة جهات التمويل المشتركة ======
+  // هذه الدالة تُستخدم في كل مكان: لوحة تحكم المسؤول + واجهة العميل
+  function getMasterFinanceEntitiesList() {
+    // القائمة الأساسية لجميع جهات التمويل المرخصة من ساما
+    const defaultEntities = [
+      // البنوك المحلية (12 بنك)
+      { name: 'البنك الأهلي السعودي', type: 'بنك محلي' },
+      { name: 'مصرف الراجحي', type: 'بنك محلي' },
+      { name: 'بنك الرياض', type: 'بنك محلي' },
+      { name: 'البنك السعودي الأول', type: 'بنك محلي' },
+      { name: 'البنك العربي الوطني', type: 'بنك محلي' },
+      { name: 'مصرف الإنماء', type: 'بنك محلي' },
+      { name: 'البنك السعودي الفرنسي', type: 'بنك محلي' },
+      { name: 'البنك السعودي للاستثمار', type: 'بنك محلي' },
+      { name: 'بنك البلاد', type: 'بنك محلي' },
+      { name: 'بنك الجزيرة', type: 'بنك محلي' },
+      { name: 'بنك الخليج الدولي', type: 'بنك محلي' },
+      { name: 'بنك ساب', type: 'بنك محلي' },
+      // البنوك الرقمية
+      { name: 'بنك STC', type: 'بنك رقمي' },
+      { name: 'بنك D360', type: 'بنك رقمي' },
+      { name: 'بنك فيجن', type: 'بنك رقمي' },
+      // فروع البنوك الأجنبية
+      { name: 'بنك الإمارات دبي الوطني', type: 'بنك أجنبي' },
+      { name: 'بنك المشرق', type: 'بنك أجنبي' },
+      { name: 'بنك البحرين الوطني', type: 'بنك أجنبي' },
+      { name: 'البنك الأول (FAB)', type: 'بنك أجنبي' },
+      { name: 'بنك HSBC', type: 'بنك أجنبي' },
+      { name: 'بنك Citibank', type: 'بنك أجنبي' },
+      // شركات التمويل العقاري
+      { name: 'أملاك العالمية للتمويل', type: 'شركة تمويل عقاري' },
+      { name: 'شركة دار التمليك', type: 'شركة تمويل عقاري' },
+      { name: 'شركة سهل للتمويل', type: 'شركة تمويل عقاري' },
+      { name: 'شركة مسار النمو للتمويل', type: 'شركة تمويل عقاري' },
+      { name: 'شركة عبداللطيف جميل للتمويل العقاري', type: 'شركة تمويل عقاري' },
+      { name: 'شركة بداية للتمويل', type: 'شركة تمويل عقاري' },
+      { name: 'الشركة السعودية لإعادة التمويل العقاري', type: 'شركة تمويل عقاري' },
+      // شركات التمويل الاستهلاكي والإيجار
+      { name: 'شركة النايفات للتمويل', type: 'شركة تمويل' },
+      { name: 'شركة ينال للتمويل', type: 'شركة تمويل' },
+      { name: 'شركة اليسر للإجارة والتمويل', type: 'شركة تمويل' },
+      { name: 'شركة آجل للخدمات التمويلية', type: 'شركة تمويل' },
+      { name: 'الشركة الوطنية للتمويل', type: 'شركة تمويل' },
+      { name: 'شركة المرابحة المرنة للتمويل', type: 'شركة تمويل' },
+      { name: 'شركة كرناف للتمويل', type: 'شركة تمويل' },
+      { name: 'شركة الجاسرية للتمويل', type: 'شركة تمويل' },
+      { name: 'شركة متاجر للتمويل', type: 'شركة تمويل' },
+      { name: 'شركة تسهيل للتمويل', type: 'شركة تمويل' },
+      { name: 'شركة السعودي الفرنسي للتأجير التمويلي', type: 'شركة تمويل' },
+      { name: 'شركة الأولى للتمويل', type: 'شركة تمويل' },
+      { name: 'شركة الجبر للتمويل', type: 'شركة تمويل' },
+      { name: 'شركة موني للتمويل', type: 'شركة تمويل' },
+      { name: 'شركة كوارا للتمويل', type: 'شركة تمويل' },
+      { name: 'شركة إمكان للتمويل', type: 'شركة تمويل' },
+      { name: 'شركة الأمثل للتمويل', type: 'شركة تمويل' },
+      { name: 'شركة دويتشه الخليج للتمويل', type: 'شركة تمويل' },
+      { name: 'شركة الراجحي للتمويل', type: 'شركة تمويل' },
+      { name: 'شركة الأهلي للتمويل', type: 'شركة تمويل' },
+      { name: 'شركة التسهيلات المالية', type: 'شركة تمويل' },
+      { name: 'شركة رسن للتمويل', type: 'شركة تمويل' },
+      { name: 'شركة لندو للتمويل', type: 'شركة تمويل' },
+      // شركات التمويل الجماعي والتقنية المالية
+      { name: 'شركة فندينق سوق للتمويل', type: 'تقنية مالية' },
+      { name: 'شركة منافع للتمويل', type: 'تقنية مالية' },
+      { name: 'شركة سلفة للتمويل', type: 'تقنية مالية' },
+      { name: 'شركة تمارا للتمويل', type: 'تقنية مالية' },
+      { name: 'شركة تابي للتمويل', type: 'تقنية مالية' },
+      { name: 'شركة سبوتي للتمويل', type: 'تقنية مالية' },
+      { name: 'شركة بوست باي للتمويل', type: 'تقنية مالية' },
+      { name: 'شركة قسطها للتمويل', type: 'تقنية مالية' },
+      { name: 'شركة حصيل للتمويل', type: 'تقنية مالية' },
+      { name: 'شركة ليندا للتمويل', type: 'تقنية مالية' },
+      { name: 'شركة فرصة للتمويل', type: 'تقنية مالية' },
+      { name: 'شركة سكوبير للتمويل', type: 'تقنية مالية' }
+    ];
+    
+    // إضافة الجهات المخصصة التي أضافها المسؤول
+    const customBanks = JSON.parse(localStorage.getItem('fino_custom_banks') || '[]');
+    
+    // دمج القائمتين مع إزالة التكرار
+    const allEntities = [...defaultEntities];
+    customBanks.forEach(cb => {
+      if (!allEntities.find(e => e.name === cb.name)) {
+        allEntities.push({ name: cb.name, type: cb.type || 'جهة مخصصة' });
+      }
+    });
+    
+    return allEntities;
+  }
+
   let bankConfigs = [];
   const defaultBankConfigs = [
     // مصرف الراجحي
@@ -6141,19 +6231,7 @@
       id:'financeType',
       label:'اختر نوع التمويل تريد حسبته:',
       type:'select',
-      options:[
-        'تمويل شخصي',
-        'تمويل استهلاكي',
-        'تمويل التأجيري',
-        'تمويل عقاري',
-        'شراء مديونية تمويل شخصي',
-        'شراء مديونية تمويل عقاري',
-        'بطاقات الإتمان',
-        'تمويل نقاط البيع',
-        'تمويل المؤسسات',
-        'تمويل الأسطول',
-        'مفوتر'
-      ]
+      options: loadDynamicProducts
     },
     {
       id:'mortgageProductType',
@@ -6360,8 +6438,7 @@
     {
       id:'selectedFinanceEntity',
       label:'اختر جهة التمويل',
-      type:'select',
-      options: () => getAllFinanceEntities(),
+      type:'financeEntitySelect',
       show:a=>a.calcMode==='نسبة على جهة تمويل معينة'
     },
     {
@@ -6381,6 +6458,50 @@
     { id:'balloonAmount',label:'كم مبلغ الدفعة الأخيرة؟',type:'number',show:c=>c.balloon==='نعم' },
     { id:'more',label:'هل لديك التزامات أخرى؟',type:'select',options:['نعم','لا'] }
   ];
+
+  // دالة تحميل المنتجات الديناميكية من localStorage
+  function loadDynamicProducts() {
+    // المنتجات الافتراضية
+    const defaultProducts = [
+      { name: 'تمويل شخصي', enabled: true },
+      { name: 'تمويل استهلاكي', enabled: true },
+      { name: 'تمويل التأجيري', enabled: true },
+      { name: 'تمويل عقاري', enabled: true },
+      { name: 'شراء مديونية تمويل شخصي', enabled: true },
+      { name: 'شراء مديونية تمويل عقاري', enabled: true },
+      { name: 'بطاقات الإتمان', enabled: true },
+      { name: 'تمويل نقاط البيع', enabled: true },
+      { name: 'تمويل المؤسسات', enabled: true },
+      { name: 'تمويل الأسطول', enabled: true },
+      { name: 'مفوتر', enabled: true }
+    ];
+    
+    // تحميل المنتجات المخصصة من localStorage
+    const customProducts = JSON.parse(localStorage.getItem('finoProducts') || '[]');
+    const financeProducts = JSON.parse(localStorage.getItem('fino_finance_products') || '[]');
+    
+    // دمج المنتجات
+    const allProducts = [...defaultProducts];
+    
+    // إضافة المنتجات المخصصة
+    customProducts.forEach(p => {
+      if (!allProducts.some(dp => dp.name === p.name)) {
+        allProducts.push({ name: p.name, enabled: p.enabled !== false });
+      }
+    });
+    
+    financeProducts.forEach(p => {
+      if (!allProducts.some(dp => dp.name === p.name)) {
+        allProducts.push({ name: p.name, enabled: p.enabled !== false });
+      }
+    });
+    
+    // تحويل المنتجات إلى صيغة الخيارات المطلوبة
+    return allProducts.filter(p => p.enabled !== false).map(p => ({
+      value: p.name,
+      label: p.name
+    }));
+  }
 
   function getRetirementAge(rank) {
     const retirementAges = {
@@ -6787,49 +6908,15 @@
         }
       });
     } else if(q.type === 'financeEntitySelect'){
-      // عرض جميع جهات التمويل مع نسبها
+      // ====== عرض جهات التمويل للعميل - مربوط بالدالة المركزية ======
       const entitiesContainer = document.createElement('div');
       entitiesContainer.style.cssText = 'max-height:400px; overflow-y:auto; margin-top:10px;';
       
       const bankLogos = typeof getBankLogos === 'function' ? getBankLogos() : {};
       
-      // قائمة كاملة بجميع البنوك وشركات التمويل
-      const allFinanceEntities = [
-        // البنوك المحلية
-        'البنك الأهلي السعودي', 'مصرف الراجحي', 'بنك الرياض', 'البنك السعودي الأول',
-        'البنك العربي الوطني', 'مصرف الإنماء', 'البنك السعودي الفرنسي',
-        'البنك السعودي للاستثمار', 'بنك البلاد', 'بنك الجزيرة', 'بنك الخليج الدولي',
-        'بنك ساب',
-        // البنوك الرقمية
-        'بنك STC', 'بنك D360', 'بنك فيجن',
-        // فروع البنوك الأجنبية
-        'بنك الإمارات دبي الوطني', 'بنك المشرق', 'بنك البحرين الوطني',
-        'البنك الأول (FAB)', 'بنك HSBC', 'بنك Citibank',
-        // شركات التمويل العقاري
-        'أملاك العالمية للتمويل', 'شركة دار التمليك', 'شركة سهل للتمويل',
-        'شركة مسار النمو للتمويل', 'شركة عبداللطيف جميل للتمويل العقاري',
-        'شركة بداية للتمويل', 'الشركة السعودية لإعادة التمويل العقاري',
-        // شركات التمويل الاستهلاكي والإيجار
-        'شركة النايفات للتمويل', 'شركة ينال للتمويل', 'شركة اليسر للإجارة والتمويل',
-        'شركة آجل للخدمات التمويلية', 'الشركة الوطنية للتمويل', 'شركة المرابحة المرنة للتمويل',
-        'شركة كرناف للتمويل', 'شركة الجاسرية للتمويل', 'شركة متاجر للتمويل',
-        'شركة تسهيل للتمويل', 'شركة السعودي الفرنسي للتأجير التمويلي',
-        'شركة الأولى للتمويل', 'شركة الجبر للتمويل', 'شركة موني للتمويل',
-        'شركة كوارا للتمويل', 'شركة إمكان للتمويل', 'شركة الأمثل للتمويل',
-        'شركة دويتشه الخليج للتمويل', 'شركة الراجحي للتمويل', 'شركة الأهلي للتمويل',
-        'شركة التسهيلات المالية', 'شركة رسن للتمويل', 'شركة لندو للتمويل',
-        // شركات التمويل الجماعي والتقنية المالية
-        'شركة فندينغ سوق للتمويل', 'شركة منافع للتمويل', 'شركة سلفة للتمويل',
-        'شركة تمارا للتمويل', 'شركة تابي للتمويل', 'شركة سبوتي للتمويل',
-        'شركة بوست باي للتمويل', 'شركة قسطها للتمويل', 'شركة حصيل للتمويل',
-        'شركة ليندا للتمويل', 'شركة فرصة للتمويل', 'شركة سكوبير للتمويل'
-      ];
-      
-      // دمج البنوك المخزنة في bankConfigs مع القائمة الكاملة
-      const banksFromConfigs = [...new Set(bankConfigs.map(cfg => cfg.bankName))];
-      // إضافة الجهات المخصصة من localStorage
-      const customBanks = JSON.parse(localStorage.getItem('fino_custom_banks') || '[]').map(b => b.name);
-      const uniqueBanks = [...new Set([...allFinanceEntities, ...banksFromConfigs, ...customBanks])];
+      // استخدام الدالة المركزية للحصول على نفس قائمة المسؤول
+      const masterEntities = getMasterFinanceEntitiesList();
+      const uniqueBanks = masterEntities.map(e => e.name);
       
       uniqueBanks.forEach(bankName => {
         // الحصول على النسبة المناسبة حسب بيانات العميل
@@ -6895,8 +6982,8 @@
       } else if (q.id === 'financeType' && typeof loadDynamicProducts === 'function') {
         const products = loadDynamicProducts();
         sel.innerHTML = '<option value="">اختر...</option>';
-        products.filter(p => p.enabled).forEach(p => {
-          sel.innerHTML += `<option value="${p.name}">${p.name}</option>`;
+        products.forEach(p => {
+          sel.innerHTML += `<option value="${p.value}">${p.label}</option>`;
         });
       } else if(q.dynamic && q.id === 'appointYear'){
         const nowH = getHijriNowParts();
@@ -9616,6 +9703,8 @@ ${contact}`.trim();
     tbody.innerHTML = html;
   }
   
+  // ====== دالة تحديث قائمة جهات التمويل في لوحة التحكم ======
+  // تستخدم الدالة المركزية getMasterFinanceEntitiesList()
   function updateBankDropdowns() {
     const select = document.getElementById('adminBankName');
     if (!select) return;
@@ -9623,52 +9712,51 @@ ${contact}`.trim();
     // حفظ القيمة الحالية
     const currentValue = select.value;
     
-    // البنوك الافتراضية - القائمة الكاملة المرخصة من ساما
-    const defaultBanks = [
-      // البنوك المحلية (11 بنك)
-      'البنك الأهلي السعودي', 'مصرف الراجحي', 'بنك الرياض', 'البنك السعودي الأول',
-      'البنك العربي الوطني', 'مصرف الإنماء', 'البنك السعودي الفرنسي',
-      'البنك السعودي للاستثمار', 'بنك البلاد', 'بنك الجزيرة', 'بنك الخليج الدولي',
-      // البنوك الرقمية
-      'بنك STC', 'بنك D360', 'بنك فيجن',
-      // فروع البنوك الأجنبية
-      'بنك الإمارات دبي الوطني', 'بنك المشرق', 'بنك البحرين الوطني',
-      'البنك الأول (FAB)', 'بنك HSBC', 'بنك Citibank',
-      // شركات التمويل العقاري
-      'أملاك العالمية للتمويل', 'شركة دار التمليك', 'شركة سهل للتمويل',
-      'شركة مسار النمو للتمويل', 'شركة عبداللطيف جميل للتمويل العقاري',
-      'شركة بداية للتمويل', 'الشركة السعودية لإعادة التمويل العقاري',
-      // شركات التمويل الاستهلاكي والإيجار
-      'شركة النايفات للتمويل', 'شركة ينال للتمويل', 'شركة اليسر للإجارة والتمويل',
-      'شركة آجل للخدمات التمويلية', 'الشركة الوطنية للتمويل', 'شركة المرابحة المرنة للتمويل',
-      'شركة كرناف للتمويل', 'شركة الجاسرية للتمويل', 'شركة متاجر للتمويل',
-      'شركة تسهيل للتمويل', 'شركة السعودي الفرنسي للتأجير التمويلي',
-      'شركة الأولى للتمويل', 'شركة الجبر للتمويل', 'شركة موني للتمويل',
-      'شركة كوارا للتمويل', 'شركة إمكان للتمويل', 'شركة الأمثل للتمويل',
-      'شركة دويتشه الخليج للتمويل', 'شركة الراجحي للتمويل', 'شركة الأهلي للتمويل',
-      'شركة التسهيلات المالية', 'شركة رسن للتمويل', 'شركة لندو للتمويل',
-      // شركات التمويل الجماعي والتقنية المالية
-      'شركة فندينق سوق للتمويل', 'شركة منافع للتمويل', 'شركة سلفة للتمويل',
-      'شركة تمارا للتمويل', 'شركة تابي للتمويل', 'شركة سبوتي للتمويل',
-      'شركة بوست باي للتمويل', 'شركة قسطها للتمويل', 'شركة حصيل للتمويل',
-      'شركة ليندا للتمويل', 'شركة فرصة للتمويل', 'شركة سكوبير للتمويل'
-    ];
+    // استخدام الدالة المركزية للحصول على جميع جهات التمويل
+    const allEntities = getMasterFinanceEntitiesList();
     
-    let html = '<option value="">اختر...</option>';
+    let html = '<option value="">اختر جهة التمويل...</option>';
     
-    // إضافة البنوك الافتراضية
-    defaultBanks.forEach(name => {
-      html += `<option value="${name}">${name}</option>`;
+    // تصنيف الجهات حسب النوع
+    const categories = {
+      'بنك محلي': [],
+      'بنك رقمي': [],
+      'بنك أجنبي': [],
+      'شركة تمويل عقاري': [],
+      'شركة تمويل': [],
+      'تقنية مالية': [],
+      'جهة مخصصة': []
+    };
+    
+    allEntities.forEach(entity => {
+      const type = entity.type || 'جهة مخصصة';
+      if (categories[type]) {
+        categories[type].push(entity.name);
+      } else {
+        categories['جهة مخصصة'].push(entity.name);
+      }
     });
     
-    // إضافة الجهات المخصصة
-    if (customBanks.length > 0) {
-      html += '<optgroup label="--- الجهات المضافة ---">';
-      customBanks.forEach(bank => {
-        html += `<option value="${bank.name}">${bank.name} (${bank.type})</option>`;
-      });
-      html += '</optgroup>';
-    }
+    // إضافة كل فئة كمجموعة
+    const categoryLabels = {
+      'بنك محلي': '🏦 البنوك المحلية',
+      'بنك رقمي': '📱 البنوك الرقمية',
+      'بنك أجنبي': '🌐 فروع البنوك الأجنبية',
+      'شركة تمويل عقاري': '🏠 شركات التمويل العقاري',
+      'شركة تمويل': '💳 شركات التمويل',
+      'تقنية مالية': '💻 التقنية المالية (FinTech)',
+      'جهة مخصصة': '➕ جهات مضافة بواسطة المسؤول'
+    };
+    
+    Object.keys(categories).forEach(type => {
+      if (categories[type].length > 0) {
+        html += `<optgroup label="${categoryLabels[type] || type}">`;
+        categories[type].forEach(name => {
+          html += `<option value="${name}">${name}</option>`;
+        });
+        html += '</optgroup>';
+      }
+    });
     
     select.innerHTML = html;
     
@@ -12865,17 +12953,12 @@ ${contact}`.trim();
     }
   });
   
+  // ====== دالة الحصول على جهات التمويل لواجهة العميل ======
+  // تستخدم الدالة المركزية getMasterFinanceEntitiesList()
   function getAllFinanceEntities() {
-    const defaultEntities = [
-      'البنك الأهلي السعودي', 'مصرف الراجحي', 'بنك الرياض', 'بنك ساب', 'البنك العربي الوطني',
-      'مصرف الإنماء', 'البنك السعودي الفرنسي', 'البنك السعودي للاستثمار', 'بنك البلاد',
-      'بنك الجزيرة', 'شركة تسهيل', 'شركة نايفات', 'شركة اليسر'
-    ];
-    const customBanks = JSON.parse(localStorage.getItem('fino_custom_banks') || '[]');
-    const customEntities = customBanks.map(b => b.name);
-    
-    // دمج وإزالة التكرار
-    return [...new Set([...defaultEntities, ...customEntities])];
+    // استخدام الدالة المركزية للحصول على نفس قائمة المسؤول
+    const allEntities = getMasterFinanceEntitiesList();
+    return allEntities.map(e => e.name);
   }
 
   function updateFinanceEntityDropdown() {
