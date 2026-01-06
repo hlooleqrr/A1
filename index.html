@@ -772,9 +772,9 @@
       padding: 0 10px;
     }
     .card {
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(8px);
+      background: rgba(255, 255, 255, var(--card-opacity, 0.95));
+      backdrop-filter: blur(var(--card-blur, 10px));
+      -webkit-backdrop-filter: blur(var(--card-blur, 10px));
       border-radius: 24px;
       padding: 24px 20px;
       box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
@@ -784,6 +784,19 @@
       border: 1px solid rgba(255,255,255,0.3);
       position: relative;
       z-index: 1;
+    }
+    
+    /* عند وجود خلفية عامة - جعل البطاقات شفافة أكثر */
+    body.has-global-bg .card {
+      background: rgba(255, 255, 255, var(--card-opacity, 0.85));
+    }
+    
+    /* إخفاء البطاقات عند الطلب */
+    body.hide-cards .card {
+      background: transparent !important;
+      box-shadow: none !important;
+      border: none !important;
+      backdrop-filter: none !important;
     }
 
     button, .btn {
@@ -2317,6 +2330,21 @@
           <button onclick="showPage('adminResultTexts')" style="background:linear-gradient(135deg, #06b6d4 0%, #0891b2 100%); color:#fff; border:none; padding:12px; border-radius:10px; font-size:13px; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:4px;">
             <span style="font-size:20px;">✏️</span>
             <span>صيغ النتيجة</span>
+          </button>
+        </div>
+      </div>
+      
+      <!-- قسم إدارة الجهات -->
+      <div style="margin-bottom:15px;">
+        <div style="font-size:12px; color:#94a3b8; margin-bottom:8px; padding-right:5px;">🏢 إدارة الجهات والشركات</div>
+        <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:8px;">
+          <button onclick="showPage('adminEmployers')" style="background:linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color:#fff; border:none; padding:12px; border-radius:10px; font-size:13px; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:4px;">
+            <span style="font-size:20px;">🏢</span>
+            <span>جهات الوظيفة</span>
+          </button>
+          <button onclick="showPage('adminFinanceEntities')" style="background:linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%); color:#fff; border:none; padding:12px; border-radius:10px; font-size:13px; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:4px;">
+            <span style="font-size:20px;">🏦</span>
+            <span>جهات التمويل</span>
           </button>
         </div>
       </div>
@@ -4000,6 +4028,90 @@
     </div>
   </div>
 
+  <!-- صفحة إدارة جهات الوظيفة -->
+  <div id="adminEmployersPage" class="page">
+    <div class="card fade-in">
+      <h2 style="margin-top:0; font-size:19px; color:#111827;">🏢 إدارة جهات الوظيفة</h2>
+      <p style="font-size:13px; color:#6b7280; text-align:right;">
+        أضف وعدل واحذف جهات العمل التي تظهر للعميل وفي العروض.
+      </p>
+      
+      <!-- نموذج إضافة جهة جديدة -->
+      <div style="background:linear-gradient(135deg, #f0fdf4, #dcfce7); padding:15px; border-radius:12px; margin-bottom:20px; border-right:4px solid #22c55e;">
+        <h4 style="margin:0 0 12px; font-size:15px; color:#166534;">➕ إضافة جهة جديدة</h4>
+        <div style="display:grid; grid-template-columns:1fr 1fr auto; gap:10px; align-items:end;">
+          <div>
+            <label style="font-size:12px; color:#374151;">اسم الجهة</label>
+            <input id="newEmployerName" type="text" placeholder="مثل: الصحة القابضة" style="width:100%; padding:10px; border:1px solid #d1d5db; border-radius:8px;">
+          </div>
+          <div>
+            <label style="font-size:12px; color:#374151;">الأيقونة (اختياري)</label>
+            <input id="newEmployerIcon" type="text" placeholder="🏥" style="width:100%; padding:10px; border:1px solid #d1d5db; border-radius:8px;">
+          </div>
+          <button onclick="addNewEmployer()" style="background:linear-gradient(135deg, #22c55e, #16a34a); color:#fff; border:none; padding:10px 20px; border-radius:8px; cursor:pointer; font-weight:600;">➕ إضافة</button>
+        </div>
+      </div>
+      
+      <!-- قائمة الجهات الحالية -->
+      <div style="background:#f8fafc; padding:15px; border-radius:12px;">
+        <h4 style="margin:0 0 12px; font-size:15px; color:#374151;">📝 الجهات الحالية</h4>
+        <div id="employersList" style="display:grid; gap:8px; max-height:400px; overflow-y:auto;"></div>
+      </div>
+      
+      <div style="margin-top:15px; display:flex; gap:10px; justify-content:flex-end;">
+        <button class="primary" onclick="saveEmployersList()" style="padding:12px 25px;">💾 حفظ التغييرات</button>
+        <button class="secondary" onclick="resetEmployersList()">🔄 إعادة تعيين</button>
+        <button class="secondary" onclick="showPage('adminHub')">🔙 رجوع</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- صفحة إدارة جهات التمويل -->
+  <div id="adminFinanceEntitiesPage" class="page">
+    <div class="card fade-in">
+      <h2 style="margin-top:0; font-size:19px; color:#111827;">🏦 إدارة جهات التمويل</h2>
+      <p style="font-size:13px; color:#6b7280; text-align:right;">
+        أضف وعدل واحذف البنوك وشركات التمويل.
+      </p>
+      
+      <!-- نموذج إضافة جهة تمويل جديدة -->
+      <div style="background:linear-gradient(135deg, #eff6ff, #dbeafe); padding:15px; border-radius:12px; margin-bottom:20px; border-right:4px solid #3b82f6;">
+        <h4 style="margin:0 0 12px; font-size:15px; color:#1e40af;">➕ إضافة جهة تمويل جديدة</h4>
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr auto; gap:10px; align-items:end;">
+          <div>
+            <label style="font-size:12px; color:#374151;">اسم الجهة</label>
+            <input id="newFinanceEntityName" type="text" placeholder="مثل: بنك الراجحي" style="width:100%; padding:10px; border:1px solid #d1d5db; border-radius:8px;">
+          </div>
+          <div>
+            <label style="font-size:12px; color:#374151;">النوع</label>
+            <select id="newFinanceEntityType" style="width:100%; padding:10px; border:1px solid #d1d5db; border-radius:8px;">
+              <option value="بنك">🏦 بنك</option>
+              <option value="شركة تمويل">🏢 شركة تمويل</option>
+              <option value="تقنية مالية">📱 تقنية مالية</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:12px; color:#374151;">الأيقونة</label>
+            <input id="newFinanceEntityIcon" type="text" placeholder="🏦" style="width:100%; padding:10px; border:1px solid #d1d5db; border-radius:8px;">
+          </div>
+          <button onclick="addNewFinanceEntity()" style="background:linear-gradient(135deg, #3b82f6, #2563eb); color:#fff; border:none; padding:10px 20px; border-radius:8px; cursor:pointer; font-weight:600;">➕ إضافة</button>
+        </div>
+      </div>
+      
+      <!-- قائمة جهات التمويل الحالية -->
+      <div style="background:#f8fafc; padding:15px; border-radius:12px;">
+        <h4 style="margin:0 0 12px; font-size:15px; color:#374151;">📝 جهات التمويل الحالية</h4>
+        <div id="financeEntitiesList" style="display:grid; gap:8px; max-height:400px; overflow-y:auto;"></div>
+      </div>
+      
+      <div style="margin-top:15px; display:flex; gap:10px; justify-content:flex-end;">
+        <button class="primary" onclick="saveFinanceEntitiesList()" style="padding:12px 25px;">💾 حفظ التغييرات</button>
+        <button class="secondary" onclick="resetFinanceEntitiesList()">🔄 إعادة تعيين</button>
+        <button class="secondary" onclick="showPage('adminHub')">🔙 رجوع</button>
+      </div>
+    </div>
+  </div>
+
   <!-- صفحة الإعدادات العامة -->
   <div id="adminSettingsPage" class="page">
     <div class="card fade-in">
@@ -4366,9 +4478,155 @@
         </div>
       </div>
       
-      <div style="margin-top:15px; display:flex; gap:8px; justify-content:flex-end;">
-        <button class="primary small" onclick="savePlatformSettingsFromUI()">💾 حفظ الإعدادات</button>
-        <button class="secondary small" onclick="showPage('adminHub')">🔙 رجوع</button>
+      <!-- التحكم بالنصوص والبطاقات -->
+      <div style="margin-top:20px; padding:15px; background:linear-gradient(135deg, #e0e7ff, #c7d2fe); border-radius:12px; border:2px solid #6366f1;">
+        <h4 style="margin:0 0 15px; font-size:16px; color:#4338ca;">✍️ التحكم بالنصوص والبطاقات</h4>
+        
+        <!-- لون النص الرئيسي -->
+        <div class="admin-grid" style="margin-bottom:15px;">
+          <div>
+            <label>لون النص الرئيسي</label>
+            <input id="settingsTextColor" type="color" value="#111827" onchange="updateTextStyles()">
+          </div>
+          <div>
+            <label>لون النص الثانوي</label>
+            <input id="settingsSecondaryTextColor" type="color" value="#6b7280" onchange="updateTextStyles()">
+          </div>
+          <div>
+            <label>نوع الخط</label>
+            <select id="settingsFontFamily" onchange="updateTextStyles()">
+              <option value="'Tajawal', sans-serif">تجوال (افتراضي)</option>
+              <option value="'Cairo', sans-serif">القاهرة</option>
+              <option value="'Almarai', sans-serif">المراعي</option>
+              <option value="'Noto Kufi Arabic', sans-serif">نوتو كوفي</option>
+              <option value="'Amiri', serif">أميري</option>
+            </select>
+          </div>
+          <div>
+            <label>حجم الخط الأساسي</label>
+            <input id="settingsFontSize" type="range" min="12" max="20" value="16" onchange="updateTextStyles()">
+            <span id="fontSizeValue">16px</span>
+          </div>
+        </div>
+        
+        <!-- إخفاء البطاقات -->
+        <div style="margin-bottom:15px; padding:10px; background:#fff; border-radius:8px;">
+          <label style="display:flex; align-items:center; gap:10px; cursor:pointer; font-weight:700;">
+            <input type="checkbox" id="settingsHideCards" onchange="toggleCardsVisibility()">
+            <span>إخفاء خلفيات البطاقات (لإظهار الخلفية بشكل كامل)</span>
+          </label>
+        </div>
+      </div>
+      
+      <!-- إدارة عناصر صفحة النتيجة -->
+      <div style="margin-top:20px; padding:15px; background:linear-gradient(135deg, #fef3c7, #fde68a); border-radius:12px; border:2px solid #f59e0b;">
+        <h4 style="margin:0 0 15px; font-size:16px; color:#92400e;">📊 إدارة عناصر صفحة النتيجة</h4>
+        <p style="font-size:12px; color:#92400e; margin-bottom:15px;">يمكنك إخفاء أو إظهار أي عنصر في صفحة النتيجة</p>
+        
+        <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); gap:10px;">
+          <label style="display:flex; align-items:center; gap:8px; cursor:pointer; padding:8px; background:#fff; border-radius:8px;">
+            <input type="checkbox" id="resultShowType" checked onchange="saveResultElementsSettings()">
+            <span>نوع التمويل</span>
+          </label>
+          <label style="display:flex; align-items:center; gap:8px; cursor:pointer; padding:8px; background:#fff; border-radius:8px;">
+            <input type="checkbox" id="resultShowBank" checked onchange="saveResultElementsSettings()">
+            <span>البنك المرشح</span>
+          </label>
+          <label style="display:flex; align-items:center; gap:8px; cursor:pointer; padding:8px; background:#fff; border-radius:8px;">
+            <input type="checkbox" id="resultShowAmount" checked onchange="saveResultElementsSettings()">
+            <span>مبلغ التمويل</span>
+          </label>
+          <label style="display:flex; align-items:center; gap:8px; cursor:pointer; padding:8px; background:#fff; border-radius:8px;">
+            <input type="checkbox" id="resultShowInstallment" checked onchange="saveResultElementsSettings()">
+            <span>القسط الشهري</span>
+          </label>
+          <label style="display:flex; align-items:center; gap:8px; cursor:pointer; padding:8px; background:#fff; border-radius:8px;">
+            <input type="checkbox" id="resultShowDuration" checked onchange="saveResultElementsSettings()">
+            <span>مدة التمويل</span>
+          </label>
+          <label style="display:flex; align-items:center; gap:8px; cursor:pointer; padding:8px; background:#fff; border-radius:8px;">
+            <input type="checkbox" id="resultShowRate" checked onchange="saveResultElementsSettings()">
+            <span>نسبة الربح</span>
+          </label>
+          <label style="display:flex; align-items:center; gap:8px; cursor:pointer; padding:8px; background:#fff; border-radius:8px;">
+            <input type="checkbox" id="resultShowProfit" checked onchange="saveResultElementsSettings()">
+            <span>إجمالي الأرباح</span>
+          </label>
+          <label style="display:flex; align-items:center; gap:8px; cursor:pointer; padding:8px; background:#fff; border-radius:8px;">
+            <input type="checkbox" id="resultShowTotal" checked onchange="saveResultElementsSettings()">
+            <span>إجمالي السداد</span>
+          </label>
+          <label style="display:flex; align-items:center; gap:8px; cursor:pointer; padding:8px; background:#fff; border-radius:8px;">
+            <input type="checkbox" id="resultShowEndDate" checked onchange="saveResultElementsSettings()">
+            <span>تاريخ الانتهاء</span>
+          </label>
+          <label style="display:flex; align-items:center; gap:8px; cursor:pointer; padding:8px; background:#fff; border-radius:8px;">
+            <input type="checkbox" id="resultShowRetirement" checked onchange="saveResultElementsSettings()">
+            <span>عمر التقاعد</span>
+          </label>
+          <label style="display:flex; align-items:center; gap:8px; cursor:pointer; padding:8px; background:#fff; border-radius:8px;">
+            <input type="checkbox" id="resultShowSalaryDetails" checked onchange="saveResultElementsSettings()">
+            <span>تفاصيل الراتب</span>
+          </label>
+          <label style="display:flex; align-items:center; gap:8px; cursor:pointer; padding:8px; background:#fff; border-radius:8px;">
+            <input type="checkbox" id="resultShowCommitments" checked onchange="saveResultElementsSettings()">
+            <span>الالتزامات</span>
+          </label>
+          <label style="display:flex; align-items:center; gap:8px; cursor:pointer; padding:8px; background:#fff; border-radius:8px;">
+            <input type="checkbox" id="resultShowButtons" checked onchange="saveResultElementsSettings()">
+            <span>أزرار المشاركة</span>
+          </label>
+        </div>
+      </div>
+      
+      <!-- تصاميم جاهزة للنتيجة -->
+      <div style="margin-top:20px; padding:15px; background:linear-gradient(135deg, #dbeafe, #bfdbfe); border-radius:12px; border:2px solid #3b82f6;">
+        <h4 style="margin:0 0 15px; font-size:16px; color:#1e40af;">🎨 تصاميم جاهزة للمنصة</h4>
+        <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(150px, 1fr)); gap:10px;">
+          <button onclick="applyPresetTheme('classic')" style="padding:15px; background:#fff; border:2px solid #e5e7eb; border-radius:10px; cursor:pointer; text-align:center;">
+            <div style="font-size:24px;">💼</div>
+            <div style="font-weight:600; margin-top:5px;">كلاسيكي</div>
+            <div style="font-size:11px; color:#6b7280;">أبيض ورمادي</div>
+          </button>
+          <button onclick="applyPresetTheme('dark')" style="padding:15px; background:#1f2937; border:2px solid #374151; border-radius:10px; cursor:pointer; text-align:center; color:#fff;">
+            <div style="font-size:24px;">🌙</div>
+            <div style="font-weight:600; margin-top:5px;">داكن</div>
+            <div style="font-size:11px; color:#9ca3af;">أسود ورمادي</div>
+          </button>
+          <button onclick="applyPresetTheme('gold')" style="padding:15px; background:linear-gradient(135deg, #fef3c7, #fde68a); border:2px solid #f59e0b; border-radius:10px; cursor:pointer; text-align:center;">
+            <div style="font-size:24px;">🌟</div>
+            <div style="font-weight:600; margin-top:5px;">ذهبي</div>
+            <div style="font-size:11px; color:#92400e;">فاخر وأنيق</div>
+          </button>
+          <button onclick="applyPresetTheme('green')" style="padding:15px; background:linear-gradient(135deg, #d1fae5, #a7f3d0); border:2px solid #10b981; border-radius:10px; cursor:pointer; text-align:center;">
+            <div style="font-size:24px;">🌿</div>
+            <div style="font-weight:600; margin-top:5px;">أخضر</div>
+            <div style="font-size:11px; color:#065f46;">طبيعي ومريح</div>
+          </button>
+          <button onclick="applyPresetTheme('blue')" style="padding:15px; background:linear-gradient(135deg, #dbeafe, #bfdbfe); border:2px solid #3b82f6; border-radius:10px; cursor:pointer; text-align:center;">
+            <div style="font-size:24px;">💠</div>
+            <div style="font-weight:600; margin-top:5px;">أزرق</div>
+            <div style="font-size:11px; color:#1e40af;">مهني ورسمي</div>
+          </button>
+          <button onclick="applyPresetTheme('transparent')" style="padding:15px; background:rgba(255,255,255,0.3); border:2px dashed #9ca3af; border-radius:10px; cursor:pointer; text-align:center;">
+            <div style="font-size:24px;">🕳️</div>
+            <div style="font-weight:600; margin-top:5px;">شفاف</div>
+            <div style="font-size:11px; color:#6b7280;">لإظهار الخلفية</div>
+          </button>
+        </div>
+      </div>
+      
+      <!-- زر الحفظ الرئيسي -->
+      <div id="saveSettingsContainer" style="position:sticky; bottom:0; background:linear-gradient(135deg, #28a745, #20c997); padding:15px; border-radius:15px; margin-top:20px; box-shadow:0 -5px 20px rgba(40,167,69,0.3);">
+        <button id="mainSaveBtn" class="primary" onclick="savePlatformSettingsFromUI()" style="width:100%; padding:15px 30px; font-size:18px; font-weight:bold; background:#fff; color:#28a745; border:none; border-radius:10px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:10px; transition:all 0.3s;">
+          <span style="font-size:24px;">💾</span>
+          <span>حفظ جميع الإعدادات</span>
+        </button>
+        <p style="text-align:center; color:#fff; margin-top:8px; font-size:12px;">⚠️ تأكد من الحفظ قبل الخروج لتطبيق التغييرات</p>
+      </div>
+      
+      <div style="margin-top:15px; display:flex; gap:8px; justify-content:center;">
+        <button class="secondary" onclick="showPage('adminHub')" style="padding:12px 30px;">🔙 رجوع للوحة التحكم</button>
       </div>
     </div>
   </div>
@@ -4960,9 +5218,130 @@
 </div>
 
 <script>
+  // ====== إدارة جهات الوظيفة - تعريف مبكر ======
+  window.EMPLOYERS_LIST_KEY = 'fino_employers_list';
+  window.defaultEmployers = [
+    { name: 'أرامكو', icon: '🛢️' },
+    { name: 'سابك', icon: '🏭' },
+    { name: 'ستك', icon: '📞' },
+    { name: 'الاتصالات السعودية', icon: '📱' },
+    { name: 'موبايلي', icon: '📲' },
+    { name: 'زين', icon: '📶' },
+    { name: 'الكهرباء السعودية', icon: '⚡' },
+    { name: 'الخطوط السعودية', icon: '✈️' },
+    { name: 'وزارة الصحة', icon: '🏥' },
+    { name: 'وزارة التعليم', icon: '🏫' },
+    { name: 'وزارة الدفاع', icon: '🏛️' },
+    { name: 'وزارة الداخلية', icon: '🚨' },
+    { name: 'الحرس الوطني', icon: '🛡️' },
+    { name: 'الأمن العام', icon: '👮' },
+    { name: 'الجوازات', icon: '🛂' },
+    { name: 'الدفاع المدني', icon: '🚒' },
+    { name: 'الصحة القابضة', icon: '🏥' },
+    { name: 'وزارة العدل', icon: '⚖️' },
+    { name: 'وزارة المالية', icon: '💰' },
+    { name: 'وزارة الإسكان', icon: '🏠' }
+  ];
+  
+  window.getEmployersList = function() {
+    try {
+      const saved = localStorage.getItem(window.EMPLOYERS_LIST_KEY);
+      return saved ? JSON.parse(saved) : [...window.defaultEmployers];
+    } catch (e) {
+      return [...window.defaultEmployers];
+    }
+  };
+  
+  window.loadEmployersList = function() {
+    const container = document.getElementById('employersList');
+    if (!container) return;
+    
+    const employers = window.getEmployersList();
+    container.innerHTML = '';
+    
+    employers.forEach((emp, index) => {
+      const div = document.createElement('div');
+      div.style.cssText = 'display:flex; align-items:center; gap:10px; padding:12px; background:#f8fafc; border-radius:8px; margin-bottom:8px;';
+      div.innerHTML = `
+        <span style="font-size:24px;">${emp.icon}</span>
+        <input type="text" value="${emp.name}" onchange="window.updateEmployerName(${index}, this.value)" style="flex:1; padding:8px; border:1px solid #e2e8f0; border-radius:6px;">
+        <input type="text" value="${emp.icon}" onchange="window.updateEmployerIcon(${index}, this.value)" style="width:60px; padding:8px; border:1px solid #e2e8f0; border-radius:6px; text-align:center;">
+        <button onclick="window.deleteEmployer(${index})" style="background:#ef4444; color:#fff; border:none; padding:8px 12px; border-radius:6px; cursor:pointer;">🗑️</button>
+      `;
+      container.appendChild(div);
+    });
+  };
+  
+  window.addNewEmployer = function() {
+    const nameInput = document.getElementById('newEmployerName');
+    const iconInput = document.getElementById('newEmployerIcon');
+    const name = nameInput?.value?.trim();
+    const icon = iconInput?.value?.trim() || '🏢';
+    
+    if (!name) {
+      if (typeof showToast === 'function') showToast('أدخل اسم الجهة', 'error');
+      return;
+    }
+    
+    const employers = window.getEmployersList();
+    if (employers.find(e => e.name === name)) {
+      if (typeof showToast === 'function') showToast('هذه الجهة موجودة بالفعل', 'error');
+      return;
+    }
+    
+    employers.push({ name, icon });
+    localStorage.setItem(window.EMPLOYERS_LIST_KEY, JSON.stringify(employers));
+    window.loadEmployersList();
+    if (typeof window.updateAllEmployerDropdowns === 'function') window.updateAllEmployerDropdowns();
+    nameInput.value = '';
+    iconInput.value = '';
+    if (typeof showToast === 'function') showToast(`تم إضافة جهة الوظيفة: ${name}`, 'success');
+  };
+  
+  window.updateEmployerName = function(index, newName) {
+    const employers = window.getEmployersList();
+    if (employers[index]) {
+      employers[index].name = newName;
+      localStorage.setItem(window.EMPLOYERS_LIST_KEY, JSON.stringify(employers));
+    }
+  };
+  
+  window.updateEmployerIcon = function(index, newIcon) {
+    const employers = window.getEmployersList();
+    if (employers[index]) {
+      employers[index].icon = newIcon;
+      localStorage.setItem(window.EMPLOYERS_LIST_KEY, JSON.stringify(employers));
+      window.loadEmployersList();
+    }
+  };
+  
+  window.deleteEmployer = function(index) {
+    const employers = window.getEmployersList();
+    const deleted = employers.splice(index, 1);
+    localStorage.setItem(window.EMPLOYERS_LIST_KEY, JSON.stringify(employers));
+    window.loadEmployersList();
+    if (typeof window.updateAllEmployerDropdowns === 'function') window.updateAllEmployerDropdowns();
+    if (typeof showToast === 'function') showToast(`تم حذف جهة الوظيفة: ${deleted[0]?.name}`, 'info');
+  };
+  
+  window.saveEmployersList = function() {
+    if (typeof showSaveConfirmation === 'function') showSaveConfirmation('تم حفظ جهات الوظيفة بنجاح');
+  };
+  
+  window.resetEmployersList = function() {
+    if (confirm('هل تريد إعادة تعيين جهات الوظيفة للقيم الافتراضية؟')) {
+      localStorage.removeItem(window.EMPLOYERS_LIST_KEY);
+      window.loadEmployersList();
+      if (typeof window.updateAllEmployerDropdowns === 'function') window.updateAllEmployerDropdowns();
+      if (typeof showToast === 'function') showToast('تم إعادة تعيين جهات الوظيفة', 'info');
+    }
+  };
+  
+  console.log('[FINO] تم تحميل دوال إدارة جهات الوظيفة');
+  
   // دالة عرض الصفحات - متاحة عالمياً
   window.showPage = function(name) {
-    ['landing','calculator','result','adminLogin','adminHub','admin','adminProducts','adminArchive','comingSoon','earlySettlement','adminRatings','adminOffers','adminMarketing','adminQuestions','adminVisitors','adminClientResults','adminAds','adminSettings','adminThemes','adminTexts','adminResultSettings','adminResultTexts'].forEach(id => {
+    ['landing','calculator','result','adminLogin','adminHub','admin','adminProducts','adminArchive','comingSoon','earlySettlement','adminRatings','adminOffers','adminMarketing','adminQuestions','adminVisitors','adminClientResults','adminAds','adminSettings','adminThemes','adminTexts','adminResultSettings','adminResultTexts','adminEmployers','adminFinanceEntities'].forEach(id => {
       const el = document.getElementById(id + 'Page');
       if (!el) return;
       el.classList.toggle('active', id === name);
@@ -4986,6 +5365,14 @@
         if (typeof loadProductsForQuestions === 'function') {
           loadProductsForQuestions();
         }
+      }
+      // تحميل قائمة جهات الوظيفة
+      if (name === 'adminEmployers' && typeof window.loadEmployersList === 'function') {
+        window.loadEmployersList();
+      }
+      // تحميل قائمة جهات التمويل
+      if (name === 'adminFinanceEntities' && typeof window.loadFinanceEntitiesList === 'function') {
+        window.loadFinanceEntitiesList();
       }
     }
   };
@@ -6911,7 +7298,7 @@
         }
       });
     } else if(q.type === 'financeEntitySelect'){
-      // ====== عرض جهات التمويل للعميل - مربوط بالدالة المركزية ======
+      // ====== عرض جهات التمويل للعميل - فقط البنوك المناسبة لوضع العميل ======
       const entitiesContainer = document.createElement('div');
       entitiesContainer.style.cssText = 'max-height:400px; overflow-y:auto; margin-top:10px;';
       
@@ -6919,11 +7306,35 @@
       
       // استخدام الدالة المركزية للحصول على نفس قائمة المسؤول
       const masterEntities = getMasterFinanceEntitiesList();
-      const uniqueBanks = masterEntities.map(e => e.name);
       
-      uniqueBanks.forEach(bankName => {
-        // الحصول على النسبة المناسبة حسب بيانات العميل
-        const rate = getBankRateForClient(bankName, answers);
+      // فلترة البنوك حسب وضع العميل (نوع الوظيفة، نوع المنتج، المدة)
+      const banksWithRates = [];
+      masterEntities.forEach(entity => {
+        const rate = getBankRateForClient(entity.name, answers);
+        if (rate !== null) {
+          banksWithRates.push({ name: entity.name, rate: rate, category: entity.category });
+        }
+      });
+      
+      // ترتيب حسب النسبة (الأقل أولاً)
+      banksWithRates.sort((a, b) => a.rate - b.rate);
+      
+      // إضافة عنوان يوضح عدد البنوك المتاحة
+      const headerInfo = document.createElement('div');
+      headerInfo.style.cssText = 'background:linear-gradient(135deg, #10b981 0%, #059669 100%); color:#fff; padding:10px 15px; border-radius:10px; margin-bottom:15px; text-align:center;';
+      headerInfo.innerHTML = `<strong>🎯 ${banksWithRates.length} بنك متاح حسب وضعك</strong><br><small>نوع الوظيفة: ${answers.jobType || 'غير محدد'} | المنتج: ${answers.financeType || 'غير محدد'}</small>`;
+      entitiesContainer.appendChild(headerInfo);
+      
+      if (banksWithRates.length === 0) {
+        const noResults = document.createElement('div');
+        noResults.style.cssText = 'text-align:center; padding:30px; color:#6b7280;';
+        noResults.innerHTML = '<p>لا توجد بنوك متاحة حسب بياناتك الحالية</p><p>يرجى التواصل مع المسؤول لإضافة نسب مناسبة</p>';
+        entitiesContainer.appendChild(noResults);
+      }
+      
+      banksWithRates.forEach(bank => {
+        const bankName = bank.name;
+        const rate = bank.rate;
         
         const card = document.createElement('div');
         card.style.cssText = 'display:flex; align-items:center; padding:15px; margin:10px 0; background:linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-radius:12px; cursor:pointer; transition:all 0.3s; border:2px solid transparent;';
@@ -7021,6 +7432,18 @@
         offersBtn.style.cssText = 'display:block; margin:15px auto 0; background:linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color:#fff; border:none; border-radius:10px; padding:12px 20px; font-size:14px; cursor:pointer; box-shadow:0 4px 15px rgba(245,158,11,0.3);';
         offersBtn.onclick = function() { openOffersSearchModal(); };
         div.appendChild(offersBtn);
+      }
+      
+      // إضافة عرض العروض تحت سؤال اختيار النسبة
+      if (q.id === 'calcMode') {
+        const offersContainer = document.createElement('div');
+        offersContainer.id = 'calcModeOffersContainer';
+        offersContainer.style.cssText = 'margin-top:20px; padding:15px; background:linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-radius:12px; border:2px solid #f59e0b;';
+        offersContainer.innerHTML = '<h4 style="margin:0 0 10px; font-size:14px; color:#92400e;"><span style="font-size:18px;">🎁</span> عروض متاحة لقطاعك</h4><div id="calcModeOffersList" style="max-height:200px; overflow-y:auto;"></div>';
+        div.appendChild(offersContainer);
+        
+        // تحميل العروض المناسبة للعميل
+        setTimeout(() => loadCalcModeOffers(), 100);
       }
       
       // الانتقال التلقائي عند اختيار قيمة
@@ -11123,7 +11546,34 @@ ${contact}`.trim();
       customVideo: settings.splashVideo
     });
     
-    alert('تم حفظ الإعدادات.');
+    // إظهار رسالة تأكيد بصرية
+    showSaveConfirmation('✅ تم حفظ جميع الإعدادات بنجاح!', 'سيتم تطبيق التغييرات فوراً');
+  }
+  
+  // دالة عرض رسالة تأكيد الحفظ بشكل بصري
+  function showSaveConfirmation(title, message) {
+    // إنشاء عنصر التأكيد
+    const overlay = document.createElement('div');
+    overlay.id = 'saveConfirmOverlay';
+    overlay.style.cssText = 'position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); display:flex; align-items:center; justify-content:center; z-index:99999; animation:fadeIn 0.3s;';
+    
+    overlay.innerHTML = `
+      <div style="background:#fff; padding:30px 40px; border-radius:20px; text-align:center; animation:scaleIn 0.3s; max-width:90%;">
+        <div style="font-size:60px; margin-bottom:15px;">✅</div>
+        <h3 style="color:#28a745; margin-bottom:10px; font-size:20px;">${title}</h3>
+        <p style="color:#666; margin-bottom:20px;">${message}</p>
+        <button onclick="this.closest('#saveConfirmOverlay').remove()" style="background:linear-gradient(135deg, #28a745, #20c997); color:#fff; border:none; padding:12px 40px; border-radius:10px; font-size:16px; cursor:pointer;">حسناً</button>
+      </div>
+    `;
+    
+    document.body.appendChild(overlay);
+    
+    // إغلاق تلقائي بعد 3 ثواني
+    setTimeout(() => {
+      if (document.getElementById('saveConfirmOverlay')) {
+        document.getElementById('saveConfirmOverlay').remove();
+      }
+    }, 3000);
   }
   
   function applyPlatformSettings(settings) {
@@ -11236,6 +11686,169 @@ ${contact}`.trim();
       document.body.classList.add('has-global-bg');
       console.log('تم تطبيق الخلفية العامة على كافة الصفحات:', globalImage);
     }
+  }
+  
+  // ====== دوال التحكم بالنصوص والبطاقات ======
+  function updateTextStyles() {
+    const textColor = document.getElementById('settingsTextColor')?.value || '#111827';
+    const secondaryColor = document.getElementById('settingsSecondaryTextColor')?.value || '#6b7280';
+    const fontFamily = document.getElementById('settingsFontFamily')?.value || "'Tajawal', sans-serif";
+    const fontSize = document.getElementById('settingsFontSize')?.value || '16';
+    
+    document.documentElement.style.setProperty('--text-color', textColor);
+    document.documentElement.style.setProperty('--secondary-text-color', secondaryColor);
+    document.documentElement.style.setProperty('--font-family', fontFamily);
+    document.documentElement.style.setProperty('--font-size', fontSize + 'px');
+    
+    document.body.style.color = textColor;
+    document.body.style.fontFamily = fontFamily;
+    document.body.style.fontSize = fontSize + 'px';
+    
+    // تحديث عرض القيمة
+    const fontSizeValue = document.getElementById('fontSizeValue');
+    if (fontSizeValue) fontSizeValue.textContent = fontSize + 'px';
+    
+    savePlatformSettingsFromUI();
+  }
+  
+  function toggleCardsVisibility() {
+    const hideCards = document.getElementById('settingsHideCards')?.checked || false;
+    if (hideCards) {
+      document.body.classList.add('hide-cards');
+    } else {
+      document.body.classList.remove('hide-cards');
+    }
+    savePlatformSettingsFromUI();
+  }
+  
+  // ====== إدارة عناصر صفحة النتيجة ======
+  const RESULT_ELEMENTS_KEY = 'finoResultElements';
+  
+  function saveResultElementsSettings() {
+    const settings = {
+      showType: document.getElementById('resultShowType')?.checked ?? true,
+      showBank: document.getElementById('resultShowBank')?.checked ?? true,
+      showAmount: document.getElementById('resultShowAmount')?.checked ?? true,
+      showInstallment: document.getElementById('resultShowInstallment')?.checked ?? true,
+      showDuration: document.getElementById('resultShowDuration')?.checked ?? true,
+      showRate: document.getElementById('resultShowRate')?.checked ?? true,
+      showProfit: document.getElementById('resultShowProfit')?.checked ?? true,
+      showTotal: document.getElementById('resultShowTotal')?.checked ?? true,
+      showEndDate: document.getElementById('resultShowEndDate')?.checked ?? true,
+      showRetirement: document.getElementById('resultShowRetirement')?.checked ?? true,
+      showSalaryDetails: document.getElementById('resultShowSalaryDetails')?.checked ?? true,
+      showCommitments: document.getElementById('resultShowCommitments')?.checked ?? true,
+      showButtons: document.getElementById('resultShowButtons')?.checked ?? true
+    };
+    localStorage.setItem(RESULT_ELEMENTS_KEY, JSON.stringify(settings));
+    applyResultElementsSettings(settings);
+  }
+  
+  function loadResultElementsSettings() {
+    try {
+      const saved = localStorage.getItem(RESULT_ELEMENTS_KEY);
+      if (saved) {
+        const settings = JSON.parse(saved);
+        // تحميل الإعدادات للحقول
+        if (document.getElementById('resultShowType')) document.getElementById('resultShowType').checked = settings.showType ?? true;
+        if (document.getElementById('resultShowBank')) document.getElementById('resultShowBank').checked = settings.showBank ?? true;
+        if (document.getElementById('resultShowAmount')) document.getElementById('resultShowAmount').checked = settings.showAmount ?? true;
+        if (document.getElementById('resultShowInstallment')) document.getElementById('resultShowInstallment').checked = settings.showInstallment ?? true;
+        if (document.getElementById('resultShowDuration')) document.getElementById('resultShowDuration').checked = settings.showDuration ?? true;
+        if (document.getElementById('resultShowRate')) document.getElementById('resultShowRate').checked = settings.showRate ?? true;
+        if (document.getElementById('resultShowProfit')) document.getElementById('resultShowProfit').checked = settings.showProfit ?? true;
+        if (document.getElementById('resultShowTotal')) document.getElementById('resultShowTotal').checked = settings.showTotal ?? true;
+        if (document.getElementById('resultShowEndDate')) document.getElementById('resultShowEndDate').checked = settings.showEndDate ?? true;
+        if (document.getElementById('resultShowRetirement')) document.getElementById('resultShowRetirement').checked = settings.showRetirement ?? true;
+        if (document.getElementById('resultShowSalaryDetails')) document.getElementById('resultShowSalaryDetails').checked = settings.showSalaryDetails ?? true;
+        if (document.getElementById('resultShowCommitments')) document.getElementById('resultShowCommitments').checked = settings.showCommitments ?? true;
+        if (document.getElementById('resultShowButtons')) document.getElementById('resultShowButtons').checked = settings.showButtons ?? true;
+        return settings;
+      }
+    } catch (e) {
+      console.error('خطأ في تحميل إعدادات عناصر النتيجة:', e);
+    }
+    return null;
+  }
+  
+  function applyResultElementsSettings(settings) {
+    if (!settings) return;
+    // سيتم تطبيق الإعدادات عند عرض النتيجة
+    console.log('تم حفظ إعدادات عناصر النتيجة:', settings);
+  }
+  
+  // ====== التصاميم الجاهزة ======
+  function applyPresetTheme(theme) {
+    const themes = {
+      classic: {
+        textColor: '#111827',
+        secondaryColor: '#6b7280',
+        cardOpacity: 0.95,
+        cardBlur: 10,
+        hideCards: false
+      },
+      dark: {
+        textColor: '#f9fafb',
+        secondaryColor: '#9ca3af',
+        cardOpacity: 0.9,
+        cardBlur: 15,
+        hideCards: false
+      },
+      gold: {
+        textColor: '#78350f',
+        secondaryColor: '#92400e',
+        cardOpacity: 0.85,
+        cardBlur: 8,
+        hideCards: false
+      },
+      green: {
+        textColor: '#064e3b',
+        secondaryColor: '#065f46',
+        cardOpacity: 0.88,
+        cardBlur: 10,
+        hideCards: false
+      },
+      blue: {
+        textColor: '#1e3a8a',
+        secondaryColor: '#1e40af',
+        cardOpacity: 0.9,
+        cardBlur: 12,
+        hideCards: false
+      },
+      transparent: {
+        textColor: '#ffffff',
+        secondaryColor: '#e5e7eb',
+        cardOpacity: 0.3,
+        cardBlur: 20,
+        hideCards: true
+      }
+    };
+    
+    const preset = themes[theme];
+    if (!preset) return;
+    
+    // تطبيق التصميم
+    if (document.getElementById('settingsTextColor')) document.getElementById('settingsTextColor').value = preset.textColor;
+    if (document.getElementById('settingsSecondaryTextColor')) document.getElementById('settingsSecondaryTextColor').value = preset.secondaryColor;
+    if (document.getElementById('settingsCardOpacity')) document.getElementById('settingsCardOpacity').value = preset.cardOpacity * 100;
+    if (document.getElementById('settingsCardBlur')) document.getElementById('settingsCardBlur').value = preset.cardBlur;
+    if (document.getElementById('settingsHideCards')) document.getElementById('settingsHideCards').checked = preset.hideCards;
+    
+    // تطبيق التغييرات
+    document.documentElement.style.setProperty('--card-opacity', preset.cardOpacity);
+    document.documentElement.style.setProperty('--card-blur', preset.cardBlur + 'px');
+    document.body.style.color = preset.textColor;
+    
+    if (preset.hideCards) {
+      document.body.classList.add('hide-cards');
+    } else {
+      document.body.classList.remove('hide-cards');
+    }
+    
+    updateTextStyles();
+    updateCardBackground();
+    
+    showSaveConfirmation('تم تطبيق التصميم: ' + theme);
   }
   
   // ====== محرر النصوص ======
@@ -12088,6 +12701,116 @@ ${contact}`.trim();
     closeOffersSearchModal();
     showToast(`تم اختيار عرض: ${offer.title}`, 'success');
   }
+  
+  // دالة تحميل العروض تحت سؤال اختيار النسبة
+  function loadCalcModeOffers() {
+    const container = document.getElementById('calcModeOffersList');
+    if (!container) return;
+    
+    const clientJobType = answers.jobType || '';
+    const clientEmployer = answers.employer || '';
+    const clientFinanceType = answers.financeType || '';
+    
+    // البحث عن العروض المناسبة
+    const now = new Date();
+    const matchingOffers = offers.filter(o => {
+      if (!o.enabled) return false;
+      
+      // فلترة نوع الوظيفة
+      if (o.targetJobType && o.targetJobType !== '' && o.targetJobType !== clientJobType) return false;
+      
+      // فلترة جهة العمل
+      const targetEmployer = o.customEmployer || o.targetEmployer;
+      if (targetEmployer && targetEmployer !== '' && targetEmployer !== clientEmployer) return false;
+      
+      // فلترة نوع التمويل
+      if (o.targetFinanceType && o.targetFinanceType !== '' && o.targetFinanceType !== 'الكل' && o.targetFinanceType !== clientFinanceType) return false;
+      
+      // فلترة التاريخ
+      if (o.startDate && new Date(o.startDate) > now) return false;
+      if (o.endDate && new Date(o.endDate) < now) return false;
+      
+      return true;
+    });
+    
+    if (matchingOffers.length === 0) {
+      container.innerHTML = '<p style="color:#78350f; font-size:12px; text-align:center;">لا توجد عروض متاحة حالياً لقطاعك</p>';
+      return;
+    }
+    
+    let html = '';
+    matchingOffers.forEach((offer, index) => {
+      const expiryInfo = getOfferExpiryInfo(offer);
+      html += `
+        <div style="display:flex; align-items:center; padding:10px; margin:8px 0; background:#fff; border-radius:8px; cursor:pointer; border:2px solid transparent; transition:all 0.2s;" 
+             onmouseover="this.style.borderColor='#f59e0b'" 
+             onmouseout="this.style.borderColor='transparent'"
+             onclick="selectOfferFromCalcMode(${index})">
+          <div style="flex:1;">
+            <strong style="color:#92400e; font-size:13px;">${offer.title}</strong>
+            ${offer.specialRate ? `<span style="background:#10b981; color:#fff; padding:2px 8px; border-radius:10px; font-size:11px; margin-right:8px;">${offer.specialRate}%</span>` : ''}
+            ${expiryInfo.text ? `<span style="color:${expiryInfo.urgent ? '#ef4444' : '#6b7280'}; font-size:10px; display:block; margin-top:3px;">${expiryInfo.text}</span>` : ''}
+          </div>
+          <button style="background:#f59e0b; color:#fff; border:none; padding:6px 12px; border-radius:6px; font-size:11px; cursor:pointer;">✅ اختيار</button>
+        </div>
+      `;
+    });
+    
+    container.innerHTML = html;
+  }
+  
+  // اختيار عرض من سؤال النسبة - الانتقال التلقائي
+  window.selectOfferFromCalcMode = function(offerIndex) {
+    const clientJobType = answers.jobType || '';
+    const clientEmployer = answers.employer || '';
+    const clientFinanceType = answers.financeType || '';
+    const now = new Date();
+    
+    const matchingOffers = offers.filter(o => {
+      if (!o.enabled) return false;
+      if (o.targetJobType && o.targetJobType !== '' && o.targetJobType !== clientJobType) return false;
+      const targetEmployer = o.customEmployer || o.targetEmployer;
+      if (targetEmployer && targetEmployer !== '' && targetEmployer !== clientEmployer) return false;
+      if (o.targetFinanceType && o.targetFinanceType !== '' && o.targetFinanceType !== 'الكل' && o.targetFinanceType !== clientFinanceType) return false;
+      if (o.startDate && new Date(o.startDate) > now) return false;
+      if (o.endDate && new Date(o.endDate) < now) return false;
+      return true;
+    });
+    
+    const offer = matchingOffers[offerIndex];
+    if (!offer) return;
+    
+    // حفظ العرض المختار
+    window.selectedOffer = offer;
+    answers.selectedOfferRate = offer.specialRate || '';
+    answers.selectedOfferTitle = offer.title;
+    answers.calcMode = 'عرض خاص';
+    
+    // تعيين النسبة من العرض
+    if (offer.specialRate) {
+      answers.profitMargin = offer.specialRate;
+    }
+    
+    // تحديد المدة - الحد الأقصى للعميل أو الحد الأقصى للعرض (أيهما أقل)
+    const maxClientMonths = getMaxAllowedMonths();
+    const offerMaxMonths = offer.maxMonths || 360;
+    answers.months = Math.min(maxClientMonths, offerMaxMonths);
+    
+    // حفظ الحالة للرجوع
+    saveQuestionState();
+    
+    // تخطي سؤال النسبة والمدة والانتقال لسؤال الالتزامات
+    // البحث عن سؤال hasCommitments
+    for (let i = step; i < generalQuestions.length; i++) {
+      if (generalQuestions[i].id === 'hasCommitments') {
+        step = i;
+        break;
+      }
+    }
+    
+    showToast(`تم اختيار عرض: ${offer.title} - النسبة: ${offer.specialRate || 'حسب البنك'}%`, 'success');
+    showQuestion();
+  };
   
   // ====== نظام التصاميم الجاهزة ======
   const fullDesigns = {
@@ -13156,6 +13879,281 @@ ${contact}`.trim();
   };
   
   console.log('[FINO] تم تصدير الدوال الرئيسية إلى window');
+
+  // ====== إدارة جهات الوظيفة ======
+  window.EMPLOYERS_LIST_KEY = 'fino_employers_list';
+  window.defaultEmployers = [
+    { name: 'أرامكو', icon: '🛢️' },
+    { name: 'سابك', icon: '🏭' },
+    { name: 'ستك', icon: '📞' },
+    { name: 'الاتصالات السعودية', icon: '📱' },
+    { name: 'موبايلي', icon: '📲' },
+    { name: 'زين', icon: '📶' },
+    { name: 'الكهرباء السعودية', icon: '⚡' },
+    { name: 'الخطوط السعودية', icon: '✈️' },
+    { name: 'وزارة الصحة', icon: '🏥' },
+    { name: 'وزارة التعليم', icon: '🏫' },
+    { name: 'وزارة الدفاع', icon: '🏛️' },
+    { name: 'وزارة الداخلية', icon: '🚨' },
+    { name: 'الحرس الوطني', icon: '🛡️' },
+    { name: 'الأمن العام', icon: '👮' },
+    { name: 'الجوازات', icon: '🛂' },
+    { name: 'الدفاع المدني', icon: '🚒' },
+    { name: 'الصحة القابضة', icon: '🏥' },
+    { name: 'وزارة العدل', icon: '⚖️' },
+    { name: 'وزارة المالية', icon: '💰' },
+    { name: 'وزارة الإسكان', icon: '🏠' }
+  ];
+  
+  window.getEmployersList = function() {
+    try {
+      const saved = localStorage.getItem(window.EMPLOYERS_LIST_KEY);
+      return saved ? JSON.parse(saved) : [...window.defaultEmployers];
+    } catch (e) {
+      return [...window.defaultEmployers];
+    }
+  }
+  
+  window.loadEmployersList = function() {
+    const container = document.getElementById('employersList');
+    if (!container) return;
+    
+    const employers = window.getEmployersList();
+    container.innerHTML = '';
+    
+    employers.forEach((emp, index) => {
+      const div = document.createElement('div');
+      div.style.cssText = 'display:flex; align-items:center; gap:10px; padding:10px; background:#fff; border-radius:8px; border:1px solid #e5e7eb;';
+      div.innerHTML = `
+        <span style="font-size:20px;">${emp.icon || '🏢'}</span>
+        <input type="text" value="${emp.name}" onchange="updateEmployerName(${index}, this.value)" style="flex:1; padding:8px; border:1px solid #d1d5db; border-radius:6px;">
+        <input type="text" value="${emp.icon || ''}" onchange="updateEmployerIcon(${index}, this.value)" placeholder="🏢" style="width:50px; padding:8px; border:1px solid #d1d5db; border-radius:6px; text-align:center;">
+        <button onclick="deleteEmployer(${index})" style="background:#ef4444; color:#fff; border:none; padding:8px 12px; border-radius:6px; cursor:pointer;">🗑️</button>
+      `;
+      container.appendChild(div);
+    });
+  }
+  
+  window.addNewEmployer = function() {
+    const nameInput = document.getElementById('newEmployerName');
+    const iconInput = document.getElementById('newEmployerIcon');
+    const name = nameInput?.value?.trim();
+    const icon = iconInput?.value?.trim() || '🏢';
+    
+    if (!name) {
+      showToast('أدخل اسم الجهة', 'error');
+      return;
+    }
+    
+    const employers = window.getEmployersList();
+    if (employers.find(e => e.name === name)) {
+      showToast('هذه الجهة موجودة بالفعل', 'error');
+      return;
+    }
+    
+    employers.push({ name, icon });
+    localStorage.setItem(window.EMPLOYERS_LIST_KEY, JSON.stringify(employers));
+    window.loadEmployersList();
+    window.updateAllEmployerDropdowns();
+    nameInput.value = '';
+    iconInput.value = '';
+    showToast(`تم إضافة الجهة: ${name}`, 'success');
+  };
+  
+  window.updateEmployerName = function(index, newName) {
+    const employers = window.getEmployersList();
+    if (employers[index]) {
+      employers[index].name = newName;
+      localStorage.setItem(window.EMPLOYERS_LIST_KEY, JSON.stringify(employers));
+      window.updateAllEmployerDropdowns();
+    }
+  };
+  
+  window.updateEmployerIcon = function(index, newIcon) {
+    const employers = window.getEmployersList();
+    if (employers[index]) {
+      employers[index].icon = newIcon;
+      localStorage.setItem(window.EMPLOYERS_LIST_KEY, JSON.stringify(employers));
+      window.loadEmployersList();
+    }
+  };
+  
+  window.deleteEmployer = function(index) {
+    const employers = window.getEmployersList();
+    const deleted = employers.splice(index, 1);
+    localStorage.setItem(window.EMPLOYERS_LIST_KEY, JSON.stringify(employers));
+    window.loadEmployersList();
+    window.updateAllEmployerDropdowns();
+    showToast(`تم حذف الجهة: ${deleted[0]?.name}`, 'info');
+  };
+  
+  window.saveEmployersList = function() {
+    showSaveConfirmation('تم حفظ جهات الوظيفة بنجاح');
+    window.updateAllEmployerDropdowns();
+  };
+  
+  window.resetEmployersList = function() {
+    if (confirm('هل تريد إعادة تعيين جهات الوظيفة للقيم الافتراضية؟')) {
+      localStorage.setItem(window.EMPLOYERS_LIST_KEY, JSON.stringify(window.defaultEmployers));
+      window.loadEmployersList();
+      window.updateAllEmployerDropdowns();
+      showToast('تم إعادة تعيين جهات الوظيفة', 'info');
+    }
+  };
+  
+  window.updateAllEmployerDropdowns = function() {
+    const employers = window.getEmployersList();
+    
+    // تحديث قائمة العروض
+    const offerSelect = document.getElementById('offerTargetEmployer');
+    if (offerSelect) {
+      const currentValue = offerSelect.value;
+      offerSelect.innerHTML = '<option value="">الكل</option>';
+      employers.forEach(emp => {
+        offerSelect.innerHTML += `<option value="${emp.name}">${emp.icon} ${emp.name}</option>`;
+      });
+      offerSelect.value = currentValue;
+    }
+    
+    // تحديث قائمة البحث عن العروض
+    const searchSelect = document.getElementById('searchOfferEmployer');
+    if (searchSelect) {
+      const currentValue = searchSelect.value;
+      searchSelect.innerHTML = '<option value="">اختر جهة العمل...</option>';
+      employers.forEach(emp => {
+        searchSelect.innerHTML += `<option value="${emp.name}">${emp.icon} ${emp.name}</option>`;
+      });
+      searchSelect.value = currentValue;
+    }
+  }
+  
+  // ====== إدارة جهات التمويل ======
+  const FINANCE_ENTITIES_KEY = 'fino_finance_entities';
+  
+  function getFinanceEntitiesList() {
+    try {
+      const saved = localStorage.getItem(FINANCE_ENTITIES_KEY);
+      if (saved) return JSON.parse(saved);
+      // استخدام القائمة المركزية الموجودة
+      return getMasterFinanceEntitiesList().map(e => ({
+        name: e.name,
+        type: e.category.includes('بنك') ? 'بنك' : e.category.includes('شركة') ? 'شركة تمويل' : 'تقنية مالية',
+        icon: e.icon
+      }));
+    } catch (e) {
+      return [];
+    }
+  }
+  
+  function loadFinanceEntitiesList() {
+    const container = document.getElementById('financeEntitiesList');
+    if (!container) return;
+    
+    const entities = getFinanceEntitiesList();
+    container.innerHTML = '';
+    
+    entities.forEach((entity, index) => {
+      const div = document.createElement('div');
+      div.style.cssText = 'display:flex; align-items:center; gap:10px; padding:10px; background:#fff; border-radius:8px; border:1px solid #e5e7eb;';
+      div.innerHTML = `
+        <span style="font-size:20px;">${entity.icon || '🏦'}</span>
+        <input type="text" value="${entity.name}" onchange="updateFinanceEntityName(${index}, this.value)" style="flex:1; padding:8px; border:1px solid #d1d5db; border-radius:6px;">
+        <select onchange="updateFinanceEntityType(${index}, this.value)" style="padding:8px; border:1px solid #d1d5db; border-radius:6px;">
+          <option value="بنك" ${entity.type === 'بنك' ? 'selected' : ''}>🏦 بنك</option>
+          <option value="شركة تمويل" ${entity.type === 'شركة تمويل' ? 'selected' : ''}>🏢 شركة تمويل</option>
+          <option value="تقنية مالية" ${entity.type === 'تقنية مالية' ? 'selected' : ''}>📱 تقنية مالية</option>
+        </select>
+        <input type="text" value="${entity.icon || ''}" onchange="updateFinanceEntityIcon(${index}, this.value)" placeholder="🏦" style="width:50px; padding:8px; border:1px solid #d1d5db; border-radius:6px; text-align:center;">
+        <button onclick="deleteFinanceEntity(${index})" style="background:#ef4444; color:#fff; border:none; padding:8px 12px; border-radius:6px; cursor:pointer;">🗑️</button>
+      `;
+      container.appendChild(div);
+    });
+  }
+  
+  window.addNewFinanceEntity = function() {
+    const nameInput = document.getElementById('newFinanceEntityName');
+    const typeSelect = document.getElementById('newFinanceEntityType');
+    const iconInput = document.getElementById('newFinanceEntityIcon');
+    const name = nameInput?.value?.trim();
+    const type = typeSelect?.value || 'بنك';
+    const icon = iconInput?.value?.trim() || '🏦';
+    
+    if (!name) {
+      showToast('أدخل اسم جهة التمويل', 'error');
+      return;
+    }
+    
+    const entities = getFinanceEntitiesList();
+    if (entities.find(e => e.name === name)) {
+      showToast('هذه الجهة موجودة بالفعل', 'error');
+      return;
+    }
+    
+    entities.push({ name, type, icon });
+    localStorage.setItem(FINANCE_ENTITIES_KEY, JSON.stringify(entities));
+    loadFinanceEntitiesList();
+    nameInput.value = '';
+    iconInput.value = '';
+    showToast(`تم إضافة جهة التمويل: ${name}`, 'success');
+  };
+  
+  window.updateFinanceEntityName = function(index, newName) {
+    const entities = getFinanceEntitiesList();
+    if (entities[index]) {
+      entities[index].name = newName;
+      localStorage.setItem(FINANCE_ENTITIES_KEY, JSON.stringify(entities));
+    }
+  };
+  
+  window.updateFinanceEntityType = function(index, newType) {
+    const entities = getFinanceEntitiesList();
+    if (entities[index]) {
+      entities[index].type = newType;
+      localStorage.setItem(FINANCE_ENTITIES_KEY, JSON.stringify(entities));
+    }
+  };
+  
+  window.updateFinanceEntityIcon = function(index, newIcon) {
+    const entities = getFinanceEntitiesList();
+    if (entities[index]) {
+      entities[index].icon = newIcon;
+      localStorage.setItem(FINANCE_ENTITIES_KEY, JSON.stringify(entities));
+      loadFinanceEntitiesList();
+    }
+  };
+  
+  window.deleteFinanceEntity = function(index) {
+    const entities = getFinanceEntitiesList();
+    const deleted = entities.splice(index, 1);
+    localStorage.setItem(FINANCE_ENTITIES_KEY, JSON.stringify(entities));
+    loadFinanceEntitiesList();
+    showToast(`تم حذف جهة التمويل: ${deleted[0]?.name}`, 'info');
+  };
+  
+  window.saveFinanceEntitiesList = function() {
+    showSaveConfirmation('تم حفظ جهات التمويل بنجاح');
+  };
+  
+  window.resetFinanceEntitiesList = function() {
+    if (confirm('هل تريد إعادة تعيين جهات التمويل للقيم الافتراضية؟')) {
+      localStorage.removeItem(FINANCE_ENTITIES_KEY);
+      loadFinanceEntitiesList();
+      showToast('تم إعادة تعيين جهات التمويل', 'info');
+    }
+  };
+  
+  // تحميل القوائم عند فتح الصفحات
+  const originalShowPage = window.showPage;
+  window.showPage = function(name) {
+    originalShowPage(name);
+    setTimeout(() => {
+      if (name === 'adminEmployers') {
+        window.loadEmployersList();
+      } else if (name === 'adminFinanceEntities') {
+        window.loadFinanceEntitiesList();
+      }
+    }, 100);
+  };
 </script>
 
 
