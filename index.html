@@ -856,8 +856,23 @@
       text-align: right;
       font-size: 17px;
       margin-top: 8px;
-      margin-bottom: 2px;
+      font-weight: 700;
       color: #374151;
+    }
+    
+    /* تنسيق خاص لملصقات الأسئلة في الحاسبة لجعلها شفافة */
+    #question label {
+      background: transparent !important;
+      color: #ffffff !important;
+      font-size: 24px !important;
+      font-weight: 800 !important;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.5) !important;
+      padding: 10px 0 !important;
+      margin-bottom: 15px !important;
+      display: block !important;
+      text-align: center !important;
+      border: none !important;
+      box-shadow: none !important;
     }
 
     .fade-in {
@@ -2338,6 +2353,10 @@
       <div style="margin-bottom:15px;">
         <div style="font-size:12px; color:#94a3b8; margin-bottom:8px; padding-right:5px;">🏢 إدارة الجهات والشركات</div>
         <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:8px;">
+          <button onclick="showPage('adminJobTypes')" style="background:linear-gradient(135deg, #f43f5e 0%, #e11d48 100%); color:#fff; border:none; padding:12px; border-radius:10px; font-size:13px; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:4px;">
+            <span style="font-size:20px;">💼</span>
+            <span>أنواع الوظائف</span>
+          </button>
           <button onclick="showPage('adminEmployers')" style="background:linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color:#fff; border:none; padding:12px; border-radius:10px; font-size:13px; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:4px;">
             <span style="font-size:20px;">🏢</span>
             <span>جهات الوظيفة</span>
@@ -4028,6 +4047,40 @@
     </div>
   </div>
 
+  <!-- صفحة إدارة أنواع الوظائف -->
+  <div id="adminJobTypesPage" class="page">
+    <div class="card fade-in">
+      <h2 style="margin-top:0; font-size:19px; color:#111827;">💼 إدارة أنواع الوظائف</h2>
+      <p style="font-size:13px; color:#6b7280; text-align:right;">
+        أضف وعدل واحذف أنواع الوظائف (مثل: حكومي، عسكري، قطاع خاص، إلخ).
+      </p>
+      
+      <!-- نموذج إضافة نوع وظيفة جديد -->
+      <div style="background:linear-gradient(135deg, #fff1f2, #ffe4e6); padding:15px; border-radius:12px; margin-bottom:20px; border-right:4px solid #f43f5e;">
+        <h4 style="margin:0 0 12px; font-size:15px; color:#9f1239;">➕ إضافة نوع وظيفة جديد</h4>
+        <div style="display:grid; grid-template-columns:1fr auto; gap:10px; align-items:end;">
+          <div>
+            <label style="font-size:12px; color:#374151;">اسم نوع الوظيفة</label>
+            <input id="newJobTypeName" type="text" placeholder="مثل: قطاع شبه حكومي" style="width:100%; padding:10px; border:1px solid #d1d5db; border-radius:8px;">
+          </div>
+          <button onclick="addNewJobType()" style="background:linear-gradient(135deg, #f43f5e, #e11d48); color:#fff; border:none; padding:10px 20px; border-radius:8px; cursor:pointer; font-weight:600;">➕ إضافة</button>
+        </div>
+      </div>
+      
+      <!-- قائمة أنواع الوظائف الحالية -->
+      <div style="background:#f8fafc; padding:15px; border-radius:12px;">
+        <h4 style="margin:0 0 12px; font-size:15px; color:#374151;">📝 أنواع الوظائف الحالية</h4>
+        <div id="jobTypesList" style="display:grid; gap:8px; max-height:400px; overflow-y:auto;"></div>
+      </div>
+      
+      <div style="margin-top:15px; display:flex; gap:10px; justify-content:flex-end;">
+        <button class="primary" onclick="saveJobTypesList()" style="padding:12px 25px;">💾 حفظ التغييرات</button>
+        <button class="secondary" onclick="resetJobTypesList()">🔄 إعادة تعيين</button>
+        <button class="secondary" onclick="showPage('adminHub')">🔙 رجوع</button>
+      </div>
+    </div>
+  </div>
+
   <!-- صفحة إدارة جهات الوظيفة -->
   <div id="adminEmployersPage" class="page">
     <div class="card fade-in">
@@ -5271,6 +5324,74 @@
       container.appendChild(div);
     });
   };
+
+  // --- إدارة أنواع الوظائف (Job Types) ---
+  window.JOB_TYPES_KEY = 'fino_job_types_list';
+  window.defaultJobTypes = ['حكومي', 'عسكري', 'قطاع خاص', 'متقاعد'];
+
+  window.getJobTypes = function() {
+    try {
+      const saved = localStorage.getItem(window.JOB_TYPES_KEY);
+      return saved ? JSON.parse(saved) : [...window.defaultJobTypes];
+    } catch (e) {
+      return [...window.defaultJobTypes];
+    }
+  };
+
+  window.loadJobTypesList = function() {
+    const container = document.getElementById('jobTypesList');
+    if (!container) return;
+    
+    const list = window.getJobTypes();
+    container.innerHTML = '';
+    
+    list.forEach((type, index) => {
+      const div = document.createElement('div');
+      div.style.cssText = 'display:flex; justify-content:space-between; align-items:center; padding:12px; background:#f8fafc; border-radius:8px; margin-bottom:8px; border:1px solid #e2e8f0;';
+      div.innerHTML = `
+        <span style="font-weight:600; color:#1e293b;">${type}</span>
+        <button onclick="window.deleteJobType(${index})" style="background:#fee2e2; color:#ef4444; border:none; padding:8px 15px; border-radius:6px; cursor:pointer; font-size:12px; font-weight:bold;">🗑️ حذف</button>
+      `;
+      container.appendChild(div);
+    });
+  };
+
+  window.addNewJobType = function() {
+    const nameInput = document.getElementById('newJobTypeName');
+    const name = nameInput?.value?.trim();
+    if (!name) { alert('يرجى إدخال اسم نوع الوظيفة'); return; }
+    
+    const list = window.getJobTypes();
+    if (list.includes(name)) { alert('هذا النوع موجود مسبقاً'); return; }
+    
+    list.push(name);
+    localStorage.setItem(window.JOB_TYPES_KEY, JSON.stringify(list));
+    nameInput.value = '';
+    window.loadJobTypesList();
+  };
+
+  window.deleteJobType = function(index) {
+    if (!confirm('هل أنت متأكد من حذف نوع الوظيفة هذا؟')) return;
+    const list = window.getJobTypes();
+    list.splice(index, 1);
+    localStorage.setItem(window.JOB_TYPES_KEY, JSON.stringify(list));
+    window.loadJobTypesList();
+  };
+
+  window.saveJobTypesList = function() {
+    alert('تم حفظ التغييرات بنجاح');
+  };
+
+  window.resetJobTypesList = function() {
+    if (!confirm('هل أنت متأكد من إعادة تعيين أنواع الوظائف للافتراضي؟')) return;
+    localStorage.removeItem(window.JOB_TYPES_KEY);
+    window.loadJobTypesList();
+  };
+
+  // تحديث دالة الحصول على خيارات نوع الوظيفة لتكون ديناميكية
+  window.getJobTypeOptions = function() {
+    return window.getJobTypes();
+  };
   
   window.addNewEmployer = function() {
     const nameInput = document.getElementById('newEmployerName');
@@ -5367,9 +5488,12 @@
         }
       }
       // تحميل قائمة جهات الوظيفة
-      if (name === 'adminEmployers' && typeof window.loadEmployersList === 'function') {
-        window.loadEmployersList();
-      }
+      if (pageId === 'adminEmployers') {
+      if (typeof window.loadEmployersList === 'function') window.loadEmployersList();
+    }
+    if (pageId === 'adminJobTypes') {
+      if (typeof window.loadJobTypesList === 'function') window.loadJobTypesList();
+    }
       // تحميل قائمة جهات التمويل
       if (name === 'adminFinanceEntities' && typeof window.loadFinanceEntitiesList === 'function') {
         window.loadFinanceEntitiesList();
@@ -5918,11 +6042,12 @@
     renderBankTable();
   }
 
-  // دالة للحصول على النسبة المناسبة لبنك معين حسب بيانات العميل
+  // دالة للحصول على النسبة المناسبة لبنك معين حسب بيانات العميل - مطورة لتطابق كافة المعايير
   function getBankRateForClient(bankName, clientAnswers) {
     const salary = parseFloat(clientAnswers.salary || '0');
     if (!salary || !bankName) return null;
 
+    // 1. تحديد نوع التمويل بدقة
     let fType;
     if (clientAnswers.financeType === 'شراء مديونية تمويل شخصي') fType = 'buyoutPersonal';
     else if (clientAnswers.financeType === 'شراء مديونية تمويل عقاري') fType = 'buyoutMortgage';
@@ -5931,24 +6056,45 @@
     else if (clientAnswers.financeType && clientAnswers.financeType.includes('عقاري')) fType = 'mortgage';
     else fType = 'personal';
 
+    // 2. تحديد نوع الدعم (مدعوم/غير مدعوم)
     const supp = clientAnswers.supported || 'الكل';
+    
+    // 3. تحديد نوع الوظيفة
     const jobType = clientAnswers.jobType || '';
+    
+    // 4. تحديد مدة التمويل
     const months = parseInt(clientAnswers.months || '0');
+    
+    // 5. تحديد حالة اعتزاز (إن وجدت)
+    const isEtizaz = clientAnswers.isEtizaz === 'نعم';
 
-    // البحث عن النسبة المناسبة للبنك
+    // البحث عن النسبة المناسبة للبنك بناءً على كافة المعايير
     const matchingConfigs = bankConfigs.filter(cfg => {
+      // أ. مطابقة اسم البنك ونوع التمويل
       if (cfg.bankName !== bankName) return false;
       if (cfg.financeType !== fType) return false;
+      
+      // ب. مطابقة نطاق الراتب
       if (!(salary >= cfg.minSalary && salary <= cfg.maxSalary)) return false;
-      if (!(cfg.supportedType === 'الكل' || cfg.supportedType === supp)) return false;
+      
+      // ج. مطابقة نوع الدعم
+      if (cfg.supportedType && cfg.supportedType !== 'الكل' && cfg.supportedType !== supp) return false;
+      
+      // د. مطابقة نوع الوظيفة (حكومي، عسكري، إلخ)
       if (cfg.jobType && cfg.jobType !== 'الكل' && jobType && cfg.jobType !== jobType) return false;
+      
+      // هـ. مطابقة مدة التمويل (الأشهر)
       if (cfg.minMonths && months && months < cfg.minMonths) return false;
       if (cfg.maxMonths && months && months > cfg.maxMonths) return false;
+      
+      // و. مطابقة حالة اعتزاز (إذا كان العرض مخصصاً لمشتركي اعتزاز)
+      if (cfg.isEtizazOnly && !isEtizaz) return false;
+      
       return true;
     });
 
     if (matchingConfigs.length > 0) {
-      // إرجاع أقل نسبة
+      // إرجاع أفضل نسبة (الأقل هامش ربح)
       matchingConfigs.sort((a, b) => a.margin - b.margin);
       return matchingConfigs[0].margin;
     }
@@ -7424,21 +7570,20 @@
       }
       div.appendChild(sel);
       
-      // إضافة زر البحث عن العروض عند سؤال نوع الوظيفة
-      if (q.id === 'jobType') {
+      // تم نقل زر البحث عن العروض إلى مرحلة اختيار طريقة النسبة (calcMode) بناءً على طلب المستخدم
+      
+      // إضافة زر البحث عن العروض وعرضها تحت سؤال اختيار النسبة (calcMode)
+      if (q.id === 'calcMode') {
         const offersBtn = document.createElement('button');
         offersBtn.type = 'button';
         offersBtn.innerHTML = '🎁 ابحث عن عروض لقطاعي';
-        offersBtn.style.cssText = 'display:block; margin:15px auto 0; background:linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color:#fff; border:none; border-radius:10px; padding:12px 20px; font-size:14px; cursor:pointer; box-shadow:0 4px 15px rgba(245,158,11,0.3);';
+        offersBtn.style.cssText = 'display:block; margin:15px auto 15px; background:linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color:#fff; border:none; border-radius:10px; padding:12px 20px; font-size:14px; cursor:pointer; box-shadow:0 4px 15px rgba(245,158,11,0.3); width:100%; font-weight:bold;';
         offersBtn.onclick = function() { openOffersSearchModal(); };
         div.appendChild(offersBtn);
-      }
-      
-      // إضافة عرض العروض تحت سؤال اختيار النسبة
-      if (q.id === 'calcMode') {
+
         const offersContainer = document.createElement('div');
         offersContainer.id = 'calcModeOffersContainer';
-        offersContainer.style.cssText = 'margin-top:20px; padding:15px; background:linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-radius:12px; border:2px solid #f59e0b;';
+        offersContainer.style.cssText = 'margin-top:10px; padding:15px; background:linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-radius:12px; border:2px solid #f59e0b;';
         offersContainer.innerHTML = '<h4 style="margin:0 0 10px; font-size:14px; color:#92400e;"><span style="font-size:18px;">🎁</span> عروض متاحة لقطاعك</h4><div id="calcModeOffersList" style="max-height:200px; overflow-y:auto;"></div>';
         div.appendChild(offersContainer);
         
@@ -14158,4 +14303,4 @@ ${contact}`.trim();
 
 
 </body>
-</html>
+</html
