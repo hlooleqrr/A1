@@ -26,6 +26,72 @@
   <style>  
     * { box-sizing: border-box; }
     
+    /* ========== تنسيق بطاقات الأسئلة في لوحة التحكم ========== */
+    .question-item {
+      background: #ffffff !important;
+      border: 1px solid #e2e8f0 !important;
+      border-radius: 12px !important;
+      padding: 12px 15px !important;
+      margin-bottom: 10px !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 10px !important;
+      transition: all 0.2s ease !important;
+    }
+    .question-item:hover {
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+    }
+    .question-item.question-hidden {
+      opacity: 0.5 !important;
+      background: #f8fafc !important;
+    }
+    .question-drag-handle {
+      cursor: grab !important;
+      color: #9ca3af !important;
+      font-size: 14px !important;
+    }
+    .question-text {
+      flex: 1 !important;
+      color: #1f2937 !important;
+      font-size: 14px !important;
+      font-weight: 500 !important;
+      text-align: right !important;
+    }
+    .question-actions {
+      display: flex !important;
+      gap: 6px !important;
+      flex-wrap: wrap !important;
+    }
+    .question-btn {
+      padding: 6px 12px !important;
+      border-radius: 8px !important;
+      font-size: 12px !important;
+      cursor: pointer !important;
+      border: 1px solid #e2e8f0 !important;
+      background: #f8fafc !important;
+      color: #374151 !important;
+      transition: all 0.2s ease !important;
+    }
+    .question-btn:hover {
+      background: #e2e8f0 !important;
+    }
+    .question-btn-edit {
+      background: #fef3c7 !important;
+      border-color: #fcd34d !important;
+      color: #92400e !important;
+    }
+    .question-btn-edit:hover {
+      background: #fde68a !important;
+    }
+    .question-btn-hide {
+      background: #fee2e2 !important;
+      border-color: #fca5a5 !important;
+      color: #991b1b !important;
+    }
+    .question-btn-hide:hover {
+      background: #fecaca !important;
+    }
+    
     /* ========== تصميم عصري شفاف مثل المنصة المرجعية ========== */
     /* إخفاء جميع الإطارات والتركيز */
     *, *:focus, *:active {
@@ -2583,6 +2649,14 @@ body.has-global-bg .card {
         </div>  
       </div>  
         
+      <!-- زر تطبيق جميع التغييرات -->
+      <div style="margin-top:25px; padding:15px; background:linear-gradient(135deg, #10b981 0%, #059669 100%); border-radius:12px; text-align:center;">
+        <p style="font-size:12px; color:#d1fae5; margin:0 0 10px 0;">اضغط لتطبيق جميع التعديلات وإعادة تحميل البيانات</p>
+        <button onclick="applyAllChanges()" style="background:#fff; color:#059669; border:none; padding:14px 40px; border-radius:10px; font-size:16px; font-weight:700; cursor:pointer; box-shadow:0 4px 15px rgba(0,0,0,0.2);">
+          ✅ تطبيق التغييرات
+        </button>
+      </div>
+      
       <div style="margin-top:20px; text-align:center;">  
         <button onclick="backToLanding()" style="background:linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color:#fff; border:none; padding:12px 30px; border-radius:10px; font-size:14px; cursor:pointer;">  
           🏠 رجوع للرئيسية  
@@ -2750,6 +2824,27 @@ body.has-global-bg .card {
               <option value="">بدون</option>  
               <option value="نعم">اعتزاز</option>  
             </select>  
+          </div>
+          <div>  
+            <label>القسط المرن المخفض <span style="color:#059669; font-size:10px;">(للعقاري المدعوم)</span></label>  
+            <select id="adminFlexibleInstallment" onchange="toggleFlexibleMinAmount()">  
+              <option value="">غير مفعل</option>  
+              <option value="نعم">مفعل - يدعم القسط المرن</option>  
+            </select>  
+          </div>
+          <div id="flexibleMinAmountDiv" style="display:none;">  
+            <label>الحد الأدنى للقسط المرن (ريال)</label>  
+            <select id="adminFlexibleMinAmount">  
+              <option value="400">400 ريال</option>  
+              <option value="500">500 ريال</option>  
+              <option value="600">600 ريال</option>  
+              <option value="700">700 ريال</option>  
+              <option value="800">800 ريال</option>  
+              <option value="900">900 ريال</option>  
+              <option value="1000">1,000 ريال</option>  
+              <option value="1500">1,500 ريال</option>  
+              <option value="2000">2,000 ريال</option>  
+            </select>  
           </div>  
           <div>  
             <label>احتساب العمر</label>  
@@ -2800,6 +2895,7 @@ body.has-global-bg .card {
             <th>نوع الوظيفة</th>  
             <th>تفاصيل المنتج</th>  
             <th>اعتزاز</th>  
+            <th>قسط مرن</th>  
             <th>النسبة %</th>  
             <th>احتساب العمر</th>  
             <th>العمر الأقصى</th>  
@@ -3154,16 +3250,38 @@ body.has-global-bg .card {
         <!-- النتيجة تظهر هنا -->  
       </div>  
         
-      <div style="margin-top:15px; padding:12px; background:#fef3c7; border-radius:10px; text-align:right; font-size:13px;">  
-        <strong>ℹ️ ملاحظة:</strong> حسب نظام ساما، مبلغ السداد المبكر = الرصيد المتبقي من الأصل + كلفة 3 أشهر قادمة (للشخصي) أو شهر واحد (للعقاري)  
-      </div>  
+      <!-- تنبيهات قانونية مهمة -->
+      <div style="margin-top:15px; padding:15px; background:linear-gradient(135deg, #fef3c7, #fde68a); border-radius:12px; border:2px solid #f59e0b; text-align:right;">
+        <h4 style="margin:0 0 10px; font-size:14px; color:#92400e;">📜 تنبيهات قانونية مهمة</h4>
+        
+        <div style="margin-bottom:12px; padding:10px; background:#fff; border-radius:8px; font-size:13px;">
+          <strong style="color:#1e40af;">🏠 التمويل العقاري:</strong>
+          <ul style="margin:8px 0 0 0; padding-right:20px; color:#374151;">
+            <li>طريقة الحساب: <strong>أصل التمويل + أرباح سنتين + أرباح 3 أشهر (رسوم إدارية)</strong></li>
+            <li>بعض جهات التمويل تشترط عدم السداد خلال أول 24 شهر كفترة حظر</li>
+            <li>قد تختلف الطريقة إذا وُجد شرط جزائي مختلف في العقد</li>
+          </ul>
+        </div>
+        
+        <div style="margin-bottom:12px; padding:10px; background:#fff; border-radius:8px; font-size:13px;">
+          <strong style="color:#059669;">💳 التمويل الشخصي:</strong>
+          <ul style="margin:8px 0 0 0; padding-right:20px; color:#374151;">
+            <li>طريقة الحساب: <strong>أصل المبلغ + أرباح 3 أشهر</strong></li>
+            <li>بعض جهات التمويل تضيف رسوم تسوية بنسبة معينة</li>
+          </ul>
+        </div>
+        
+        <div style="padding:10px; background:#fef2f2; border-radius:8px; font-size:12px; color:#991b1b;">
+          <strong>⚠️ تنبيه مهم:</strong> هذه الطريقة هي المعتمدة من البنك المركزي السعودي (ساما)، إلا إذا اشترطت جهة التمويل طريقة أخرى في العقد. <strong>يُرجى مراجعة عقد التمويل للتأكد.</strong>
+        </div>
+      </div>
         
       <!-- تنبيه شرط السنتين للعقاري -->  
       <div id="earlySettlementWarningBox" style="margin-top:10px; padding:12px; background:#fef2f2; border-radius:10px; border:1px solid #fca5a5; text-align:right; font-size:13px;">  
         <strong>⚠️ تنبيه للتمويل العقاري:</strong>  
         <span id="earlySettlementWarningText">أكثر جهات التمويل يشترطون انتهاء سنتين من الأقساط للسماح بالسداد المبكر. راجع العقد.</span>  
         <div style="margin-top:8px; font-size:12px; color:#991b1b;">  
-          <strong>📊 طريقة الحساب للعقاري:</strong> <span id="earlySettlementFormulaText">أرباح سنتين + أرباح 3 أشهر (رسوم إدارية)</span>  
+          <strong>📊 طريقة الحساب للعقاري:</strong> <span id="earlySettlementFormulaText">أصل التمويل + أرباح سنتين + أرباح 3 أشهر (رسوم إدارية)</span>  
         </div>  
       </div>  
         
@@ -5706,6 +5824,82 @@ body.has-global-bg .card {
   function showPage(name) { window.showPage(name); }  
   
   function backToLanding() { showPage('landing'); }  
+
+// دالة تطبيق جميع التغييرات
+function applyAllChanges() {
+  // إظهار رسالة تحميل
+  const btn = event.target;
+  const originalText = btn.innerHTML;
+  btn.innerHTML = '⏳ جاري التطبيق...';
+  btn.disabled = true;
+  
+  setTimeout(() => {
+    // إعادة تحميل جميع البيانات من localStorage
+    try {
+      // إعادة تحميل إعدادات البنوك
+      if (typeof loadBankConfigsFromStorage === 'function') {
+        loadBankConfigsFromStorage();
+      }
+      
+      // إعادة تحميل التعديلات التراكمية
+      if (typeof loadRateAdjustmentsFromStorage === 'function') {
+        loadRateAdjustmentsFromStorage();
+      }
+      
+      // إعادة تحميل إعدادات الأسئلة
+      if (typeof loadCustomQuestions === 'function') {
+        loadCustomQuestions();
+      }
+      
+      // إعادة تحميل إعدادات المنتجات
+      if (typeof loadProductSettings === 'function') {
+        loadProductSettings();
+      }
+      
+      // إعادة عرض جدول البنوك
+      if (typeof renderBankTable === 'function') {
+        renderBankTable();
+      }
+      
+      // إعادة عرض قائمة الأسئلة
+      if (typeof renderQuestionsList === 'function') {
+        renderQuestionsList();
+      }
+      
+      // إعادة عرض قائمة التعديلات
+      if (typeof renderRateAdjustmentsList === 'function') {
+        renderRateAdjustmentsList();
+      }
+      
+      btn.innerHTML = '✅ تم التطبيق بنجاح!';
+      btn.style.background = '#10b981';
+      btn.style.color = '#fff';
+      
+      // إظهار رسالة نجاح
+      alert('✅ تم تطبيق جميع التغييرات بنجاح!\n\nسيتم إعادة تحميل الصفحة لضمان تطبيق التغييرات.');
+      
+      // إعادة تحميل الصفحة لضمان تطبيق جميع التغييرات
+      setTimeout(() => {
+        location.reload();
+      }, 500);
+      
+    } catch (error) {
+      console.error('خطأ في تطبيق التغييرات:', error);
+      btn.innerHTML = '❌ حدث خطأ';
+      btn.style.background = '#ef4444';
+      btn.style.color = '#fff';
+      alert('حدث خطأ أثناء تطبيق التغييرات. يرجى المحاولة مرة أخرى.');
+    }
+    
+    setTimeout(() => {
+      btn.innerHTML = originalText;
+      btn.style.background = '#fff';
+      btn.style.color = '#059669';
+      btn.disabled = false;
+    }, 2000);
+  }, 500);
+}
+
   
   window.startClientFlow = function() {  
     showPage('calculator');  
@@ -6134,6 +6328,7 @@ body.has-global-bg .card {
         <td>${cfg.jobType || ''}</td>  
         <td>${cfg.productDetail || ''}</td>  
         <td>${cfg.etezaaz || ''}</td>  
+        <td>${cfg.flexibleInstallment ? '✅ (' + (cfg.flexibleMinAmount || 400) + 'ر)' : ''}</td>  
         <td>${cfg.margin}</td>  
         <td>${cfg.ageCalcType === 'gregorian' ? 'ميلادي' : 'هجري'}</td>  
         <td>${cfg.maxAge || 60}</td>  
@@ -6147,6 +6342,15 @@ body.has-global-bg .card {
     });  
   }  
   
+  // دالة إظهار/إخفاء حقل الحد الأدنى للقسط المرن
+  function toggleFlexibleMinAmount() {
+    const flexibleSelect = document.getElementById('adminFlexibleInstallment');
+    const minAmountDiv = document.getElementById('flexibleMinAmountDiv');
+    if (flexibleSelect && minAmountDiv) {
+      minAmountDiv.style.display = flexibleSelect.value === 'نعم' ? 'block' : 'none';
+    }
+  }
+
   function clearAdminForm() {  
     document.getElementById('adminBankName').value = '';  
     document.getElementById('adminFinanceType').value = 'personal';  
@@ -6159,6 +6363,9 @@ body.has-global-bg .card {
     document.getElementById('adminMaxMonths').value = '';  
     document.getElementById('adminProductDetail').value = '';  
     document.getElementById('adminEtezaaz').value = '';  
+    document.getElementById('adminFlexibleInstallment').value = '';  
+    document.getElementById('adminFlexibleMinAmount').value = '400';  
+    document.getElementById('flexibleMinAmountDiv').style.display = 'none';  
     document.getElementById('adminAgeCalcType').value = 'hijri';  
     document.getElementById('adminMaxAge').value = '';  
     document.getElementById('adminBankNote').value = '';  
@@ -6181,6 +6388,8 @@ body.has-global-bg .card {
     const maxMonths = parseInt(document.getElementById('adminMaxMonths').value || '0');  
     const productDetail = document.getElementById('adminProductDetail').value;  
     const etezaaz = document.getElementById('adminEtezaaz').value;  
+    const flexibleInstallment = document.getElementById('adminFlexibleInstallment').value;  
+    const flexibleMinAmount = parseInt(document.getElementById('adminFlexibleMinAmount').value || '400');  
     const ageCalcType = document.getElementById('adminAgeCalcType').value;  
     const maxAge = parseInt(document.getElementById('adminMaxAge').value || '60');  
     const bankNote = (document.getElementById('adminBankNote').value || '').trim();  
@@ -6210,6 +6419,10 @@ body.has-global-bg .card {
     if (maxMonths) cfg.maxMonths = maxMonths;  
     if (productDetail) cfg.productDetail = productDetail;  
     if (etezaaz) cfg.etezaaz = etezaaz;  
+    if (flexibleInstallment) {
+      cfg.flexibleInstallment = flexibleInstallment;
+      cfg.flexibleMinAmount = flexibleMinAmount || 400;
+    }
     if (bankNote) cfg.bankNote = bankNote;  
     if (rateExpiryDate) cfg.rateExpiryDate = rateExpiryDate;  
     cfg.ageCalcType = ageCalcType || 'hijri';  
@@ -6236,6 +6449,15 @@ body.has-global-bg .card {
     document.getElementById('adminMaxMonths').value = cfg.maxMonths || '';  
     document.getElementById('adminProductDetail').value = cfg.productDetail || '';  
     document.getElementById('adminEtezaaz').value = cfg.etezaaz || '';  
+    document.getElementById('adminFlexibleInstallment').value = cfg.flexibleInstallment || '';  
+    // إظهار حقل الحد الأدنى إذا كان القسط المرن مفعل
+    if (cfg.flexibleInstallment === 'نعم') {
+      document.getElementById('flexibleMinAmountDiv').style.display = 'block';
+      document.getElementById('adminFlexibleMinAmount').value = cfg.flexibleMinAmount || '400';
+    } else {
+      document.getElementById('flexibleMinAmountDiv').style.display = 'none';
+      document.getElementById('adminFlexibleMinAmount').value = '400';
+    }
     document.getElementById('adminAgeCalcType').value = cfg.ageCalcType || 'hijri';  
     document.getElementById('adminMaxAge').value = cfg.maxAge || '';  
     document.getElementById('adminBankNote').value = cfg.bankNote || '';  
@@ -6347,7 +6569,7 @@ body.has-global-bg .card {
     const mortgageDetail = answers.mortgageProductType || '';  
     const wantsEtezaaz = (answers.financeType === 'تمويل عقاري' && answers.supported === 'مدعوم' && answers.isEtezaaz === 'نعم');  
   
-    console.log('بحث عن بنوك مطابقة:', { fType, salary, supp, jobType, months });  
+    console.log('بحث عن بنوك مطابقة:', { fType, salary, supp, jobType, months, mortgageDetail });  
   
     const list = bankConfigs.filter(cfg => {  
       // فحص نوع التمويل  
@@ -6359,15 +6581,33 @@ body.has-global-bg .card {
       // فحص الدعم  
       if (!(cfg.supportedType === 'الكل' || cfg.supportedType === supp)) return false;  
   
-      // فحص نوع الوظيفة - الكل يعني متاح لجميع الوظائف  
-      if (cfg.jobType && cfg.jobType !== 'الكل' && jobType && cfg.jobType !== jobType) return false;  
+      // فحص نوع الوظيفة (jobType)
+      // إذا كان العميل عسكري/حكومي/قطاع خاص:
+      // - يُرشح له فقط البنوك التي تدعم "الكل" أو تدعم نفس نوع الوظيفة
+      if (jobType && jobType !== '') {
+        // العميل له نوع وظيفة محدد
+        if (cfg.jobType && cfg.jobType !== '' && cfg.jobType !== 'الكل') {
+          // البنك محدد لنوع وظيفة معين (ليس "الكل")
+          if (cfg.jobType !== jobType) return false;
+        }
+        // إذا كان البنك يدعم "الكل" أو ليس له تحديد، يُقبل
+      }  
         
       // فحص المدة بالأشهر  
       if (cfg.minMonths && months && months < cfg.minMonths) return false;  
       if (cfg.maxMonths && months && months > cfg.maxMonths) return false;  
         
-      // فحص تفاصيل المنتج  
-      if (cfg.productDetail && mortgageDetail && cfg.productDetail !== mortgageDetail) return false;  
+      // فحص تفاصيل المنتج (productDetail)
+      // إذا كان العميل اختار منتج محدد (مثل "بناء ذاتي" أو "وحدات جاهزة"):
+      // - يُرشح له فقط البنوك التي تدعم "الكل" أو تدعم نفس المنتج المحدد
+      if (mortgageDetail && mortgageDetail !== '') {
+        // العميل اختار منتج محدد
+        if (cfg.productDetail && cfg.productDetail !== '' && cfg.productDetail !== 'الكل') {
+          // البنك له منتج محدد (ليس "الكل")
+          if (cfg.productDetail !== mortgageDetail) return false;
+        }
+        // إذا كان البنك يدعم "الكل" أو ليس له تحديد، يُقبل
+      }  
         
       // فحص برنامج اعتزاز  
       if (wantsEtezaaz && cfg.etezaaz && cfg.etezaaz !== 'نعم') return false;  
@@ -7202,7 +7442,29 @@ body.has-global-bg .card {
       type:'number',  
       show:a=>a.financeType==='شراء مديونية تمويل شخصي'  
     },  
-    { id:'hasCommitments',label:'هل لديك التزامات؟',type:'select',options:['نعم','لا'] }  
+    { id:'hasCommitments',label:'هل لديك التزامات؟',type:'select',options:['نعم','لا'] },
+    
+    /* (إضافة) سؤال القسط المرن المخفض - يظهر للتمويل العقاري المدعوم فقط إذا كان البنك يدعمه */
+    {
+      id:'wantFlexibleInstallment',
+      label:'هل ترغب في القسط المرن المخفض؟ (تخفيض القسط لفترة محددة)',
+      type:'select',
+      options:['لا','نعم'],
+      show:a=>a.financeType==='تمويل عقاري' && a.supported==='مدعوم' && a.hasCommitments==='نعم' && a.bankSupportsFlexible === true
+    },
+    {
+      id:'flexibleInstallmentAmount',
+      label:'حدد مبلغ القسط المخفض (ريال)',
+      type:'flexibleAmountSelect',
+      show:a=>a.wantFlexibleInstallment==='نعم'
+    },
+    {
+      id:'flexibleInstallmentMonths',
+      label:'كم مدة القسط المخفض؟ (بالشهور)',
+      type:'select',
+      options:['12','24','36','48','60'],
+      show:a=>a.wantFlexibleInstallment==='نعم'
+    }
   ];  
   
   const commitmentQuestions = [  
@@ -7746,6 +8008,82 @@ body.has-global-bg .card {
       note.textContent = 'اختر جهة التمويل للحصول على النسبة المخزنة تلقائياً';  
       div.appendChild(note);  
         
+    } else if(q.type === 'flexibleAmountSelect'){
+      // ====== قائمة القسط المرن المخفض ======
+      const flexContainer = document.createElement('div');
+      flexContainer.style.cssText = 'background:linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); padding:15px; border-radius:12px; border:2px solid #10b981; margin-top:10px;';
+      
+      // حساب الحد الأقصى المسموح للقسط (بعد خصم الالتزامات)
+      const salary = parseFloat(answers.salary || '0');
+      const deductionRate = 0.65; // 65% للعقاري المدعوم
+      const maxAllowed = salary * deductionRate;
+      
+      // حساب إجمالي الالتزامات
+      let totalCommitments = 0;
+      if (answers.commitments && Array.isArray(answers.commitments)) {
+        answers.commitments.forEach(c => {
+          totalCommitments += parseFloat(c.amount || 0);
+        });
+      }
+      
+      // القسط المتاح بعد خصم الالتزامات
+      const availableInstallment = Math.max(0, maxAllowed - totalCommitments);
+      
+      // إنشاء قائمة القسط المرن (من 400 إلى الحد الأقصى)
+      const flexSelect = document.createElement('select');
+      flexSelect.id = q.id;
+      flexSelect.style.cssText = 'width:100%; padding:12px; border-radius:8px; border:2px solid #10b981; font-size:16px; font-weight:bold; background:#fff;';
+      flexSelect.innerHTML = '<option value="">اختر مبلغ القسط المخفض...</option>';
+      
+      // الحصول على الحد الأدنى المحدد للبنك (افتراضي 400 ريال)
+      const minAmount = parseInt(answers.flexibleMinAmount) || 400;
+      const maxAmount = Math.floor(availableInstallment / 100) * 100; // تقريب لأقرب 100
+      
+      // إضافة خيارات من الحد الأدنى إلى الحد الأقصى (بزيادة 100 ريال)
+      for (let amount = minAmount; amount <= maxAmount; amount += 100) {
+        flexSelect.innerHTML += `<option value="${amount}">${amount.toLocaleString()} ريال</option>`;
+      }
+      
+      // إضافة الحد الأقصى إذا لم يكن مضافاً
+      if (maxAmount < availableInstallment) {
+        flexSelect.innerHTML += `<option value="${Math.floor(availableInstallment)}">${Math.floor(availableInstallment).toLocaleString()} ريال (الحد الأقصى)</option>`;
+      }
+      
+      // إضافة معلومات توضيحية
+      const infoDiv = document.createElement('div');
+      infoDiv.style.cssText = 'margin-bottom:15px; padding:10px; background:#fff; border-radius:8px; font-size:13px; color:#065f46;';
+      infoDiv.innerHTML = `
+        <div style="margin-bottom:8px;"><strong>💰 الراتب:</strong> ${salary.toLocaleString()} ريال</div>
+        <div style="margin-bottom:8px;"><strong>📊 الحد الأقصى للاستقطاع (65%):</strong> ${maxAllowed.toLocaleString()} ريال</div>
+        <div style="margin-bottom:8px;"><strong>📉 إجمالي الالتزامات:</strong> ${totalCommitments.toLocaleString()} ريال</div>
+        <div style="margin-bottom:8px; color:#0369a1;"><strong>🏦 الحد الأدنى للبنك:</strong> ${minAmount.toLocaleString()} ريال</div>
+        <div style="color:#059669; font-weight:bold;"><strong>✅ القسط المتاح للتخفيض:</strong> من ${minAmount.toLocaleString()} إلى ${Math.floor(availableInstallment).toLocaleString()} ريال</div>
+      `;
+      
+      flexContainer.appendChild(infoDiv);
+      flexContainer.appendChild(flexSelect);
+      
+      // ملاحظة توضيحية
+      const noteDiv = document.createElement('div');
+      noteDiv.style.cssText = 'margin-top:10px; padding:10px; background:#fef3c7; border-radius:8px; font-size:12px; color:#92400e;';
+      noteDiv.innerHTML = `
+        <strong>💡 ملاحظة:</strong> القسط المرن المخفض يتيح لك تخفيض القسط لفترة محددة (حتى 60 شهر)، 
+        وبعد انتهاء هذه الفترة يرتفع القسط تلقائياً ليصل إلى الحد الأقصى المسموح.
+      `;
+      flexContainer.appendChild(noteDiv);
+      
+      div.appendChild(flexContainer);
+      
+      // الانتقال التلقائي عند الاختيار
+      flexSelect.addEventListener('change', function(){
+        if(this.value){
+          saveQuestionState();
+          answers[q.id] = this.value;
+          step++;
+          showQuestion();
+        }
+      });
+        
     } else if(q.type === 'select'){  
       const sel = document.createElement('select');  
       sel.id = q.id;  
@@ -8150,8 +8488,12 @@ body.has-global-bg .card {
         answers.profitMargin = bestBank.margin;  
         answers.recommendedBank = bestBank;
         // حفظ معلومة إذا كانت النسبة من نوع اعتزاز (لا تطبق عليها التعديلات التراكمية)
-        answers.isEtezaazRate = bestBank.isEtezaaz || false;  
-        console.log('تم اختيار البنك:', bestBank.bankName, 'بنسبة:', bestBank.margin, 'اعتزاز:', bestBank.isEtezaaz || false);  
+        answers.isEtezaazRate = bestBank.isEtezaaz || false;
+        // حفظ معلومة دعم القسط المرن المخفض
+        answers.bankSupportsFlexible = bestBank.flexibleInstallment === 'نعم' || bestBank.flexibleInstallment === true;
+        // حفظ الحد الأدنى للقسط المرن المحدد للبنك
+        answers.flexibleMinAmount = bestBank.flexibleMinAmount || 400;
+        console.log('تم اختيار البنك:', bestBank.bankName, 'بنسبة:', bestBank.margin, 'اعتزاز:', bestBank.isEtezaaz || false, 'قسط مرن:', bestBank.flexibleInstallment || false, 'حد أدنى:', bestBank.flexibleMinAmount || 400);  
       } else {  
         // إذا لم يتم العثور على بنك مطابق، نستخدم نسبة افتراضية  
         answers.profitMargin = 5.0;  
@@ -8507,27 +8849,39 @@ body.has-global-bg .card {
       }  
     });  
   
+    // (إضافة) التحقق من اختيار القسط المرن المخفض
+    const wantFlexible = answers.wantFlexibleInstallment === 'نعم';
+    const flexibleAmount = wantFlexible ? parseFloat(answers.flexibleInstallmentAmount || '0') : 0;
+    const flexibleMonths = wantFlexible ? parseInt(answers.flexibleInstallmentMonths || '0') : 0;
+
     let futurePhases = [];  
     for(let mmx = 1; mmx <= months; mmx++) {  
       let activeCommits = commits  
         .filter(c => mmx <= parseInt(c.months))  
         .reduce((sum, c) => sum + (c.amount || 0), 0);  
-  
+
       let balloonExtra = balloonPhases.reduce((sum, b) =>  
         (mmx >= b.start && mmx < b.end) ? sum + b.value : sum, 0);  
-  
+
       // (إضافة) تحديد الاستقطاع حسب قبل/بعد التقاعد للممتد  
       const monthAllowed = (isExtended && mmx > preRetMonths) ? allowedInstPost : allowedInstPre;  
-  
+
       let available = monthAllowed - activeCommits - balloonExtra;  
-  
+
       if(isPersonalLike){  
         // (إضافة) حد 33.33% قبل التقاعد على الراتب، وبعد التقاعد على راتب التقاعد (لو ممتد)  
         const baseForCap = (isExtended && mmx > preRetMonths) ? (pensionSalaryEst || 0) : salary;  
         available = Math.min(available, baseForCap * 0.3333);  
-      }  
+      }
+      
+      // (إضافة) تطبيق القسط المرن المخفض إذا اختاره العميل
+      if (wantFlexible && mmx <= flexibleMonths && flexibleAmount > 0) {
+        // في فترة القسط المرن، نستخدم القسط المخفض الذي اختاره العميل
+        available = Math.min(available, flexibleAmount);
+      }
+        
       futurePhases.push({ month: mmx, inst: available });  
-    }  
+    }
   
     let finalPhases = [];  
     for (let i = 0; i < futurePhases.length; i++) {  
@@ -9482,32 +9836,79 @@ ${contact}`.trim();
     const remainingMonths = totalMonths - paidMonths;  
     const remainingPrincipal = originalAmount * (remainingMonths / totalMonths);  
       
-    // كلفة الأشهر القادمة حسب نظام ساما  
-    const penaltyMonths = financeType === 'mortgage' ? 1 : 3;  
-    const penaltyCost = remainingPrincipal * (annualRate / 100 / 12) * penaltyMonths;  
-      
-    // مبلغ السداد المبكر  
-    const earlySettlementAmount = remainingPrincipal + penaltyCost;  
+    // ====== المعادلة الصحيحة حسب نظام البنك المركزي ======
+    let earlySettlementAmount = 0;
+    let penaltyCost = 0;
+    let twoYearsProfitCost = 0;
+    let threeMonthsProfitCost = 0;
+    let formulaDescription = '';
+    
+    if (financeType === 'mortgage') {
+      // التمويل العقاري: أصل التمويل + أرباح سنتين + أرباح 3 أشهر (رسوم إدارية)
+      twoYearsProfitCost = remainingPrincipal * (annualRate / 100) * 2; // أرباح سنتين
+      threeMonthsProfitCost = remainingPrincipal * (annualRate / 100 / 12) * 3; // أرباح 3 أشهر
+      penaltyCost = twoYearsProfitCost + threeMonthsProfitCost;
+      earlySettlementAmount = remainingPrincipal + penaltyCost;
+      formulaDescription = 'أصل التمويل + أرباح سنتين + أرباح 3 أشهر (رسوم إدارية)';
+    } else {
+      // التمويل الشخصي: أصل المبلغ + أرباح 3 أشهر
+      threeMonthsProfitCost = remainingPrincipal * (annualRate / 100 / 12) * 3;
+      penaltyCost = threeMonthsProfitCost;
+      earlySettlementAmount = remainingPrincipal + penaltyCost;
+      formulaDescription = 'أصل المبلغ + أرباح 3 أشهر';
+    }
       
     // الأرباح المتبقية لو أكمل  
     const remainingProfit = totalProfit * (remainingMonths / totalMonths);  
       
     // المبلغ الموفر  
     const savedAmount = remainingProfit - penaltyCost;  
-    const savingPercentage = ((savedAmount / remainingProfit) * 100).toFixed(1);  
+    const savingPercentage = remainingProfit > 0 ? ((savedAmount / remainingProfit) * 100).toFixed(1) : '0';  
       
+    // بناء النتيجة حسب نوع التمويل
+    let detailsHtml = '';
+    if (financeType === 'mortgage') {
+      detailsHtml = `
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+          <div style="padding:10px; background:#fff; border-radius:10px;">
+            <div style="font-size:12px; color:#6b7280;">الرصيد المتبقي من الأصل</div>
+            <div style="font-size:18px; font-weight:700; color:#111827;">${remainingPrincipal.toLocaleString('ar-SA')} ريال</div>
+          </div>
+          <div style="padding:10px; background:#fff; border-radius:10px;">
+            <div style="font-size:12px; color:#6b7280;">أرباح سنتين</div>
+            <div style="font-size:18px; font-weight:700; color:#dc2626;">${twoYearsProfitCost.toLocaleString('ar-SA', {maximumFractionDigits:0})} ريال</div>
+          </div>
+          <div style="padding:10px; background:#fff; border-radius:10px;">
+            <div style="font-size:12px; color:#6b7280;">أرباح 3 أشهر (رسوم إدارية)</div>
+            <div style="font-size:18px; font-weight:700; color:#f59e0b;">${threeMonthsProfitCost.toLocaleString('ar-SA', {maximumFractionDigits:0})} ريال</div>
+          </div>
+          <div style="padding:10px; background:#fff; border-radius:10px;">
+            <div style="font-size:12px; color:#6b7280;">إجمالي الرسوم</div>
+            <div style="font-size:18px; font-weight:700; color:#7c3aed;">${penaltyCost.toLocaleString('ar-SA', {maximumFractionDigits:0})} ريال</div>
+          </div>
+        </div>
+      `;
+    } else {
+      detailsHtml = `
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+          <div style="padding:10px; background:#fff; border-radius:10px;">
+            <div style="font-size:12px; color:#6b7280;">الرصيد المتبقي من الأصل</div>
+            <div style="font-size:18px; font-weight:700; color:#111827;">${remainingPrincipal.toLocaleString('ar-SA')} ريال</div>
+          </div>
+          <div style="padding:10px; background:#fff; border-radius:10px;">
+            <div style="font-size:12px; color:#6b7280;">أرباح 3 أشهر</div>
+            <div style="font-size:18px; font-weight:700; color:#f59e0b;">${threeMonthsProfitCost.toLocaleString('ar-SA', {maximumFractionDigits:0})} ريال</div>
+          </div>
+        </div>
+      `;
+    }
+    
     const resultHtml = `  
-      <h3 style="margin:0 0 15px; color:#059669;">✅ نتيجة السداد المبكر</h3>  
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">  
-        <div style="padding:10px; background:#fff; border-radius:10px;">  
-          <div style="font-size:12px; color:#6b7280;">الرصيد المتبقي من الأصل</div>  
-          <div style="font-size:18px; font-weight:700; color:#111827;">${remainingPrincipal.toLocaleString('ar-SA')} ريال</div>  
-        </div>  
-        <div style="padding:10px; background:#fff; border-radius:10px;">  
-          <div style="font-size:12px; color:#6b7280;">كلفة ${penaltyMonths} أشهر قادمة</div>  
-          <div style="font-size:18px; font-weight:700; color:#f59e0b;">${penaltyCost.toLocaleString('ar-SA', {maximumFractionDigits:0})} ريال</div>  
-        </div>  
-      </div>  
+      <h3 style="margin:0 0 15px; color:#059669;">✅ نتيجة السداد المبكر</h3>
+      <div style="margin-bottom:10px; padding:8px 12px; background:#e0f2fe; border-radius:8px; font-size:13px; color:#0369a1;">
+        <strong>📊 طريقة الحساب:</strong> ${formulaDescription}
+      </div>
+      ${detailsHtml}
       <div style="margin-top:15px; padding:15px; background:linear-gradient(135deg,#1e3a8a,#3b82f6); border-radius:12px; color:#fff;">  
         <div style="font-size:14px; opacity:0.9;">💰 مبلغ السداد المبكر</div>  
         <div style="font-size:28px; font-weight:900;">${earlySettlementAmount.toLocaleString('ar-SA', {maximumFractionDigits:0})} ريال</div>  
@@ -14568,4 +14969,4 @@ ${contact}`.trim();
   
   
 </body>  
-</html  
+</html
