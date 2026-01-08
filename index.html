@@ -26,17 +26,51 @@
   <style>  
     * { box-sizing: border-box; }
     
+    /* ========== زر التنفيذ الثابت في صفحات المسؤول ========== */
+    .admin-execute-btn {
+      position: fixed !important;
+      bottom: 20px !important;
+      left: 50% !important;
+      transform: translateX(-50%) !important;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+      color: #ffffff !important;
+      border: none !important;
+      padding: 15px 40px !important;
+      border-radius: 50px !important;
+      font-size: 16px !important;
+      font-weight: 700 !important;
+      cursor: pointer !important;
+      box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4) !important;
+      z-index: 9999 !important;
+      display: none !important;
+      animation: pulse-execute 2s infinite !important;
+    }
+    .admin-execute-btn:hover {
+      background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+      transform: translateX(-50%) scale(1.05) !important;
+    }
+    .admin-execute-btn.show {
+      display: flex !important;
+      align-items: center !important;
+      gap: 8px !important;
+    }
+    @keyframes pulse-execute {
+      0%, 100% { box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); }
+      50% { box-shadow: 0 4px 25px rgba(16, 185, 129, 0.6); }
+    }
+    
     /* ========== تنسيق بطاقات الأسئلة في لوحة التحكم ========== */
     .question-item {
       background: #ffffff !important;
-      border: 1px solid #e2e8f0 !important;
+      border: 2px solid #cbd5e1 !important;
       border-radius: 12px !important;
-      padding: 12px 15px !important;
-      margin-bottom: 10px !important;
+      padding: 15px 18px !important;
+      margin-bottom: 12px !important;
       display: flex !important;
       align-items: center !important;
-      gap: 10px !important;
+      gap: 12px !important;
       transition: all 0.2s ease !important;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05) !important;
     }
     .question-item:hover {
       box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
@@ -52,10 +86,12 @@
     }
     .question-text {
       flex: 1 !important;
-      color: #1f2937 !important;
-      font-size: 14px !important;
-      font-weight: 500 !important;
+      color: #000000 !important;
+      font-size: 15px !important;
+      font-weight: 700 !important;
       text-align: right !important;
+      line-height: 1.6 !important;
+      text-shadow: none !important;
     }
     .question-actions {
       display: flex !important;
@@ -6554,7 +6590,8 @@ function applyAllChanges() {
   function getMatchingBanksForAnswers() {  
     const salary = parseFloat(answers.salary || '0');  
     if (!salary) return [];  
-  
+
+    // تحديد نوع التمويل
     let fType;  
     if (answers.financeType === 'شراء مديونية تمويل شخصي') fType = 'buyoutPersonal';  
     else if (answers.financeType === 'شراء مديونية تمويل عقاري') fType = 'buyoutMortgage';  
@@ -6562,55 +6599,87 @@ function applyAllChanges() {
     else if (answers.financeType && (answers.financeType.includes('شخصي') || answers.financeType === 'تمويل التأجيري')) fType = 'personal';  
     else if (answers.financeType && answers.financeType.includes('عقاري')) fType = 'mortgage';  
     else fType = 'personal';  
-  
+
     const supp = answers.supported || 'الكل';  
     const jobType = answers.jobType || '';  
     const months = parseInt(answers.months || '0');  
     const mortgageDetail = answers.mortgageProductType || '';  
     const wantsEtezaaz = (answers.financeType === 'تمويل عقاري' && answers.supported === 'مدعوم' && answers.isEtezaaz === 'نعم');  
-  
-    console.log('بحث عن بنوك مطابقة:', { fType, salary, supp, jobType, months, mortgageDetail });  
-  
+
+    console.log('=== بدء عملية الترشيح ===');
+    console.log('بيانات العميل:', { 
+      financeType: answers.financeType,
+      fType, 
+      salary, 
+      supp, 
+      jobType, 
+      months, 
+      mortgageDetail,
+      wantsEtezaaz
+    });  
+    console.log('عدد البنوك المسجلة:', bankConfigs.length);
+
     const list = bankConfigs.filter(cfg => {  
-      // فحص نوع التمويل  
-      if (cfg.financeType !== fType) return false;  
+      // ========== 1. فحص نوع التمويل (إلزامي) ==========
+      if (cfg.financeType !== fType) {
+        console.log(`❌ ${cfg.bankName}: نوع التمويل لا يتطابق (${cfg.financeType} ≠ ${fType})`);
+        return false;
+      }
         
-      // فحص الراتب  
-      if (!(salary >= cfg.minSalary && salary <= cfg.maxSalary)) return false;  
+      // ========== 2. فحص الراتب (إلزامي) ==========
+      if (!(salary >= cfg.minSalary && salary <= cfg.maxSalary)) {
+        console.log(`❌ ${cfg.bankName}: الراتب خارج النطاق (${salary} ليس بين ${cfg.minSalary}-${cfg.maxSalary})`);
+        return false;
+      }
         
-      // فحص الدعم  
-      if (!(cfg.supportedType === 'الكل' || cfg.supportedType === supp)) return false;  
-  
-      // فحص نوع الوظيفة (jobType)
-      // إذا كان العميل عسكري/حكومي/قطاع خاص:
+      // ========== 3. فحص الدعم (إلزامي) ==========
+      if (cfg.supportedType && cfg.supportedType !== 'الكل' && cfg.supportedType !== supp) {
+        console.log(`❌ ${cfg.bankName}: نوع الدعم لا يتطابق (${cfg.supportedType} ≠ ${supp})`);
+        return false;
+      }
+
+      // ========== 4. فحص نوع الوظيفة (إلزامي) ==========
+      // إذا كان العميل له نوع وظيفة محدد:
       // - يُرشح له فقط البنوك التي تدعم "الكل" أو تدعم نفس نوع الوظيفة
       if (jobType && jobType !== '') {
-        // العميل له نوع وظيفة محدد
         if (cfg.jobType && cfg.jobType !== '' && cfg.jobType !== 'الكل') {
-          // البنك محدد لنوع وظيفة معين (ليس "الكل")
-          if (cfg.jobType !== jobType) return false;
+          if (cfg.jobType !== jobType) {
+            console.log(`❌ ${cfg.bankName}: نوع الوظيفة لا يتطابق (${cfg.jobType} ≠ ${jobType})`);
+            return false;
+          }
         }
-        // إذا كان البنك يدعم "الكل" أو ليس له تحديد، يُقبل
       }  
         
-      // فحص المدة بالأشهر  
-      if (cfg.minMonths && months && months < cfg.minMonths) return false;  
-      if (cfg.maxMonths && months && months > cfg.maxMonths) return false;  
+      // ========== 5. فحص المدة بالأشهر ==========
+      if (cfg.minMonths && months && months < cfg.minMonths) {
+        console.log(`❌ ${cfg.bankName}: المدة أقل من الحد الأدنى (${months} < ${cfg.minMonths})`);
+        return false;
+      }
+      if (cfg.maxMonths && months && months > cfg.maxMonths) {
+        console.log(`❌ ${cfg.bankName}: المدة أكبر من الحد الأقصى (${months} > ${cfg.maxMonths})`);
+        return false;
+      }
         
-      // فحص تفاصيل المنتج (productDetail)
+      // ========== 6. فحص تفاصيل المنتج (إلزامي للعقاري) ==========
       // إذا كان العميل اختار منتج محدد (مثل "بناء ذاتي" أو "وحدات جاهزة"):
       // - يُرشح له فقط البنوك التي تدعم "الكل" أو تدعم نفس المنتج المحدد
       if (mortgageDetail && mortgageDetail !== '') {
-        // العميل اختار منتج محدد
         if (cfg.productDetail && cfg.productDetail !== '' && cfg.productDetail !== 'الكل') {
-          // البنك له منتج محدد (ليس "الكل")
-          if (cfg.productDetail !== mortgageDetail) return false;
+          if (cfg.productDetail !== mortgageDetail) {
+            console.log(`❌ ${cfg.bankName}: تفاصيل المنتج لا تتطابق (${cfg.productDetail} ≠ ${mortgageDetail})`);
+            return false;
+          }
         }
-        // إذا كان البنك يدعم "الكل" أو ليس له تحديد، يُقبل
       }  
         
-      // فحص برنامج اعتزاز  
-      if (wantsEtezaaz && cfg.etezaaz && cfg.etezaaz !== 'نعم') return false;  
+      // ========== 7. فحص برنامج اعتزاز ==========
+      if (wantsEtezaaz && cfg.etezaaz && cfg.etezaaz !== 'نعم') {
+        console.log(`❌ ${cfg.bankName}: لا يدعم برنامج اعتزاز`);
+        return false;
+      }
+      
+      // ✅ البنك مطابق لجميع الشروط
+      console.log(`✅ ${cfg.bankName}: مطابق - نسبة: ${cfg.margin}%`);
   
       return true;  
     });  
@@ -14965,8 +15034,107 @@ ${contact}`.trim();
       }  
     }, 100);  
   };  
-</script>  
+</script>
+
+<!-- زر التنفيذ الثابت لصفحات المسؤول -->
+<button id="adminExecuteBtn" class="admin-execute-btn" onclick="executeAllAdminChanges()">
+  ✅ تنفيذ التغييرات
+</button>
+
+<script>
+// دالة إظهار/إخفاء زر التنفيذ حسب الصفحة الحالية
+function updateExecuteButtonVisibility() {
+  const btn = document.getElementById('adminExecuteBtn');
+  if (!btn) return;
   
+  // قائمة صفحات المسؤول التي يظهر فيها الزر
+  const adminPages = [
+    'adminPage', 'adminProductsPage', 'adminQuestionsPage', 'adminThemesPage',
+    'adminTextsPage', 'adminSettingsPage', 'adminJobTypesPage', 'adminEmployersPage',
+    'adminFinanceEntitiesPage', 'adminResultSettingsPage', 'adminResultTextsPage',
+    'adminRatingsPage', 'adminOffersPage', 'adminMarketingPage', 'adminAdsPage'
+  ];
   
+  const currentPage = document.querySelector('.page[style*="display: block"]')?.id ||
+                      document.querySelector('.page:not([style*="display: none"])')?.id;
+  
+  if (adminPages.includes(currentPage)) {
+    btn.classList.add('show');
+  } else {
+    btn.classList.remove('show');
+  }
+}
+
+// دالة تنفيذ جميع التغييرات
+function executeAllAdminChanges() {
+  // حفظ جميع الإعدادات الحالية
+  try {
+    // حفظ إعدادات البنوك
+    if (typeof saveBankConfigs === 'function') saveBankConfigs();
+    
+    // حفظ إعدادات الأسئلة
+    if (typeof saveCustomQuestions === 'function') saveCustomQuestions();
+    
+    // حفظ إعدادات الثيمات
+    if (typeof saveThemeSettings === 'function') saveThemeSettings();
+    
+    // حفظ إعدادات النصوص
+    if (typeof saveCustomTexts === 'function') saveCustomTexts();
+    
+    // حفظ إعدادات النتيجة
+    if (typeof saveResultSettings === 'function') saveResultSettings();
+    
+    // حفظ صيغ النتيجة
+    if (typeof saveResultTexts === 'function') saveResultTexts();
+    
+    // حفظ أنواع الوظائف
+    if (typeof saveJobTypesList === 'function') saveJobTypesList();
+    
+    // حفظ جهات الوظيفة
+    if (typeof saveEmployersList === 'function') saveEmployersList();
+    
+    // حفظ جهات التمويل
+    if (typeof saveFinanceEntitiesList === 'function') saveFinanceEntitiesList();
+    
+    // حفظ إعدادات التسويق
+    if (typeof saveMarketingSettings === 'function') saveMarketingSettings();
+    
+    // حفظ العروض
+    if (typeof saveOffers === 'function') saveOffers();
+    
+    // عرض رسالة نجاح
+    const btn = document.getElementById('adminExecuteBtn');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '✅ تم التنفيذ بنجاح!';
+    btn.style.background = 'linear-gradient(135deg, #059669 0%, #047857 100%)';
+    
+    setTimeout(() => {
+      btn.innerHTML = originalText;
+      btn.style.background = '';
+      // إعادة تحميل الصفحة لتطبيق التغييرات
+      location.reload();
+    }, 1500);
+    
+  } catch (e) {
+    console.error('خطأ في تنفيذ التغييرات:', e);
+    alert('حدث خطأ أثناء التنفيذ. يرجى المحاولة مرة أخرى.');
+  }
+}
+
+// تحديث ظهور الزر عند تغيير الصفحة
+const originalShowPage = window.showPage;
+window.showPage = function(pageId) {
+  if (typeof originalShowPage === 'function') {
+    originalShowPage(pageId);
+  }
+  setTimeout(updateExecuteButtonVisibility, 100);
+};
+
+// تحديث عند تحميل الصفحة
+document.addEventListener('DOMContentLoaded', function() {
+  setTimeout(updateExecuteButtonVisibility, 500);
+});
+</script>
+
 </body>  
-</html
+</html  
