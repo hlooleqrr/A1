@@ -7899,6 +7899,15 @@ function applyAllChanges() {
         
       if(q.show && !q.show(currentCommitment)){ commitmentStep++; showQuestion(); return; }  
     }else{  
+      // إذا كان المستخدم أجاب بـ "لا" على سؤال الالتزامات - انتقل مباشرة للنتيجة
+      if(answers.hasCommitments === 'لا') {
+        console.log('=== المستخدم أجاب بـ لا على الالتزامات - سيتم استدعاء calculate() ===');
+        answers.commitments = []; // تعيين مصفوفة فارغة للالتزامات
+        document.getElementById('nextButton').style.display = 'none';
+        calculate();
+        return;
+      }
+      
       // فحص الأسئلة المخصصة للمنتجات  
       const productQuestions = loadProductQuestions();  
       const currentProduct = answers.financeType;  
@@ -15257,4 +15266,4 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 </body>  
-</html  
+</html 
