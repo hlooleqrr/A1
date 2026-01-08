@@ -62,7 +62,8 @@
     /* ========== تنسيق بطاقات الأسئلة في لوحة التحكم ========== */
     .question-item {
       background: #ffffff !important;
-      border: 2px solid #cbd5e1 !important;
+      background-color: #ffffff !important;
+      border: 3px solid #1e3a5f !important;
       border-radius: 12px !important;
       padding: 15px 18px !important;
       margin-bottom: 12px !important;
@@ -70,28 +71,39 @@
       align-items: center !important;
       gap: 12px !important;
       transition: all 0.2s ease !important;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05) !important;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
     }
     .question-item:hover {
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.2) !important;
     }
     .question-item.question-hidden {
-      opacity: 0.5 !important;
-      background: #f8fafc !important;
+      opacity: 0.6 !important;
+      background: #f1f5f9 !important;
     }
     .question-drag-handle {
       cursor: grab !important;
-      color: #9ca3af !important;
-      font-size: 14px !important;
+      color: #1e3a5f !important;
+      font-size: 16px !important;
+      font-weight: bold !important;
     }
     .question-text {
       flex: 1 !important;
       color: #000000 !important;
-      font-size: 15px !important;
-      font-weight: 700 !important;
+      -webkit-text-fill-color: #000000 !important;
+      font-size: 16px !important;
+      font-weight: 800 !important;
       text-align: right !important;
-      line-height: 1.6 !important;
+      line-height: 1.8 !important;
       text-shadow: none !important;
+      background: transparent !important;
+    }
+    .question-item * {
+      color: #000000 !important;
+      -webkit-text-fill-color: #000000 !important;
+    }
+    .question-item .question-btn {
+      color: #374151 !important;
+      -webkit-text-fill-color: #374151 !important;
     }
     .question-actions {
       display: flex !important;
@@ -6160,43 +6172,43 @@ function applyAllChanges() {
     { bankName: 'مصرف الراجحي', bankType:'بنك', financeType: 'personal', supportedType: 'الكل', minSalary: 4000, maxSalary: 8000, margin: 5.5, jobType: 'الكل' },  
     { bankName: 'مصرف الراجحي', bankType:'بنك', financeType: 'personal', supportedType: 'الكل', minSalary: 8001, maxSalary: 20000, margin: 4.9, jobType: 'الكل' },  
     { bankName: 'مصرف الراجحي', bankType:'بنك', financeType: 'personal', supportedType: 'الكل', minSalary: 20001, maxSalary: 999999, margin: 4.5, jobType: 'الكل' },  
-    { bankName: 'مصرف الراجحي', bankType:'بنك', financeType: 'mortgage', supportedType: 'مدعوم', minSalary: 4000, maxSalary: 999999, minMonths: 12, maxMonths: 240, margin: 4.31, jobType: 'الكل', bankNote: 'نسب سكني 20 سنة' },  
+    { bankName: 'مصرف الراجحي', bankType:'بنك', financeType: 'mortgage', supportedType: 'مدعوم', minSalary: 4000, maxSalary: 999999, minMonths: 12, maxMonths: 240, margin: 4.31, jobType: 'الكل', productDetail: 'الكل', bankNote: 'نسب سكني 20 سنة' },  
   
     // البنك الأهلي السعودي  
     { bankName: 'البنك الأهلي السعودي', bankType:'بنك', financeType: 'personal', supportedType: 'الكل', minSalary: 4000, maxSalary: 8000, margin: 5.25, jobType: 'الكل' },  
     { bankName: 'البنك الأهلي السعودي', bankType:'بنك', financeType: 'personal', supportedType: 'الكل', minSalary: 8001, maxSalary: 20000, margin: 4.75, jobType: 'الكل' },  
     { bankName: 'البنك الأهلي السعودي', bankType:'بنك', financeType: 'personal', supportedType: 'الكل', minSalary: 20001, maxSalary: 999999, margin: 4.25, jobType: 'الكل' },  
-    { bankName: 'البنك الأهلي السعودي', bankType:'بنك', financeType: 'mortgage', supportedType: 'مدعوم', minSalary: 4000, maxSalary: 999999, minMonths: 12, maxMonths: 240, margin: 4.20, jobType: 'الكل', bankNote: 'نسب سكني 20 سنة' },  
+    { bankName: 'البنك الأهلي السعودي', bankType:'بنك', financeType: 'mortgage', supportedType: 'مدعوم', minSalary: 4000, maxSalary: 999999, minMonths: 12, maxMonths: 240, margin: 4.20, jobType: 'الكل', productDetail: 'الكل', bankNote: 'نسب سكني 20 سنة' },  
   
     // بنك الرياض  
     { bankName: 'بنك الرياض', bankType:'بنك', financeType: 'personal', supportedType: 'الكل', minSalary: 4000, maxSalary: 10000, margin: 5.35, jobType: 'الكل' },  
     { bankName: 'بنك الرياض', bankType:'بنك', financeType: 'personal', supportedType: 'الكل', minSalary: 10001, maxSalary: 999999, margin: 4.65, jobType: 'الكل' },  
-    { bankName: 'بنك الرياض', bankType:'بنك', financeType: 'mortgage', supportedType: 'مدعوم', minSalary: 4000, maxSalary: 999999, minMonths: 12, maxMonths: 240, margin: 4.10, jobType: 'الكل', bankNote: 'نسب سكني 20 سنة' },  
+    { bankName: 'بنك الرياض', bankType:'بنك', financeType: 'mortgage', supportedType: 'مدعوم', minSalary: 4000, maxSalary: 999999, minMonths: 12, maxMonths: 240, margin: 4.10, jobType: 'الكل', productDetail: 'الكل', bankNote: 'نسب سكني 20 سنة' },  
   
     // مصرف الإنماء  
     { bankName: 'مصرف الإنماء', bankType:'بنك', financeType: 'personal', supportedType: 'الكل', minSalary: 4000, maxSalary: 8000, margin: 5.45, jobType: 'الكل' },  
     { bankName: 'مصرف الإنماء', bankType:'بنك', financeType: 'personal', supportedType: 'الكل', minSalary: 8001, maxSalary: 999999, margin: 4.85, jobType: 'الكل' },  
-    { bankName: 'مصرف الإنماء', bankType:'بنك', financeType: 'mortgage', supportedType: 'مدعوم', minSalary: 4000, maxSalary: 999999, minMonths: 12, maxMonths: 240, margin: 3.65, jobType: 'الكل', bankNote: 'نسب سكني 20 سنة' },  
+    { bankName: 'مصرف الإنماء', bankType:'بنك', financeType: 'mortgage', supportedType: 'مدعوم', minSalary: 4000, maxSalary: 999999, minMonths: 12, maxMonths: 240, margin: 3.65, jobType: 'الكل', productDetail: 'الكل', bankNote: 'نسب سكني 20 سنة' },  
   
     // بنك البلاد  
     { bankName: 'بنك البلاد', bankType:'بنك', financeType: 'personal', supportedType: 'الكل', minSalary: 4000, maxSalary: 999999, margin: 5.15, jobType: 'الكل' },  
-    { bankName: 'بنك البلاد', bankType:'بنك', financeType: 'mortgage', supportedType: 'مدعوم', minSalary: 4000, maxSalary: 999999, minMonths: 12, maxMonths: 240, margin: 3.94, jobType: 'الكل', bankNote: 'نسب سكني 20 سنة' },  
+    { bankName: 'بنك البلاد', bankType:'بنك', financeType: 'mortgage', supportedType: 'مدعوم', minSalary: 4000, maxSalary: 999999, minMonths: 12, maxMonths: 240, margin: 3.94, jobType: 'الكل', productDetail: 'الكل', bankNote: 'نسب سكني 20 سنة' },  
   
     // البنك السعودي الفرنسي  
     { bankName: 'البنك السعودي الفرنسي', bankType:'بنك', financeType: 'personal', supportedType: 'الكل', minSalary: 5000, maxSalary: 999999, margin: 4.95, jobType: 'الكل' },  
-    { bankName: 'البنك السعودي الفرنسي', bankType:'بنك', financeType: 'mortgage', supportedType: 'مدعوم', minSalary: 5000, maxSalary: 999999, minMonths: 12, maxMonths: 240, margin: 4.40, jobType: 'الكل', bankNote: 'نسب سكني 20 سنة' },  
+    { bankName: 'البنك السعودي الفرنسي', bankType:'بنك', financeType: 'mortgage', supportedType: 'مدعوم', minSalary: 5000, maxSalary: 999999, minMonths: 12, maxMonths: 240, margin: 4.40, jobType: 'الكل', productDetail: 'الكل', bankNote: 'نسب سكني 20 سنة' },  
   
     // بنك الجزيرة  
     { bankName: 'بنك الجزيرة', bankType:'بنك', financeType: 'personal', supportedType: 'الكل', minSalary: 4000, maxSalary: 999999, margin: 5.2, jobType: 'الكل' },  
-    { bankName: 'بنك الجزيرة', bankType:'بنك', financeType: 'mortgage', supportedType: 'مدعوم', minSalary: 4000, maxSalary: 999999, minMonths: 12, maxMonths: 240, margin: 4.20, jobType: 'الكل', bankNote: 'نسب سكني 20 سنة' },  
+    { bankName: 'بنك الجزيرة', bankType:'بنك', financeType: 'mortgage', supportedType: 'مدعوم', minSalary: 4000, maxSalary: 999999, minMonths: 12, maxMonths: 240, margin: 4.20, jobType: 'الكل', productDetail: 'الكل', bankNote: 'نسب سكني 20 سنة' },  
   
     // البنك العربي الوطني  
     { bankName: 'البنك العربي الوطني', bankType:'بنك', financeType: 'personal', supportedType: 'الكل', minSalary: 5000, maxSalary: 999999, margin: 5.0, jobType: 'الكل' },  
-    { bankName: 'البنك العربي الوطني', bankType:'بنك', financeType: 'mortgage', supportedType: 'مدعوم', minSalary: 5000, maxSalary: 999999, minMonths: 12, maxMonths: 240, margin: 4.09, jobType: 'الكل', bankNote: 'نسب سكني 20 سنة' },  
+    { bankName: 'البنك العربي الوطني', bankType:'بنك', financeType: 'mortgage', supportedType: 'مدعوم', minSalary: 5000, maxSalary: 999999, minMonths: 12, maxMonths: 240, margin: 4.09, jobType: 'الكل', productDetail: 'الكل', bankNote: 'نسب سكني 20 سنة' },  
   
     // بنك ساب  
     { bankName: 'بنك ساب', bankType:'بنك', financeType: 'personal', supportedType: 'الكل', minSalary: 5000, maxSalary: 999999, margin: 4.85, jobType: 'الكل' },  
-    { bankName: 'بنك ساب', bankType:'بنك', financeType: 'mortgage', supportedType: 'مدعوم', minSalary: 5000, maxSalary: 999999, minMonths: 12, maxMonths: 240, margin: 4.35, jobType: 'الكل', bankNote: 'نسب سكني 20 سنة' },  
+    { bankName: 'بنك ساب', bankType:'بنك', financeType: 'mortgage', supportedType: 'مدعوم', minSalary: 5000, maxSalary: 999999, minMonths: 12, maxMonths: 240, margin: 4.35, jobType: 'الكل', productDetail: 'الكل', bankNote: 'نسب سكني 20 سنة' },  
   
     // شركة عبداللطيف جميل للتمويل  
     { bankName: 'عبداللطيف جميل للتمويل', bankType:'شركة', financeType: 'personal', supportedType: 'الكل', minSalary: 4000, maxSalary: 999999, margin: 6.5, jobType: 'الكل' },  
@@ -8585,13 +8597,61 @@ function applyAllChanges() {
     console.log('النسبة بعد التنظيف:', profitMarginRaw);  
     console.log('النسبة كرقم:', profitMargin);  
       
-    if (!profitMargin || isNaN(profitMargin) || profitMargin <= 0) {  
-      alert('نسبة هامش الربح غير صحيحة. يرجى إدخال رقم صحيح مثل 5.20');  
-      console.error('خطأ في النسبة:', answers.profitMargin, '->', profitMargin);  
-      return;  
-    }  
-  
-    const isBuyoutPersonal = financeType === 'شراء مديونية تمويل شخصي';  
+if (!profitMargin || isNaN(profitMargin) || profitMargin <= 0) {
+      alert('نسبة هامش الربح غير صحيحة. يرجى إدخال رقم صحيح مثل 5.20');
+      console.error('خطأ في النسبة:', answers.profitMargin, '->', profitMargin);
+      return;
+    }
+
+    // ========== تطبيق التعديلات التراكمية على النسبة ==========
+    const originalProfitMargin = profitMargin;
+    let appliedAdjustmentsInfo = [];
+    
+    // تحديد حالة العميل للتعديلات
+    const clientConditions = {
+      supportAdvance: answers.supportAdvance === 'نعم',
+      hasPersonalLoan: answers.hasPersonalLoan === 'نعم' || (answers.commitments && answers.commitments.some(c => c.type === 'تمويل شخصي')),
+      hasMortgageLoan: answers.hasMortgageLoan === 'نعم' || (answers.commitments && answers.commitments.some(c => c.type === 'تمويل عقاري')),
+      hasCreditCard: answers.hasCreditCard === 'نعم' || (answers.commitments && answers.commitments.some(c => c.type === 'بطاقة ائتمانية')),
+      isNewCustomer: answers.isNewCustomer === 'نعم',
+      salaryTransfer: answers.salaryTransfer === 'نعم'
+    };
+    
+    // الحصول على اسم البنك المختار
+    const selectedBankName = answers.recommendedBank?.bankName || answers.currentBank || answers.selectedFinanceEntity || '';
+    
+    // التحقق من إذا كانت النسبة من نوع اعتزاز
+    const isEtezaazRate = answers.isEtezaazRate || false;
+    
+    // تطبيق التعديلات التراكمية
+    if (typeof calculateAdjustedRate === 'function') {
+      const adjustmentResult = calculateAdjustedRate(
+        profitMargin,
+        selectedBankName,
+        financeType === 'تمويل عقاري' ? 'mortgage' : 'personal',
+        clientConditions,
+        isEtezaazRate
+      );
+      
+      if (adjustmentResult.totalAdjustment !== 0) {
+        profitMargin = adjustmentResult.adjustedRate;
+        appliedAdjustmentsInfo = adjustmentResult.appliedAdjustments;
+        console.log('تم تطبيق التعديلات التراكمية:', {
+          'النسبة الأصلية': originalProfitMargin,
+          'النسبة بعد التعديل': profitMargin,
+          'إجمالي التعديل': adjustmentResult.totalAdjustment,
+          'التعديلات المطبقة': appliedAdjustmentsInfo,
+          'نسبة اعتزاز': isEtezaazRate
+        });
+      }
+    }
+    
+    // حفظ معلومات التعديلات لعرضها في النتائج
+    answers._appliedAdjustments = appliedAdjustmentsInfo;
+    answers._originalProfitMargin = originalProfitMargin;
+    answers._adjustedProfitMargin = profitMargin;
+
+    const isBuyoutPersonal = financeType === 'شراء مديونية تمويل شخصي';
     const isConsumer = financeType === 'تمويل استهلاكي';  
     const isLeasing = financeType === 'تمويل التأجيري';  
   
@@ -12515,15 +12575,34 @@ ${contact}`.trim();
     const globalImage = settings?.globalImage || '';  
     const bgAllPages = settings?.bgAllPages || false;  
       
+    console.log('جاري تطبيق الخلفية العامة:', { globalImage, bgAllPages });  
+      
     // إزالة الخلفية السابقة  
     document.body.classList.remove('has-global-bg');  
     document.body.style.removeProperty('--global-bg-image');  
+    document.body.style.backgroundImage = '';  
       
     // إذا كان هناك صورة عامة وتم تفعيل الخيار  
     if (globalImage && bgAllPages) {  
       document.body.style.setProperty('--global-bg-image', `url(${globalImage})`);  
+      document.body.style.backgroundImage = `url(${globalImage})`;  
+      document.body.style.backgroundSize = 'cover';  
+      document.body.style.backgroundPosition = 'center';  
+      document.body.style.backgroundRepeat = 'no-repeat';  
+      document.body.style.backgroundAttachment = 'fixed';  
       document.body.classList.add('has-global-bg');  
-      console.log('تم تطبيق الخلفية العامة على كافة الصفحات:', globalImage);  
+      console.log('✅ تم تطبيق الخلفية العامة على كافة الصفحات:', globalImage);  
+    } else if (globalImage && !bgAllPages) {  
+      // إذا كانت الصورة موجودة لكن الخيار غير مفعل، طبقها على الصفحة الرئيسية فقط  
+      const landingPage = document.getElementById('landingPage');  
+      if (landingPage) {  
+        landingPage.style.backgroundImage = `url(${globalImage})`;  
+        landingPage.style.backgroundSize = 'cover';  
+        landingPage.style.backgroundPosition = 'center';  
+      }  
+      console.log('✅ تم تطبيق الخلفية على الصفحة الرئيسية فقط:', globalImage);  
+    } else {  
+      console.log('ℹ️ لا توجد خلفية عامة للتطبيق');  
     }  
   }  
     
