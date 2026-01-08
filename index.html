@@ -6227,11 +6227,11 @@ function applyAllChanges() {
     { bankName: 'البنك الأهلي السعودي', bankType:'بنك', financeType: 'mortgage', supportedType: 'مدعوم', minSalary: 4000, maxSalary: 999999, minMonths: 300, maxMonths: 360, margin: 4.50, jobType: 'الكل', productDetail: 'وحدة جاهزة', bankNote: 'وحدات جاهزة - مدعوم' },  
 
 // === البنك الأهلي السعودي - عقاري غير مدعوم ===  
-    { bankName: 'البنك الأهلي السعودي', bankType:'بنك', financeType: 'mortgage', supportedType: 'غير مدعوم', minSalary: 4000, maxSalary: 999999, minMonths: 1, maxMonths: 119, margin: 3.80, jobType: 'الكل', bankNote: 'غير مدعوم' },  
-    { bankName: 'البنك الأهلي السعودي', bankType:'بنك', financeType: 'mortgage', supportedType: 'غير مدعوم', minSalary: 4000, maxSalary: 999999, minMonths: 120, maxMonths: 179, margin: 4.20, jobType: 'الكل', bankNote: 'غير مدعوم' },  
-    { bankName: 'البنك الأهلي السعودي', bankType:'بنك', financeType: 'mortgage', supportedType: 'غير مدعوم', minSalary: 4000, maxSalary: 999999, minMonths: 180, maxMonths: 239, margin: 4.40, jobType: 'الكل', bankNote: 'غير مدعوم' },  
-    { bankName: 'البنك الأهلي السعودي', bankType:'بنك', financeType: 'mortgage', supportedType: 'غير مدعوم', minSalary: 4000, maxSalary: 999999, minMonths: 240, maxMonths: 299, margin: 4.60, jobType: 'الكل', bankNote: 'غير مدعوم' },  
-    { bankName: 'البنك الأهلي السعودي', bankType:'بنك', financeType: 'mortgage', supportedType: 'غير مدعوم', minSalary: 4000, maxSalary: 999999, minMonths: 300, maxMonths: 360, margin: 5.00, jobType: 'الكل', bankNote: 'غير مدعوم' },  
+    { bankName: 'البنك الأهلي السعودي', bankType:'بنك', financeType: 'mortgage', supportedType: 'غير مدعوم', minSalary: 4000, maxSalary: 999999, minMonths: 1, maxMonths: 119, margin: 3.80, jobType: 'الكل', productDetail: 'الكل', bankNote: 'غير مدعوم' },  
+    { bankName: 'البنك الأهلي السعودي', bankType:'بنك', financeType: 'mortgage', supportedType: 'غير مدعوم', minSalary: 4000, maxSalary: 999999, minMonths: 120, maxMonths: 179, margin: 4.20, jobType: 'الكل', productDetail: 'الكل', bankNote: 'غير مدعوم' },  
+    { bankName: 'البنك الأهلي السعودي', bankType:'بنك', financeType: 'mortgage', supportedType: 'غير مدعوم', minSalary: 4000, maxSalary: 999999, minMonths: 180, maxMonths: 239, margin: 4.40, jobType: 'الكل', productDetail: 'الكل', bankNote: 'غير مدعوم' },  
+    { bankName: 'البنك الأهلي السعودي', bankType:'بنك', financeType: 'mortgage', supportedType: 'غير مدعوم', minSalary: 4000, maxSalary: 999999, minMonths: 240, maxMonths: 299, margin: 4.60, jobType: 'الكل', productDetail: 'الكل', bankNote: 'غير مدعوم' },  
+    { bankName: 'البنك الأهلي السعودي', bankType:'بنك', financeType: 'mortgage', supportedType: 'غير مدعوم', minSalary: 4000, maxSalary: 999999, minMonths: 300, maxMonths: 360, margin: 5.00, jobType: 'الكل', productDetail: 'الكل', bankNote: 'غير مدعوم' },  
 
 // === البنك الأهلي السعودي - عقاري مدعوم على الخارطة 2.99% ===  
     { bankName: 'البنك الأهلي السعودي', bankType:'بنك', financeType: 'mortgage', supportedType: 'مدعوم', minSalary: 4000, maxSalary: 999999, minMonths: 12, maxMonths: 240, margin: 2.99, jobType: 'الكل', productDetail: 'تحت الإنشاء', bankNote: 'عرض على الخارطة - يشمل دعم الباقة المقدمة والدعم الشهري' },  
@@ -6603,7 +6603,10 @@ function applyAllChanges() {
     const supp = answers.supported || 'الكل';  
     const jobType = answers.jobType || '';  
     const months = parseInt(answers.months || '0');  
-    const mortgageDetail = answers.mortgageProductType || '';  
+    // تحويل تفاصيل المنتج العقاري إلى القيم المستخدمة في قاعدة البيانات
+    let mortgageDetail = answers.mortgageProductType || '';
+    if (mortgageDetail === 'وحدة جاهزة من السوق') mortgageDetail = 'وحدة جاهزة';
+    else if (mortgageDetail === 'وحدة تحت الإنشاء (على الخارطة)') mortgageDetail = 'على الخارطة';  
     const wantsEtezaaz = (answers.financeType === 'تمويل عقاري' && answers.supported === 'مدعوم' && answers.isEtezaaz === 'نعم');  
 
     console.log('=== بدء عملية الترشيح ===');
@@ -6691,7 +6694,7 @@ function applyAllChanges() {
     return list;  
   }  
   
-  const ADMIN_PIN = '11qq11qQ@';  
+  const ADMIN_PIN = '1234';  
   
   function handleAdminLogin() {  
     const pin = document.getElementById('adminPin').value;  
