@@ -24,7 +24,99 @@
   <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">  
   <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400;500;600;700;800&display=swap" rel="stylesheet">  
   <style>  
-    * { box-sizing: border-box; }  
+    * { box-sizing: border-box; }
+    
+    /* ========== تصميم عصري شفاف مثل المنصة المرجعية ========== */
+    /* إخفاء جميع الإطارات والتركيز */
+    *, *:focus, *:active {
+      outline: none !important;
+      -webkit-tap-highlight-color: transparent !important;
+    }
+    
+    /* البطاقة الشفافة الرئيسية */
+    body.has-global-bg .card,
+    body.has-global-bg #questionCard,
+    body.has-global-bg #resultCard,
+    body.has-global-bg #ratingSection,
+    body.has-global-bg .question-card {
+      background: rgba(255, 255, 255, 0.08) !important;
+      backdrop-filter: blur(12px) !important;
+      -webkit-backdrop-filter: blur(12px) !important;
+      border: 1px solid rgba(255, 255, 255, 0.15) !important;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15) !important;
+      border-radius: 20px !important;
+    }
+    
+    /* النصوص بيضاء */
+    body.has-global-bg .card h2,
+    body.has-global-bg .card h3,
+    body.has-global-bg .card label,
+    body.has-global-bg .card p,
+    body.has-global-bg .card span,
+    body.has-global-bg #questionCard h2,
+    body.has-global-bg #questionCard label,
+    body.has-global-bg #questionCard p,
+    body.has-global-bg .question-title {
+      color: #ffffff !important;
+    }
+    
+    /* حقول الإدخال شفافة */
+    body.has-global-bg .card input[type="text"],
+    body.has-global-bg .card input[type="number"],
+    body.has-global-bg .card select,
+    body.has-global-bg #questionCard input,
+    body.has-global-bg #questionCard select {
+      background: rgba(255, 255, 255, 0.12) !important;
+      border: 1px solid rgba(255, 255, 255, 0.25) !important;
+      color: #ffffff !important;
+      border-radius: 12px !important;
+    }
+    body.has-global-bg .card input::placeholder {
+      color: rgba(255, 255, 255, 0.5) !important;
+    }
+    
+    /* أزرار الخيارات شفافة */
+    body.has-global-bg .option-btn,
+    body.has-global-bg button[onclick*="selectOption"],
+    body.has-global-bg .choice-btn {
+      background: rgba(255, 255, 255, 0.08) !important;
+      border: 1px solid rgba(255, 255, 255, 0.2) !important;
+      color: #ffffff !important;
+      border-radius: 12px !important;
+      transition: all 0.3s ease !important;
+    }
+    body.has-global-bg .option-btn:hover,
+    body.has-global-bg button[onclick*="selectOption"]:hover {
+      background: rgba(255, 255, 255, 0.15) !important;
+      border-color: rgba(255, 255, 255, 0.4) !important;
+      transform: translateY(-2px) !important;
+    }
+    body.has-global-bg .option-btn.selected {
+      background: rgba(59, 130, 246, 0.4) !important;
+      border-color: #60a5fa !important;
+    }
+    
+    /* زر التالي برتقالي */
+    body.has-global-bg #nextButton {
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+      color: #ffffff !important;
+      border: none !important;
+      border-radius: 30px !important;
+      padding: 14px 50px !important;
+      font-weight: 700 !important;
+      font-size: 16px !important;
+      box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4) !important;
+    }
+    
+    /* شريط التقدم */
+    body.has-global-bg .progress-bar {
+      background: rgba(255, 255, 255, 0.15) !important;
+      border-radius: 10px !important;
+    }
+    body.has-global-bg .progress-fill {
+      background: linear-gradient(90deg, #f59e0b, #fbbf24) !important;
+      border-radius: 10px !important;
+    }  
       
     /* متغيرات CSS للتحكم الشامل */  
     :root {  
@@ -75,14 +167,6 @@
       --border-radius-md: 20px;  
       --border-radius-lg: 30px;  
       --border-radius-xl: 40px;  
-      
-      /* إعدادات البطاقة والخط - قابلة للتخصيص من لوحة التحكم */  
-      --question-label-color: #111827;  
-      --question-label-shadow: 0 1px 3px rgba(0,0,0,0.1);  
-      --card-bg-color: rgba(255, 255, 255, 0.95);  
-      --card-border-color: rgba(255,255,255,0.3);  
-      --card-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);  
-      --card-visible: block;  
     }  
       
     /* توافق الآيفون - Safe Area */  
@@ -120,7 +204,9 @@
       
     /* الخلفية العامة التي يضعها المسؤول - تغطي كامل الصفحة */  
     body.has-global-bg {  
+      background: var(--global-bg-image) !important;  
       background-image: var(--global-bg-image) !important;  
+      background-color: transparent !important;  
       background-size: cover !important;  
       background-position: center center !important;  
       background-repeat: no-repeat !important;  
@@ -131,6 +217,12 @@
       margin: 0 !important;  
       padding: 0 !important;  
       overflow-x: hidden !important;  
+    }
+    
+    /* إزالة الخلفية الزرقاء عندما يضع المسؤول خلفية */
+    body.has-global-bg,
+    body.has-global-bg *:not(input):not(select):not(button):not(.primary):not(#nextButton):not(#mainButton) {
+      background-color: transparent !important;
     }  
       
     /* إزالة أي فراغات أو حدود من الصفحة */  
@@ -779,26 +871,30 @@
       margin: 16px auto 32px;  
       padding: 0 10px;  
     }  
-.card {
-      background: rgba(255, 255, 255, var(--card-opacity, 0.95));
-      backdrop-filter: blur(var(--card-blur, 10px));
-      -webkit-backdrop-filter: blur(var(--card-blur, 10px));
+    .card {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       border-radius: 24px;
       padding: 24px 20px;
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
       margin-bottom: 14px;
       text-align: center;
       width: 100%;
-      border: 1px solid rgba(255,255,255,0.3);
-      color: #1a1a2e;
+      border: 1px solid rgba(255, 255, 255, 0.2);
       position: relative;  
-      z-index: 1;  
+      z-index: 1;
+      color: #ffffff;
+    }
+    .card h2, .card h3, .card h4, .card p, .card label, .card span {
+      color: #ffffff;
     }  
       
     /* عند وجود خلفية عامة - جعل البطاقات شفافة أكثر */  
-    body.has-global-bg .card {  
-      background: rgba(255, 255, 255, var(--card-opacity, 0.85));  
-    }  
+body.has-global-bg .card {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
       
     /* إخفاء البطاقات عند الطلب */  
     body.hide-cards .card {  
@@ -848,17 +944,30 @@
       padding: 11px 12px;  
       margin: 8px 0 2px;  
       font-size: 18px;  
-      border-radius: 10px;  
-      border: 1px solid #d1d5db;  
+      border-radius: 12px;  
+      border: 1px solid rgba(255, 255, 255, 0.3);  
       text-align: right;  
-      background: #f9fafb;  
-      color: #111827;  
+      background: rgba(255, 255, 255, 0.15);  
+      color: #ffffff;  
+      backdrop-filter: blur(5px);
     }  
-    input:focus, select:focus, textarea:focus {  
-      outline: none;  
-      border-color: #2563eb;  
-      box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.35);  
-      background: #ffffff;  
+    input::placeholder {
+      color: rgba(255, 255, 255, 0.6);
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: rgba(255, 255, 255, 0.5);
+      box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.2);
+    }
+    
+    /* إزالة الإطارات الصفراء المتقطعة من جميع الأزرار */
+    button:focus, a:focus, .landing-start-btn:focus, .secondary-btn:focus {
+      outline: none !important;
+      box-shadow: none !important;
+    }
+    button, a, .landing-start-btn, .secondary-btn {
+      outline: none !important;
     }  
     label {  
       display: block;  
@@ -869,20 +978,20 @@
       color: #374151;  
     }  
       
-/* تنسيق خاص لملصقات الأسئلة في الحاسبة - لون الخط قابل للتخصيص من لوحة التحكم */  
+    /* تنسيق خاص لملصقات الأسئلة في الحاسبة - شفاف مع خط أبيض */
     #question label {
       background: transparent !important;
-      color: var(--question-label-color, #1a1a2e) !important;
-      font-size: 24px !important;  
-      font-weight: 800 !important;  
-      text-shadow: var(--question-label-shadow, 0 1px 3px rgba(0,0,0,0.1)) !important;  
-      padding: 10px 0 !important;  
-      margin-bottom: 15px !important;  
-      display: block !important;  
-      text-align: center !important;  
-      border: none !important;  
-      box-shadow: none !important;  
-    }  
+      color: #ffffff !important;
+      font-size: 24px !important;
+      font-weight: 800 !important;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.5) !important;
+      padding: 10px 0 !important;
+      margin-bottom: 15px !important;
+      display: block !important;
+      text-align: center !important;
+      border: none !important;
+      box-shadow: none !important;
+    }
   
     .fade-in {  
       animation: fadeInMove .3s ease-out forwards;  
@@ -1883,7 +1992,85 @@
     /* تحسين التمرير */  
     .page, .card, .modal-content {  
       -webkit-overflow-scrolling: touch;  
-    }  
+    }
+    
+    /* ========== تصميم شفاف إجباري - يتجاوز جميع التنسيقات ========== */
+    #calculatorPage .card,
+    #calculatorPage > .card,
+    .page .card,
+    div.card,
+    .card,
+    [class*="card"] {
+      background: transparent !important;
+      background-color: transparent !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      border: none !important;
+      box-shadow: none !important;
+      outline: none !important;
+    }
+    
+    /* إزالة الخلفية من جميع العناصر داخل الحاسبة */
+    #calculatorPage,
+    #calculatorPage * {
+      background-color: transparent !important;
+    }
+    
+    /* استثناء حقول الإدخال والأزرار */
+    #calculatorPage input,
+    #calculatorPage select,
+    #calculatorPage button {
+      background: rgba(255, 255, 255, 0.15) !important;
+    }
+    
+    /* زر التالي برتقالي */
+    #nextButton, #mainButton, .primary {
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+    }
+    
+    /* النصوص بيضاء إجباري */
+    #calculatorPage .card h2,
+    #calculatorPage .card label,
+    #calculatorPage .card p,
+    #calculatorPage .card span,
+    .page .card h2,
+    .page .card label,
+    .page .card p {
+      color: #ffffff !important;
+    }
+    
+    /* حقول الإدخال شفافة */
+    #calculatorPage input[type="text"],
+    #calculatorPage input[type="number"],
+    #calculatorPage select,
+    .page .card input,
+    .page .card select {
+      background: rgba(255, 255, 255, 0.12) !important;
+      border: 1px solid rgba(255, 255, 255, 0.25) !important;
+      color: #ffffff !important;
+      border-radius: 12px !important;
+    }
+    
+    #calculatorPage input::placeholder {
+      color: rgba(255, 255, 255, 0.5) !important;
+    }
+    
+    /* زر التالي برتقالي */
+    #nextButton, #mainButton {
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+      color: #ffffff !important;
+      border: none !important;
+      border-radius: 30px !important;
+      font-weight: 700 !important;
+      box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4) !important;
+    }
+    
+    /* شريط التقدم */
+    .steps-badge {
+      background: rgba(255, 255, 255, 0.1) !important;
+      color: #ffffff !important;
+      border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    }
   </style>  
 </head>  
 <body>  
@@ -2154,7 +2341,7 @@
   
   <!-- صفحة الحاسبة -->  
   <div id="calculatorPage" class="page">  
-    <div class="card">  
+    <div class="card" style="background: transparent !important; border: none !important;">  
       <div class="steps-badge">  
         أسئلة بسيطة خطوة بخطوة للوصول لأدق حسبة ممكنة 👌  
       </div>  
@@ -2172,7 +2359,7 @@
   
   <!-- صفحة النتيجة -->  
   <div id="resultPage" class="page">  
-    <div class="card fade-in" id="resultCard">  
+    <div class="card fade-in" id="resultCard" style="background: rgba(255, 255, 255, 0.08) !important; border: 1px solid rgba(255, 255, 255, 0.2) !important;">  
       <!-- تعبئة من الجافاسكربت -->  
     </div>  
   
@@ -2189,7 +2376,7 @@
   </div>  
   
     <!-- قسم التقييم -->  
-    <div id="ratingSection" class="card fade-in" style="margin-top:12px; display:none;">  
+    <div id="ratingSection" class="card fade-in" style="margin-top:12px; display:none; background: rgba(255, 255, 255, 0.08) !important; border: 1px solid rgba(255, 255, 255, 0.2) !important;">  
       <h3 style="margin:0 0 8px; font-size:16px; color:#111827; text-align:right;">⭐ قيّم تجربتك</h3>  
       <p style="font-size:13px; color:#6b7280; text-align:right; margin-bottom:10px;">رأيك يهمنا! كيف كانت تجربتك مع منصة FINO؟</p>  
       <div id="ratingStars" style="display:flex; justify-content:center; gap:8px; margin-bottom:10px;">  
@@ -2396,24 +2583,6 @@
         </div>  
       </div>  
         
-      <!-- قسم المعادلات والحسابات - جديد -->  
-      <div style="margin-bottom:15px; background:linear-gradient(135deg, rgba(251,191,36,0.2) 0%, rgba(245,158,11,0.2) 100%); padding:15px; border-radius:12px; border:2px solid #f59e0b;">  
-        <div style="font-size:14px; color:#fbbf24; margin-bottom:10px; padding-right:5px; font-weight:700;">📊 المعادلات والحسابات</div>  
-        <p style="font-size:11px; color:#fcd34d; margin-bottom:12px;">تحكم في معادلات الحساب وتعديلات النسب والقسط المرن</p>  
-        <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:8px;">  
-          <button onclick="showPage('admin')" style="background:linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color:#fff; border:none; padding:12px; border-radius:10px; font-size:13px; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:4px;">  
-            <span style="font-size:20px;">⚙️</span>  
-            <span>تعديلات النسب</span>  
-            <span style="font-size:10px; opacity:0.8;">حسب وضع العميل</span>  
-          </button>  
-          <button onclick="showPage('adminProducts')" style="background:linear-gradient(135deg, #10b981 0%, #059669 100%); color:#fff; border:none; padding:12px; border-radius:10px; font-size:13px; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:4px;">  
-            <span style="font-size:20px;">💳</span>  
-            <span>القسط المرن</span>  
-            <span style="font-size:10px; opacity:0.8;">إعدادات البنوك</span>  
-          </button>  
-        </div>  
-      </div>  
-        
       <div style="margin-top:20px; text-align:center;">  
         <button onclick="backToLanding()" style="background:linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color:#fff; border:none; padding:12px 30px; border-radius:10px; font-size:14px; cursor:pointer;">  
           🏠 رجوع للرئيسية  
@@ -2583,14 +2752,6 @@
             </select>  
           </div>  
           <div>  
-            <label>القسط المرن المخفض (للعقاري المدعوم)</label>  
-            <select id="adminFlexiblePayment">  
-              <option value="">غير مفعل</option>  
-              <option value="نعم">مفعل</option>  
-            </select>  
-            <small style="color:#6b7280; font-size:10px;">يسمح للعميل باختيار قسط مخفض لفترة محددة</small>  
-          </div>  
-          <div>  
             <label>احتساب العمر</label>  
             <select id="adminAgeCalcType">  
               <option value="hijri">هجري (افتراضي)</option>  
@@ -2684,9 +2845,8 @@
               <label>نوع التعديل</label>  
               <select id="adjType" required onchange="updateAdjustmentOptions()">  
                 <option value="">اختر نوع التعديل...</option>  
-                <option value="supportAdvance">الدعم المقدم من سكني</option>  
-                <option value="personalLoan">التزام شخصي (قرض شخصي)</option>  
-                <option value="carLoan">التزام سيارة</option>  
+                <option value="supportAdvance">الدعم المقدم</option>  
+                <option value="personalLoan">التزام شخصي قائم</option>  
                 <option value="mortgageLoan">التزام عقاري قائم</option>  
                 <option value="creditCard">بطاقة ائتمانية</option>  
                 <option value="newCustomer">عميل جديد</option>  
@@ -2715,6 +2875,13 @@
             <div>  
               <label>ملاحظة للعميل</label>  
               <input id="adjNote" type="text" placeholder="تظهر في صفحة النتيجة" />  
+            </div>
+            <div style="grid-column: span 2;">
+              <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                <input id="adjIncludeEtezaaz" type="checkbox" style="width: 18px; height: 18px;" />
+                <span>تطبيق هذا التعديل على نسب اعتزاز أيضاً</span>
+              </label>
+              <small style="color:#78350f; display: block; margin-top: 4px;">بشكل افتراضي، نسب اعتزاز ثابتة ولا تُطبق عليها التعديلات التراكمية</small>
             </div>  
           </div>  
           <input type="hidden" id="adjEditIndex" value="" />  
@@ -4273,62 +4440,6 @@
         </div>  
       </div>  
         
-      <!-- إعدادات البطاقة والخط - جديد -->  
-      <div style="margin-top:20px; padding:15px; background:linear-gradient(135deg, #fef3c7, #fde68a); border-radius:12px; border:2px solid #f59e0b;">  
-        <h4 style="margin:0 0 10px; font-size:15px; color:#92400e;">🎨 إعدادات البطاقة والخط (المستطيل الأبيض)</h4>  
-        <p style="font-size:12px; color:#78350f; margin-bottom:15px;">  
-          تحكم في شكل البطاقة البيضاء ولون الخط في صفحة الأسئلة  
-        </p>  
-        <div class="admin-grid">  
-          <div>  
-            <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">  
-              <input type="checkbox" id="settingsShowCard" onchange="saveCardSettings()" checked>  
-              <span>إظهار البطاقة (المستطيل الأبيض)</span>  
-            </label>  
-          </div>  
-          <div>  
-            <label>لون خلفية البطاقة</label>  
-            <input id="settingsCardBgColor" type="color" value="#ffffff" onchange="saveCardSettings()">  
-          </div>  
-          <div>  
-            <label>شفافية البطاقة (0-100%)</label>  
-            <input id="settingsCardOpacity" type="range" min="0" max="100" value="95" onchange="saveCardSettings()">  
-            <span id="cardOpacityValue">95%</span>  
-          </div>  
-          <div>  
-            <label>لون حدود البطاقة</label>  
-            <input id="settingsCardBorderColor" type="color" value="#e5e7eb" onchange="saveCardSettings()">  
-          </div>  
-        </div>  
-        <div class="admin-grid" style="margin-top:15px;">  
-          <div>  
-            <label>لون خط الأسئلة</label>  
-            <select id="settingsQuestionLabelColor" onchange="saveCardSettings()">  
-              <option value="#111827">أسود</option>  
-              <option value="#ffffff">أبيض</option>  
-              <option value="#1e40af">أزرق داكن</option>  
-              <option value="#059669">أخضر</option>  
-              <option value="#dc2626">أحمر</option>  
-              <option value="custom">مخصص...</option>  
-            </select>  
-          </div>  
-          <div id="customLabelColorDiv" style="display:none;">  
-            <label>لون مخصص</label>  
-            <input id="settingsCustomLabelColor" type="color" value="#111827" onchange="saveCardSettings()">  
-          </div>  
-          <div>  
-            <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">  
-              <input type="checkbox" id="settingsLabelShadow" onchange="saveCardSettings()">  
-              <span>إضافة ظل للنص</span>  
-            </label>  
-          </div>  
-        </div>  
-        <div style="margin-top:15px; text-align:center;">  
-          <button onclick="previewCardSettings()" style="background:#3b82f6; color:#fff; border:none; padding:10px 20px; border-radius:8px; cursor:pointer;">👁️ معاينة التغييرات</button>  
-          <button onclick="resetCardSettings()" style="background:#ef4444; color:#fff; border:none; padding:10px 20px; border-radius:8px; cursor:pointer; margin-right:10px;">↩️ إعادة الافتراضي</button>  
-        </div>  
-      </div>  
-        
       <!-- إعدادات شاشة البداية -->  
       <div style="margin-top:20px; padding:15px; background:#f0f9ff; border-radius:12px; border:1px solid #bae6fd;">  
         <h4 style="margin:0 0 10px; font-size:15px; color:#0369a1;">📱 إعدادات شاشة البداية (الأيفون الذي يخرج منه المال)</h4>  
@@ -5870,14 +5981,30 @@
     // نسب البنوك الجديدة من الصور المرفقة  
   
     // === نسب اعتزاز - البنك الأهلي السعودي (وزارة الدفاع) ===  
-    { bankName: 'البنك الأهلي السعودي', bankType:'بنك', financeType: 'personal', supportedType: 'الكل', minSalary: 4000, maxSalary: 999999, minMonths: 12, maxMonths: 60, margin: 2.50, jobType: 'عسكري', etezaaz: 'وزارة الدفاع', bankNote: 'عرض اعتزاز - وزارة الدفاع' },  
-    { bankName: 'البنك الأهلي السعودي', bankType:'بنك', financeType: 'personal', supportedType: 'الكل', minSalary: 4000, maxSalary: 999999, minMonths: 72, maxMonths: 180, margin: 3.50, jobType: 'عسكري', etezaaz: 'وزارة الدفاع', bankNote: 'عرض اعتزاز - وزارة الدفاع' },  
-    { bankName: 'البنك الأهلي السعودي', bankType:'بنك', financeType: 'personal', supportedType: 'الكل', minSalary: 4000, maxSalary: 999999, minMonths: 192, maxMonths: 240, margin: 3.65, jobType: 'عسكري', etezaaz: 'وزارة الدفاع', bankNote: 'عرض اعتزاز - وزارة الدفاع' },  
-    { bankName: 'البنك الأهلي السعودي', bankType:'بنك', financeType: 'personal', supportedType: 'الكل', minSalary: 4000, maxSalary: 999999, minMonths: 252, maxMonths: 300, margin: 3.75, jobType: 'عسكري', etezaaz: 'وزارة الدفاع', bankNote: 'عرض اعتزاز - وزارة الدفاع' },  
-    { bankName: 'البنك الأهلي السعودي', bankType:'بنك', financeType: 'personal', supportedType: 'الكل', minSalary: 4000, maxSalary: 999999, minMonths: 312, maxMonths: 360, margin: 3.85, jobType: 'عسكري', etezaaz: 'وزارة الدفاع', bankNote: 'عرض اعتزاز - وزارة الدفاع' },  
+    // هذه النسب ثابتة ولا تُطبق عليها التعديلات التراكمية (+0.90%) إلا إذا فعّلها المسؤول
+    { bankName: 'البنك الأهلي السعودي', bankType:'بنك', financeType: 'personal', supportedType: 'الكل', minSalary: 4000, maxSalary: 999999, minMonths: 12, maxMonths: 60, margin: 2.50, jobType: 'عسكري', etezaaz: 'وزارة الدفاع', isEtezaaz: true, bankNote: 'عرض اعتزاز - وزارة الدفاع (1-5 سنوات)' },  
+    { bankName: 'البنك الأهلي السعودي', bankType:'بنك', financeType: 'personal', supportedType: 'الكل', minSalary: 4000, maxSalary: 999999, minMonths: 72, maxMonths: 180, margin: 3.50, jobType: 'عسكري', etezaaz: 'وزارة الدفاع', isEtezaaz: true, bankNote: 'عرض اعتزاز - وزارة الدفاع (6-15 سنة)' },  
+    { bankName: 'البنك الأهلي السعودي', bankType:'بنك', financeType: 'personal', supportedType: 'الكل', minSalary: 4000, maxSalary: 999999, minMonths: 192, maxMonths: 240, margin: 3.65, jobType: 'عسكري', etezaaz: 'وزارة الدفاع', isEtezaaz: true, bankNote: 'عرض اعتزاز - وزارة الدفاع (16-20 سنة)' },  
+    { bankName: 'البنك الأهلي السعودي', bankType:'بنك', financeType: 'personal', supportedType: 'الكل', minSalary: 4000, maxSalary: 999999, minMonths: 252, maxMonths: 300, margin: 3.75, jobType: 'عسكري', etezaaz: 'وزارة الدفاع', isEtezaaz: true, bankNote: 'عرض اعتزاز - وزارة الدفاع (21-25 سنة)' },  
+    { bankName: 'البنك الأهلي السعودي', bankType:'بنك', financeType: 'personal', supportedType: 'الكل', minSalary: 4000, maxSalary: 999999, minMonths: 312, maxMonths: 360, margin: 3.85, jobType: 'عسكري', etezaaz: 'وزارة الدفاع', isEtezaaz: true, bankNote: 'عرض اعتزاز - وزارة الدفاع (26-30 سنة)' },  
   
+// === البنك الأهلي السعودي - عقاري مدعوم (الوحدات الجاهزة) ===  
+    { bankName: 'البنك الأهلي السعودي', bankType:'بنك', financeType: 'mortgage', supportedType: 'مدعوم', minSalary: 4000, maxSalary: 999999, minMonths: 1, maxMonths: 59, margin: 3.70, jobType: 'الكل', productDetail: 'وحدة جاهزة', bankNote: 'وحدات جاهزة - مدعوم' },  
+    { bankName: 'البنك الأهلي السعودي', bankType:'بنك', financeType: 'mortgage', supportedType: 'مدعوم', minSalary: 4000, maxSalary: 999999, minMonths: 60, maxMonths: 119, margin: 3.80, jobType: 'الكل', productDetail: 'وحدة جاهزة', bankNote: 'وحدات جاهزة - مدعوم' },  
+    { bankName: 'البنك الأهلي السعودي', bankType:'بنك', financeType: 'mortgage', supportedType: 'مدعوم', minSalary: 4000, maxSalary: 999999, minMonths: 120, maxMonths: 179, margin: 3.90, jobType: 'الكل', productDetail: 'وحدة جاهزة', bankNote: 'وحدات جاهزة - مدعوم' },  
+    { bankName: 'البنك الأهلي السعودي', bankType:'بنك', financeType: 'mortgage', supportedType: 'مدعوم', minSalary: 4000, maxSalary: 999999, minMonths: 180, maxMonths: 239, margin: 4.20, jobType: 'الكل', productDetail: 'وحدة جاهزة', bankNote: 'وحدات جاهزة - مدعوم' },  
+    { bankName: 'البنك الأهلي السعودي', bankType:'بنك', financeType: 'mortgage', supportedType: 'مدعوم', minSalary: 4000, maxSalary: 999999, minMonths: 240, maxMonths: 299, margin: 4.30, jobType: 'الكل', productDetail: 'وحدة جاهزة', bankNote: 'وحدات جاهزة - مدعوم' },  
+    { bankName: 'البنك الأهلي السعودي', bankType:'بنك', financeType: 'mortgage', supportedType: 'مدعوم', minSalary: 4000, maxSalary: 999999, minMonths: 300, maxMonths: 360, margin: 4.50, jobType: 'الكل', productDetail: 'وحدة جاهزة', bankNote: 'وحدات جاهزة - مدعوم' },  
+
+// === البنك الأهلي السعودي - عقاري غير مدعوم ===  
+    { bankName: 'البنك الأهلي السعودي', bankType:'بنك', financeType: 'mortgage', supportedType: 'غير مدعوم', minSalary: 4000, maxSalary: 999999, minMonths: 1, maxMonths: 119, margin: 3.80, jobType: 'الكل', bankNote: 'غير مدعوم' },  
+    { bankName: 'البنك الأهلي السعودي', bankType:'بنك', financeType: 'mortgage', supportedType: 'غير مدعوم', minSalary: 4000, maxSalary: 999999, minMonths: 120, maxMonths: 179, margin: 4.20, jobType: 'الكل', bankNote: 'غير مدعوم' },  
+    { bankName: 'البنك الأهلي السعودي', bankType:'بنك', financeType: 'mortgage', supportedType: 'غير مدعوم', minSalary: 4000, maxSalary: 999999, minMonths: 180, maxMonths: 239, margin: 4.40, jobType: 'الكل', bankNote: 'غير مدعوم' },  
+    { bankName: 'البنك الأهلي السعودي', bankType:'بنك', financeType: 'mortgage', supportedType: 'غير مدعوم', minSalary: 4000, maxSalary: 999999, minMonths: 240, maxMonths: 299, margin: 4.60, jobType: 'الكل', bankNote: 'غير مدعوم' },  
+    { bankName: 'البنك الأهلي السعودي', bankType:'بنك', financeType: 'mortgage', supportedType: 'غير مدعوم', minSalary: 4000, maxSalary: 999999, minMonths: 300, maxMonths: 360, margin: 5.00, jobType: 'الكل', bankNote: 'غير مدعوم' },  
+
 // === البنك الأهلي السعودي - عقاري مدعوم على الخارطة 2.99% ===  
-    { bankName: 'البنك الأهلي السعودي', bankType:'بنك', financeType: 'mortgage', supportedType: 'مدعوم', minSalary: 4000, maxSalary: 999999, minMonths: 12, maxMonths: 240, margin: 2.99, jobType: 'الكل', bankNote: 'عرض على الخارطة - يشمل دعم الباقة المقدمة والدعم الشهري' },  
+    { bankName: 'البنك الأهلي السعودي', bankType:'بنك', financeType: 'mortgage', supportedType: 'مدعوم', minSalary: 4000, maxSalary: 999999, minMonths: 12, maxMonths: 240, margin: 2.99, jobType: 'الكل', productDetail: 'تحت الإنشاء', bankNote: 'عرض على الخارطة - يشمل دعم الباقة المقدمة والدعم الشهري' },  
   
 // === البنك السعودي للاستثمار - عقاري مدعوم (سكني 20 سنة) ===  
     { bankName: 'البنك السعودي للاستثمار', bankType:'بنك', financeType: 'mortgage', supportedType: 'مدعوم', minSalary: 4000, maxSalary: 999999, minMonths: 12, maxMonths: 240, margin: 4.16, jobType: 'الكل', bankNote: 'نسب سكني 20 سنة' },  
@@ -6202,12 +6329,10 @@
     }).filter(b => b.rate !== null);  
   }  
   
-  // دالة محسنة للحصول على البنوك المطابقة بناءً على جميع المعايير (STRICT MATCHING)
   function getMatchingBanksForAnswers() {  
     const salary = parseFloat(answers.salary || '0');  
     if (!salary) return [];  
-
-    // 1. تحديد نوع التمويل بدقة
+  
     let fType;  
     if (answers.financeType === 'شراء مديونية تمويل شخصي') fType = 'buyoutPersonal';  
     else if (answers.financeType === 'شراء مديونية تمويل عقاري') fType = 'buyoutMortgage';  
@@ -6215,126 +6340,47 @@
     else if (answers.financeType && (answers.financeType.includes('شخصي') || answers.financeType === 'تمويل التأجيري')) fType = 'personal';  
     else if (answers.financeType && answers.financeType.includes('عقاري')) fType = 'mortgage';  
     else fType = 'personal';  
-
-    // 2. تحديد نوع الدعم
+  
     const supp = answers.supported || 'الكل';  
-    
-    // 3. تحديد نوع الوظيفة
     const jobType = answers.jobType || '';  
-    
-    // 4. تحديد مدة التمويل
     const months = parseInt(answers.months || '0');  
-    
-    // 5. تحديد نوع المنتج العقاري (وحدات جاهزة/تحت الإنشاء/إلخ)
     const mortgageDetail = answers.mortgageProductType || '';  
-    
-    // 6. تحديد حالة اعتزاز
     const wantsEtezaaz = (answers.financeType === 'تمويل عقاري' && answers.supported === 'مدعوم' && answers.isEtezaaz === 'نعم');  
-    
-    // 7. تحديد حالة الالتزامات (لتعديلات النسب)
-    const hasPersonalLoan = answers.commitments && answers.commitments.some(c => c.type === 'قرض شخصي');
-    const hasCarLoan = answers.commitments && answers.commitments.some(c => c.type === 'قرض سيارة' || c.type === 'التزام سيارة');
-    const hasMortgageLoan = answers.commitments && answers.commitments.some(c => c.type === 'قرض عقاري');
-    const hasCreditCard = answers.commitments && answers.commitments.some(c => c.type === 'بطاقة ائتمانية');
-    const wantsSupportAdvance = answers.supportAdvance === 'نعم';
-
-    console.log('🔍 بحث دقيق عن بنوك مطابقة:', { fType, salary, supp, jobType, months, mortgageDetail, wantsEtezaaz, hasPersonalLoan, hasCarLoan });  
-
-    // فلترة صارمة: يجب أن تطابق البنوك جميع المعايير
+  
+    console.log('بحث عن بنوك مطابقة:', { fType, salary, supp, jobType, months });  
+  
     const list = bankConfigs.filter(cfg => {  
-      // أ. فحص نوع التمويل (إجباري)
-      if (cfg.financeType !== fType) {
-        console.log(`❌ البنك ${cfg.bankName}: نوع التمويل غير متطابق (${cfg.financeType} != ${fType})`);
-        return false;  
-      }
+      // فحص نوع التمويل  
+      if (cfg.financeType !== fType) return false;  
         
-      // ب. فحص الراتب (إجباري)
-      if (!(salary >= cfg.minSalary && salary <= cfg.maxSalary)) {
-        console.log(`❌ البنك ${cfg.bankName}: الراتب خارج النطاق (${salary} ليس بين ${cfg.minSalary} و ${cfg.maxSalary})`);
-        return false;  
-      }
+      // فحص الراتب  
+      if (!(salary >= cfg.minSalary && salary <= cfg.maxSalary)) return false;  
         
-      // ج. فحص الدعم (إجباري)
-      if (cfg.supportedType && cfg.supportedType !== 'الكل' && cfg.supportedType !== supp) {
-        console.log(`❌ البنك ${cfg.bankName}: نوع الدعم غير متطابق (${cfg.supportedType} != ${supp})`);
-        return false;  
-      }
-
-      // د. فحص نوع الوظيفة (إجباري إذا كان البنك يحدده)
-      if (cfg.jobType && cfg.jobType !== 'الكل' && jobType && cfg.jobType !== jobType) {
-        console.log(`❌ البنك ${cfg.bankName}: نوع الوظيفة غير متطابق (${cfg.jobType} != ${jobType})`);
-        return false;  
-      }
+      // فحص الدعم  
+      if (!(cfg.supportedType === 'الكل' || cfg.supportedType === supp)) return false;  
+  
+      // فحص نوع الوظيفة - الكل يعني متاح لجميع الوظائف  
+      if (cfg.jobType && cfg.jobType !== 'الكل' && jobType && cfg.jobType !== jobType) return false;  
         
-      // هـ. فحص المدة بالأشهر (إجباري إذا كان البنك يحددها)
-      if (cfg.minMonths && months && months < cfg.minMonths) {
-        console.log(`❌ البنك ${cfg.bankName}: المدة أقل من الحد الأدنى (${months} < ${cfg.minMonths})`);
-        return false;  
-      }
-      if (cfg.maxMonths && months && months > cfg.maxMonths) {
-        console.log(`❌ البنك ${cfg.bankName}: المدة أكثر من الحد الأقصى (${months} > ${cfg.maxMonths})`);
-        return false;  
-      }
+      // فحص المدة بالأشهر  
+      if (cfg.minMonths && months && months < cfg.minMonths) return false;  
+      if (cfg.maxMonths && months && months > cfg.maxMonths) return false;  
         
-      // و. فحص تفاصيل المنتج (إجباري إذا كان البنك يحددها)
-      if (cfg.productDetail && cfg.productDetail !== 'الكل' && mortgageDetail && cfg.productDetail !== mortgageDetail) {
-        console.log(`❌ البنك ${cfg.bankName}: نوع المنتج غير متطابق (${cfg.productDetail} != ${mortgageDetail})`);
-        return false;  
-      }
+      // فحص تفاصيل المنتج  
+      if (cfg.productDetail && mortgageDetail && cfg.productDetail !== mortgageDetail) return false;  
         
-      // ز. فحص برنامج اعتزاز (إجباري إذا طلب العميل)
-      if (wantsEtezaaz && cfg.etezaaz && cfg.etezaaz !== 'نعم') {
-        console.log(`❌ البنك ${cfg.bankName}: لا يدعم برنامج اعتزاز`);
-        return false;  
-      }
-
-      console.log(`✅ البنك ${cfg.bankName}: مطابق تماماً`);
+      // فحص برنامج اعتزاز  
+      if (wantsEtezaaz && cfg.etezaaz && cfg.etezaaz !== 'نعم') return false;  
+  
       return true;  
     });  
-
-    console.log(`📊 عدد البنوك المطابقة: ${list.length}`);
-    
-    // تطبيق تعديلات النسب التراكمية على كل بنك
-    const adjustedList = list.map(cfg => {
-      let adjustedMargin = cfg.margin;
+  
+    console.log('البنوك المطابقة قبل الترتيب:', list.length);  
       
-      // الحصول على تعديلات النسب المطبقة
-      const clientConditions = {
-        supportAdvance: wantsSupportAdvance,
-        hasPersonalLoan: hasPersonalLoan,
-        hasMortgageLoan: hasMortgageLoan,
-        hasCarLoan: hasCarLoan,
-        hasCreditCard: hasCreditCard,
-        isNewCustomer: false,
-        salaryTransfer: answers.salaryTransfer === 'نعم'
-      };
-      
-      const applicableAdjustments = getApplicableRateAdjustments(cfg.bankName, fType, clientConditions);
-      
-      // تطبيق التعديلات بشكل تراكمي
-      let totalAdjustment = 0;
-      applicableAdjustments.forEach(adj => {
-        const adjValue = parseFloat(adj.value) || 0;
-        adjustedMargin += adjValue;
-        totalAdjustment += adjValue;
-      });
-      
-      if (totalAdjustment !== 0) {
-        console.log(`📈 البنك ${cfg.bankName}: النسبة الأصلية ${cfg.margin}% → النسبة المعدلة ${adjustedMargin}% (تعديل: ${totalAdjustment > 0 ? '+' : ''}${totalAdjustment}%)`);
-      }
-      
-      return {
-        ...cfg,
-        originalMargin: cfg.margin,
-        margin: adjustedMargin,
-        appliedAdjustments: applicableAdjustments
-      };
-    });
-      
-    // ترتيب حسب النسبة الأقل (بعد التعديل)  
-    adjustedList.sort((a,b)=> a.margin - b.margin);  
-    return adjustedList;  
-  }
+    // ترتيب حسب النسبة الأقل  
+    list.sort((a,b)=> a.margin - b.margin);  
+    return list;  
+  }  
   
   const ADMIN_PIN = '11qq11qQ@';  
   
@@ -8102,8 +8148,10 @@
       if (matchingBanks && matchingBanks.length > 0) {  
         const bestBank = matchingBanks[0];  
         answers.profitMargin = bestBank.margin;  
-        answers.recommendedBank = bestBank;  
-        console.log('تم اختيار البنك:', bestBank.bankName, 'بنسبة:', bestBank.margin);  
+        answers.recommendedBank = bestBank;
+        // حفظ معلومة إذا كانت النسبة من نوع اعتزاز (لا تطبق عليها التعديلات التراكمية)
+        answers.isEtezaazRate = bestBank.isEtezaaz || false;  
+        console.log('تم اختيار البنك:', bestBank.bankName, 'بنسبة:', bestBank.margin, 'اعتزاز:', bestBank.isEtezaaz || false);  
       } else {  
         // إذا لم يتم العثور على بنك مطابق، نستخدم نسبة افتراضية  
         answers.profitMargin = 5.0;  
@@ -13132,17 +13180,6 @@ ${contact}`.trim();
     
   // ====== نظام التصاميم الجاهزة ======  
   const fullDesigns = {  
-    darkBlue: {  
-      name: 'أزرق داكن (مشابه للمرجعي)',  
-      theme: 'darkBlue',  
-      font: { main: 'Tajawal', title: 'Cairo', size: 16, weight: 600 },  
-      colors: {  
-        primary: '#1e3a8a', secondary: '#f59e0b', accent: '#3b82f6',  
-        splash1: '#0f172a', splash2: '#1e3a8a', splash3: '#1e40af',  
-        home1: '#0f172a', home2: '#1e293b', home3: '#1e3a8a', home4: '#1e40af',  
-        result1: '#0f172a', result2: '#1e3a8a', resultCard: 'rgba(255,255,255,0.1)'  
-      }  
-    },  
     modern: {  
       name: 'عصري',  
       theme: 'default',  
@@ -13794,12 +13831,47 @@ ${contact}`.trim();
     
   // ====== نظام تعديلات النسب حسب وضع العميل ======  
   const RATE_ADJUSTMENTS_KEY = 'fino_rate_adjustments';  
+
+  // تعديلات النسب الافتراضية للبنك الأهلي
+  const defaultRateAdjustments = [
+    {
+      bankName: 'البنك الأهلي السعودي',
+      financeType: 'mortgage',
+      type: 'personalLoan',
+      name: 'التزام شخصي قائم (الأهلي)',
+      value: 0.90,
+      startDate: '',
+      endDate: '',
+      note: '+90 نقطة إذا كان على العميل التزام/قرض شخصي',
+      enabled: true,
+      createdAt: new Date().toISOString()
+    },
+    {
+      bankName: 'البنك الأهلي السعودي',
+      financeType: 'mortgage',
+      type: 'supportAdvance',
+      name: 'الدعم المقدم (الأهلي)',
+      value: 0.90,
+      startDate: '',
+      endDate: '',
+      note: '+90 نقطة إذا كان العميل يبغى الدعم المقدم',
+      enabled: true,
+      createdAt: new Date().toISOString()
+    }
+  ];
+
+  // تهيئة تعديلات النسب الافتراضية
+  (function initDefaultRateAdjustments() {
+    const existingAdjustments = JSON.parse(localStorage.getItem(RATE_ADJUSTMENTS_KEY) || '[]');
+    if (existingAdjustments.length === 0) {
+      localStorage.setItem(RATE_ADJUSTMENTS_KEY, JSON.stringify(defaultRateAdjustments));
+    }
+  })();
     
-  // أنواع التعديلات (محدثة لتشمل التزام السيارة)  
+  // أنواع التعديلات  
   const adjustmentTypes = {  
-    supportAdvance: 'الدعم المقدم من سكني',  
-    personalLoan: 'التزام شخصي (قرض شخصي)',  
-    carLoan: 'التزام سيارة',  
+    supportAdvance: 'الدعم المقدم',  
+    personalLoan: 'التزام شخصي قائم',  
     mortgageLoan: 'التزام عقاري قائم',  
     creditCard: 'بطاقة ائتمانية',  
     newCustomer: 'عميل جديد',  
@@ -13829,7 +13901,8 @@ ${contact}`.trim();
       value: parseFloat(document.getElementById('adjValue')?.value) || 0,  
       startDate: document.getElementById('adjStartDate')?.value || '',  
       endDate: document.getElementById('adjEndDate')?.value || '',  
-      note: document.getElementById('adjNote')?.value || '',  
+      note: document.getElementById('adjNote')?.value || '',
+      includeEtezaaz: document.getElementById('adjIncludeEtezaaz')?.checked || false,  
       enabled: true,  
       createdAt: new Date().toISOString()  
     };  
@@ -13863,7 +13936,8 @@ ${contact}`.trim();
     document.getElementById('adjValue').value = '';  
     document.getElementById('adjStartDate').value = '';  
     document.getElementById('adjEndDate').value = '';  
-    document.getElementById('adjNote').value = '';  
+    document.getElementById('adjNote').value = '';
+    if (document.getElementById('adjIncludeEtezaaz')) document.getElementById('adjIncludeEtezaaz').checked = false;  
     document.getElementById('adjEditIndex').value = '';  
   }  
     
@@ -13921,7 +13995,8 @@ ${contact}`.trim();
     document.getElementById('adjValue').value = adj.value;  
     document.getElementById('adjStartDate').value = adj.startDate;  
     document.getElementById('adjEndDate').value = adj.endDate;  
-    document.getElementById('adjNote').value = adj.note;  
+    document.getElementById('adjNote').value = adj.note;
+    if (document.getElementById('adjIncludeEtezaaz')) document.getElementById('adjIncludeEtezaaz').checked = adj.includeEtezaaz || false;  
     document.getElementById('adjEditIndex').value = index;  
   }  
     
@@ -13937,13 +14012,16 @@ ${contact}`.trim();
   }  
     
   // الحصول على تعديلات النسبة المطبقة على عميل معين  
-  // دالة محسنة للحصول على تعديلات النسب المطبقة على عميل معين (تراكمية)
-  function getApplicableRateAdjustments(bankName, financeType, clientConditions) {  
+  // ملاحظة: نسب اعتزاز لا تُطبق عليها التعديلات التراكمية إلا إذا فعّلها المسؤول بإضافة includeEtezaaz: true
+  function getApplicableRateAdjustments(bankName, financeType, clientConditions, isEtezaazRate = false) {  
     const adjustments = JSON.parse(localStorage.getItem(RATE_ADJUSTMENTS_KEY) || '[]');  
     const now = new Date();  
       
-    const applicableAdjustments = adjustments.filter(adj => {  
+    return adjustments.filter(adj => {  
       if (!adj.enabled) return false;  
+        
+      // ✅ إذا كانت النسبة من نوع اعتزاز، لا تطبق التعديلات إلا إذا كان التعديل يشمل اعتزاز
+      if (isEtezaazRate && !adj.includeEtezaaz) return false;
         
       // فلترة الجهة  
       if (adj.bankName !== 'الكل' && adj.bankName !== bankName) return false;  
@@ -13955,39 +14033,25 @@ ${contact}`.trim();
       if (adj.startDate && new Date(adj.startDate) > now) return false;  
       if (adj.endDate && new Date(adj.endDate) < now) return false;  
         
-      // فلترة حالة العميل - تطبيق تراكمي  
+      // فلترة حالة العميل  
       if (clientConditions) {  
-        // الدعم المقدم من سكني
         if (adj.type === 'supportAdvance' && !clientConditions.supportAdvance) return false;  
-        // التزام شخصي (قرض شخصي)
         if (adj.type === 'personalLoan' && !clientConditions.hasPersonalLoan) return false;  
-        // التزام عقاري
         if (adj.type === 'mortgageLoan' && !clientConditions.hasMortgageLoan) return false;  
-        // التزام سيارة (جديد)
-        if (adj.type === 'carLoan' && !clientConditions.hasCarLoan) return false;  
-        // بطاقة ائتمانية
         if (adj.type === 'creditCard' && !clientConditions.hasCreditCard) return false;  
-        // عميل جديد
         if (adj.type === 'newCustomer' && !clientConditions.isNewCustomer) return false;  
-        // تحويل راتب
         if (adj.type === 'salaryTransfer' && !clientConditions.salaryTransfer) return false;  
         if (adj.type === 'noSalaryTransfer' && clientConditions.salaryTransfer) return false;  
       }  
         
       return true;  
     });  
-    
-    // تسجيل التعديلات المطبقة للتدقيق
-    if (applicableAdjustments.length > 0) {
-      console.log('تعديلات النسب المطبقة على', bankName + ':', applicableAdjustments.map(a => `${a.name}: ${a.value > 0 ? '+' : ''}${a.value}%`).join(', '));
-    }
-    
-    return applicableAdjustments;
   }  
     
   // حساب النسبة النهائية بعد التعديلات  
-  function calculateAdjustedRate(baseRate, bankName, financeType, clientConditions) {  
-    const applicableAdjustments = getApplicableRateAdjustments(bankName, financeType, clientConditions);  
+  // isEtezaazRate: إذا كانت النسبة من نوع اعتزاز، لا تطبق التعديلات التراكمية
+  function calculateAdjustedRate(baseRate, bankName, financeType, clientConditions, isEtezaazRate = false) {  
+    const applicableAdjustments = getApplicableRateAdjustments(bankName, financeType, clientConditions, isEtezaazRate);  
     let totalAdjustment = 0;  
     const appliedAdjustments = [];  
       
@@ -14500,355 +14564,6 @@ ${contact}`.trim();
       }  
     }, 100);  
   };  
-
-// ====== إعدادات البطاقة والخط (المستطيل الأبيض) ======
-const CARD_SETTINGS_KEY = 'fino_card_settings';
-
-// حفظ إعدادات البطاقة
-function saveCardSettings() {
-  const showCard = document.getElementById('settingsShowCard')?.checked ?? true;
-  const bgColor = document.getElementById('settingsCardBgColor')?.value || '#ffffff';
-  const opacity = document.getElementById('settingsCardOpacity')?.value || 95;
-  const borderColor = document.getElementById('settingsCardBorderColor')?.value || '#e5e7eb';
-  const labelColorSelect = document.getElementById('settingsQuestionLabelColor')?.value || '#111827';
-  const customLabelColor = document.getElementById('settingsCustomLabelColor')?.value || '#111827';
-  const labelShadow = document.getElementById('settingsLabelShadow')?.checked ?? false;
-  
-  // إظهار/إخفاء حقل اللون المخصص
-  const customDiv = document.getElementById('customLabelColorDiv');
-  if (customDiv) {
-    customDiv.style.display = labelColorSelect === 'custom' ? 'block' : 'none';
-  }
-  
-  // تحديث عرض الشفافية
-  const opacityValue = document.getElementById('cardOpacityValue');
-  if (opacityValue) opacityValue.textContent = opacity + '%';
-  
-  const labelColor = labelColorSelect === 'custom' ? customLabelColor : labelColorSelect;
-  
-  const settings = {
-    showCard,
-    bgColor,
-    opacity: parseInt(opacity),
-    borderColor,
-    labelColor,
-    labelShadow
-  };
-  
-  localStorage.setItem(CARD_SETTINGS_KEY, JSON.stringify(settings));
-  applyCardSettings(settings);
-  showToast('تم حفظ إعدادات البطاقة', 'success');
-}
-
-// تطبيق إعدادات البطاقة
-function applyCardSettings(settings) {
-  const root = document.documentElement;
-  
-  if (!settings) {
-    settings = JSON.parse(localStorage.getItem(CARD_SETTINGS_KEY) || '{}');
-  }
-  
-  // تطبيق لون الخط
-  const labelColor = settings.labelColor || '#111827';
-  root.style.setProperty('--question-label-color', labelColor);
-  
-  // تطبيق ظل النص
-  const shadow = settings.labelShadow ? '0 2px 10px rgba(0,0,0,0.5)' : '0 1px 3px rgba(0,0,0,0.1)';
-  root.style.setProperty('--question-label-shadow', shadow);
-  
-  // تطبيق إعدادات البطاقة
-  const opacity = (settings.opacity || 95) / 100;
-  const bgColor = settings.bgColor || '#ffffff';
-  const borderColor = settings.borderColor || '#e5e7eb';
-  
-  // تحويل اللون إلى RGBA
-  const r = parseInt(bgColor.slice(1,3), 16);
-  const g = parseInt(bgColor.slice(3,5), 16);
-  const b = parseInt(bgColor.slice(5,7), 16);
-  
-  root.style.setProperty('--card-bg-color', `rgba(${r}, ${g}, ${b}, ${opacity})`);
-  root.style.setProperty('--card-border-color', borderColor);
-  
-  // إظهار/إخفاء البطاقة
-  if (settings.showCard === false) {
-    document.body.classList.add('hide-cards');
-  } else {
-    document.body.classList.remove('hide-cards');
-  }
-}
-
-// تحميل إعدادات البطاقة
-function loadCardSettings() {
-  const settings = JSON.parse(localStorage.getItem(CARD_SETTINGS_KEY) || '{}');
-  
-  const showCardEl = document.getElementById('settingsShowCard');
-  const bgColorEl = document.getElementById('settingsCardBgColor');
-  const opacityEl = document.getElementById('settingsCardOpacity');
-  const borderColorEl = document.getElementById('settingsCardBorderColor');
-  const labelColorEl = document.getElementById('settingsQuestionLabelColor');
-  const customLabelColorEl = document.getElementById('settingsCustomLabelColor');
-  const labelShadowEl = document.getElementById('settingsLabelShadow');
-  const opacityValueEl = document.getElementById('cardOpacityValue');
-  
-  if (showCardEl) showCardEl.checked = settings.showCard !== false;
-  if (bgColorEl) bgColorEl.value = settings.bgColor || '#ffffff';
-  if (opacityEl) opacityEl.value = settings.opacity || 95;
-  if (borderColorEl) borderColorEl.value = settings.borderColor || '#e5e7eb';
-  if (labelShadowEl) labelShadowEl.checked = settings.labelShadow || false;
-  if (opacityValueEl) opacityValueEl.textContent = (settings.opacity || 95) + '%';
-  
-  // تحديد لون الخط
-  if (labelColorEl) {
-    const predefinedColors = ['#111827', '#ffffff', '#1e40af', '#059669', '#dc2626'];
-    if (predefinedColors.includes(settings.labelColor)) {
-      labelColorEl.value = settings.labelColor;
-    } else if (settings.labelColor) {
-      labelColorEl.value = 'custom';
-      if (customLabelColorEl) customLabelColorEl.value = settings.labelColor;
-      const customDiv = document.getElementById('customLabelColorDiv');
-      if (customDiv) customDiv.style.display = 'block';
-    }
-  }
-  
-  applyCardSettings(settings);
-}
-
-// معاينة التغييرات
-function previewCardSettings() {
-  saveCardSettings();
-  showPage('calculator');
-  showToast('تم تطبيق التغييرات - شاهد النتيجة', 'info');
-}
-
-// إعادة الإعدادات الافتراضية
-function resetCardSettings() {
-  localStorage.removeItem(CARD_SETTINGS_KEY);
-  
-  const showCardEl = document.getElementById('settingsShowCard');
-  const bgColorEl = document.getElementById('settingsCardBgColor');
-  const opacityEl = document.getElementById('settingsCardOpacity');
-  const borderColorEl = document.getElementById('settingsCardBorderColor');
-  const labelColorEl = document.getElementById('settingsQuestionLabelColor');
-  const labelShadowEl = document.getElementById('settingsLabelShadow');
-  const opacityValueEl = document.getElementById('cardOpacityValue');
-  
-  if (showCardEl) showCardEl.checked = true;
-  if (bgColorEl) bgColorEl.value = '#ffffff';
-  if (opacityEl) opacityEl.value = 95;
-  if (borderColorEl) borderColorEl.value = '#e5e7eb';
-  if (labelColorEl) labelColorEl.value = '#111827';
-  if (labelShadowEl) labelShadowEl.checked = false;
-  if (opacityValueEl) opacityValueEl.textContent = '95%';
-  
-  const customDiv = document.getElementById('customLabelColorDiv');
-  if (customDiv) customDiv.style.display = 'none';
-  
-  applyCardSettings({});
-  showToast('تم إعادة الإعدادات الافتراضية', 'info');
-}
-
-// تحميل الإعدادات عند بدء الصفحة
-document.addEventListener('DOMContentLoaded', function() {
-  setTimeout(loadCardSettings, 500);
-});
-
-// ====== نظام القسط المرن المخفض (للتمويل العقاري المدعوم) ======
-
-// التحقق من توفر القسط المرن للبنك المختار
-function isBankFlexiblePaymentEnabled(bankName) {
-  const config = bankConfigs.find(cfg => cfg.bankName === bankName && cfg.flexiblePayment === 'نعم');
-  return !!config;
-}
-
-// عرض نافذة القسط المرن المخفض
-function showFlexiblePaymentModal(maxInstallment, onConfirm, onSkip) {
-  // إزالة النافذة السابقة إن وجدت
-  const existingModal = document.getElementById('flexiblePaymentModal');
-  if (existingModal) existingModal.remove();
-  
-  const minInstallment = 400;
-  const maxMonths = 60;
-  
-  const modal = document.createElement('div');
-  modal.id = 'flexiblePaymentModal';
-  modal.style.cssText = `
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.7);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 10000;
-    padding: 20px;
-  `;
-  
-  modal.innerHTML = `
-    <div style="
-      background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
-      border-radius: 24px;
-      padding: 30px;
-      max-width: 450px;
-      width: 100%;
-      text-align: center;
-      box-shadow: 0 25px 50px rgba(0,0,0,0.3);
-      animation: slideUp 0.3s ease-out;
-    ">
-      <style>
-        @keyframes slideUp {
-          from { transform: translateY(50px); opacity: 0; }
-          to { transform: translateY(0); opacity: 1; }
-        }
-      </style>
-      
-      <div style="font-size: 50px; margin-bottom: 15px;">💳</div>
-      <h3 style="color: #fff; font-size: 22px; margin: 0 0 10px; font-weight: 800;">القسط المرن المخفض</h3>
-      <p style="color: rgba(255,255,255,0.9); font-size: 14px; margin-bottom: 25px; line-height: 1.8;">
-        هذا البنك يدعم خيار القسط المرن المخفض!<br>
-        يمكنك دفع قسط أقل لفترة محددة ثم يرتفع للقسط الأصلي.
-      </p>
-      
-      <div style="background: rgba(255,255,255,0.1); border-radius: 16px; padding: 20px; margin-bottom: 20px;">
-        <label style="color: #fbbf24; font-size: 14px; font-weight: 700; display: block; margin-bottom: 10px;">
-          هل تريد القسط المخفض المرن؟
-        </label>
-        <div style="display: flex; gap: 10px; justify-content: center;">
-          <button id="flexYesBtn" onclick="showFlexibleOptions()" style="
-            background: linear-gradient(135deg, #10b981, #059669);
-            color: #fff;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-          ">✅ نعم</button>
-          <button id="flexNoBtn" onclick="skipFlexiblePayment()" style="
-            background: rgba(255,255,255,0.2);
-            color: #fff;
-            border: 2px solid rgba(255,255,255,0.3);
-            padding: 12px 30px;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-          ">❌ لا</button>
-        </div>
-      </div>
-      
-      <div id="flexibleOptionsContainer" style="display: none;">
-        <div style="background: rgba(255,255,255,0.15); border-radius: 16px; padding: 20px; margin-bottom: 15px;">
-          <label style="color: #fbbf24; font-size: 14px; font-weight: 700; display: block; margin-bottom: 10px;">
-            قيمة القسط المخفض (ريال)
-          </label>
-          <input type="range" id="flexInstallmentSlider" min="${minInstallment}" max="${Math.floor(maxInstallment)}" value="${minInstallment}" 
-            style="width: 100%; height: 8px; border-radius: 4px; cursor: pointer;"
-            oninput="updateFlexInstallmentDisplay()">
-          <div style="display: flex; justify-content: space-between; color: rgba(255,255,255,0.7); font-size: 12px; margin-top: 5px;">
-            <span>${minInstallment} ريال</span>
-            <span id="flexInstallmentValue" style="color: #fbbf24; font-size: 18px; font-weight: 800;">${minInstallment} ريال</span>
-            <span>${Math.floor(maxInstallment)} ريال</span>
-          </div>
-        </div>
-        
-        <div style="background: rgba(255,255,255,0.15); border-radius: 16px; padding: 20px; margin-bottom: 20px;">
-          <label style="color: #fbbf24; font-size: 14px; font-weight: 700; display: block; margin-bottom: 10px;">
-            عدد أشهر القسط المخفض
-          </label>
-          <input type="range" id="flexMonthsSlider" min="1" max="${maxMonths}" value="12" 
-            style="width: 100%; height: 8px; border-radius: 4px; cursor: pointer;"
-            oninput="updateFlexMonthsDisplay()">
-          <div style="display: flex; justify-content: space-between; color: rgba(255,255,255,0.7); font-size: 12px; margin-top: 5px;">
-            <span>1 شهر</span>
-            <span id="flexMonthsValue" style="color: #fbbf24; font-size: 18px; font-weight: 800;">12 شهر</span>
-            <span>${maxMonths} شهر</span>
-          </div>
-        </div>
-        
-        <div style="background: linear-gradient(135deg, #fef3c7, #fde68a); border-radius: 12px; padding: 15px; margin-bottom: 20px; text-align: right;">
-          <div style="color: #92400e; font-size: 13px; line-height: 1.8;">
-            <strong>📊 ملخص:</strong><br>
-            • ستدفع <span id="flexSummaryInstallment" style="font-weight:800;">400</span> ريال لمدة <span id="flexSummaryMonths" style="font-weight:800;">12</span> شهر<br>
-            • بعدها يرتفع القسط للحد الأقصى المسموح
-          </div>
-        </div>
-        
-        <button onclick="confirmFlexiblePayment()" style="
-          background: linear-gradient(135deg, #f59e0b, #d97706);
-          color: #fff;
-          border: none;
-          padding: 15px 40px;
-          border-radius: 12px;
-          font-size: 18px;
-          font-weight: 800;
-          cursor: pointer;
-          width: 100%;
-        ">تأكيد وعرض النتيجة</button>
-      </div>
-    </div>
-  `;
-  
-  document.body.appendChild(modal);
-  
-  // حفظ الدوال للاستخدام لاحقاً
-  window._flexiblePaymentCallbacks = { onConfirm, onSkip, maxInstallment };
-}
-
-// إظهار خيارات القسط المرن
-function showFlexibleOptions() {
-  document.getElementById('flexibleOptionsContainer').style.display = 'block';
-  document.getElementById('flexYesBtn').style.display = 'none';
-  document.getElementById('flexNoBtn').style.display = 'none';
-}
-
-// تحديث عرض قيمة القسط
-function updateFlexInstallmentDisplay() {
-  const value = document.getElementById('flexInstallmentSlider').value;
-  document.getElementById('flexInstallmentValue').textContent = value + ' ريال';
-  document.getElementById('flexSummaryInstallment').textContent = value;
-}
-
-// تحديث عرض عدد الأشهر
-function updateFlexMonthsDisplay() {
-  const value = document.getElementById('flexMonthsSlider').value;
-  document.getElementById('flexMonthsValue').textContent = value + ' شهر';
-  document.getElementById('flexSummaryMonths').textContent = value;
-}
-
-// تخطي القسط المرن
-function skipFlexiblePayment() {
-  const modal = document.getElementById('flexiblePaymentModal');
-  if (modal) modal.remove();
-  
-  if (window._flexiblePaymentCallbacks && window._flexiblePaymentCallbacks.onSkip) {
-    window._flexiblePaymentCallbacks.onSkip();
-  }
-}
-
-// تأكيد القسط المرن
-function confirmFlexiblePayment() {
-  const installment = parseInt(document.getElementById('flexInstallmentSlider').value);
-  const months = parseInt(document.getElementById('flexMonthsSlider').value);
-  
-  const modal = document.getElementById('flexiblePaymentModal');
-  if (modal) modal.remove();
-  
-  if (window._flexiblePaymentCallbacks && window._flexiblePaymentCallbacks.onConfirm) {
-    window._flexiblePaymentCallbacks.onConfirm(installment, months);
-  }
-}
-
-// حفظ إعدادات القسط المرن في الإجابات
-function saveFlexiblePaymentToAnswers(installment, months) {
-  answers.flexiblePayment = {
-    enabled: true,
-    reducedInstallment: installment,
-    reducedMonths: months
-  };
-}
-
 </script>  
   
   
