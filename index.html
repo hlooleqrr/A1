@@ -188,46 +188,6 @@
     body.has-global-bg .card input::placeholder {
       color: rgba(255, 255, 255, 0.5) !important;
     }
-
-    /* استثناء صفحات المسؤول: منع ظهور خط أبيض على خلفية فاتحة */
-    body.has-global-bg .page[id^="admin"] h1,
-    body.has-global-bg .page[id^="admin"] h2,
-    body.has-global-bg .page[id^="admin"] h3,
-    body.has-global-bg .page[id^="admin"] h4,
-    body.has-global-bg .page[id^="admin"] h5,
-    body.has-global-bg .page[id^="admin"] h6,
-    body.has-global-bg .page[id^="admin"] p,
-    body.has-global-bg .page[id^="admin"] label,
-    body.has-global-bg .page[id^="admin"] span,
-    body.has-global-bg .page[id^="admin"] small,
-    body.has-global-bg .page[id^="admin"] li,
-    body.has-global-bg .page[id^="admin"] th,
-    body.has-global-bg .page[id^="admin"] td,
-    body.has-global-bg .page[id^="admin"] a,
-    body.has-global-bg .page[id^="admin"] .admin-section-title,
-    body.has-global-bg .page[id^="admin"] .admin-subtitle {
-      color: #111827 !important;
-      -webkit-text-fill-color: #111827 !important;
-    }
-    body.has-global-bg .page[id^="admin"] .card,
-    body.has-global-bg .page[id^="admin"] .admin-card,
-    body.has-global-bg .page[id^="admin"] .admin-panel,
-    body.has-global-bg .page[id^="admin"] .admin-section,
-    body.has-global-bg .page[id^="admin"] table,
-    body.has-global-bg .page[id^="admin"] .table-wrap {
-      background: rgba(255,255,255,0.96) !important;
-      backdrop-filter: none !important;
-      -webkit-backdrop-filter: none !important;
-    }
-    body.has-global-bg .page[id^="admin"] input,
-    body.has-global-bg .page[id^="admin"] select,
-    body.has-global-bg .page[id^="admin"] textarea {
-      background: #ffffff !important;
-      color: #111827 !important;
-      -webkit-text-fill-color: #111827 !important;
-      border-color: rgba(17,24,39,0.25) !important;
-    }
-
     
     /* أزرار الخيارات شفافة */
     body.has-global-bg .option-btn,
@@ -373,12 +333,13 @@
       overflow-x: hidden !important;  
     }
     
-    /* إزالة الخلفية الزرقاء عندما يضع المسؤول خلفية (استثناء صفحات المسؤول) */
+    /* إزالة الخلفية الزرقاء عندما يضع المسؤول خلفية */
     body.has-global-bg,
-    body.has-global-bg .page:not([id^="admin"]) *:not(input):not(select):not(button):not(.primary):not(#nextButton):not(#mainButton) {
+    body.has-global-bg *:not(input):not(select):not(button):not(.primary):not(#nextButton):not(#mainButton) {
       background-color: transparent !important;
-    }
-/* إزالة أي فراغات أو حدود من الصفحة */  
+    }  
+      
+    /* إزالة أي فراغات أو حدود من الصفحة */  
     html {  
       margin: 0 !important;  
       padding: 0 !important;  
@@ -2191,10 +2152,17 @@ body.has-global-bg .card {
     }
     
     /* استثناء: النصوص في البطاقات الشفافة على الخلفية الزرقاء */
-    body:not(.has-white-bg) #questionCard h2,
-    body:not(.has-white-bg) #questionCard label,
-    body:not(.has-white-bg) #questionCard p {
+    body:not(.has-white-bg) #questionCard > h2,
+    body:not(.has-white-bg) #questionCard > label,
+    body:not(.has-white-bg) #questionCard > p,
+    body:not(.has-white-bg) .question-title {
       color: #ffffff !important;
+    }
+    
+    /* استثناء: بطاقات البنوك يجب أن تكون بنص داكن */
+    #entitiesContainer div[style*="background:linear-gradient(135deg, #f8fafc"] div,
+    #entitiesContainer div[style*="background:linear-gradient(135deg, #f8fafc"] span {
+      color: inherit !important;
     }
     
     /* حقول الإدخال بيضاء مع نص داكن */
@@ -2228,6 +2196,15 @@ body.has-global-bg .card {
       background: rgba(255, 255, 255, 0.1) !important;
       color: #ffffff !important;
       border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    }
+    
+    /* إصلاح لون النص في بطاقات اختيار البنوك */
+    #entitiesContainer > div[style*="background:#fff"],
+    #entitiesContainer > div[style*="background:#fff"] * {
+      color: #1e293b !important;
+    }
+    #entitiesContainer > div[style*="background:#fff"] small {
+      color: #64748b !important;
     }
   </style>  
 </head>  
@@ -8112,13 +8089,13 @@ function applyAllChanges() {
         const logo = bankLogos[bankName];  
         const logoHtml = logo ? `<img src="${logo}" style="width:50px; height:50px; object-fit:contain; margin-left:15px; border-radius:8px;">` : `<div style="width:50px; height:50px; background:#e2e8f0; border-radius:8px; display:flex; align-items:center; justify-content:center; margin-left:15px; font-size:20px;">🏦</div>`;  
           
-        const rateHtml = rate ? `<span style="color:#10b981; font-weight:700;">${rate}%</span>` : `<span style="color:#9ca3af;">غير محدد</span>`;  
+        const rateHtml = rate ? `<span style="color:#10b981 !important; font-weight:700;">${rate}%</span>` : `<span style="color:#9ca3af !important;">غير محدد</span>`;  
           
         card.innerHTML = `  
           ${logoHtml}  
           <div style="flex:1;">  
-            <div style="font-weight:600; color:#1e293b; font-size:15px;">${bankName}</div>  
-            <div style="font-size:12px; color:#64748b; margin-top:4px;">نسبة الهامش: ${rateHtml}</div>  
+            <div style="font-weight:600; color:#1e293b !important; font-size:15px;">${bankName}</div>  
+            <div style="font-size:12px; color:#64748b !important; margin-top:4px;">نسبة الهامش: ${rateHtml}</div>  
           </div>  
           <div style="font-size:20px;">➡️</div>  
         `;  
@@ -8282,7 +8259,7 @@ function applyAllChanges() {
         const offersContainer = document.createElement('div');  
         offersContainer.id = 'calcModeOffersContainer';  
         offersContainer.style.cssText = 'margin-top:10px; padding:15px; background:linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-radius:12px; border:2px solid #f59e0b;';  
-        offersContainer.innerHTML = '<div id="calcModeOffersList" style="max-height:200px; overflow-y:auto;"></div>';  
+        offersContainer.innerHTML = '<h4 style="margin:0 0 10px; font-size:14px; color:#92400e;"><span style="font-size:18px;">🎁</span> عروض متاحة لقطاعك</h4><div id="calcModeOffersList" style="max-height:200px; overflow-y:auto;"></div>';  
         div.appendChild(offersContainer);  
           
         // تحميل العروض المناسبة للعميل  
@@ -8298,12 +8275,6 @@ function applyAllChanges() {
           // حفظ القيمة والانتقال  
           if(step < generalQuestions.length){  
             answers[q.id] = this.value;  
-            // إذا اختار (لا) في سؤال الالتزامات -> النتيجة مباشرة
-            if(q.id === 'hasCommitments' && this.value === 'لا'){  
-              document.getElementById('nextButton').style.display = 'none';  
-              calculate();  
-              return;  
-            }  
             step++;  
             showQuestion();  
           } else {  
@@ -12635,13 +12606,10 @@ ${contact}`.trim();
     
   // دالة تطبيق الخلفية العامة على كامل الصفحة  
   function applyGlobalBackground(settings) {  
-    const rawGlobalImage = (settings?.globalImage || '').trim();
-    const bgAllPages = !!settings?.bgAllPages;
-    const globalImage = (rawGlobalImage && rawGlobalImage !== 'null' && rawGlobalImage !== 'undefined') ? rawGlobalImage : '';
-    const cssBgValue = globalImage
-      ? ((/^url\(/i.test(globalImage) || /gradient\(/i.test(globalImage)) ? globalImage : `url(${globalImage})`)
-      : '';
-console.log('جاري تطبيق الخلفية العامة:', { globalImage, bgAllPages });  
+    const globalImage = settings?.globalImage || '';  
+    const bgAllPages = settings?.bgAllPages || false;  
+      
+    console.log('جاري تطبيق الخلفية العامة:', { globalImage, bgAllPages });  
       
     // إزالة الخلفية السابقة  
     document.body.classList.remove('has-global-bg');  
@@ -12650,8 +12618,8 @@ console.log('جاري تطبيق الخلفية العامة:', { globalImage, b
       
     // إذا كان هناك صورة عامة وتم تفعيل الخيار  
     if (globalImage && bgAllPages) {  
-      document.body.style.setProperty('--global-bg-image', cssBgValue);  
-      document.body.style.backgroundImage = cssBgValue;  
+      document.body.style.setProperty('--global-bg-image', `url(${globalImage})`);  
+      document.body.style.backgroundImage = `url(${globalImage})`;  
       document.body.style.backgroundSize = 'cover';  
       document.body.style.backgroundPosition = 'center';  
       document.body.style.backgroundRepeat = 'no-repeat';  
@@ -12662,7 +12630,7 @@ console.log('جاري تطبيق الخلفية العامة:', { globalImage, b
       // إذا كانت الصورة موجودة لكن الخيار غير مفعل، طبقها على الصفحة الرئيسية فقط  
       const landingPage = document.getElementById('landingPage');  
       if (landingPage) {  
-        landingPage.style.backgroundImage = cssBgValue;  
+        landingPage.style.backgroundImage = `url(${globalImage})`;  
         landingPage.style.backgroundSize = 'cover';  
         landingPage.style.backgroundPosition = 'center';  
       }  
@@ -15142,3 +15110,151 @@ console.log('جاري تطبيق الخلفية العامة:', { globalImage, b
     const entities = getFinanceEntitiesList();  
     if (entities[index]) {  
       entities[index].type = newType;  
+      localStorage.setItem(FINANCE_ENTITIES_KEY, JSON.stringify(entities));  
+    }  
+  };  
+    
+  window.updateFinanceEntityIcon = function(index, newIcon) {  
+    const entities = getFinanceEntitiesList();  
+    if (entities[index]) {  
+      entities[index].icon = newIcon;  
+      localStorage.setItem(FINANCE_ENTITIES_KEY, JSON.stringify(entities));  
+      loadFinanceEntitiesList();  
+    }  
+  };  
+    
+  window.deleteFinanceEntity = function(index) {  
+    const entities = getFinanceEntitiesList();  
+    const deleted = entities.splice(index, 1);  
+    localStorage.setItem(FINANCE_ENTITIES_KEY, JSON.stringify(entities));  
+    loadFinanceEntitiesList();  
+    showToast(`تم حذف جهة التمويل: ${deleted[0]?.name}`, 'info');  
+  };  
+    
+  window.saveFinanceEntitiesList = function() {  
+    showSaveConfirmation('تم حفظ جهات التمويل بنجاح');  
+  };  
+    
+  window.resetFinanceEntitiesList = function() {  
+    if (confirm('هل تريد إعادة تعيين جهات التمويل للقيم الافتراضية؟')) {  
+      localStorage.removeItem(FINANCE_ENTITIES_KEY);  
+      loadFinanceEntitiesList();  
+      showToast('تم إعادة تعيين جهات التمويل', 'info');  
+    }  
+  };  
+    
+  // تحميل القوائم عند فتح الصفحات  
+  const originalShowPage = window.showPage;  
+  window.showPage = function(name) {  
+    originalShowPage(name);  
+    setTimeout(() => {  
+      if (name === 'adminEmployers') {  
+        window.loadEmployersList();  
+      } else if (name === 'adminFinanceEntities') {  
+        window.loadFinanceEntitiesList();  
+      }  
+    }, 100);  
+  };  
+</script>
+
+<!-- زر التنفيذ الثابت لصفحات المسؤول -->
+<button id="adminExecuteBtn" class="admin-execute-btn" onclick="executeAllAdminChanges()">
+  ✅ تنفيذ التغييرات
+</button>
+
+<script>
+// دالة إظهار/إخفاء زر التنفيذ حسب الصفحة الحالية
+function updateExecuteButtonVisibility() {
+  const btn = document.getElementById('adminExecuteBtn');
+  if (!btn) return;
+  
+  // البحث عن أي صفحة مسؤول مفعلة
+  const allPages = document.querySelectorAll('.page');
+  let isAdminPage = false;
+  
+  allPages.forEach(page => {
+    if (page.classList.contains('active') && page.id && page.id.startsWith('admin') && page.id !== 'adminLoginPage' && page.id !== 'adminHubPage') {
+      isAdminPage = true;
+    }
+  });
+  
+  if (isAdminPage) {
+    btn.classList.add('show');
+  } else {
+    btn.classList.remove('show');
+  }
+}
+
+// دالة تنفيذ جميع التغييرات
+function executeAllAdminChanges() {
+  // حفظ جميع الإعدادات الحالية
+  try {
+    // حفظ إعدادات البنوك
+    if (typeof saveBankConfigs === 'function') saveBankConfigs();
+    
+    // حفظ إعدادات الأسئلة
+    if (typeof saveCustomQuestions === 'function') saveCustomQuestions();
+    
+    // حفظ إعدادات الثيمات
+    if (typeof saveThemeSettings === 'function') saveThemeSettings();
+    
+    // حفظ إعدادات النصوص
+    if (typeof saveCustomTexts === 'function') saveCustomTexts();
+    
+    // حفظ إعدادات النتيجة
+    if (typeof saveResultSettings === 'function') saveResultSettings();
+    
+    // حفظ صيغ النتيجة
+    if (typeof saveResultTexts === 'function') saveResultTexts();
+    
+    // حفظ أنواع الوظائف
+    if (typeof saveJobTypesList === 'function') saveJobTypesList();
+    
+    // حفظ جهات الوظيفة
+    if (typeof saveEmployersList === 'function') saveEmployersList();
+    
+    // حفظ جهات التمويل
+    if (typeof saveFinanceEntitiesList === 'function') saveFinanceEntitiesList();
+    
+    // حفظ إعدادات التسويق
+    if (typeof saveMarketingSettings === 'function') saveMarketingSettings();
+    
+    // حفظ العروض
+    if (typeof saveOffers === 'function') saveOffers();
+    
+    // عرض رسالة نجاح
+    const btn = document.getElementById('adminExecuteBtn');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '✅ تم التنفيذ بنجاح!';
+    btn.style.background = 'linear-gradient(135deg, #059669 0%, #047857 100%)';
+    
+    setTimeout(() => {
+      btn.innerHTML = originalText;
+      btn.style.background = '';
+      // إعادة تحميل الصفحة لتطبيق التغييرات
+      location.reload();
+    }, 1500);
+    
+  } catch (e) {
+    console.error('خطأ في تنفيذ التغييرات:', e);
+    alert('حدث خطأ أثناء التنفيذ. يرجى المحاولة مرة أخرى.');
+  }
+}
+
+// تحديث ظهور الزر عند تغيير الصفحة
+const originalShowPage = window.showPage;
+window.showPage = function(pageId) {
+  if (typeof originalShowPage === 'function') {
+    originalShowPage(pageId);
+  }
+  setTimeout(updateExecuteButtonVisibility, 100);
+};
+
+// تحديث عند تحميل الصفحة
+document.addEventListener('DOMContentLoaded', function() {
+  setTimeout(updateExecuteButtonVisibility, 500);
+});
+</script>
+
+</body>  
+</html  
