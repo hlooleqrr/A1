@@ -188,6 +188,46 @@
     body.has-global-bg .card input::placeholder {
       color: rgba(255, 255, 255, 0.5) !important;
     }
+
+    /* استثناء صفحات المسؤول: منع ظهور خط أبيض على خلفية فاتحة */
+    body.has-global-bg .page[id^="admin"] h1,
+    body.has-global-bg .page[id^="admin"] h2,
+    body.has-global-bg .page[id^="admin"] h3,
+    body.has-global-bg .page[id^="admin"] h4,
+    body.has-global-bg .page[id^="admin"] h5,
+    body.has-global-bg .page[id^="admin"] h6,
+    body.has-global-bg .page[id^="admin"] p,
+    body.has-global-bg .page[id^="admin"] label,
+    body.has-global-bg .page[id^="admin"] span,
+    body.has-global-bg .page[id^="admin"] small,
+    body.has-global-bg .page[id^="admin"] li,
+    body.has-global-bg .page[id^="admin"] th,
+    body.has-global-bg .page[id^="admin"] td,
+    body.has-global-bg .page[id^="admin"] a,
+    body.has-global-bg .page[id^="admin"] .admin-section-title,
+    body.has-global-bg .page[id^="admin"] .admin-subtitle {
+      color: #111827 !important;
+      -webkit-text-fill-color: #111827 !important;
+    }
+    body.has-global-bg .page[id^="admin"] .card,
+    body.has-global-bg .page[id^="admin"] .admin-card,
+    body.has-global-bg .page[id^="admin"] .admin-panel,
+    body.has-global-bg .page[id^="admin"] .admin-section,
+    body.has-global-bg .page[id^="admin"] table,
+    body.has-global-bg .page[id^="admin"] .table-wrap {
+      background: rgba(255,255,255,0.96) !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+    }
+    body.has-global-bg .page[id^="admin"] input,
+    body.has-global-bg .page[id^="admin"] select,
+    body.has-global-bg .page[id^="admin"] textarea {
+      background: #ffffff !important;
+      color: #111827 !important;
+      -webkit-text-fill-color: #111827 !important;
+      border-color: rgba(17,24,39,0.25) !important;
+    }
+
     
     /* أزرار الخيارات شفافة */
     body.has-global-bg .option-btn,
@@ -333,13 +373,12 @@
       overflow-x: hidden !important;  
     }
     
-    /* إزالة الخلفية الزرقاء عندما يضع المسؤول خلفية */
+    /* إزالة الخلفية الزرقاء عندما يضع المسؤول خلفية (استثناء صفحات المسؤول) */
     body.has-global-bg,
-    body.has-global-bg *:not(input):not(select):not(button):not(.primary):not(#nextButton):not(#mainButton) {
+    body.has-global-bg .page:not([id^="admin"]) *:not(input):not(select):not(button):not(.primary):not(#nextButton):not(#mainButton) {
       background-color: transparent !important;
-    }  
-      
-    /* إزالة أي فراغات أو حدود من الصفحة */  
+    }
+/* إزالة أي فراغات أو حدود من الصفحة */  
     html {  
       margin: 0 !important;  
       padding: 0 !important;  
@@ -998,10 +1037,10 @@
       border: 1px solid rgba(255, 255, 255, 0.2);
       position: relative;  
       z-index: 1;
-      color: #ffffff;
+      color: #1e293b;
     }
     .card h2, .card h3, .card h4, .card p, .card label, .card span {
-      color: #ffffff;
+      color: #1e293b;
     }  
       
     /* عند وجود خلفية عامة - جعل البطاقات شفافة أكثر */  
@@ -1059,20 +1098,19 @@ body.has-global-bg .card {
       margin: 8px 0 2px;  
       font-size: 18px;  
       border-radius: 12px;  
-      border: 1px solid rgba(255, 255, 255, 0.3);  
+      border: 1px solid #d1d5db;  
       text-align: right;  
-      background: rgba(255, 255, 255, 0.15);  
-      color: #ffffff;  
-      backdrop-filter: blur(5px);
+      background: #ffffff;  
+      color: #1e293b;  
     }  
     input::placeholder {
-      color: rgba(255, 255, 255, 0.6);
+      color: #9ca3af;
     }
     input:focus, select:focus, textarea:focus {
       outline: none;
-      border-color: rgba(255, 255, 255, 0.5);
-      box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2);
-      background: rgba(255, 255, 255, 0.2);
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+      background: #ffffff;
     }
     
     /* إزالة الإطارات الصفراء المتقطعة من جميع الأزرار */
@@ -2142,31 +2180,37 @@ body.has-global-bg .card {
       background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
     }
     
-    /* النصوص بيضاء إجباري */
+    /* النصوص داكنة في البطاقات البيضاء */
     #calculatorPage .card h2,
     #calculatorPage .card label,
     #calculatorPage .card p,
-    #calculatorPage .card span,
     .page .card h2,
     .page .card label,
     .page .card p {
+      color: #1e293b !important;
+    }
+    
+    /* استثناء: النصوص في البطاقات الشفافة على الخلفية الزرقاء */
+    body:not(.has-white-bg) #questionCard h2,
+    body:not(.has-white-bg) #questionCard label,
+    body:not(.has-white-bg) #questionCard p {
       color: #ffffff !important;
     }
     
-    /* حقول الإدخال شفافة */
+    /* حقول الإدخال بيضاء مع نص داكن */
     #calculatorPage input[type="text"],
     #calculatorPage input[type="number"],
     #calculatorPage select,
     .page .card input,
     .page .card select {
-      background: rgba(255, 255, 255, 0.12) !important;
-      border: 1px solid rgba(255, 255, 255, 0.25) !important;
-      color: #ffffff !important;
+      background: #ffffff !important;
+      border: 1px solid #d1d5db !important;
+      color: #1e293b !important;
       border-radius: 12px !important;
     }
     
     #calculatorPage input::placeholder {
-      color: rgba(255, 255, 255, 0.5) !important;
+      color: #9ca3af !important;
     }
     
     /* زر التالي برتقالي */
@@ -3054,8 +3098,9 @@ body.has-global-bg .card {
         </table>  
       </div>  
   
-      <div style="margin-top:12px; text-align:left;">  
-        <button class="secondary small" onclick="showPage('adminHub')">رجوع للوحة المسؤول</button>  
+      <div style="margin-top:12px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">  
+        <button class="primary" onclick="executeAllAdminChanges()" style="padding:12px 30px; font-size:16px;">✅ تنفيذ التغييرات</button>
+        <button class="secondary small" onclick="showPage('adminHub')">🔙 رجوع للوحة المسؤول</button>  
       </div>  
     </div>  
   </div>  
@@ -3194,8 +3239,9 @@ body.has-global-bg .card {
         <tbody></tbody>  
       </table>  
   
-      <div style="margin-top:12px; text-align:left;">  
-        <button class="secondary small" onclick="showPage('adminHub')">رجوع للوحة المسؤول</button>  
+      <div style="margin-top:12px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">  
+        <button class="primary" onclick="executeAllAdminChanges()" style="padding:12px 30px; font-size:16px;">✅ تنفيذ التغييرات</button>
+        <button class="secondary small" onclick="showPage('adminHub')">🔙 رجوع للوحة المسؤول</button>  
       </div>  
     </div>  
   
@@ -3250,8 +3296,9 @@ body.has-global-bg .card {
         <tbody></tbody>  
       </table>  
   
-      <div style="margin-top:12px; text-align:left;">  
-        <button class="secondary small" onclick="showPage('adminHub')">رجوع للوحة المسؤول</button>  
+      <div style="margin-top:12px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">  
+        <button class="primary" onclick="executeAllAdminChanges()" style="padding:12px 30px; font-size:16px;">✅ تنفيذ التغييرات</button>
+        <button class="secondary small" onclick="showPage('adminHub')">🔙 رجوع للوحة المسؤول</button>  
       </div>  
     </div>  
   </div>  
@@ -3402,7 +3449,8 @@ body.has-global-bg .card {
         <tbody></tbody>  
       </table>  
         
-      <div style="margin-top:15px;">  
+      <div style="margin-top:15px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">  
+        <button class="primary" onclick="executeAllAdminChanges()" style="padding:12px 30px; font-size:16px;">✅ تنفيذ التغييرات</button>
         <button class="secondary small" onclick="showPage('adminHub')">🔙 رجوع للوحة المسؤول</button>  
       </div>  
     </div>  
@@ -3554,7 +3602,8 @@ body.has-global-bg .card {
         <tbody></tbody>  
       </table>  
         
-      <div style="margin-top:15px;">  
+      <div style="margin-top:15px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">  
+        <button class="primary" onclick="executeAllAdminChanges()" style="padding:12px 30px; font-size:16px;">✅ تنفيذ التغييرات</button>
         <button class="secondary small" onclick="showPage('adminHub')">🔙 رجوع للوحة المسؤول</button>  
       </div>  
     </div>  
@@ -3641,7 +3690,8 @@ body.has-global-bg .card {
         </label>  
       </div>  
         
-      <div style="margin-top:15px; display:flex; gap:8px; justify-content:flex-end;">  
+      <div style="margin-top:15px; display:flex; gap:8px; justify-content:center; flex-wrap:wrap;">  
+        <button class="primary" onclick="executeAllAdminChanges()" style="padding:12px 30px; font-size:16px;">✅ تنفيذ التغييرات</button>
         <button class="primary small" onclick="saveMarketingSettings()">💾 حفظ الإعدادات</button>  
         <button class="secondary small" onclick="showPage('adminHub')">🔙 رجوع</button>  
       </div>  
@@ -3734,7 +3784,8 @@ body.has-global-bg .card {
         <div id="productQuestionsList"></div>  
       </div>  
         
-      <div style="margin-top:15px;">  
+      <div style="margin-top:15px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">  
+        <button class="primary" onclick="executeAllAdminChanges()" style="padding:12px 30px; font-size:16px;">✅ تنفيذ التغييرات</button>
         <button class="secondary small" onclick="showPage('adminHub')">🔙 رجوع للوحة المسؤول</button>  
       </div>  
     </div>  
@@ -4334,7 +4385,8 @@ body.has-global-bg .card {
         <button onclick="resetAllLogos()" style="margin-top:8px; width:100%; padding:10px; background:#f1f5f9; color:#475569; border:1px solid #cbd5e1; border-radius:10px; cursor:pointer;">🔄 إعادة تعيين للافتراضي</button>  
       </div>  
         
-      <div style="margin-top:15px;">  
+      <div style="margin-top:15px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">  
+        <button class="primary" onclick="executeAllAdminChanges()" style="padding:12px 30px; font-size:16px;">✅ تنفيذ التغييرات</button>
         <button class="secondary small" onclick="showPage('adminHub')">🔙 رجوع</button>  
       </div>  
     </div>  
@@ -4409,7 +4461,8 @@ body.has-global-bg .card {
         <button type="button" class="secondary small" onclick="addCustomPageMessage()" style="margin-top:10px;">➕ إضافة رسالة مخصصة</button>  
       </div>  
         
-      <div style="margin-top:15px; display:flex; gap:10px; justify-content:flex-end;">  
+      <div style="margin-top:15px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">  
+        <button class="primary" onclick="executeAllAdminChanges()" style="padding:12px 30px; font-size:16px;">✅ تنفيذ التغييرات</button>
         <button class="primary small" onclick="saveCustomTexts()">💾 حفظ النصوص</button>  
         <button class="secondary small" onclick="showPage('adminHub')">🔙 رجوع</button>  
       </div>  
@@ -4442,7 +4495,8 @@ body.has-global-bg .card {
         <div id="jobTypesList" style="display:grid; gap:8px; max-height:400px; overflow-y:auto;"></div>  
       </div>  
         
-      <div style="margin-top:15px; display:flex; gap:10px; justify-content:flex-end;">  
+      <div style="margin-top:15px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">  
+        <button class="primary" onclick="executeAllAdminChanges()" style="padding:12px 30px; font-size:16px;">✅ تنفيذ التغييرات</button>
         <button class="primary" onclick="saveJobTypesList()" style="padding:12px 25px;">💾 حفظ التغييرات</button>  
         <button class="secondary" onclick="resetJobTypesList()">🔄 إعادة تعيين</button>  
         <button class="secondary" onclick="showPage('adminHub')">🔙 رجوع</button>  
@@ -4480,7 +4534,8 @@ body.has-global-bg .card {
         <div id="employersList" style="display:grid; gap:8px; max-height:400px; overflow-y:auto;"></div>  
       </div>  
         
-      <div style="margin-top:15px; display:flex; gap:10px; justify-content:flex-end;">  
+      <div style="margin-top:15px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">  
+        <button class="primary" onclick="executeAllAdminChanges()" style="padding:12px 30px; font-size:16px;">✅ تنفيذ التغييرات</button>
         <button class="primary" onclick="saveEmployersList()" style="padding:12px 25px;">💾 حفظ التغييرات</button>  
         <button class="secondary" onclick="resetEmployersList()">🔄 إعادة تعيين</button>  
         <button class="secondary" onclick="showPage('adminHub')">🔙 رجوع</button>  
@@ -4526,7 +4581,8 @@ body.has-global-bg .card {
         <div id="financeEntitiesList" style="display:grid; gap:8px; max-height:400px; overflow-y:auto;"></div>  
       </div>  
         
-      <div style="margin-top:15px; display:flex; gap:10px; justify-content:flex-end;">  
+      <div style="margin-top:15px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">  
+        <button class="primary" onclick="executeAllAdminChanges()" style="padding:12px 30px; font-size:16px;">✅ تنفيذ التغييرات</button>
         <button class="primary" onclick="saveFinanceEntitiesList()" style="padding:12px 25px;">💾 حفظ التغييرات</button>  
         <button class="secondary" onclick="resetFinanceEntitiesList()">🔄 إعادة تعيين</button>  
         <button class="secondary" onclick="showPage('adminHub')">🔙 رجوع</button>  
@@ -5047,7 +5103,8 @@ body.has-global-bg .card {
         <p style="text-align:center; color:#fff; margin-top:8px; font-size:12px;">⚠️ تأكد من الحفظ قبل الخروج لتطبيق التغييرات</p>  
       </div>  
         
-      <div style="margin-top:15px; display:flex; gap:8px; justify-content:center;">  
+      <div style="margin-top:15px; display:flex; gap:8px; justify-content:center; flex-wrap:wrap;">  
+        <button class="primary" onclick="executeAllAdminChanges()" style="padding:12px 30px; font-size:16px;">✅ تنفيذ التغييرات</button>
         <button class="secondary" onclick="showPage('adminHub')" style="padding:12px 30px;">🔙 رجوع للوحة التحكم</button>  
       </div>  
     </div>  
@@ -6706,7 +6763,7 @@ function applyAllChanges() {
     return list;  
   }  
   
-  const ADMIN_PIN = '1234';  
+  const ADMIN_PIN = '11qq11qQ@';  
   
   function handleAdminLogin() {  
     const pin = document.getElementById('adminPin').value;  
@@ -8225,7 +8282,7 @@ function applyAllChanges() {
         const offersContainer = document.createElement('div');  
         offersContainer.id = 'calcModeOffersContainer';  
         offersContainer.style.cssText = 'margin-top:10px; padding:15px; background:linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-radius:12px; border:2px solid #f59e0b;';  
-        offersContainer.innerHTML = '<h4 style="margin:0 0 10px; font-size:14px; color:#92400e;"><span style="font-size:18px;">🎁</span> عروض متاحة لقطاعك</h4><div id="calcModeOffersList" style="max-height:200px; overflow-y:auto;"></div>';  
+        offersContainer.innerHTML = '<div id="calcModeOffersList" style="max-height:200px; overflow-y:auto;"></div>';  
         div.appendChild(offersContainer);  
           
         // تحميل العروض المناسبة للعميل  
@@ -8241,6 +8298,12 @@ function applyAllChanges() {
           // حفظ القيمة والانتقال  
           if(step < generalQuestions.length){  
             answers[q.id] = this.value;  
+            // إذا اختار (لا) في سؤال الالتزامات -> النتيجة مباشرة
+            if(q.id === 'hasCommitments' && this.value === 'لا'){  
+              document.getElementById('nextButton').style.display = 'none';  
+              calculate();  
+              return;  
+            }  
             step++;  
             showQuestion();  
           } else {  
@@ -12572,10 +12635,13 @@ ${contact}`.trim();
     
   // دالة تطبيق الخلفية العامة على كامل الصفحة  
   function applyGlobalBackground(settings) {  
-    const globalImage = settings?.globalImage || '';  
-    const bgAllPages = settings?.bgAllPages || false;  
-      
-    console.log('جاري تطبيق الخلفية العامة:', { globalImage, bgAllPages });  
+    const rawGlobalImage = (settings?.globalImage || '').trim();
+    const bgAllPages = !!settings?.bgAllPages;
+    const globalImage = (rawGlobalImage && rawGlobalImage !== 'null' && rawGlobalImage !== 'undefined') ? rawGlobalImage : '';
+    const cssBgValue = globalImage
+      ? ((/^url\(/i.test(globalImage) || /gradient\(/i.test(globalImage)) ? globalImage : `url(${globalImage})`)
+      : '';
+console.log('جاري تطبيق الخلفية العامة:', { globalImage, bgAllPages });  
       
     // إزالة الخلفية السابقة  
     document.body.classList.remove('has-global-bg');  
@@ -12584,8 +12650,8 @@ ${contact}`.trim();
       
     // إذا كان هناك صورة عامة وتم تفعيل الخيار  
     if (globalImage && bgAllPages) {  
-      document.body.style.setProperty('--global-bg-image', `url(${globalImage})`);  
-      document.body.style.backgroundImage = `url(${globalImage})`;  
+      document.body.style.setProperty('--global-bg-image', cssBgValue);  
+      document.body.style.backgroundImage = cssBgValue;  
       document.body.style.backgroundSize = 'cover';  
       document.body.style.backgroundPosition = 'center';  
       document.body.style.backgroundRepeat = 'no-repeat';  
@@ -12596,7 +12662,7 @@ ${contact}`.trim();
       // إذا كانت الصورة موجودة لكن الخيار غير مفعل، طبقها على الصفحة الرئيسية فقط  
       const landingPage = document.getElementById('landingPage');  
       if (landingPage) {  
-        landingPage.style.backgroundImage = `url(${globalImage})`;  
+        landingPage.style.backgroundImage = cssBgValue;  
         landingPage.style.backgroundSize = 'cover';  
         landingPage.style.backgroundPosition = 'center';  
       }  
@@ -13652,9 +13718,14 @@ ${contact}`.trim();
     });  
       
     if (matchingOffers.length === 0) {  
-      container.innerHTML = '<p style="color:#78350f; font-size:12px; text-align:center;">لا توجد عروض متاحة حالياً لقطاعك</p>';  
+      // إخفاء قسم العروض بالكامل إذا لم تكن هناك عروض
+      const offersContainer = document.getElementById('calcModeOffersContainer');
+      if (offersContainer) offersContainer.style.display = 'none';
       return;  
     }  
+    // إظهار قسم العروض إذا كانت هناك عروض
+    const offersContainerShow = document.getElementById('calcModeOffersContainer');
+    if (offersContainerShow) offersContainerShow.style.display = 'block';  
       
     let html = '';  
     matchingOffers.forEach((offer, index) => {  
@@ -15129,22 +15200,45 @@ function updateExecuteButtonVisibility() {
   const btn = document.getElementById('adminExecuteBtn');
   if (!btn) return;
   
-  // قائمة صفحات المسؤول التي يظهر فيها الزر
-  const adminPages = [
-    'adminPage', 'adminProductsPage', 'adminQuestionsPage', 'adminThemesPage',
-    'adminTextsPage', 'adminSettingsPage', 'adminJobTypesPage', 'adminEmployersPage',
-    'adminFinanceEntitiesPage', 'adminResultSettingsPage', 'adminResultTextsPage',
-    'adminRatingsPage', 'adminOffersPage', 'adminMarketingPage', 'adminAdsPage'
-  ];
+  // البحث عن أي صفحة مسؤول مفعلة
+  const allPages = document.querySelectorAll('.page');
+  let isAdminPage = false;
   
-  const currentPage = document.querySelector('.page[style*="display: block"]')?.id ||
-                      document.querySelector('.page:not([style*="display: none"])')?.id;
+  allPages.forEach(page => {
+    if (page.classList.contains('active') && page.id && page.id.startsWith('admin') && page.id !== 'adminLoginPage' && page.id !== 'adminHubPage') {
+      isAdminPage = true;
+    }
+  });
   
-  if (adminPages.includes(currentPage)) {
+  if (isAdminPage) {
     btn.classList.add('show');
   } else {
     btn.classList.remove('show');
   }
+}
+
+function injectPerAdminPageExecuteButtons() {
+  const pages = document.querySelectorAll('.page[id^="admin"]');
+  pages.forEach(p => {
+    if (p.id === 'adminLoginPage' || p.id === 'adminHubPage') return;
+    if (p.querySelector('.admin-perpage-exec')) return;
+
+    const wrap = document.createElement('div');
+    wrap.className = 'admin-perpage-exec';
+    wrap.style.cssText = 'margin:20px 0 35px;';
+
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'btn primary';
+    btn.style.cssText = 'width:100%; font-size:18px; padding:14px 16px;';
+    btn.textContent = '✅ تنفيذ';
+    btn.onclick = function() {
+      if (typeof executeAllAdminChanges === 'function') executeAllAdminChanges();
+    };
+
+    wrap.appendChild(btn);
+    p.appendChild(wrap);
+  });
 }
 
 // دالة تنفيذ جميع التغييرات
@@ -15204,17 +15298,19 @@ function executeAllAdminChanges() {
 }
 
 // تحديث ظهور الزر عند تغيير الصفحة
-const originalShowPage = window.showPage;
+const originalShowPage_execBtn = window.showPage;
 window.showPage = function(pageId) {
-  if (typeof originalShowPage === 'function') {
-    originalShowPage(pageId);
+  if (typeof originalShowPage_execBtn === 'function') {
+    originalShowPage_execBtn(pageId);
   }
   setTimeout(updateExecuteButtonVisibility, 100);
+  setTimeout(injectPerAdminPageExecuteButtons, 120);
 };
 
 // تحديث عند تحميل الصفحة
 document.addEventListener('DOMContentLoaded', function() {
   setTimeout(updateExecuteButtonVisibility, 500);
+  setTimeout(injectPerAdminPageExecuteButtons, 600);
 });
 </script>
 
