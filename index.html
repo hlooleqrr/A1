@@ -6010,7 +6010,7 @@ function applyAllChanges() {
     // تتبع بدء الحسبة  
     if (typeof trackVisitor === 'function') trackVisitor();  
   };  
-  function startClientFlow() { window.startClientFlow(); }  
+  // startClientFlow معرّفة في window مباشرة  
   
   function backToFinanceType(){  
     showPage('calculator');  
@@ -9412,9 +9412,9 @@ if (!profitMargin || isNaN(profitMargin) || profitMargin <= 0) {
     
     // إضافة إجابات الأسئلة الإضافية (المخصصة من المسؤول)
     let customQuestionsHtml = '';
-    const productQuestions = typeof loadProductQuestions === 'function' ? loadProductQuestions() : [];
-    if (productQuestions.length > 0) {
-      productQuestions.forEach(pq => {
+    const productQuestionsForResult = typeof loadProductQuestions === 'function' ? loadProductQuestions() : [];
+    if (productQuestionsForResult.length > 0) {
+      productQuestionsForResult.forEach(pq => {
         // التحقق من وجود إجابة لهذا السؤال
         const answerValue = answers[pq.id];
         if (answerValue !== undefined && answerValue !== null && answerValue !== '') {
@@ -9748,18 +9748,18 @@ if (!profitMargin || isNaN(profitMargin) || profitMargin <= 0) {
     }  
   
     // إضافة إجابات الأسئلة المخصصة للمنتجات في النتيجة  
-    const productQuestions = loadProductQuestions();  
-    const selectedBank = answers.selectedFinanceEntity || answers.currentBank || '';  
-    const clientJobType = answers.jobType || '';  
-    const relevantProductQuestions = productQuestions.filter(pq => {  
+    const productQuestionsShare = loadProductQuestions();  
+    const selectedBankShare = answers.selectedFinanceEntity || answers.currentBank || '';  
+    const clientJobTypeShare = answers.jobType || '';  
+    const relevantProductQuestions = productQuestionsShare.filter(pq => {  
       // فحص التفعيل  
       if (!pq.enabled) return false;  
       // فحص المنتج  
       if (pq.product !== 'all' && pq.product !== financeType) return false;  
       // فحص جهة التمويل المستهدفة  
-      if (pq.target && pq.target !== 'all' && pq.target !== selectedBank) return false;  
+      if (pq.target && pq.target !== 'all' && pq.target !== selectedBankShare) return false;  
       // فحص نوع الوظيفة  
-      if (pq.jobType && pq.jobType !== 'all' && pq.jobType !== clientJobType) return false;  
+      if (pq.jobType && pq.jobType !== 'all' && pq.jobType !== clientJobTypeShare) return false;  
       // فحص إظهار في النتيجة  
       if (pq.showInResult === 'no') return false;  
       return true;  
@@ -15359,7 +15359,7 @@ ${contact}`.trim();
     
   // تصدير الدوال الرئيسية إلى window لتكون متاحة للأزرار  
   window.showPage = showPage;  
-  window.startClientFlow = startClientFlow;  
+  // window.startClientFlow معرّفة مسبقاً  
   window.backToLanding = backToLanding;  
   window.openMiniAdminTools = openMiniAdminTools;  
   window.resetCalc = resetCalc;  
@@ -15750,10 +15750,10 @@ function executeAllAdminChanges() {
 }
 
 // تحديث ظهور الزر عند تغيير الصفحة
-const originalShowPage = window.showPage;
+var _origShowPageForBtn = window.showPage;
 window.showPage = function(pageId) {
-  if (typeof originalShowPage === 'function') {
-    originalShowPage(pageId);
+  if (typeof _origShowPageForBtn === 'function') {
+    _origShowPageForBtn(pageId);
   }
   setTimeout(updateExecuteButtonVisibility, 100);
 };
