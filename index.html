@@ -3686,8 +3686,23 @@ body.has-global-bg .card {
       <!-- الأسئلة الأساسية -->  
       <div id="questionsList" class="question-list" style="margin-top:15px;"></div>  
         
-      <!-- قسم إضافة سؤال مخصص لمنتج محدد -->  
-      <div style="margin-top:20px; padding:15px; background:#f0fdf4; border-radius:12px; border:1px solid #86efac;">  
+      <!-- قسم إعدادات سؤال التمويل المحدد -->
+      <div style="margin-top:20px; padding:15px; background:#dbeafe; border-radius:12px; border:1px solid #60a5fa;">
+        <h4 style="margin:0 0 12px; font-size:15px; color:#1e40af;">💵 سؤال التمويل المحدد</h4>
+        <p style="font-size:12px; color:#64748b; margin-bottom:10px;">
+          هذا السؤال يسأل العميل "هل تريد تمويل محدد؟" ويسمح له بتحديد مبلغ أقل من الحد الأقصى.
+        </p>
+        <div style="display:flex; align-items:center; gap:15px;">
+          <label style="font-size:14px; color:#374151;">حالة السؤال:</label>
+          <select id="specificAmountQuestionVisibility" style="padding:10px 20px; border:2px solid #60a5fa; border-radius:8px; font-size:14px; font-weight:bold;" onchange="saveSpecificAmountVisibility()">
+            <option value="show">✅ ظاهر</option>
+            <option value="hide">❌ مخفي</option>
+          </select>
+        </div>
+      </div>
+      
+      <!-- قسم إضافة سؤال مخصص لمنتج محدد -->
+      <div style="margin-top:20px; padding:15px; background:#f0fdf4; border-radius:12px; border:1px solid #86efac;">
         <h4 style="margin:0 0 12px; font-size:15px; color:#166534;">➕ إضافة سؤال مخصص لمنتج</h4>  
         <div style="display:grid; gap:10px;">  
           <div>  
@@ -5888,7 +5903,11 @@ body.has-global-bg .card {
         // تحميل المنتجات في القائمة المنسدلة  
         if (typeof loadProductsForQuestions === 'function') {  
           loadProductsForQuestions();  
-        }  
+        }
+        // تهيئة إعدادات سؤال التمويل المحدد
+        if (typeof initSpecificAmountVisibility === 'function') {
+          initSpecificAmountVisibility();
+        }
       }  
       // تحميل قائمة جهات الوظيفة  
       if (pageId === 'adminEmployers') {  
@@ -7582,6 +7601,20 @@ function applyAllChanges() {
       type:'select',
       options:['12','24','36','48','60'],
       show:a=>a.wantFlexibleInstallment==='نعم'
+    },
+    /* (إضافة) سؤال التمويل المحدد - يمكن للمسؤول إخفاؤه */
+    {
+      id:'wantSpecificAmount',
+      label:'هل تريد تمويل محدد؟',
+      type:'select',
+      options:['لا','نعم'],
+      show:a=>isSpecificAmountQuestionVisible() // يظهر حسب إعدادات المسؤول
+    },
+    {
+      id:'specificFinanceAmount',
+      label:'أدخل مبلغ التمويل الذي تريده (ريال)',
+      type:'specificAmountInput',
+      show:a=>a.wantSpecificAmount==='نعم'
     }
   ];  
   
@@ -8210,6 +8243,94 @@ function applyAllChanges() {
           showQuestion();
         }
       });
+        
+    } else if(q.type === 'specificAmountInput'){
+      // ====== حقل إدخال التمويل المحدد ======
+      const specificContainer = document.createElement('div');
+      specificContainer.style.cssText = 'background:linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); padding:20px; border-radius:12px; border:2px solid #0ea5e9; margin-top:10px;';
+      
+      // حساب الحد الأقصى للتمويل (تقديري)
+      const salary = parseFloat(answers.salary || '0');
+      const months = parseInt(answers.months || '60');
+      const profitMargin = parseFloat(answers.profitMargin || '5');
+      const years = months / 12;
+      const profitFactor = (years * profitMargin / 100) + 1;
+      
+      // حساب القسط المتاح (تقريبي)
+      let deductionRate = 0.65; // افتراضي
+      if(answers.financeType === 'تمويل عقاري' && answers.supported === 'مدعوم') deductionRate = 0.65;
+      else if(answers.financeType === 'تمويل عقاري') deductionRate = 0.55;
+      else deductionRate = 0.45;
+      
+      const maxInstallment = salary * deductionRate;
+      const totalCommitments = (answers.commitments || []).reduce((sum, c) => sum + (c.amount || 0), 0);
+      const availableInstallment = Math.max(0, maxInstallment - totalCommitments);
+      const totalAvailable = availableInstallment * months;
+      const maxFinanceAmount = Math.floor(totalAvailable / profitFactor);
+      
+      // عرض الحد الأقصى
+      const infoDiv = document.createElement('div');
+      infoDiv.style.cssText = 'margin-bottom:15px; font-size:14px; color:#0369a1;';
+      infoDiv.innerHTML = `
+        <div style="margin-bottom:10px;"><strong>💰 الحد الأقصى للتمويل الممنوح لك:</strong> <span style="font-size:18px; font-weight:bold; color:#059669;">${maxFinanceAmount.toLocaleString()} ريال</span></div>
+        <div style="font-size:12px; color:#64748b;">يمكنك إدخال مبلغ أقل من هذا الحد إذا كنت لا تحتاج كامل المبلغ</div>
+      `;
+      specificContainer.appendChild(infoDiv);
+      
+      // حقل الإدخال
+      const inputDiv = document.createElement('div');
+      inputDiv.style.cssText = 'display:flex; gap:10px; align-items:center;';
+      
+      const amountInput = document.createElement('input');
+      amountInput.type = 'number';
+      amountInput.id = q.id;
+      amountInput.placeholder = 'أدخل المبلغ...';
+      amountInput.style.cssText = 'flex:1; padding:15px; border-radius:10px; border:2px solid #0ea5e9; font-size:18px; font-weight:bold; text-align:center;';
+      amountInput.max = maxFinanceAmount;
+      inputDiv.appendChild(amountInput);
+      
+      const confirmBtn = document.createElement('button');
+      confirmBtn.type = 'button';
+      confirmBtn.innerHTML = 'تأكيد';
+      confirmBtn.style.cssText = 'padding:15px 25px; background:linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%); color:#fff; border:none; border-radius:10px; font-size:16px; font-weight:bold; cursor:pointer;';
+      inputDiv.appendChild(confirmBtn);
+      
+      specificContainer.appendChild(inputDiv);
+      
+      // رسالة التحقق
+      const errorDiv = document.createElement('div');
+      errorDiv.id = 'specificAmountError';
+      errorDiv.style.cssText = 'display:none; margin-top:10px; padding:10px; background:#fee2e2; border-radius:8px; color:#dc2626; font-size:13px;';
+      specificContainer.appendChild(errorDiv);
+      
+      // حفظ الحد الأقصى للاستخدام لاحقاً
+      answers._maxFinanceAmount = maxFinanceAmount;
+      
+      confirmBtn.onclick = function() {
+        const enteredAmount = parseFloat(amountInput.value || '0');
+        
+        if(!enteredAmount || enteredAmount <= 0) {
+          errorDiv.innerHTML = '⚠️ يرجى إدخال مبلغ صحيح';
+          errorDiv.style.display = 'block';
+          return;
+        }
+        
+        if(enteredAmount > maxFinanceAmount) {
+          errorDiv.innerHTML = `⚠️ التمويل المذكور (${enteredAmount.toLocaleString()} ريال) يتجاوز الحد الأقصى للتمويل الممنوح لك (${maxFinanceAmount.toLocaleString()} ريال)`;
+          errorDiv.style.display = 'block';
+          return;
+        }
+        
+        // المبلغ صحيح - حفظه والانتقال
+        errorDiv.style.display = 'none';
+        saveQuestionState();
+        answers[q.id] = enteredAmount;
+        answers._specificAmountApproved = true;
+        step++;
+        showQuestion();
+      };
+      
+      div.appendChild(specificContainer);
         
     } else if(q.type === 'select'){  
       const sel = document.createElement('select');  
@@ -9071,9 +9192,42 @@ if (!profitMargin || isNaN(profitMargin) || profitMargin <= 0) {
     const hasNegativeInstalment = finalPhases.some(p => p.inst < 0);  
     const minInstalment = Math.min(...finalPhases.map(p => p.inst));  
       
-    const totalInst = finalPhases.reduce((s,p)=>s + p.inst * (p.to - p.from + 1), 0);  
+    let totalInst = finalPhases.reduce((s,p)=>s + p.inst * (p.to - p.from + 1), 0);  
     const profitFactor = (years * profitMargin / 100) + 1;  
-    const netFinance = totalInst / profitFactor;  
+    let netFinance = totalInst / profitFactor;
+    
+    // ====== معالجة التمويل المحدد ======
+    let isSpecificAmountUsed = false;
+    let specificAmountValue = 0;
+    let recalculatedInstallment = 0;
+    
+    if (answers._specificAmountApproved && answers.specificFinanceAmount) {
+      specificAmountValue = parseFloat(answers.specificFinanceAmount);
+      
+      // التحقق من أن المبلغ المحدد أقل من الحد الأقصى
+      if (specificAmountValue > 0 && specificAmountValue <= netFinance) {
+        isSpecificAmountUsed = true;
+        
+        // إعادة حساب القسط بناءً على التمويل المحدد
+        // التمويل المحدد = إجمالي الأقساط / معامل الربح
+        // إذن إجمالي الأقساط = التمويل المحدد * معامل الربح
+        const newTotalInst = specificAmountValue * profitFactor;
+        recalculatedInstallment = newTotalInst / months;
+        
+        // تحديث القيم
+        totalInst = newTotalInst;
+        netFinance = specificAmountValue;
+        
+        // تحديث مراحل الأقساط لتعكس القسط الجديد
+        finalPhases = [{ from: 1, to: months, inst: recalculatedInstallment }];
+        
+        console.log('تم تطبيق التمويل المحدد:', {
+          'المبلغ المحدد': specificAmountValue,
+          'القسط الجديد': recalculatedInstallment,
+          'إجمالي الأقساط': newTotalInst
+        });
+      }
+    }  
   
     let adminFee = 0, vat = 0;  
     if (isPersonalLike) {  
@@ -9236,9 +9390,22 @@ if (!profitMargin || isNaN(profitMargin) || profitMargin <= 0) {
   
     // إضافة اسم المنتج إذا كان موجوداً  
     const productName = answers.mortgageProductType || '';  
+    
+    // إضافة اسم البنك الذي عليه النسبة (إذا أدخله العميل)
+    const selectedBankForRate = answers.currentBank || answers.selectedFinanceEntity || '';
+    
+    // إضافة جهة العمل (إذا ذكرها العميل)
+    const workEntity = answers.governmentEntity || answers.privateCompany || '';
+    
+    // إضافة التمويل المحدد (إذا اختاره العميل)
+    const specificAmount = answers._specificAmountApproved ? answers.specificFinanceAmount : 0;
+    
     html += `<div style="display:flex; flex-direction:column; align-items:flex-end; margin:6px 0 10px; gap:4px;">  
       <span class="badge-duration">نوع التمويل: ${financeType}</span>  
       ${productName ? `<span class="badge-duration" style="background:#e0f2fe; color:#0369a1;">المنتج: ${productName}</span>` : ''}  
+      ${selectedBankForRate ? `<span class="badge-duration" style="background:#fef3c7; color:#92400e;">🏦 البنك: ${selectedBankForRate}</span>` : ''}  
+      ${workEntity ? `<span class="badge-duration" style="background:#ecfdf5; color:#065f46;">🏛️ جهة العمل: ${workEntity}</span>` : ''}  
+      ${specificAmount ? `<span class="badge-duration" style="background:#dbeafe; color:#1e40af;">💵 تم تحديد التمويل بـ: ${specificAmount.toLocaleString()} ريال</span>` : ''}  
     </div>`;  
   
     if (recommendedBank) {  
@@ -9502,8 +9669,8 @@ if (!profitMargin || isNaN(profitMargin) || profitMargin <= 0) {
       </div>  
     `;  
   
-    // تنبيه للقطاع الخاص (غير مدني وغير عسكري)  
-    if (answers.jobType && !['مدني (قطاع حكومي)','عسكري'].includes(answers.jobType)) {  
+    // تنبيه للقطاع الخاص فقط  
+    if (answers.jobType === 'قطاع خاص') {  
       html += `  
         <div class="notice-soft">  
           تنبيه: جميع حالات القطاع الخاص (شبه حكومي/معتمد/غير معتمد) تخضع لاعتماد الجهة الممولة وقد تختلف الشروط حسب سياسة كل جهة.  
@@ -9863,7 +10030,7 @@ if (!profitMargin || isNaN(profitMargin) || profitMargin <= 0) {
   
     const contact = `\nللاستفسار والتقديم: 0506214458\nسرعة تملك العقار والحلول التمويلية\n`;  
   
-    const privateNotice = (answers.jobType && !['مدني (قطاع حكومي)','عسكري'].includes(answers.jobType))  
+    const privateNotice = (answers.jobType === 'قطاع خاص')  
       ? `\nتنبيه: القطاع الخاص بجميع أنواعه لابد اعتماده من الجهة الممولة وقد تختلف الشروط.\n`  
       : '';  
   
@@ -11994,6 +12161,37 @@ ${contact}`.trim();
     
   function saveCustomQuestions(data) {  
     localStorage.setItem(QUESTIONS_KEY, JSON.stringify(data));  
+  }
+  
+  // ====== إعدادات سؤال التمويل المحدد ======
+  const SPECIFIC_AMOUNT_KEY = 'finoSpecificAmountVisibility';
+  
+  function loadSpecificAmountVisibility() {
+    try {
+      const data = localStorage.getItem(SPECIFIC_AMOUNT_KEY);
+      return data ? data : 'show'; // الافتراضي ظاهر
+    } catch (e) {
+      return 'show';
+    }
+  }
+  
+  function saveSpecificAmountVisibility() {
+    const select = document.getElementById('specificAmountQuestionVisibility');
+    if (select) {
+      localStorage.setItem(SPECIFIC_AMOUNT_KEY, select.value);
+      console.log('تم حفظ حالة سؤال التمويل المحدد:', select.value);
+    }
+  }
+  
+  function initSpecificAmountVisibility() {
+    const select = document.getElementById('specificAmountQuestionVisibility');
+    if (select) {
+      select.value = loadSpecificAmountVisibility();
+    }
+  }
+  
+  function isSpecificAmountQuestionVisible() {
+    return loadSpecificAmountVisibility() === 'show';
   }  
     
   function renderQuestionsList() {  
@@ -12474,7 +12672,15 @@ ${contact}`.trim();
       cardBgColor: document.getElementById('settingsCardBgColor')?.value || '#ffffff',  
       cardOpacity: parseInt(document.getElementById('settingsCardOpacity')?.value) || 95,  
       cardBlur: parseInt(document.getElementById('settingsCardBlur')?.value) || 10,  
-      cardTransparent: document.getElementById('settingsCardTransparent')?.checked || false  
+      cardTransparent: document.getElementById('settingsCardTransparent')?.checked || false,
+      // إعدادات الخط ولون النص
+      textColor: document.getElementById('settingsTextColor')?.value || '#111827',
+      secondaryTextColor: document.getElementById('settingsSecondaryTextColor')?.value || '#6b7280',
+      fontFamily: document.getElementById('settingsFontFamily')?.value || "'Tajawal', sans-serif",
+      fontSize: parseInt(document.getElementById('settingsFontSize')?.value) || 16,
+      // إعدادات الخط من صفحة الثيمات
+      fontMain: document.getElementById('fontMain')?.value || 'Tajawal',
+      fontTitle: document.getElementById('fontTitle')?.value || 'Cairo'
     };  
       
     savePlatformSettings(settings);  
@@ -12610,7 +12816,30 @@ ${contact}`.trim();
     }  
       
     // تطبيق الخلفية العامة على كامل الصفحة  
-    applyGlobalBackground(settings);  
+    applyGlobalBackground(settings);
+    
+    // تطبيق إعدادات الخط ولون النص
+    if (settings.textColor) {
+      document.documentElement.style.setProperty('--text-color', settings.textColor);
+      document.body.style.color = settings.textColor;
+    }
+    if (settings.secondaryTextColor) {
+      document.documentElement.style.setProperty('--secondary-text-color', settings.secondaryTextColor);
+    }
+    if (settings.fontFamily) {
+      document.documentElement.style.setProperty('--font-family', settings.fontFamily);
+      document.body.style.fontFamily = settings.fontFamily;
+    }
+    if (settings.fontSize) {
+      document.documentElement.style.setProperty('--font-size', settings.fontSize + 'px');
+      document.body.style.fontSize = settings.fontSize + 'px';
+    }
+    if (settings.fontMain) {
+      document.documentElement.style.setProperty('--font-main', `'${settings.fontMain}', sans-serif`);
+    }
+    if (settings.fontTitle) {
+      document.documentElement.style.setProperty('--font-title', `'${settings.fontTitle}', sans-serif`);
+    }
   }  
     
   // دالة تطبيق الخلفية العامة على كامل الصفحة  
@@ -15266,4 +15495,4 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 </body>  
-</html 
+</html  
