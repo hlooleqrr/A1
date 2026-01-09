@@ -6755,8 +6755,15 @@ function applyAllChanges() {
   
     console.log('البنوك المطابقة قبل الترتيب:', list.length);  
       
-    // ترتيب حسب النسبة الأقل  
-    list.sort((a,b)=> a.margin - b.margin);  
+    // ========== ترتيب حسب أقل نسبة هامش ربح ==========
+    // بعد الفلترة، يتم ترتيب البنوك حسب أقل نسبة فقط
+    list.sort((a, b) => a.margin - b.margin);
+    
+    console.log('البنوك بعد الترتيب حسب أقل نسبة:');
+    list.forEach((cfg, i) => {
+      console.log(`${i+1}. ${cfg.bankName} - ${cfg.margin}% - وظيفة:${cfg.jobType || 'الكل'} - منتج:${cfg.productDetail || 'الكل'}`);
+    });
+    
     return list;  
   }  
   
@@ -12273,9 +12280,35 @@ ${contact}`.trim();
     const div = document.getElementById('question');
     document.getElementById('nextButton').style.display = 'none';
     
+    // حساب الحد الأقصى للتمويل
+    const salary = parseFloat(answers.salary || '0');
+    const months = parseInt(answers.months || '60');
+    const profitMargin = parseFloat(answers.profitMargin || '5');
+    const years = months / 12;
+    const profitFactor = (years * profitMargin / 100) + 1;
+    
+    // حساب القسط المتاح
+    let deductionRate = 0.45; // افتراضي للشخصي
+    if(answers.financeType === 'تمويل عقاري' && answers.supported === 'مدعوم') deductionRate = 0.65;
+    else if(answers.financeType === 'تمويل عقاري') deductionRate = 0.55;
+    else deductionRate = 0.45;
+    
+    const maxInstallment = salary * deductionRate;
+    const totalCommitments = (answers.commitments || []).reduce((sum, c) => sum + (parseFloat(c.amount) || 0), 0);
+    const availableInstallment = Math.max(0, maxInstallment - totalCommitments);
+    const totalAvailable = availableInstallment * months;
+    const maxFinanceAmount = Math.floor(totalAvailable / profitFactor);
+    
+    // حفظ الحد الأقصى للاستخدام لاحقاً
+    answers._maxFinanceAmount = maxFinanceAmount;
+    
     div.innerHTML = `
       <div class="question-card fade-in" style="text-align:center;">
         <h3 style="color:#1e293b; margin-bottom:20px;">💵 هل تريد تمويل محدد؟</h3>
+        <div style="background:linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); padding:15px; border-radius:12px; border:2px solid #0ea5e9; margin-bottom:20px;">
+          <p style="color:#0369a1; font-size:14px; margin-bottom:10px;">💰 الحد الأقصى للتمويل الممنوح لك:</p>
+          <p style="color:#059669; font-size:24px; font-weight:bold; margin:0;">${maxFinanceAmount.toLocaleString()} ريال</p>
+        </div>
         <p style="color:#64748b; font-size:14px; margin-bottom:20px;">يمكنك تحديد مبلغ تمويل أقل من الحد الأقصى الممنوح لك</p>
         <div style="display:flex; gap:15px; justify-content:center; flex-wrap:wrap;">
           <button onclick="handleSpecificAmountAnswer('no')" style="background:#ef4444; color:#fff; border:none; padding:15px 40px; border-radius:12px; font-size:16px; font-weight:bold; cursor:pointer; min-width:120px;">لا</button>
@@ -12480,17 +12513,19 @@ ${contact}`.trim();
       
     generalQuestions.forEach((q, i) => {  
       const isHidden = customQ.hidden.includes('general_' + i);  
+      const isDeleted = customQ.deleted && customQ.deleted.includes('general_' + i);
       const customLabel = customQ.labels['general_' + i] || q.label;  
         
       html += `  
-        <div class="question-item ${isHidden ? 'question-hidden' : ''}" data-index="general_${i}">  
+        <div class="question-item ${isHidden ? 'question-hidden' : ''} ${isDeleted ? 'question-deleted' : ''}" data-index="general_${i}" style="${isDeleted ? 'opacity:0.5; text-decoration:line-through;' : ''}">  
           <span class="question-drag-handle">☰</span>  
-          <span class="question-text">${i + 1}. ${customLabel}</span>  
+          <span class="question-text">${i + 1}. ${customLabel} ${isDeleted ? '(محذوف)' : ''}</span>  
           <div class="question-actions">  
             <button class="question-btn" onclick="moveQuestionUp('general', ${i})" style="padding:4px 8px; font-size:11px;" ${i === 0 ? 'disabled' : ''}>⬆️</button>  
             <button class="question-btn" onclick="moveQuestionDown('general', ${i})" style="padding:4px 8px; font-size:11px;" ${i === generalQuestions.length - 1 ? 'disabled' : ''}>⬇️</button>  
             <button class="question-btn question-btn-edit" onclick="editQuestionLabel('general_${i}')">تعديل</button>  
-            <button class="question-btn question-btn-hide" onclick="toggleQuestionVisibility('general_${i}')">${isHidden ? 'إظهار' : 'إخفاء'}</button>  
+            <button class="question-btn question-btn-hide" onclick="toggleQuestionVisibility('general_${i}')">${isHidden ? 'إظهار' : 'إخفاء'}</button>
+            ${isDeleted ? '<button class="question-btn" onclick="restoreQuestion(\'general_' + i + '\')" style="background:#22c55e; color:#fff;">استعادة</button>' : '<button class="question-btn" onclick="deleteQuestion(\'general_' + i + '\')" style="background:#ef4444; color:#fff;">حذف</button>'}  
           </div>  
         </div>  
       `;  
@@ -12500,17 +12535,19 @@ ${contact}`.trim();
       
     commitmentQuestions.forEach((q, i) => {  
       const isHidden = customQ.hidden.includes('commitment_' + i);  
+      const isDeleted = customQ.deleted && customQ.deleted.includes('commitment_' + i);
       const customLabel = customQ.labels['commitment_' + i] || q.label;  
         
       html += `  
-        <div class="question-item ${isHidden ? 'question-hidden' : ''}" data-index="commitment_${i}">  
+        <div class="question-item ${isHidden ? 'question-hidden' : ''} ${isDeleted ? 'question-deleted' : ''}" data-index="commitment_${i}" style="${isDeleted ? 'opacity:0.5; text-decoration:line-through;' : ''}">  
           <span class="question-drag-handle">☰</span>  
-          <span class="question-text">${i + 1}. ${customLabel}</span>  
+          <span class="question-text">${i + 1}. ${customLabel} ${isDeleted ? '(محذوف)' : ''}</span>  
           <div class="question-actions">  
             <button class="question-btn" onclick="moveQuestionUp('commitment', ${i})" style="padding:4px 8px; font-size:11px;" ${i === 0 ? 'disabled' : ''}>⬆️</button>  
             <button class="question-btn" onclick="moveQuestionDown('commitment', ${i})" style="padding:4px 8px; font-size:11px;" ${i === commitmentQuestions.length - 1 ? 'disabled' : ''}>⬇️</button>  
             <button class="question-btn question-btn-edit" onclick="editQuestionLabel('commitment_${i}')">تعديل</button>  
-            <button class="question-btn question-btn-hide" onclick="toggleQuestionVisibility('commitment_${i}')">${isHidden ? 'إظهار' : 'إخفاء'}</button>  
+            <button class="question-btn question-btn-hide" onclick="toggleQuestionVisibility('commitment_${i}')">${isHidden ? 'إظهار' : 'إخفاء'}</button>
+            ${isDeleted ? '<button class="question-btn" onclick="restoreQuestion(\'commitment_' + i + '\')" style="background:#22c55e; color:#fff;">استعادة</button>' : '<button class="question-btn" onclick="deleteQuestion(\'commitment_' + i + '\')" style="background:#ef4444; color:#fff;">حذف</button>'}  
           </div>  
         </div>  
       `;  
@@ -12555,6 +12592,45 @@ ${contact}`.trim();
     renderQuestionsList();  
     showToast('تم حفظ التغييرات! ✅');  
   }  
+
+  // دالة حذف السؤال
+  function deleteQuestion(index) {
+    if (!confirm('هل أنت متأكد من حذف هذا السؤال؟\nسيتم إخفاء السؤال بشكل دائم ولن يظهر للعملاء.')) return;
+    
+    const customQ = loadCustomQuestions();
+    
+    // إضافة السؤال لقائمة المحذوفات
+    if (!customQ.deleted) customQ.deleted = [];
+    if (!customQ.deleted.includes(index)) {
+      customQ.deleted.push(index);
+    }
+    
+    // إخفاء السؤال أيضاً
+    if (!customQ.hidden.includes(index)) {
+      customQ.hidden.push(index);
+    }
+    
+    saveCustomQuestions(customQ);
+    renderQuestionsList();
+    showToast('تم حذف السؤال بنجاح! 🗑️');
+  }
+
+  // دالة استعادة السؤال المحذوف
+  function restoreQuestion(index) {
+    const customQ = loadCustomQuestions();
+    
+    // إزالة السؤال من قائمة المحذوفات
+    if (customQ.deleted) {
+      customQ.deleted = customQ.deleted.filter(i => i !== index);
+    }
+    
+    // إزالة السؤال من قائمة المخفية
+    customQ.hidden = customQ.hidden.filter(i => i !== index);
+    
+    saveCustomQuestions(customQ);
+    renderQuestionsList();
+    showToast('تم استعادة السؤال بنجاح! ✅');
+  }
     
   // دالة تحريك السؤال لأعلى  
   function moveQuestionUp(category, index) {  
@@ -15765,4 +15841,4 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 </body>  
-</html
+</html  
