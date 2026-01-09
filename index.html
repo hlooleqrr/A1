@@ -3686,19 +3686,16 @@ body.has-global-bg .card {
       <!-- الأسئلة الأساسية -->  
       <div id="questionsList" class="question-list" style="margin-top:15px;"></div>  
         
-      <!-- قسم إعدادات سؤال التمويل المحدد -->
+      <!-- قسم التحكم في تفعيل/إيقاف الأسئلة لكل منتج -->
       <div style="margin-top:20px; padding:15px; background:#dbeafe; border-radius:12px; border:1px solid #60a5fa;">
-        <h4 style="margin:0 0 12px; font-size:15px; color:#1e40af;">💵 سؤال التمويل المحدد</h4>
-        <p style="font-size:12px; color:#64748b; margin-bottom:10px;">
-          هذا السؤال يسأل العميل "هل تريد تمويل محدد؟" ويسمح له بتحديد مبلغ أقل من الحد الأقصى.
+        <h4 style="margin:0 0 12px; font-size:15px; color:#1e40af;">⚙️ التحكم في تفعيل/إيقاف الأسئلة</h4>
+        <p style="font-size:12px; color:#64748b; margin-bottom:15px;">
+          يمكنك تفعيل أو إيقاف أي سؤال لكافة المنتجات أو لمنتجات محددة فقط.
         </p>
-        <div style="display:flex; align-items:center; gap:15px;">
-          <label style="font-size:14px; color:#374151;">حالة السؤال:</label>
-          <select id="specificAmountQuestionVisibility" style="padding:10px 20px; border:2px solid #60a5fa; border-radius:8px; font-size:14px; font-weight:bold;" onchange="saveSpecificAmountVisibility()">
-            <option value="show">✅ ظاهر</option>
-            <option value="hide">❌ مخفي</option>
-          </select>
-        </div>
+        <div id="questionSettingsContainer" style="display:grid; gap:15px;"></div>
+        <button onclick="saveAllQuestionSettings()" style="margin-top:15px; background:#22c55e; color:#fff; border:none; padding:12px 30px; border-radius:8px; font-size:14px; font-weight:bold; cursor:pointer;">
+          ✅ حفظ إعدادات الأسئلة
+        </button>
       </div>
       
       <!-- قسم إضافة سؤال مخصص لمنتج محدد -->
@@ -5908,6 +5905,10 @@ body.has-global-bg .card {
         if (typeof initSpecificAmountVisibility === 'function') {
           initSpecificAmountVisibility();
         }
+        // تهيئة واجهة التحكم في الأسئلة
+        if (typeof renderQuestionSettingsUI === 'function') {
+          renderQuestionSettingsUI();
+        }
       }  
       // تحميل قائمة جهات الوظيفة  
       if (pageId === 'adminEmployers') {  
@@ -7357,7 +7358,7 @@ function applyAllChanges() {
         'جندي','جندي أول','عريف','وكيل رقيب','رقيب','رقيب أول',  
         'رئيس رقباء','ملازم','ملازم أول','نقيب','رائد','مقدم','عقيد','عميد','لواء'  
       ],  
-      show:a=>a.jobType==='عسكري'  
+      show:a=>a.jobType==='عسكري' && isQuestionEnabledForProduct('militaryRank', a.financeType)  
     },  
     {  
       id:'financeType',  
@@ -7482,7 +7483,7 @@ function applyAllChanges() {
   
         const info = getMilitaryTimingInfoFromAnswers(a);  
         // شرطك: أقل من 25 سنة على التقاعد + وفيه تمديد إلى 60  
-        return (info.rankRemainingMonths > 0 && info.rankRemainingMonths <= (25*12) && info.monthsTo60 > info.rankRemainingMonths);  
+        return (info.rankRemainingMonths > 0 && info.rankRemainingMonths <= (25*12) && info.monthsTo60 > info.rankRemainingMonths) && isQuestionEnabledForProduct('extendAfterRetirement', a.financeType);  
       }  
     },  
     { id:'appointDate',label:'تاريخ التعيين (هجري)✨',type:'appointdate', show:a=>a.extendAfterRetirement==='نعم' && a.jobType==='عسكري' },  
@@ -7513,7 +7514,7 @@ function applyAllChanges() {
         const yearsToRetirement = 60 - currentAge; // سن التقاعد المدني 60 سنة  
           
         // يظهر إذا كان سيتقاعد خلال 25 سنة ويوجد بنوك تدعم عمر أكثر من 60  
-        return (yearsToRetirement > 0 && yearsToRetirement <= 25 && checkBanksSupport65());  
+        return (yearsToRetirement > 0 && yearsToRetirement <= 25 && checkBanksSupport65()) && isQuestionEnabledForProduct('extendAfterRetirement', a.financeType);  
       }  
     },  
     { id:'appointDateCivil',label:'تاريخ التعيين (هجري)',type:'appointdate', show:a=>a.extendAfterRetirementCivil==='نعم' },  
@@ -7579,7 +7580,7 @@ function applyAllChanges() {
       type:'number',  
       show:a=>a.financeType==='شراء مديونية تمويل شخصي'  
     },  
-    { id:'hasCommitments',label:'هل لديك التزامات؟',type:'select',options:['نعم','لا'] },
+    { id:'hasCommitments',label:'هل لديك التزامات؟',type:'select',options:['نعم','لا'], show:a=>isQuestionEnabledForProduct('hasCommitments', a.financeType) },
     
     /* (إضافة) سؤال القسط المرن المخفض - يظهر للتمويل العقاري المدعوم فقط إذا كان البنك يدعمه */
     {
@@ -7587,7 +7588,7 @@ function applyAllChanges() {
       label:'هل ترغب في القسط المرن المخفض؟ (تخفيض القسط لفترة محددة)',
       type:'select',
       options:['لا','نعم'],
-      show:a=>a.financeType==='تمويل عقاري' && a.supported==='مدعوم' && a.hasCommitments==='نعم' && a.bankSupportsFlexible === true
+      show:a=>a.financeType==='تمويل عقاري' && a.supported==='مدعوم' && a.hasCommitments==='نعم' && a.bankSupportsFlexible === true && isQuestionEnabledForProduct('wantFlexibleInstallment', a.financeType)
     },
     {
       id:'flexibleInstallmentAmount',
@@ -7602,20 +7603,6 @@ function applyAllChanges() {
       options:['12','24','36','48','60'],
       show:a=>a.wantFlexibleInstallment==='نعم'
     },
-    /* (إضافة) سؤال التمويل المحدد - يمكن للمسؤول إخفاؤه */
-    {
-      id:'wantSpecificAmount',
-      label:'هل تريد تمويل محدد؟',
-      type:'select',
-      options:['لا','نعم'],
-      show:a=>isSpecificAmountQuestionVisible() // يظهر حسب إعدادات المسؤول
-    },
-    {
-      id:'specificFinanceAmount',
-      label:'أدخل مبلغ التمويل الذي تريده (ريال)',
-      type:'specificAmountInput',
-      show:a=>a.wantSpecificAmount==='نعم'
-    }
   ];  
   
   const commitmentQuestions = [  
@@ -7932,10 +7919,17 @@ function applyAllChanges() {
         
       if(q.show && !q.show(currentCommitment)){ commitmentStep++; showQuestion(); return; }  
     }else{  
-      // إذا كان المستخدم أجاب بـ "لا" على سؤال الالتزامات - انتقل مباشرة للنتيجة
+      // إذا كان المستخدم أجاب بـ "لا" على سؤال الالتزامات - عرض سؤال التمويل المحدد إذا كان مفعلاً
       if(answers.hasCommitments === 'لا') {
-        console.log('=== المستخدم أجاب بـ لا على الالتزامات - سيتم استدعاء calculate() ===');
+        console.log('=== المستخدم أجاب بـ لا على الالتزامات ===');
         answers.commitments = []; // تعيين مصفوفة فارغة للالتزامات
+        
+        // فحص إذا كان سؤال التمويل المحدد مفعلاً لهذا المنتج
+        if (isSpecificAmountEnabledForProduct(answers.financeType) && !answers.wantSpecificAmount) {
+          showSpecificAmountQuestion();
+          return;
+        }
+        
         document.getElementById('nextButton').style.display = 'none';
         calculate();
         return;
@@ -8419,9 +8413,16 @@ function applyAllChanges() {
                 commitmentStep = 0;  
                 showQuestion();  
               } else {  
-                // انتهاء الالتزامات - عرض النتيجة  
+                // انتهاء الالتزامات - فحص سؤال التمويل المحدد
+                console.log('=== انتهت الالتزامات (من change event) ===');
+                
+                // فحص إذا كان سؤال التمويل المحدد مفعلاً لهذا المنتج
+                if (isSpecificAmountEnabledForProduct(answers.financeType) && !answers.wantSpecificAmount) {
+                  showSpecificAmountQuestion();
+                  return;
+                }
+                
                 document.getElementById('nextButton').style.display = 'none';  
-                console.log('=== انتهت الالتزامات (من change event) - سيتم استدعاء calculate() ===');  
                 console.log('الالتزامات النهائية:', answers.commitments);  
                 calculate();  
               }  
@@ -8529,8 +8530,16 @@ function applyAllChanges() {
           showQuestion();  
           return;  
         }else{  
+          // انتهاء الالتزامات - فحص سؤال التمويل المحدد
+          console.log('=== انتهت الالتزامات ===');
+          
+          // فحص إذا كان سؤال التمويل المحدد مفعلاً لهذا المنتج
+          if (isSpecificAmountEnabledForProduct(answers.financeType) && !answers.wantSpecificAmount) {
+            showSpecificAmountQuestion();
+            return;
+          }
+          
           document.getElementById('nextButton').style.display = 'none';  
-          console.log('=== انتهت الالتزامات - سيتم استدعاء calculate() ===');  
           console.log('الإجابات النهائية:', answers);  
           calculate();  
           return;  
@@ -9400,12 +9409,26 @@ if (!profitMargin || isNaN(profitMargin) || profitMargin <= 0) {
     // إضافة التمويل المحدد (إذا اختاره العميل)
     const specificAmount = answers._specificAmountApproved ? answers.specificFinanceAmount : 0;
     
+    // إضافة إجابات الأسئلة الإضافية (المخصصة من المسؤول)
+    let customQuestionsHtml = '';
+    const productQuestions = typeof loadProductQuestions === 'function' ? loadProductQuestions() : [];
+    if (productQuestions.length > 0) {
+      productQuestions.forEach(pq => {
+        // التحقق من وجود إجابة لهذا السؤال
+        const answerValue = answers[pq.id];
+        if (answerValue !== undefined && answerValue !== null && answerValue !== '') {
+          customQuestionsHtml += `<span class="badge-duration" style="background:#f3e8ff; color:#7c3aed;">📝 ${pq.text}: ${answerValue}</span>`;
+        }
+      });
+    }
+    
     html += `<div style="display:flex; flex-direction:column; align-items:flex-end; margin:6px 0 10px; gap:4px;">  
       <span class="badge-duration">نوع التمويل: ${financeType}</span>  
       ${productName ? `<span class="badge-duration" style="background:#e0f2fe; color:#0369a1;">المنتج: ${productName}</span>` : ''}  
       ${selectedBankForRate ? `<span class="badge-duration" style="background:#fef3c7; color:#92400e;">🏦 البنك: ${selectedBankForRate}</span>` : ''}  
       ${workEntity ? `<span class="badge-duration" style="background:#ecfdf5; color:#065f46;">🏛️ جهة العمل: ${workEntity}</span>` : ''}  
       ${specificAmount ? `<span class="badge-duration" style="background:#dbeafe; color:#1e40af;">💵 تم تحديد التمويل بـ: ${specificAmount.toLocaleString()} ريال</span>` : ''}  
+      ${customQuestionsHtml}
     </div>`;  
   
     if (recommendedBank) {  
@@ -12163,7 +12186,165 @@ ${contact}`.trim();
     localStorage.setItem(QUESTIONS_KEY, JSON.stringify(data));  
   }
   
-  // ====== إعدادات سؤال التمويل المحدد ======
+  // ====== نظام التحكم في تفعيل/إيقاف الأسئلة لكل منتج ======
+  const QUESTION_SETTINGS_KEY = 'finoQuestionSettings';
+  
+  // المنتجات المتاحة
+  const AVAILABLE_PRODUCTS = [
+    'تمويل شخصي',
+    'تمويل عقاري',
+    'تمويل التأجيري',
+    'تمويل استهلاكي',
+    'شراء مديونية تمويل شخصي',
+    'شراء مديونية تمويل عقاري'
+  ];
+  
+  // الأسئلة القابلة للتحكم
+  const CONTROLLABLE_QUESTIONS = [
+    { id: 'wantSpecificAmount', label: 'هل تريد تمويل محدد؟', defaultEnabled: true },
+    { id: 'downPayment', label: 'كم الدفعة التي تملكها؟', defaultEnabled: true },
+    { id: 'mortgageAmount', label: 'كم الرهن؟', defaultEnabled: true },
+    { id: 'hasCommitments', label: 'هل لديك التزامات؟', defaultEnabled: true },
+    { id: 'wantFlexibleInstallment', label: 'هل ترغب في القسط المرن؟', defaultEnabled: true },
+    { id: 'extendAfterRetirement', label: 'هل ترغب بالتمديد بعد التقاعد؟', defaultEnabled: true },
+    { id: 'militaryRank', label: 'الرتبة العسكرية', defaultEnabled: true },
+    { id: 'employer', label: 'جهة العمل', defaultEnabled: true }
+  ];
+  
+  // تحميل إعدادات الأسئلة
+  function loadQuestionSettings() {
+    try {
+      const data = localStorage.getItem(QUESTION_SETTINGS_KEY);
+      if (data) {
+        return JSON.parse(data);
+      }
+    } catch (e) {
+      console.error('خطأ في تحميل إعدادات الأسئلة:', e);
+    }
+    // الإعدادات الافتراضية - جميع الأسئلة مفعلة لجميع المنتجات
+    const defaultSettings = {};
+    CONTROLLABLE_QUESTIONS.forEach(q => {
+      defaultSettings[q.id] = {
+        enabledForAll: q.defaultEnabled,
+        enabledProducts: [] // فارغة يعني كل المنتجات إذا enabledForAll = true
+      };
+    });
+    return defaultSettings;
+  }
+  
+  // حفظ إعدادات الأسئلة
+  function saveQuestionSettings(settings) {
+    localStorage.setItem(QUESTION_SETTINGS_KEY, JSON.stringify(settings));
+    console.log('تم حفظ إعدادات الأسئلة:', settings);
+  }
+  
+  // فحص إذا كان السؤال مفعلاً لمنتج معين
+  function isQuestionEnabledForProduct(questionId, productName) {
+    const settings = loadQuestionSettings();
+    const questionSetting = settings[questionId];
+    
+    if (!questionSetting) {
+      // السؤال غير موجود في الإعدادات - افتراضياً مفعل
+      return true;
+    }
+    
+    // إذا كان مفعلاً لكل المنتجات
+    if (questionSetting.enabledForAll) {
+      return true;
+    }
+    
+    // إذا كان مفعلاً لمنتجات محددة
+    if (questionSetting.enabledProducts && questionSetting.enabledProducts.length > 0) {
+      return questionSetting.enabledProducts.includes(productName);
+    }
+    
+    // غير مفعل
+    return false;
+  }
+  
+  // دالة مخصصة لسؤال التمويل المحدد
+  function isSpecificAmountEnabledForProduct(productName) {
+    return isQuestionEnabledForProduct('wantSpecificAmount', productName);
+  }
+  
+  // عرض سؤال التمويل المحدد
+  function showSpecificAmountQuestion() {
+    const div = document.getElementById('questionContainer');
+    document.getElementById('nextButton').style.display = 'none';
+    
+    div.innerHTML = `
+      <div class="question-card fade-in" style="text-align:center;">
+        <h3 style="color:#1e293b; margin-bottom:20px;">💵 هل تريد تمويل محدد؟</h3>
+        <p style="color:#64748b; font-size:14px; margin-bottom:20px;">يمكنك تحديد مبلغ تمويل أقل من الحد الأقصى الممنوح لك</p>
+        <div style="display:flex; gap:15px; justify-content:center; flex-wrap:wrap;">
+          <button onclick="handleSpecificAmountAnswer('no')" style="background:#ef4444; color:#fff; border:none; padding:15px 40px; border-radius:12px; font-size:16px; font-weight:bold; cursor:pointer; min-width:120px;">لا</button>
+          <button onclick="handleSpecificAmountAnswer('yes')" style="background:#22c55e; color:#fff; border:none; padding:15px 40px; border-radius:12px; font-size:16px; font-weight:bold; cursor:pointer; min-width:120px;">نعم</button>
+        </div>
+      </div>
+    `;
+  }
+  
+  // معالجة إجابة سؤال التمويل المحدد
+  function handleSpecificAmountAnswer(answer) {
+    if (answer === 'no') {
+      answers.wantSpecificAmount = 'لا';
+      document.getElementById('nextButton').style.display = 'none';
+      calculate();
+    } else {
+      answers.wantSpecificAmount = 'نعم';
+      showSpecificAmountInput();
+    }
+  }
+  
+  // عرض حقل إدخال مبلغ التمويل المحدد
+  function showSpecificAmountInput() {
+    const div = document.getElementById('questionContainer');
+    
+    div.innerHTML = `
+      <div class="question-card fade-in" style="text-align:center;">
+        <h3 style="color:#1e293b; margin-bottom:20px;">💰 أدخل مبلغ التمويل الذي تريده</h3>
+        <p style="color:#64748b; font-size:14px; margin-bottom:20px;">أدخل المبلغ بالريال السعودي</p>
+        <div style="margin-bottom:20px;">
+          <input type="number" id="specificAmountInput" placeholder="مثال: 500000" 
+            style="width:100%; max-width:300px; padding:15px; border:2px solid #e2e8f0; border-radius:12px; font-size:18px; text-align:center; direction:ltr;"
+            oninput="formatSpecificAmount(this)">
+          <div id="specificAmountError" style="color:#ef4444; font-size:13px; margin-top:10px; display:none;"></div>
+        </div>
+        <button onclick="confirmSpecificAmount()" style="background:#22c55e; color:#fff; border:none; padding:15px 50px; border-radius:12px; font-size:18px; font-weight:bold; cursor:pointer; box-shadow:0 4px 15px rgba(34,197,94,0.4);">
+          ✅ بالتأكيد
+        </button>
+      </div>
+    `;
+  }
+  
+  // تنسيق مبلغ التمويل
+  function formatSpecificAmount(input) {
+    // إزالة الأحرف غير الرقمية
+    let value = input.value.replace(/[^0-9]/g, '');
+    input.value = value;
+  }
+  
+  // تأكيد مبلغ التمويل المحدد
+  function confirmSpecificAmount() {
+    const input = document.getElementById('specificAmountInput');
+    const errorDiv = document.getElementById('specificAmountError');
+    const amount = parseFloat(input.value);
+    
+    if (!amount || amount <= 0) {
+      errorDiv.textContent = 'يرجى إدخال مبلغ صحيح';
+      errorDiv.style.display = 'block';
+      return;
+    }
+    
+    // حفظ المبلغ المحدد
+    answers.specificFinanceAmount = amount;
+    
+    // الانتقال للنتيجة فوراً
+    document.getElementById('nextButton').style.display = 'none';
+    calculate();
+  }
+  
+  // ====== إعدادات سؤال التمويل المحدد (قديم - للتوافق) ======
   const SPECIFIC_AMOUNT_KEY = 'finoSpecificAmountVisibility';
   
   function loadSpecificAmountVisibility() {
@@ -12192,7 +12373,95 @@ ${contact}`.trim();
   
   function isSpecificAmountQuestionVisible() {
     return loadSpecificAmountVisibility() === 'show';
-  }  
+  }
+  
+  // ====== واجهة المسؤول للتحكم في الأسئلة ======
+  function renderQuestionSettingsUI() {
+    const container = document.getElementById('questionSettingsContainer');
+    if (!container) return;
+    
+    const settings = loadQuestionSettings();
+    
+    let html = '';
+    CONTROLLABLE_QUESTIONS.forEach(q => {
+      const qSetting = settings[q.id] || { enabledForAll: true, enabledProducts: [] };
+      const isEnabled = qSetting.enabledForAll || (qSetting.enabledProducts && qSetting.enabledProducts.length > 0);
+      
+      html += `
+        <div style="background:#fff; padding:12px; border-radius:10px; border:1px solid #e2e8f0;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <span style="font-weight:bold; color:#1e293b;">${q.label}</span>
+            <select id="qSetting_${q.id}_mode" onchange="toggleQuestionProducts('${q.id}')" style="padding:8px 15px; border:1px solid #d1d5db; border-radius:6px; font-size:13px;">
+              <option value="all" ${qSetting.enabledForAll ? 'selected' : ''}>✅ مفعل لكل المنتجات</option>
+              <option value="specific" ${!qSetting.enabledForAll && qSetting.enabledProducts && qSetting.enabledProducts.length > 0 ? 'selected' : ''}>🎯 مفعل لمنتجات محددة</option>
+              <option value="disabled" ${!qSetting.enabledForAll && (!qSetting.enabledProducts || qSetting.enabledProducts.length === 0) ? 'selected' : ''}>❌ موقف لكل المنتجات</option>
+            </select>
+          </div>
+          <div id="qProducts_${q.id}" style="display:${!qSetting.enabledForAll && qSetting.enabledProducts && qSetting.enabledProducts.length > 0 ? 'block' : 'none'}; margin-top:10px; padding:10px; background:#f8fafc; border-radius:8px;">
+            <div style="font-size:12px; color:#64748b; margin-bottom:8px;">اختر المنتجات:</div>
+            <div style="display:flex; flex-wrap:wrap; gap:8px;">
+              ${AVAILABLE_PRODUCTS.map(p => `
+                <label style="display:flex; align-items:center; gap:5px; background:#fff; padding:6px 10px; border-radius:6px; border:1px solid #e2e8f0; cursor:pointer; font-size:12px;">
+                  <input type="checkbox" id="qProd_${q.id}_${p.replace(/\s/g, '_')}" 
+                    ${qSetting.enabledProducts && qSetting.enabledProducts.includes(p) ? 'checked' : ''}
+                    style="cursor:pointer;">
+                  ${p}
+                </label>
+              `).join('')}
+            </div>
+          </div>
+        </div>
+      `;
+    });
+    
+    container.innerHTML = html;
+  }
+  
+  // إظهار/إخفاء قائمة المنتجات حسب الاختيار
+  function toggleQuestionProducts(questionId) {
+    const modeSelect = document.getElementById(`qSetting_${questionId}_mode`);
+    const productsDiv = document.getElementById(`qProducts_${questionId}`);
+    
+    if (modeSelect && productsDiv) {
+      productsDiv.style.display = modeSelect.value === 'specific' ? 'block' : 'none';
+    }
+  }
+  
+  // حفظ جميع إعدادات الأسئلة
+  function saveAllQuestionSettings() {
+    const settings = {};
+    
+    CONTROLLABLE_QUESTIONS.forEach(q => {
+      const modeSelect = document.getElementById(`qSetting_${q.id}_mode`);
+      if (!modeSelect) return;
+      
+      const mode = modeSelect.value;
+      
+      if (mode === 'all') {
+        settings[q.id] = { enabledForAll: true, enabledProducts: [] };
+      } else if (mode === 'disabled') {
+        settings[q.id] = { enabledForAll: false, enabledProducts: [] };
+      } else {
+        // منتجات محددة
+        const enabledProducts = [];
+        AVAILABLE_PRODUCTS.forEach(p => {
+          const checkbox = document.getElementById(`qProd_${q.id}_${p.replace(/\s/g, '_')}`);
+          if (checkbox && checkbox.checked) {
+            enabledProducts.push(p);
+          }
+        });
+        settings[q.id] = { enabledForAll: false, enabledProducts: enabledProducts };
+      }
+    });
+    
+    saveQuestionSettings(settings);
+    
+    if (typeof showToast === 'function') {
+      showToast('تم حفظ إعدادات الأسئلة بنجاح', 'success');
+    } else {
+      alert('تم حفظ إعدادات الأسئلة بنجاح');
+    }
+  }
     
   function renderQuestionsList() {  
     const container = document.getElementById('questionsList');  
