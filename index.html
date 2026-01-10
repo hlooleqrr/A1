@@ -8407,6 +8407,17 @@ function applyAllChanges() {
           // حفظ القيمة والانتقال  
           if(step < generalQuestions.length){  
             answers[q.id] = this.value;  
+            
+            // إصلاح خاص لسؤال "هل لديك التزامات" (hasCommitments)
+            if(q.id === 'hasCommitments' && this.value === 'لا') {
+                console.log('=== تم اختيار لا في سؤال الالتزامات (من change) ===');
+                answers.hasCommitments = 'لا';
+                answers.commitments = [];
+                step++; // زيادة الخطوة لتجاوز سؤال الالتزامات
+                showQuestion();
+                return;
+            }
+            
             step++;  
             showQuestion();  
           } else {  
@@ -15841,4 +15852,4 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 </body>  
-</html
+</html  
