@@ -1,3070 +1,1529 @@
-للتمويل', 'شركة سلفة للتمويل',  
-      'شركة تمارا للتمويل', 'شركة تابي للتمويل', 'شركة سبوتي للتمويل',  
-      'شركة بوست باي للتمويل', 'شركة قسطها للتمويل', 'شركة حصيل للتمويل',  
-      'شركة ليندا للتمويل', 'شركة فرصة للتمويل', 'شركة سكوبير للتمويل'  
-    ];  
+<!DOCTYPE html>  
+<html lang="ar" dir="rtl">  
+<head>  
+  <meta charset="UTF-8" />  
+  <title>منصة FINO - حاسبة التمويل الذكية</title>  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />  
+  <meta name="description" content="منصة ذكية تحسب لك التمويل وتُرشّح البنك الأنسب بناءً على راتبك ونوع التمويل والتزاماتك" />  
+  <meta name="theme-color" content="#3b82f6" />  
+  <meta name="apple-mobile-web-app-capable" content="yes" />  
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />  
+  <meta name="apple-mobile-web-app-title" content="FINO" />  
+  <link rel="manifest" href="manifest.json" />  
+  <link rel="apple-touch-icon" href="icons/icon-192x192.png" />  
+  <link rel="stylesheet" href="fino_advanced_features.css" />  
+  <!-- مكتبة الخطوط العربية العصرية -->  
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@200;300;400;500;700;800;900&display=swap" rel="stylesheet">  
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">  
+  <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&display=swap" rel="stylesheet">  
+  <link href="https://fonts.googleapis.com/css2?family=Changa:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">  
+  <link href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@400;500;600;700&display=swap" rel="stylesheet">  
+  <link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">  
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">  
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">  
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">  
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400;500;600;700;800&display=swap" rel="stylesheet">  
+  <style>  
+    * { box-sizing: border-box; }
+    
+    /* ========== زر التنفيذ الثابت في صفحات المسؤول ========== */
+    .admin-execute-btn {
+      position: fixed !important;
+      bottom: 20px !important;
+      left: 50% !important;
+      transform: translateX(-50%) !important;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+      color: #ffffff !important;
+      border: none !important;
+      padding: 15px 40px !important;
+      border-radius: 50px !important;
+      font-size: 16px !important;
+      font-weight: 700 !important;
+      cursor: pointer !important;
+      box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4) !important;
+      z-index: 9999 !important;
+      display: none !important;
+      animation: pulse-execute 2s infinite !important;
+    }
+    .admin-execute-btn:hover {
+      background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+      transform: translateX(-50%) scale(1.05) !important;
+    }
+    .admin-execute-btn.show {
+      display: flex !important;
+      align-items: center !important;
+      gap: 8px !important;
+    }
+    @keyframes pulse-execute {
+      0%, 100% { box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); }
+      50% { box-shadow: 0 4px 25px rgba(16, 185, 129, 0.6); }
+    }
+    
+    /* ========== تنسيق بطاقات الأسئلة في لوحة التحكم ========== */
+    .question-item {
+      background: #ffffff !important;
+      background-color: #ffffff !important;
+      border: 3px solid #1e3a5f !important;
+      border-radius: 12px !important;
+      padding: 15px 18px !important;
+      margin-bottom: 12px !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 12px !important;
+      transition: all 0.2s ease !important;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+    }
+    .question-item:hover {
+      box-shadow: 0 6px 16px rgba(0,0,0,0.2) !important;
+    }
+    .question-item.question-hidden {
+      opacity: 0.6 !important;
+      background: #f1f5f9 !important;
+    }
+    .question-drag-handle {
+      cursor: grab !important;
+      color: #1e3a5f !important;
+      font-size: 16px !important;
+      font-weight: bold !important;
+    }
+    .question-text {
+      flex: 1 !important;
+      color: #000000 !important;
+      -webkit-text-fill-color: #000000 !important;
+      font-size: 16px !important;
+      font-weight: 800 !important;
+      text-align: right !important;
+      line-height: 1.8 !important;
+      text-shadow: none !important;
+      background: transparent !important;
+    }
+    .question-item * {
+      color: #000000 !important;
+      -webkit-text-fill-color: #000000 !important;
+    }
+    .question-item .question-btn {
+      color: #374151 !important;
+      -webkit-text-fill-color: #374151 !important;
+    }
+    .question-actions {
+      display: flex !important;
+      gap: 6px !important;
+      flex-wrap: wrap !important;
+    }
+    .question-btn {
+      padding: 6px 12px !important;
+      border-radius: 8px !important;
+      font-size: 12px !important;
+      cursor: pointer !important;
+      border: 1px solid #e2e8f0 !important;
+      background: #f8fafc !important;
+      color: #374151 !important;
+      transition: all 0.2s ease !important;
+    }
+    .question-btn:hover {
+      background: #e2e8f0 !important;
+    }
+    .question-btn-edit {
+      background: #fef3c7 !important;
+      border-color: #fcd34d !important;
+      color: #92400e !important;
+    }
+    .question-btn-edit:hover {
+      background: #fde68a !important;
+    }
+    .question-btn-hide {
+      background: #fee2e2 !important;
+      border-color: #fca5a5 !important;
+      color: #991b1b !important;
+    }
+    .question-btn-hide:hover {
+      background: #fecaca !important;
+    }
+    
+    /* ========== تصميم عصري شفاف مثل المنصة المرجعية ========== */
+    /* إخفاء جميع الإطارات والتركيز */
+    *, *:focus, *:active {
+      outline: none !important;
+      -webkit-tap-highlight-color: transparent !important;
+    }
+    
+    /* البطاقة الشفافة الرئيسية */
+    body.has-global-bg .card,
+    body.has-global-bg #questionCard,
+    body.has-global-bg #resultCard,
+    body.has-global-bg #ratingSection,
+    body.has-global-bg .question-card {
+      background: rgba(255, 255, 255, 0.08) !important;
+      backdrop-filter: blur(12px) !important;
+      -webkit-backdrop-filter: blur(12px) !important;
+      border: 1px solid rgba(255, 255, 255, 0.15) !important;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15) !important;
+      border-radius: 20px !important;
+    }
+    
+    /* النصوص بيضاء */
+    body.has-global-bg .card h2,
+    body.has-global-bg .card h3,
+    body.has-global-bg .card label,
+    body.has-global-bg .card p,
+    body.has-global-bg .card span,
+    body.has-global-bg #questionCard h2,
+    body.has-global-bg #questionCard label,
+    body.has-global-bg #questionCard p,
+    body.has-global-bg .question-title {
+      color: #ffffff !important;
+    }
+    
+    /* حقول الإدخال شفافة */
+    body.has-global-bg .card input[type="text"],
+    body.has-global-bg .card input[type="number"],
+    body.has-global-bg .card select,
+    body.has-global-bg #questionCard input,
+    body.has-global-bg #questionCard select {
+      background: rgba(255, 255, 255, 0.12) !important;
+      border: 1px solid rgba(255, 255, 255, 0.25) !important;
+      color: #ffffff !important;
+      border-radius: 12px !important;
+    }
+    body.has-global-bg .card input::placeholder {
+      color: rgba(255, 255, 255, 0.5) !important;
+    }
+    
+    /* أزرار الخيارات شفافة */
+    body.has-global-bg .option-btn,
+    body.has-global-bg button[onclick*="selectOption"],
+    body.has-global-bg .choice-btn {
+      background: rgba(255, 255, 255, 0.08) !important;
+      border: 1px solid rgba(255, 255, 255, 0.2) !important;
+      color: #ffffff !important;
+      border-radius: 12px !important;
+      transition: all 0.3s ease !important;
+    }
+    body.has-global-bg .option-btn:hover,
+    body.has-global-bg button[onclick*="selectOption"]:hover {
+      background: rgba(255, 255, 255, 0.15) !important;
+      border-color: rgba(255, 255, 255, 0.4) !important;
+      transform: translateY(-2px) !important;
+    }
+    body.has-global-bg .option-btn.selected {
+      background: rgba(59, 130, 246, 0.4) !important;
+      border-color: #60a5fa !important;
+    }
+    
+    /* زر التالي برتقالي */
+    body.has-global-bg #nextButton {
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+      color: #ffffff !important;
+      border: none !important;
+      border-radius: 30px !important;
+      padding: 14px 50px !important;
+      font-weight: 700 !important;
+      font-size: 16px !important;
+      box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4) !important;
+    }
+    
+    /* شريط التقدم */
+    body.has-global-bg .progress-bar {
+      background: rgba(255, 255, 255, 0.15) !important;
+      border-radius: 10px !important;
+    }
+    body.has-global-bg .progress-fill {
+      background: linear-gradient(90deg, #f59e0b, #fbbf24) !important;
+      border-radius: 10px !important;
+    }  
       
-    // دمج البنوك المخزنة في bankConfigs مع القائمة الكاملة  
-    const banksFromConfigs = [...new Set(bankConfigs.map(cfg => cfg.bankName))];  
-    const uniqueBanks = [...new Set([...allFinanceEntities, ...banksFromConfigs])];  
+    /* متغيرات CSS للتحكم الشامل */  
+    :root {  
+      /* الخطوط */  
+      --font-main: 'Tajawal', sans-serif;  
+      --font-title: 'Cairo', sans-serif;  
+      --font-accent: 'Readex Pro', sans-serif;  
+        
+      /* الألوان الرئيسية */  
+      --color-primary: #3b82f6;  
+      --color-primary-dark: #1e40af;  
+      --color-primary-light: #60a5fa;  
+      --color-secondary: #f59e0b;  
+      --color-secondary-dark: #d97706;  
+      --color-secondary-light: #fbbf24;  
+      --color-accent: #10b981;  
+      --color-accent-dark: #059669;  
+        
+      /* ألوان الخلفيات */  
+      --bg-dark: #0f172a;  
+      --bg-medium: #1e3a8a;  
+      --bg-light: #3b82f6;  
+      --bg-card: rgba(255, 255, 255, 0.95);  
+      --bg-card-glass: transparent;  
+        
+      /* ألوان النصوص */  
+      --text-dark: #111827;  
+      --text-medium: #374151;  
+      --text-light: #6b7280;  
+      --text-white: #ffffff;  
+        
+      /* ألوان الصفحات المخصصة */  
+      --splash-bg-1: #0f172a;  
+      --splash-bg-2: #1e3a8a;  
+      --splash-bg-3: #3b82f6;  
+      --landing-bg-1: #0f172a;  
+      --landing-bg-2: #1e3a8a;  
+      --landing-bg-3: #1e40af;  
+      --landing-bg-4: #3b82f6;  
+      --result-bg-1: #0f172a;  
+      --result-bg-2: #1e3a8a;  
+        
+      /* تأثيرات */  
+      --shadow-soft: 0 10px 40px rgba(0, 0, 0, 0.15);  
+      --shadow-strong: 0 20px 60px rgba(0, 0, 0, 0.3);  
+      --shadow-glow: 0 0 30px rgba(59, 130, 246, 0.4);  
+      --border-radius-sm: 12px;  
+      --border-radius-md: 20px;  
+      --border-radius-lg: 30px;  
+      --border-radius-xl: 40px;  
+    }  
       
-    // إعادة بناء القائمة  
-    select.innerHTML = '<option value="all">جميع الجهات</option>';  
-    uniqueBanks.forEach(bank => {  
-      select.innerHTML += `<option value="${bank}">${bank}</option>`;  
-    });  
-  }  
+    /* توافق الآيفون - Safe Area */  
+    @supports (padding: max(0px)) {  
+      .page, .card {  
+        padding-left: max(16px, env(safe-area-inset-left));  
+        padding-right: max(16px, env(safe-area-inset-right));  
+        padding-bottom: max(20px, env(safe-area-inset-bottom));  
+      }  
+        
+      #splashScreen {  
+        padding-top: env(safe-area-inset-top);  
+        padding-bottom: env(safe-area-inset-bottom);  
+      }  
+        
+      .fixed-bottom-btn, .admin-tools-btn {  
+        bottom: max(20px, env(safe-area-inset-bottom));  
+      }  
+    }  
+      
+    /* الخلفية المتحركة */  
+    body {  
+      font-family: var(--font-main), system-ui, -apple-system, BlinkMacSystemFont, sans-serif;  
+      background: var(--main-bg, linear-gradient(-45deg, var(--bg-dark), var(--bg-medium), var(--color-primary-dark), var(--color-primary)));  
+      background-size: 400% 400%;  
+      animation: gradientBG 15s ease infinite;  
+      transition: background 0.5s ease;  
+      margin: 0;  
+      text-align: center;  
+      font-size: 20px;  
+      direction: rtl;  
+      color: #111827;  
+      min-height: 100vh;  
+    }  
+      
+    /* الخلفية العامة التي يضعها المسؤول - تغطي كامل الصفحة */  
+    body.has-global-bg {  
+      background: var(--global-bg-image) !important;  
+      background-image: var(--global-bg-image) !important;  
+      background-color: transparent !important;  
+      background-size: cover !important;  
+      background-position: center center !important;  
+      background-repeat: no-repeat !important;  
+      background-attachment: fixed !important;  
+      animation: none !important;  
+      min-height: 100vh !important;  
+      width: 100vw !important;  
+      margin: 0 !important;  
+      padding: 0 !important;  
+      overflow-x: hidden !important;  
+    }
+    
+    /* إزالة الخلفية الزرقاء عندما يضع المسؤول خلفية */
+    body.has-global-bg,
+    body.has-global-bg *:not(input):not(select):not(button):not(.primary):not(#nextButton):not(#mainButton) {
+      background-color: transparent !important;
+    }  
+      
+    /* إزالة أي فراغات أو حدود من الصفحة */  
+    html {  
+      margin: 0 !important;  
+      padding: 0 !important;  
+      overflow-x: hidden !important;  
+    }  
+      
+    body.has-global-bg::before {  
+      content: '';  
+      position: fixed;  
+      top: 0;  
+      left: 0;  
+      right: 0;  
+      bottom: 0;  
+      width: 100vw;  
+      height: 100vh;  
+      background-image: inherit;  
+      background-size: cover;  
+      background-position: center center;  
+      background-repeat: no-repeat;  
+      z-index: -1;  
+    }  
+      
+    @keyframes gradientBG {  
+      0% { background-position: 0% 50%; }  
+      50% { background-position: 100% 50%; }  
+      100% { background-position: 0% 50%; }  
+    }  
+      
+    /* الجزيئات المتحركة */  
+    #particles {  
+      position: fixed;  
+      top: 0;  
+      left: 0;  
+      width: 100%;  
+      height: 100%;  
+      pointer-events: none;  
+      z-index: 0;  
+      overflow: hidden;  
+    }  
+    .particle {  
+      position: absolute;  
+      width: 4px;  
+      height: 4px;  
+      background: rgba(255,255,255,0.3);  
+      border-radius: 50%;  
+      animation: float 20s infinite;  
+    }  
+    @keyframes float {  
+      0%, 100% { transform: translateY(100vh) rotate(0deg); opacity: 0; }  
+      10% { opacity: 1; }  
+      90% { opacity: 1; }  
+      100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; }  
+    }  
+      
+    /* شاشة البداية - تصميم عصري مبتكر */  
+    #splashScreen {  
+      position: fixed;  
+      top: 0;  
+      left: 0;  
+      width: 100%;  
+      height: 100%;  
+      background: linear-gradient(135deg, var(--splash-bg-1), var(--splash-bg-2), var(--splash-bg-3));  
+      background-size: 300% 300%;  
+      animation: splashGradientNew 4s ease infinite;  
+      display: flex;  
+      flex-direction: column;  
+      align-items: center;  
+      justify-content: center;  
+      z-index: 9999;  
+      overflow: hidden;  
+    }  
+    @keyframes splashGradientNew {  
+      0% { background-position: 0% 50%; }  
+      50% { background-position: 100% 50%; }  
+      100% { background-position: 0% 50%; }  
+    }  
+    #splashScreen.hidden {  
+      opacity: 0;  
+      visibility: hidden;  
+      pointer-events: none;  
+      transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1), visibility 1s;  
+    }  
+      
+    /* الأشكال الهندسية المتحركة */  
+    .splash-bg-shapes {  
+      position: absolute;  
+      width: 100%;  
+      height: 100%;  
+      overflow: hidden;  
+    }  
+    .splash-shape {  
+      position: absolute;  
+      border-radius: 50%;  
+      filter: blur(60px);  
+      opacity: 0.4;  
+      animation: shapeFloat 8s ease-in-out infinite;  
+    }  
+    .splash-shape-1 {  
+      width: 300px;  
+      height: 300px;  
+      background: linear-gradient(135deg, #f59e0b, #fbbf24);  
+      top: -100px;  
+      right: -100px;  
+      animation-delay: 0s;  
+    }  
+    .splash-shape-2 {  
+      width: 250px;  
+      height: 250px;  
+      background: linear-gradient(135deg, #10b981, #34d399);  
+      bottom: -80px;  
+      left: -80px;  
+      animation-delay: 1s;  
+    }  
+    .splash-shape-3 {  
+      width: 200px;  
+      height: 200px;  
+      background: linear-gradient(135deg, #8b5cf6, #a78bfa);  
+      top: 50%;  
+      left: 10%;  
+      animation-delay: 2s;  
+    }  
+    .splash-shape-4 {  
+      width: 150px;  
+      height: 150px;  
+      background: linear-gradient(135deg, #ec4899, #f472b6);  
+      top: 20%;  
+      right: 20%;  
+      animation-delay: 3s;  
+    }  
+    .splash-shape-5 {  
+      width: 180px;  
+      height: 180px;  
+      background: linear-gradient(135deg, #06b6d4, #22d3ee);  
+      bottom: 20%;  
+      right: 10%;  
+      animation-delay: 4s;  
+    }  
+    @keyframes shapeFloat {  
+      0%, 100% { transform: translate(0, 0) scale(1); }  
+      25% { transform: translate(30px, -30px) scale(1.1); }  
+      50% { transform: translate(-20px, 20px) scale(0.9); }  
+      75% { transform: translate(20px, 30px) scale(1.05); }  
+    }  
+      
+    /* الخطوط المتحركة */  
+    .splash-lines {  
+      position: absolute;  
+      width: 100%;  
+      height: 100%;  
+      overflow: hidden;  
+    }  
+    .splash-line {  
+      position: absolute;  
+      width: 2px;  
+      height: 100%;  
+      background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.3), transparent);  
+      animation: lineMove 3s ease-in-out infinite;  
+    }  
+    .splash-line:nth-child(1) { left: 20%; animation-delay: 0s; }  
+    .splash-line:nth-child(2) { left: 50%; animation-delay: 1s; }  
+    .splash-line:nth-child(3) { left: 80%; animation-delay: 2s; }  
+    @keyframes lineMove {  
+      0%, 100% { transform: translateY(-100%); opacity: 0; }  
+      50% { transform: translateY(100%); opacity: 1; }  
+    }  
+      
+    /* المحتوى الرئيسي */  
+    .splash-content {  
+      position: relative;  
+      z-index: 10;  
+      display: flex;  
+      flex-direction: column;  
+      align-items: center;  
+      text-align: center;  
+    }  
+      
+    /* حاوية الشعار */  
+    .splash-logo-container {  
+      position: relative;  
+      width: 160px;  
+      height: 160px;  
+      margin-bottom: 30px;  
+    }  
+    .splash-logo-ring {  
+      position: absolute;  
+      border-radius: 50%;  
+      border: 2px solid rgba(255,255,255,0.2);  
+    }  
+    .splash-ring-1 {  
+      width: 100%;  
+      height: 100%;  
+      top: 0;  
+      left: 0;  
+      animation: ringRotate 4s linear infinite;  
+    }  
+    .splash-ring-2 {  
+      width: 130px;  
+      height: 130px;  
+      top: 15px;  
+      left: 15px;  
+      border-color: rgba(245,158,11,0.4);  
+      animation: ringRotate 3s linear infinite reverse;  
+    }  
+    .splash-ring-3 {  
+      width: 100px;  
+      height: 100px;  
+      top: 30px;  
+      left: 30px;  
+      border-color: rgba(16,185,129,0.4);  
+      animation: ringRotate 2s linear infinite;  
+    }  
+    @keyframes ringRotate {  
+      0% { transform: rotate(0deg); }  
+      100% { transform: rotate(360deg); }  
+    }  
+      
+    /* الشعار الرئيسي */  
+    .splash-main-logo {  
+      position: absolute;  
+      top: 50%;  
+      left: 50%;  
+      transform: translate(-50%, -50%);  
+      display: flex;  
+      flex-direction: column;  
+      align-items: center;  
+      animation: logoEntrance 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;  
+    }  
+    .logo-text {  
+      font-family: var(--font-title);  
+      font-size: 36px;  
+      font-weight: 900;  
+      color: #fff;  
+      text-shadow: 0 4px 20px rgba(0,0,0,0.3);  
+      letter-spacing: 3px;  
+    }  
+    .logo-icon {  
+      font-size: 28px;  
+      margin-top: 5px;  
+      animation: iconBounce 1.5s ease-in-out infinite;  
+    }  
+    @keyframes logoEntrance {  
+      0% { transform: translate(-50%, -50%) scale(0) rotate(-180deg); opacity: 0; }  
+      100% { transform: translate(-50%, -50%) scale(1) rotate(0deg); opacity: 1; }  
+    }  
+    @keyframes iconBounce {  
+      0%, 100% { transform: translateY(0); }  
+      50% { transform: translateY(-10px); }  
+    }  
+      
+    /* العنوان */  
+    .splash-title-container {  
+      margin-bottom: 30px;  
+    }  
+    .splash-title {  
+      font-family: var(--font-title);  
+      font-size: 32px;  
+      font-weight: 800;  
+      color: #fff;  
+      margin: 0;  
+      text-shadow: 0 4px 20px rgba(0,0,0,0.3);  
+      animation: titleSlide 0.8s ease-out 0.3s both;  
+    }  
+    .splash-subtitle {  
+      font-family: var(--font-main);  
+      font-size: 16px;  
+      color: rgba(255,255,255,0.9);  
+      margin: 10px 0 0;  
+      animation: titleSlide 0.8s ease-out 0.5s both;  
+    }  
+    @keyframes titleSlide {  
+      0% { transform: translateY(30px); opacity: 0; }  
+      100% { transform: translateY(0); opacity: 1; }  
+    }  
+      
+    /* الأيقونات المتحركة */  
+    .splash-icons {  
+      position: absolute;  
+      width: 300px;  
+      height: 300px;  
+      pointer-events: none;  
+    }  
+    .splash-icon {  
+      position: absolute;  
+      font-size: 28px;  
+      top: 50%;  
+      left: 50%;  
+      animation: iconFloat 3s ease-in-out infinite;  
+      animation-delay: var(--delay);  
+      opacity: 0;  
+    }  
+    @keyframes iconFloat {  
+      0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }  
+      20% { transform: translate(calc(-50% + var(--x)), calc(-50% + var(--y))) scale(1); opacity: 1; }  
+      80% { transform: translate(calc(-50% + var(--x) * 1.2), calc(-50% + var(--y) * 1.2)) scale(1); opacity: 1; }  
+      100% { transform: translate(calc(-50% + var(--x) * 1.5), calc(-50% + var(--y) * 1.5)) scale(0); opacity: 0; }  
+    }  
+      
+    /* شريط التحميل العصري - تصميم محسّن */  
+    .splash-loader-modern {  
+      width: 280px;  
+      margin-bottom: 20px;  
+      display: flex;  
+      flex-direction: column;  
+      align-items: center;  
+    }  
+    .loader-track {  
+      width: 100%;  
+      height: 8px;  
+      background: rgba(255,255,255,0.15);  
+      border-radius: 20px;  
+      overflow: hidden;  
+      position: relative;  
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);  
+    }  
+    .loader-fill {  
+      width: 0%;  
+      height: 100%;  
+      background: linear-gradient(90deg, #f59e0b, #fbbf24, #f59e0b, #fbbf24);  
+      background-size: 300% 100%;  
+      border-radius: 20px;  
+      animation: loaderFill 3s ease-in-out forwards, loaderShimmer 1.5s linear infinite;  
+      box-shadow: 0 0 15px rgba(245,158,11,0.6);  
+    }  
+    .loader-glow {  
+      position: absolute;  
+      top: -8px;  
+      right: 0;  
+      width: 40px;  
+      height: 24px;  
+      background: radial-gradient(circle, rgba(245,158,11,0.9), transparent);  
+      border-radius: 50%;  
+      animation: loaderGlow 3s ease-in-out forwards;  
+      filter: blur(2px);  
+    }  
+    .loader-percentage {  
+      font-family: var(--font-main);  
+      font-size: 14px;  
+      color: rgba(255,255,255,0.9);  
+      margin-top: 10px;  
+      font-weight: 600;  
+    }  
+    @keyframes loaderFill {  
+      0% { width: 0%; }  
+      20% { width: 20%; }  
+      40% { width: 45%; }  
+      60% { width: 65%; }  
+      80% { width: 85%; }  
+      100% { width: 100%; }  
+    }  
+    @keyframes loaderShimmer {  
+      0% { background-position: 300% 0; }  
+      100% { background-position: -300% 0; }  
+    }  
+    @keyframes loaderGlow {  
+      0% { right: 100%; opacity: 0; }  
+      10% { opacity: 1; }  
+      90% { opacity: 1; }  
+      100% { right: 0%; opacity: 0; }  
+    }  
+      
+    .loader-dots {  
+      display: flex;  
+      justify-content: center;  
+      gap: 8px;  
+      margin-top: 15px;  
+    }  
+    .loader-dots span {  
+      width: 8px;  
+      height: 8px;  
+      background: rgba(255,255,255,0.5);  
+      border-radius: 50%;  
+      animation: dotPulse 1.2s ease-in-out infinite;  
+    }  
+    .loader-dots span:nth-child(2) { animation-delay: 0.2s; }  
+    .loader-dots span:nth-child(3) { animation-delay: 0.4s; }  
+    @keyframes dotPulse {  
+      0%, 100% { transform: scale(1); opacity: 0.5; }  
+      50% { transform: scale(1.5); opacity: 1; }  
+    }  
+      
+    .splash-loading-text {  
+      font-family: var(--font-main);  
+      font-size: 14px;  
+      color: rgba(255,255,255,0.8);  
+      margin: 0;  
+      animation: textPulse 1.5s ease-in-out infinite;  
+    }  
+    @keyframes textPulse {  
+      0%, 100% { opacity: 0.6; }  
+      50% { opacity: 1; }  
+    }  
+      
+    /* حاوية الجوال */  
+    .splash-phone-container {  
+      position: relative;  
+      margin-bottom: 30px;  
+    }  
+      
+    /* شكل الجوال آيفون برو ماكس */  
+    .splash-phone {  
+      width: 140px;  
+      height: 280px;  
+      background: linear-gradient(145deg, #3a3a3a, #1a1a1a);  
+      border-radius: 35px;  
+      position: relative;  
+      box-shadow:   
+        0 30px 60px rgba(0,0,0,0.6),  
+        0 0 0 2px #5a5a5a,  
+        inset 0 0 0 2px #2a2a2a,  
+        0 0 100px rgba(59,130,246,0.3);  
+      animation: phoneEntrance 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards, phoneFloat 3s ease-in-out 1.2s infinite;  
+      overflow: hidden;  
+      transform-style: preserve-3d;  
+      perspective: 1000px;  
+    }  
+    @keyframes phoneEntrance {  
+      0% {   
+        transform: scale(0) rotateY(180deg) rotateX(45deg) translateY(100px);  
+        opacity: 0;  
+        filter: blur(20px);  
+      }  
+      40% {  
+        transform: scale(1.2) rotateY(-30deg) rotateX(-10deg) translateY(-30px);  
+        opacity: 1;  
+        filter: blur(0);  
+      }  
+      70% {  
+        transform: scale(0.95) rotateY(15deg) rotateX(5deg) translateY(10px);  
+      }  
+      100% {   
+        transform: scale(1) rotateY(0deg) rotateX(0deg) translateY(0);  
+        opacity: 1;  
+      }  
+    }  
+    @keyframes phoneFloat {  
+      0%, 100% {   
+        transform: translateY(0) rotateZ(-2deg) rotateX(0deg);  
+        box-shadow: 0 30px 60px rgba(0,0,0,0.6), 0 0 100px rgba(59,130,246,0.3);  
+      }  
+      25% {  
+        transform: translateY(-15px) rotateZ(3deg) rotateX(5deg);  
+        box-shadow: 0 45px 80px rgba(0,0,0,0.5), 0 0 120px rgba(59,130,246,0.4);  
+      }  
+      50% {   
+        transform: translateY(-8px) rotateZ(-3deg) rotateX(-3deg);  
+        box-shadow: 0 35px 70px rgba(0,0,0,0.55), 0 0 110px rgba(59,130,246,0.35);  
+      }  
+      75% {  
+        transform: translateY(-20px) rotateZ(2deg) rotateX(3deg);  
+        box-shadow: 0 50px 90px rgba(0,0,0,0.45), 0 0 130px rgba(59,130,246,0.45);  
+      }  
+    }  
+      
+    /* النوتش */  
+    .phone-notch {  
+      width: 50px;  
+      height: 18px;  
+      background: #1a1a1a;  
+      border-radius: 0 0 12px 12px;  
+      position: absolute;  
+      top: 0;  
+      left: 50%;  
+      transform: translateX(-50%);  
+      z-index: 2;  
+    }  
+      
+    /* شاشة الجوال */  
+    .phone-screen {  
+      position: absolute;  
+      top: 8px;  
+      left: 8px;  
+      right: 8px;  
+      bottom: 8px;  
+      background: linear-gradient(180deg, #3b82f6, #1e40af);  
+      border-radius: 18px;  
+      display: flex;  
+      flex-direction: column;  
+      align-items: center;  
+      justify-content: center;  
+      overflow: hidden;  
+    }  
+    .phone-logo {  
+      font-size: 28px;  
+      font-weight: 900;  
+      color: #fff;  
+      text-shadow: 0 2px 10px rgba(0,0,0,0.3);  
+      animation: logoGlow 1.5s ease-in-out infinite;  
+    }  
+    @keyframes logoGlow {  
+      0%, 100% { text-shadow: 0 2px 10px rgba(255,255,255,0.3); }  
+      50% { text-shadow: 0 2px 20px rgba(255,255,255,0.8), 0 0 30px rgba(59,130,246,0.5); }  
+    }  
+    .phone-tagline {  
+      font-size: 8px;  
+      color: rgba(255,255,255,0.9);  
+      margin-top: 5px;  
+    }  
+      
+    /* زر الجوال */  
+    .phone-button {  
+      width: 35px;  
+      height: 4px;  
+      background: #4a4a4a;  
+      border-radius: 2px;  
+      position: absolute;  
+      bottom: 8px;  
+      left: 50%;  
+      transform: translateX(-50%);  
+    }  
+      
+    /* جزيئات المال المتطايرة */  
+    .money-particles {  
+      position: absolute;  
+      width: 300px;  
+      height: 350px;  
+      top: 50%;  
+      left: 50%;  
+      transform: translate(-50%, -50%);  
+      pointer-events: none;  
+    }  
+    .money {  
+      position: absolute;  
+      font-size: 35px;  
+      top: 60%;  
+      left: 50%;  
+      animation: moneyExplode 2.5s ease-out infinite;  
+      animation-delay: var(--delay);  
+      opacity: 0;  
+      filter: drop-shadow(0 5px 15px rgba(0,0,0,0.4));  
+    }  
+    @keyframes moneyExplode {  
+      0% {   
+        transform: translate(-50%, 0) scale(0) rotate(0deg);  
+        opacity: 0;  
+      }  
+      15% {  
+        opacity: 1;  
+        transform: translate(calc(-50% + var(--x) * 0.3), -30px) scale(1.2) rotate(20deg);  
+      }  
+      40% {  
+        opacity: 1;  
+        transform: translate(calc(-50% + var(--x)), -120px) scale(1) rotate(180deg);  
+      }  
+      70% {  
+        opacity: 0.8;  
+        transform: translate(calc(-50% + var(--x) * 1.5), -200px) scale(0.8) rotate(360deg);  
+      }  
+      100% {   
+        transform: translate(calc(-50% + var(--x) * 2), -280px) scale(0.3) rotate(540deg);  
+        opacity: 0;  
+      }  
+    }  
+    /* إضافة تأثير التوهج للمال */  
+    .money::after {  
+      content: '';  
+      position: absolute;  
+      width: 100%;  
+      height: 100%;  
+      background: radial-gradient(circle, rgba(251,191,36,0.4) 0%, transparent 70%);  
+      border-radius: 50%;  
+      animation: moneyGlow 1s ease-in-out infinite;  
+    }  
+    @keyframes moneyGlow {  
+      0%, 100% { transform: scale(1); opacity: 0.5; }  
+      50% { transform: scale(1.5); opacity: 0.8; }  
+    }  
+      
+    .splash-text {  
+      color: rgba(255,255,255,0.9);  
+      font-size: 16px;  
+      margin-top: 10px;  
+      animation: textPulse 1.5s ease-in-out infinite;  
+    }  
+    @keyframes textPulse {  
+      0%, 100% { opacity: 0.7; }  
+      50% { opacity: 1; }  
+    }  
+    .splash-loader {  
+      width: 200px;  
+      height: 4px;  
+      background: rgba(255,255,255,0.2);  
+      border-radius: 4px;  
+      margin-top: 20px;  
+      overflow: hidden;  
+    }  
+    .splash-loader-bar {  
+      width: 0%;  
+      height: 100%;  
+      background: linear-gradient(90deg, #f59e0b, #fbbf24, #f59e0b);  
+      background-size: 200% 100%;  
+      border-radius: 4px;  
+      animation: loading 2.5s ease-in-out forwards, shimmer 1s linear infinite;  
+    }  
+    @keyframes loading {  
+      0% { width: 0%; }  
+      100% { width: 100%; }  
+    }  
+    @keyframes shimmer {  
+      0% { background-position: 200% 0; }  
+      100% { background-position: -200% 0; }  
+    }  
+    @keyframes pulse {  
+      0%, 100% { transform: scale(1); }  
+      50% { transform: scale(1.05); }  
+    }  
+      
+    /* الترحيب حسب الوقت */  
+    .time-greeting {  
+      font-size: 16px;  
+      color: rgba(255,255,255,0.9);  
+      margin-bottom: 5px;  
+    }  
+      
+    header {  
+      background: transparent;  
+      color: #fff;  
+      padding: 14px 10px;  
+      position: relative;  
+      z-index: 10;  
+    }  
+    header h1 {  
+      margin: 0;  
+      font-size: 28px;  
+      font-weight: 900;  
+      letter-spacing: 0.03em;  
+      text-shadow: 0 2px 10px rgba(0,0,0,0.3);  
+    }  
+    header p {  
+      margin: 4px 0 0;  
+      font-size: 16px;  
+      opacity: 0.95;  
+    }  
+    .top-bar {  
+      display: flex;  
+      justify-content: flex-start;  
+      align-items: center;  
+      max-width: 900px;  
+      margin: 0 auto;  
+    }  
   
-  // دالة تحميل المنتجات في القائمة المنسدلة للأسئلة  
-  function loadProductsForQuestions() {  
-    const select = document.getElementById('newProductQuestionProduct');  
-    if (!select) return;  
+    .page-container {  
+      max-width: 900px;  
+      margin: 16px auto 32px;  
+      padding: 0 10px;  
+    }  
+    .card {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 24px;
+      padding: 24px 20px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      margin-bottom: 14px;
+      text-align: center;
+      width: 100%;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      position: relative;  
+      z-index: 1;
+      color: #1e293b;
+    }
+    .card h2, .card h3, .card h4, .card p, .card label, .card span {
+      color: #1e293b;
+    }  
       
-    // الحصول على المنتجات الديناميكية  
-    const products = (typeof loadDynamicProducts === 'function') ? loadDynamicProducts() : [];  
+    /* عند وجود خلفية عامة - جعل البطاقات شفافة أكثر */  
+body.has-global-bg .card {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
       
-    // إعادة بناء القائمة  
-    select.innerHTML = '<option value="all">جميع المنتجات</option>';  
-      
-    // إضافة المنتجات الافتراضية  
-    const defaultProducts = ['تمويل شخصي', 'تمويل استهلاكي', 'تمويل تأجيري', 'تمويل عقاري', 'شراء مديونية'];  
-      
-    // دمج المنتجات الديناميكية مع الافتراضية  
-    const productNames = products.map(p => p.name);  
-    const allProducts = [...new Set([...defaultProducts, ...productNames])];  
-      
-    allProducts.forEach(name => {  
-      select.innerHTML += `<option value="${name}">${name}</option>`;  
-    });  
-  }  
+    /* إخفاء البطاقات عند الطلب */  
+    body.hide-cards .card {  
+      background: transparent !important;  
+      box-shadow: none !important;  
+      border: none !important;  
+      backdrop-filter: none !important;  
+    }  
   
-  function renderProductQuestionsList() {  
-    const container = document.getElementById('productQuestionsList');  
-    if (!container) return;  
-      
-    const questions = loadProductQuestions();  
-      
-    if (questions.length === 0) {  
-      container.innerHTML = '<p style="color:#6b7280; font-size:13px; text-align:center;">لا توجد أسئلة مخصصة بعد</p>';  
-      return;  
+    button, .btn {  
+      border-radius: 999px;  
+      border: none;  
+      padding: 14px 22px;  
+      font-size: 19px;  
+      cursor: pointer;  
+      display: inline-flex;  
+      align-items: center;  
+      justify-content: center;  
+      gap: 10px;  
+      transition: transform .12s ease, box-shadow .12s ease, background .12s ease, opacity .12s ease;  
+    }  
+    button.primary, .btn.primary {  
+      background: linear-gradient(135deg, #f59e0b, #d97706);  
+      color: #ffffff;  
+      box-shadow: 0 8px 20px rgba(245, 158, 11, 0.4);  
+      font-weight: 700;  
+    }  
+    button.primary:hover, .btn.primary:hover {  
+      transform: translateY(-2px);  
+      box-shadow: 0 12px 28px rgba(245, 158, 11, 0.5);  
+      background: linear-gradient(135deg, #fbbf24, #f59e0b);  
+    }  
+    button.secondary, .btn.secondary {  
+      background: #e0f2fe;  
+      color: #1d4ed8;  
+    }  
+    button.secondary:hover, .btn.secondary:hover {  
+      background: #dbeafe;  
+    }  
+    button.small, .btn.small {  
+      padding: 12px 20px;  
+      font-size: 18px;  
     }  
-      
-    let html = '';  
-    questions.forEach((q, i) => {  
-      const targetLabel = q.target === 'all' ? 'جميع الجهات' : q.target;  
-      const showInResultLabel = q.showInResult === 'yes' ? '✅ تظهر في النتيجة' : '❌ لا تظهر';  
-      const jobTypeLabel = q.jobType === 'all' || !q.jobType ? 'جميع الوظائف' : q.jobType;  
-      html += `  
-        <div class="question-item ${!q.enabled ? 'question-hidden' : ''}" style="margin-bottom:8px;">  
-          <span class="question-text" style="flex:1;">  
-            ${q.text}  
-            <span style="font-size:11px; color:#6b7280; display:block;">  
-              المنتج: ${q.product === 'all' ? 'الكل' : q.product} | النوع: ${q.type === 'text' ? 'نص' : q.type === 'number' ? 'رقم' : 'قائمة'}  
-            </span>  
-            <span style="font-size:11px; color:#3b82f6; display:block;">  
-              🎯 المستهدف: ${targetLabel} | 👷 الوظيفة: ${jobTypeLabel} | ${showInResultLabel}  
-            </span>  
-          </span>  
-          <div class="question-actions">  
-            <button class="question-btn question-btn-edit" onclick="editProductQuestion(${i})">تعديل</button>  
-            <button class="question-btn question-btn-hide" onclick="toggleProductQuestion(${i})">${q.enabled ? 'إخفاء' : 'إظهار'}</button>  
-            <button class="question-btn question-btn-delete" onclick="deleteProductQuestion(${i})">حذف</button>  
-          </div>  
-        </div>  
-      `;  
-    });  
-      
-    container.innerHTML = html;  
-  }  
-    
-  function editProductQuestion(index) {  
-    const questions = loadProductQuestions();  
-    const q = questions[index];  
-      
-    const newText = prompt('أدخل نص السؤال الجديد:', q.text);  
-    if (newText && newText.trim()) {  
-      questions[index].text = newText.trim();  
-      saveProductQuestions(questions);  
-      renderProductQuestionsList();  
-      showToast('تم تعديل السؤال بنجاح! ✅');  
-    }  
-  }  
-    
-  function toggleProductQuestion(index) {  
-    const questions = loadProductQuestions();  
-    questions[index].enabled = !questions[index].enabled;  
-    saveProductQuestions(questions);  
-    renderProductQuestionsList();  
-    showToast('تم حفظ التغييرات! ✅');  
-  }  
-    
-  function deleteProductQuestion(index) {  
-    if (confirm('هل أنت متأكد من حذف هذا السؤال؟')) {  
-      const questions = loadProductQuestions();  
-      questions.splice(index, 1);  
-      saveProductQuestions(questions);  
-      renderProductQuestionsList();  
-      showToast('تم حذف السؤال! 🗑️');  
-    }  
-  }  
-    
-  // تحديث renderQuestionsList لعرض الأسئلة المخصصة أيضاً  
-  const originalRenderQuestionsList = renderQuestionsList;  
-  renderQuestionsList = function() {  
-    originalRenderQuestionsList();  
-    renderProductQuestionsList();  
-  };  
-    
-  // ====== إعدادات المنصة ======  
-  const PLATFORM_SETTINGS_KEY = 'finoPlatformSettings';  
-    
-  function loadPlatformSettings() {  
-    try {  
-      const data = localStorage.getItem(PLATFORM_SETTINGS_KEY);  
-      return data ? JSON.parse(data) : getDefaultPlatformSettings();  
-    } catch (e) {  
-      return getDefaultPlatformSettings();  
-    }  
-  }  
-    
-  function getDefaultPlatformSettings() {  
-    return {  
-      platformName: 'منصة FINO',  
-      platformSubtitle: 'منصة ذكية تحسب لك التمويل',  
-      welcomeMessage: 'نورت المنصة يا {name}',  
-      endDateMessage: 'الله يطول بعمرنا ويبارك لنا',  
-      showWeather: false,  
-      showSplash: true,  
-      showRetirementFormula: false,  
-      showEndDate: true,  
-      bgAllPages: true,  
-      globalImage: '',  
-      cardTransparent: true  
-    };  
-  }  
-    
-  function savePlatformSettings(settings) {  
-    localStorage.setItem(PLATFORM_SETTINGS_KEY, JSON.stringify(settings));  
-  }  
-    
-  function loadPlatformSettingsToUI() {  
-    const settings = loadPlatformSettings();  
-      
-    const el1 = document.getElementById('settingsPlatformName');  
-    const el2 = document.getElementById('settingsPlatformSubtitle');  
-    const el3 = document.getElementById('settingsWelcomeMessage');  
-    const el4 = document.getElementById('settingsEndDateMessage');  
-    const el5 = document.getElementById('settingsShowWeather');  
-    const el6 = document.getElementById('settingsShowSplash');  
-    const el7 = document.getElementById('settingsShowRetirementFormula');  
-    const el8 = document.getElementById('settingsShowEndDate');  
-    const el9 = document.getElementById('settingsShowEarlySettlement');  
-    const el10 = document.getElementById('settingsSplashDuration');  
-    const el11 = document.getElementById('settingsSplashImage');  
-    const el12 = document.getElementById('settingsSplashVideo');  
-    const el13 = document.getElementById('settingsGlobalImage');  
-    const el14 = document.getElementById('settingsHomeImage');  
-    const el15 = document.getElementById('settingsResultImage');  
-    const el16 = document.getElementById('settingsCalcImage');  
-    const el17 = document.getElementById('settingsEarlySettlementWarning');  
-    const el18 = document.getElementById('settingsEarlySettlementFormula');  
-    const el19 = document.getElementById('settingsShowEarlyWarning');  
-      
-    if (el1) el1.value = settings.platformName;  
-    if (el2) el2.value = settings.platformSubtitle;  
-    if (el3) el3.value = settings.welcomeMessage;  
-    if (el4) el4.value = settings.endDateMessage;  
-    if (el5) el5.checked = settings.showWeather;  
-    if (el6) el6.checked = settings.showSplash;  
-    if (el7) el7.checked = settings.showRetirementFormula;  
-    if (el8) el8.checked = settings.showEndDate;  
-    if (el9) el9.checked = settings.showEarlySettlement !== false;  
-    if (el10) el10.value = settings.splashDuration || 2500;  
-    if (el11) el11.value = settings.splashImage || '';  
-    if (el12) el12.value = settings.splashVideo || '';  
-    if (el13) el13.value = settings.globalImage || '';  
-    if (el14) el14.value = settings.homeImage || '';  
-    if (el15) el15.value = settings.resultImage || '';  
-    if (el16) el16.value = settings.calcImage || '';  
-      
-    // تحميل إعداد الخلفية لكافة الصفحات  
-    const elBgAllPages = document.getElementById('settingsBgAllPages');  
-    if (elBgAllPages) elBgAllPages.checked = settings.bgAllPages || false;  
-    if (el17) el17.value = settings.earlySettlementWarning || 'أكثر جهات التمويل يشترطون انتهاء سنتين من الأقساط للسماح بالسداد المبكر. راجع العقد.';  
-    if (el18) el18.value = settings.earlySettlementFormula || 'أرباح سنتين + أرباح 3 أشهر (رسوم إدارية)';  
-    if (el19) el19.checked = settings.showEarlyWarning !== false;  
-      
-    // تحميل إعدادات PWA والتسويق  
-    const el20 = document.getElementById('settingsShowPWABanner');  
-    const el21 = document.getElementById('settingsShowMarketing');  
-    if (el20) el20.checked = settings.showPWABanner !== false;  
-    if (el21) el21.checked = settings.showMarketing !== false;  
-      
-    // تطبيق الإعدادات  
-    applyPlatformSettings(settings);  
-      
-    // تحميل قائمة أنواع الوظائف  
-    renderJobTypesList();  
-  }  
-    
-  function savePlatformSettingsFromUI() {  
-    const settings = {  
-      platformName: document.getElementById('settingsPlatformName')?.value || 'منصة FINO',  
-      platformSubtitle: document.getElementById('settingsPlatformSubtitle')?.value || '',  
-      welcomeMessage: document.getElementById('settingsWelcomeMessage')?.value || '',  
-      endDateMessage: document.getElementById('settingsEndDateMessage')?.value || '',  
-      showWeather: document.getElementById('settingsShowWeather')?.checked || false,  
-      showSplash: document.getElementById('settingsShowSplash')?.checked || false,  
-      showRetirementFormula: document.getElementById('settingsShowRetirementFormula')?.checked || false,  
-      showEndDate: document.getElementById('settingsShowEndDate')?.checked || false,  
-      showEarlySettlement: document.getElementById('settingsShowEarlySettlement')?.checked !== false,  
-      showPWABanner: document.getElementById('settingsShowPWABanner')?.checked !== false,  
-      showMarketing: document.getElementById('settingsShowMarketing')?.checked !== false,  
-      // إعدادات شاشة البداية (بالثواني)  
-      splashDuration: parseInt(document.getElementById('settingsSplashDuration')?.value) || 3,  
-      splashImage: document.getElementById('settingsSplashImage')?.value || '',  
-      splashVideo: document.getElementById('settingsSplashVideo')?.value || '',  
-      // الصور المتحركة للصفحات  
-      bgAllPages: document.getElementById('settingsBgAllPages')?.checked || false,  
-      globalImage: document.getElementById('settingsGlobalImage')?.value || '',  
-      homeImage: document.getElementById('settingsHomeImage')?.value || '',  
-      resultImage: document.getElementById('settingsResultImage')?.value || '',  
-      calcImage: document.getElementById('settingsCalcImage')?.value || '',  
-      // إعدادات السداد المبكر  
-      earlySettlementWarning: document.getElementById('settingsEarlySettlementWarning')?.value || '',  
-      earlySettlementFormula: document.getElementById('settingsEarlySettlementFormula')?.value || '',  
-      showEarlyWarning: document.getElementById('settingsShowEarlyWarning')?.checked !== false,  
-      // إعدادات الصفحة الرئيسية الجديدة  
-      showBestBadge: document.getElementById('settingsShowBestBadge')?.checked !== false,  
-      bestBadgeText: document.getElementById('settingsBestBadgeText')?.value || 'الأفضل في المملكة',  
-      showFeatures: document.getElementById('settingsShowFeatures')?.checked !== false,  
-      feature1: document.getElementById('settingsFeature1')?.value || 'مقارنة البنوك',  
-      feature2: document.getElementById('settingsFeature2')?.value || 'حساب دقيق',  
-      feature3: document.getElementById('settingsFeature3')?.value || 'نتيجة فورية',  
-      cardBgColor: document.getElementById('settingsCardBgColor')?.value || '#ffffff',  
-      cardOpacity: parseInt(document.getElementById('settingsCardOpacity')?.value) || 95,  
-      cardBlur: parseInt(document.getElementById('settingsCardBlur')?.value) || 10,  
-      cardTransparent: document.getElementById('settingsCardTransparent')?.checked || false,
-      // إعدادات الخط ولون النص
-      textColor: document.getElementById('settingsTextColor')?.value || '#111827',
-      secondaryTextColor: document.getElementById('settingsSecondaryTextColor')?.value || '#6b7280',
-      fontFamily: document.getElementById('settingsFontFamily')?.value || "'Tajawal', sans-serif",
-      fontSize: parseInt(document.getElementById('settingsFontSize')?.value) || 16,
-      // إعدادات الخط من صفحة الثيمات
-      fontMain: document.getElementById('fontMain')?.value || 'Tajawal',
-      fontTitle: document.getElementById('fontTitle')?.value || 'Cairo'
-    };  
-      
-    savePlatformSettings(settings);  
-    applyPlatformSettings(settings);  
-      
-    // حفظ إعدادات شاشة البداية  
-    saveSplashSettings({  
-      enabled: settings.showSplash,  
-      duration: settings.splashDuration,  
-      customImage: settings.splashImage,  
-      customVideo: settings.splashVideo  
-    });  
-      
-    // إظهار رسالة تأكيد بصرية  
-    showSaveConfirmation('✅ تم حفظ جميع الإعدادات بنجاح!', 'سيتم تطبيق التغييرات فوراً');  
-  }  
-    
-  // دالة عرض رسالة تأكيد الحفظ بشكل بصري  
-  function showSaveConfirmation(title, message) {  
-    // إنشاء عنصر التأكيد  
-    const overlay = document.createElement('div');  
-    overlay.id = 'saveConfirmOverlay';  
-    overlay.style.cssText = 'position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); display:flex; align-items:center; justify-content:center; z-index:99999; animation:fadeIn 0.3s;';  
-      
-    overlay.innerHTML = `  
-      <div style="background:#fff; padding:30px 40px; border-radius:20px; text-align:center; animation:scaleIn 0.3s; max-width:90%;">  
-        <div style="font-size:60px; margin-bottom:15px;">✅</div>  
-        <h3 style="color:#28a745; margin-bottom:10px; font-size:20px;">${title}</h3>  
-        <p style="color:#666; margin-bottom:20px;">${message}</p>  
-        <button onclick="this.closest('#saveConfirmOverlay').remove()" style="background:linear-gradient(135deg, #28a745, #20c997); color:#fff; border:none; padding:12px 40px; border-radius:10px; font-size:16px; cursor:pointer;">حسناً</button>  
-      </div>  
-    `;  
-      
-    document.body.appendChild(overlay);  
-      
-    // إغلاق تلقائي بعد 3 ثواني  
-    setTimeout(() => {  
-      if (document.getElementById('saveConfirmOverlay')) {  
-        document.getElementById('saveConfirmOverlay').remove();  
-      }  
-    }, 3000);  
-  }  
-    
-  function applyPlatformSettings(settings) {  
-    // تحديث اسم المنصة  
-    const titleEl = document.getElementById('platformTitle');  
-    if (titleEl && settings.platformName) {  
-      titleEl.textContent = settings.platformName;  
-    }  
-      
-    // تحديث عنوان الصفحة  
-    if (settings.platformName) {  
-      document.title = settings.platformName + ' - حاسبة التمويل الذكية';  
-    }  
-      
-    // إخفاء/إظهار حاسبة السداد المبكر  
-    const earlySettlementBtn = document.getElementById('earlySettlementBtn');  
-    if (earlySettlementBtn) {  
-      earlySettlementBtn.style.display = settings.showEarlySettlement !== false ? 'inline-flex' : 'none';  
-    }  
-      
-    // تحديث تنبيه السداد المبكر للعقاري  
-    const warningBox = document.getElementById('earlySettlementWarningBox');  
-    const warningText = document.getElementById('earlySettlementWarningText');  
-    const formulaText = document.getElementById('earlySettlementFormulaText');  
-      
-    if (warningBox) {  
-      warningBox.style.display = settings.showEarlyWarning !== false ? 'block' : 'none';  
-    }  
-    if (warningText && settings.earlySettlementWarning) {  
-      warningText.textContent = settings.earlySettlementWarning;  
-    }  
-    if (formulaText && settings.earlySettlementFormula) {  
-      formulaText.textContent = settings.earlySettlementFormula;  
-    }  
-      
-    // إخفاء/إظهار شعار PWA  
-    const pwaBanner = document.getElementById('pwaInstallBanner');  
-    if (pwaBanner) {  
-      if (settings.showPWABanner === false) {  
-        pwaBanner.style.display = 'none';  
-      } else {  
-        pwaBanner.style.display = 'block';  
-      }  
-    }  
-      
-    // إخفاء/إظهار قسم التسويق  
-    const marketingSection = document.getElementById('marketingSection');  
-    if (marketingSection) {  
-      marketingSection.style.display = settings.showMarketing !== false ? 'block' : 'none';  
-    }  
-      
-    // إعدادات الصفحة الرئيسية الجديدة  
-    // وسام الأفضل في المملكة  
-    const bestBadge = document.getElementById('bestBadge');  
-    if (bestBadge) {  
-      bestBadge.style.display = settings.showBestBadge !== false ? 'inline-flex' : 'none';  
-      const badgeText = bestBadge.querySelector('span');  
-      if (badgeText && settings.bestBadgeText) {  
-        badgeText.textContent = settings.bestBadgeText;  
-      }  
-    }  
-      
-    // المميزات  
-    const featuresContainer = document.getElementById('featuresContainer');  
-    if (featuresContainer) {  
-      featuresContainer.style.display = settings.showFeatures !== false ? 'flex' : 'none';  
-    }  
-    const feature1El = document.getElementById('feature1Text');  
-    const feature2El = document.getElementById('feature2Text');  
-    const feature3El = document.getElementById('feature3Text');  
-    if (feature1El && settings.feature1) feature1El.textContent = settings.feature1;  
-    if (feature2El && settings.feature2) feature2El.textContent = settings.feature2;  
-    if (feature3El && settings.feature3) feature3El.textContent = settings.feature3;  
-      
-    // خلفية البطاقة الرئيسية - شفافة افتراضياً  
-    const landingCard = document.querySelector('.landing-card');  
-    if (landingCard) {  
-      // افتراضياً شفاف تماماً إلا إذا تم تعيين قيمة أخرى  
-      if (settings.cardTransparent !== false) {  
-        landingCard.style.background = 'transparent';  
-        landingCard.style.backdropFilter = 'none';  
-        landingCard.style.boxShadow = 'none';  
-      } else {  
-        const opacity = (settings.cardOpacity || 0) / 100;  
-        const color = settings.cardBgColor || '#ffffff';  
-        const r = parseInt(color.slice(1,3), 16);  
-        const g = parseInt(color.slice(3,5), 16);  
-        const b = parseInt(color.slice(5,7), 16);  
-        landingCard.style.background = `rgba(${r}, ${g}, ${b}, ${opacity})`;  
-        landingCard.style.backdropFilter = `blur(${settings.cardBlur || 0}px)`;  
-      }  
-    }  
-      
-    // تطبيق الخلفية العامة على كامل الصفحة  
-    applyGlobalBackground(settings);
-    
-    // تطبيق إعدادات الخط ولون النص
-    if (settings.textColor) {
-      document.documentElement.style.setProperty('--text-color', settings.textColor);
-      document.body.style.color = settings.textColor;
-    }
-    if (settings.secondaryTextColor) {
-      document.documentElement.style.setProperty('--secondary-text-color', settings.secondaryTextColor);
-    }
-    if (settings.fontFamily) {
-      document.documentElement.style.setProperty('--font-family', settings.fontFamily);
-      document.body.style.fontFamily = settings.fontFamily;
-    }
-    if (settings.fontSize) {
-      document.documentElement.style.setProperty('--font-size', settings.fontSize + 'px');
-      document.body.style.fontSize = settings.fontSize + 'px';
-    }
-    if (settings.fontMain) {
-      document.documentElement.style.setProperty('--font-main', `'${settings.fontMain}', sans-serif`);
-    }
-    if (settings.fontTitle) {
-      document.documentElement.style.setProperty('--font-title', `'${settings.fontTitle}', sans-serif`);
-    }
-  }  
-    
-  // دالة تطبيق الخلفية العامة على كامل الصفحة  
-  function applyGlobalBackground(settings) {  
-    const globalImage = settings?.globalImage || '';  
-    const bgAllPages = settings?.bgAllPages || false;  
-      
-    console.log('جاري تطبيق الخلفية العامة:', { globalImage, bgAllPages });  
-      
-    // إزالة الخلفية السابقة  
-    document.body.classList.remove('has-global-bg');  
-    document.body.style.removeProperty('--global-bg-image');  
-    document.body.style.backgroundImage = '';  
-      
-    // إذا كان هناك صورة عامة وتم تفعيل الخيار  
-    if (globalImage && bgAllPages) {  
-      document.body.style.setProperty('--global-bg-image', `url(${globalImage})`);  
-      document.body.style.backgroundImage = `url(${globalImage})`;  
-      document.body.style.backgroundSize = 'cover';  
-      document.body.style.backgroundPosition = 'center';  
-      document.body.style.backgroundRepeat = 'no-repeat';  
-      document.body.style.backgroundAttachment = 'fixed';  
-      document.body.classList.add('has-global-bg');  
-      console.log('✅ تم تطبيق الخلفية العامة على كافة الصفحات:', globalImage);  
-    } else if (globalImage && !bgAllPages) {  
-      // إذا كانت الصورة موجودة لكن الخيار غير مفعل، طبقها على الصفحة الرئيسية فقط  
-      const landingPage = document.getElementById('landingPage');  
-      if (landingPage) {  
-        landingPage.style.backgroundImage = `url(${globalImage})`;  
-        landingPage.style.backgroundSize = 'cover';  
-        landingPage.style.backgroundPosition = 'center';  
-      }  
-      console.log('✅ تم تطبيق الخلفية على الصفحة الرئيسية فقط:', globalImage);  
-    } else {  
-      console.log('ℹ️ لا توجد خلفية عامة للتطبيق');  
-    }  
-  }  
-    
-  // ====== دوال التحكم بالنصوص والبطاقات ======  
-  function updateTextStyles() {  
-    const textColor = document.getElementById('settingsTextColor')?.value || '#111827';  
-    const secondaryColor = document.getElementById('settingsSecondaryTextColor')?.value || '#6b7280';  
-    const fontFamily = document.getElementById('settingsFontFamily')?.value || "'Tajawal', sans-serif";  
-    const fontSize = document.getElementById('settingsFontSize')?.value || '16';  
-      
-    document.documentElement.style.setProperty('--text-color', textColor);  
-    document.documentElement.style.setProperty('--secondary-text-color', secondaryColor);  
-    document.documentElement.style.setProperty('--font-family', fontFamily);  
-    document.documentElement.style.setProperty('--font-size', fontSize + 'px');  
-      
-    document.body.style.color = textColor;  
-    document.body.style.fontFamily = fontFamily;  
-    document.body.style.fontSize = fontSize + 'px';  
-      
-    // تحديث عرض القيمة  
-    const fontSizeValue = document.getElementById('fontSizeValue');  
-    if (fontSizeValue) fontSizeValue.textContent = fontSize + 'px';  
-      
-    savePlatformSettingsFromUI();  
-  }  
-    
-  function toggleCardsVisibility() {  
-    const hideCards = document.getElementById('settingsHideCards')?.checked || false;  
-    if (hideCards) {  
-      document.body.classList.add('hide-cards');  
-    } else {  
-      document.body.classList.remove('hide-cards');  
-    }  
-    savePlatformSettingsFromUI();  
-  }  
-    
-  // ====== إدارة عناصر صفحة النتيجة ======  
-  const RESULT_ELEMENTS_KEY = 'finoResultElements';  
-    
-  function saveResultElementsSettings() {  
-    const settings = {  
-      showType: document.getElementById('resultShowType')?.checked ?? true,  
-      showBank: document.getElementById('resultShowBank')?.checked ?? true,  
-      showAmount: document.getElementById('resultShowAmount')?.checked ?? true,  
-      showInstallment: document.getElementById('resultShowInstallment')?.checked ?? true,  
-      showDuration: document.getElementById('resultShowDuration')?.checked ?? true,  
-      showRate: document.getElementById('resultShowRate')?.checked ?? true,  
-      showProfit: document.getElementById('resultShowProfit')?.checked ?? true,  
-      showTotal: document.getElementById('resultShowTotal')?.checked ?? true,  
-      showEndDate: document.getElementById('resultShowEndDate')?.checked ?? true,  
-      showRetirement: document.getElementById('resultShowRetirement')?.checked ?? true,  
-      showSalaryDetails: document.getElementById('resultShowSalaryDetails')?.checked ?? true,  
-      showCommitments: document.getElementById('resultShowCommitments')?.checked ?? true,  
-      showButtons: document.getElementById('resultShowButtons')?.checked ?? true  
-    };  
-    localStorage.setItem(RESULT_ELEMENTS_KEY, JSON.stringify(settings));  
-    applyResultElementsSettings(settings);  
-  }  
-    
-  function loadResultElementsSettings() {  
-    try {  
-      const saved = localStorage.getItem(RESULT_ELEMENTS_KEY);  
-      if (saved) {  
-        const settings = JSON.parse(saved);  
-        // تحميل الإعدادات للحقول  
-        if (document.getElementById('resultShowType')) document.getElementById('resultShowType').checked = settings.showType ?? true;  
-        if (document.getElementById('resultShowBank')) document.getElementById('resultShowBank').checked = settings.showBank ?? true;  
-        if (document.getElementById('resultShowAmount')) document.getElementById('resultShowAmount').checked = settings.showAmount ?? true;  
-        if (document.getElementById('resultShowInstallment')) document.getElementById('resultShowInstallment').checked = settings.showInstallment ?? true;  
-        if (document.getElementById('resultShowDuration')) document.getElementById('resultShowDuration').checked = settings.showDuration ?? true;  
-        if (document.getElementById('resultShowRate')) document.getElementById('resultShowRate').checked = settings.showRate ?? true;  
-        if (document.getElementById('resultShowProfit')) document.getElementById('resultShowProfit').checked = settings.showProfit ?? true;  
-        if (document.getElementById('resultShowTotal')) document.getElementById('resultShowTotal').checked = settings.showTotal ?? true;  
-        if (document.getElementById('resultShowEndDate')) document.getElementById('resultShowEndDate').checked = settings.showEndDate ?? true;  
-        if (document.getElementById('resultShowRetirement')) document.getElementById('resultShowRetirement').checked = settings.showRetirement ?? true;  
-        if (document.getElementById('resultShowSalaryDetails')) document.getElementById('resultShowSalaryDetails').checked = settings.showSalaryDetails ?? true;  
-        if (document.getElementById('resultShowCommitments')) document.getElementById('resultShowCommitments').checked = settings.showCommitments ?? true;  
-        if (document.getElementById('resultShowButtons')) document.getElementById('resultShowButtons').checked = settings.showButtons ?? true;  
-        return settings;  
-      }  
-    } catch (e) {  
-      console.error('خطأ في تحميل إعدادات عناصر النتيجة:', e);  
-    }  
-    return null;  
-  }  
-    
-  function applyResultElementsSettings(settings) {  
-    if (!settings) return;  
-    // سيتم تطبيق الإعدادات عند عرض النتيجة  
-    console.log('تم حفظ إعدادات عناصر النتيجة:', settings);  
-  }  
-    
-  // ====== التصاميم الجاهزة ======  
-  function applyPresetTheme(theme) {  
-    const themes = {  
-      classic: {  
-        textColor: '#111827',  
-        secondaryColor: '#6b7280',  
-        cardOpacity: 0.95,  
-        cardBlur: 10,  
-        hideCards: false  
-      },  
-      dark: {  
-        textColor: '#f9fafb',  
-        secondaryColor: '#9ca3af',  
-        cardOpacity: 0.9,  
-        cardBlur: 15,  
-        hideCards: false  
-      },  
-      gold: {  
-        textColor: '#78350f',  
-        secondaryColor: '#92400e',  
-        cardOpacity: 0.85,  
-        cardBlur: 8,  
-        hideCards: false  
-      },  
-      green: {  
-        textColor: '#064e3b',  
-        secondaryColor: '#065f46',  
-        cardOpacity: 0.88,  
-        cardBlur: 10,  
-        hideCards: false  
-      },  
-      blue: {  
-        textColor: '#1e3a8a',  
-        secondaryColor: '#1e40af',  
-        cardOpacity: 0.9,  
-        cardBlur: 12,  
-        hideCards: false  
-      },  
-      transparent: {  
-        textColor: '#ffffff',  
-        secondaryColor: '#e5e7eb',  
-        cardOpacity: 0.3,  
-        cardBlur: 20,  
-        hideCards: true  
-      }  
-    };  
-      
-    const preset = themes[theme];  
-    if (!preset) return;  
-      
-    // تطبيق التصميم  
-    if (document.getElementById('settingsTextColor')) document.getElementById('settingsTextColor').value = preset.textColor;  
-    if (document.getElementById('settingsSecondaryTextColor')) document.getElementById('settingsSecondaryTextColor').value = preset.secondaryColor;  
-    if (document.getElementById('settingsCardOpacity')) document.getElementById('settingsCardOpacity').value = preset.cardOpacity * 100;  
-    if (document.getElementById('settingsCardBlur')) document.getElementById('settingsCardBlur').value = preset.cardBlur;  
-    if (document.getElementById('settingsHideCards')) document.getElementById('settingsHideCards').checked = preset.hideCards;  
-      
-    // تطبيق التغييرات  
-    document.documentElement.style.setProperty('--card-opacity', preset.cardOpacity);  
-    document.documentElement.style.setProperty('--card-blur', preset.cardBlur + 'px');  
-    document.body.style.color = preset.textColor;  
-      
-    if (preset.hideCards) {  
-      document.body.classList.add('hide-cards');  
-    } else {  
-      document.body.classList.remove('hide-cards');  
-    }  
-      
-    updateTextStyles();  
-    updateCardBackground();  
-      
-    showSaveConfirmation('تم تطبيق التصميم: ' + theme);  
-  }  
-    
-  // ====== محرر النصوص ======  
-  const CUSTOM_TEXTS_KEY = 'finoCustomTexts';  
-  let customPageMessages = [];  
-    
-  function loadCustomTexts() {  
-    try {  
-      const saved = localStorage.getItem(CUSTOM_TEXTS_KEY);  
-      if (saved) {  
-        const data = JSON.parse(saved);  
-        // تحميل النصوص إلى الحقول  
-        if (data.welcome && document.getElementById('textWelcome')) document.getElementById('textWelcome').value = data.welcome;  
-        if (data.resultGreeting && document.getElementById('textResultGreeting')) document.getElementById('textResultGreeting').value = data.resultGreeting;  
-        if (data.financeEnd && document.getElementById('textFinanceEnd')) document.getElementById('textFinanceEnd').value = data.financeEnd;  
-        if (data.deficit && document.getElementById('textDeficit')) document.getElementById('textDeficit').value = data.deficit;  
-        if (data.retirement && document.getElementById('textRetirement')) document.getElementById('textRetirement').value = data.retirement;  
-        if (data.contact && document.getElementById('textContact')) document.getElementById('textContact').value = data.contact;  
-        if (data.disclaimer && document.getElementById('textDisclaimer')) document.getElementById('textDisclaimer').value = data.disclaimer;  
-        if (data.privateSector && document.getElementById('textPrivateSector')) document.getElementById('textPrivateSector').value = data.privateSector;  
-        if (data.pageMessages) customPageMessages = data.pageMessages;  
-        renderCustomPageMessages();  
-      }  
-    } catch(e) { console.error('خطأ في تحميل النصوص:', e); }  
-  }  
-    
-  function saveCustomTexts() {  
-    const data = {  
-      welcome: document.getElementById('textWelcome')?.value || '',  
-      resultGreeting: document.getElementById('textResultGreeting')?.value || '',  
-      financeEnd: document.getElementById('textFinanceEnd')?.value || '',  
-      deficit: document.getElementById('textDeficit')?.value || '',  
-      retirement: document.getElementById('textRetirement')?.value || '',  
-      contact: document.getElementById('textContact')?.value || '',  
-      disclaimer: document.getElementById('textDisclaimer')?.value || '',  
-      privateSector: document.getElementById('textPrivateSector')?.value || '',  
-      pageMessages: customPageMessages  
-    };  
-    localStorage.setItem(CUSTOM_TEXTS_KEY, JSON.stringify(data));  
-    alert('تم حفظ النصوص.');  
-  }  
-    
-  function addCustomPageMessage() {  
-    customPageMessages.push({  
-      id: 'msg_' + Date.now(),  
-      page: 'landing',  
-      text: 'رسالة جديدة',  
-      enabled: true  
-    });  
-    renderCustomPageMessages();  
-  }  
-    
-  function deleteCustomPageMessage(id) {  
-    customPageMessages = customPageMessages.filter(m => m.id !== id);  
-    renderCustomPageMessages();  
-  }  
-    
-  function renderCustomPageMessages() {  
-    const container = document.getElementById('customPageMessages');  
-    if (!container) return;  
-      
-    if (customPageMessages.length === 0) {  
-      container.innerHTML = '<p style="font-size:13px; color:#6b7280;">لا توجد رسائل مخصصة بعد.</p>';  
-      return;  
-    }  
-      
-    container.innerHTML = customPageMessages.map((msg, idx) => `  
-      <div style="display:flex; gap:10px; align-items:center; padding:10px; background:rgba(255,255,255,0.7); border-radius:8px; margin-bottom:8px;">  
-        <select onchange="customPageMessages[${idx}].page = this.value" style="flex:0 0 120px;">  
-          <option value="landing" ${msg.page === 'landing' ? 'selected' : ''}>الرئيسية</option>  
-          <option value="calculator" ${msg.page === 'calculator' ? 'selected' : ''}>الحاسبة</option>  
-          <option value="result" ${msg.page === 'result' ? 'selected' : ''}>النتيجة</option>  
-        </select>  
-        <input type="text" value="${escapeHtml(msg.text)}" onchange="customPageMessages[${idx}].text = this.value" style="flex:1;">  
-        <label style="display:flex; align-items:center; gap:4px; cursor:pointer;">  
-          <input type="checkbox" ${msg.enabled ? 'checked' : ''} onchange="customPageMessages[${idx}].enabled = this.checked">  
-          <span style="font-size:12px;">مفعل</span>  
-        </label>  
-        <button onclick="deleteCustomPageMessage('${msg.id}')" style="background:#ef4444; color:#fff; border:none; border-radius:4px; padding:4px 8px; cursor:pointer;">🗑️</button>  
-      </div>  
-    `).join('');  
-  }  
-    
-  // ====== إدارة أنواع الوظائف ======  
-  const JOB_TYPES_KEY = 'finoJobTypes';  
-  let customJobTypes = [];  
-    
-  // أنواع الوظائف الأساسية  
-  const defaultJobTypes = [  
-    { id: 'government', name: 'حكومي', logo: '', canDelete: false },  
-    { id: 'military', name: 'عسكري', logo: '', canDelete: false },  
-    { id: 'private', name: 'قطاع خاص', logo: '', canDelete: false },  
-    { id: 'retired', name: 'متقاعد', logo: '', canDelete: false }  
-  ];  
-    
-  function loadJobTypes() {  
-    try {  
-      const saved = localStorage.getItem(JOB_TYPES_KEY);  
-      if (saved) customJobTypes = JSON.parse(saved);  
-    } catch(e) { console.error('خطأ في تحميل أنواع الوظائف:', e); }  
-  }  
-    
-  function saveJobTypes() {  
-    localStorage.setItem(JOB_TYPES_KEY, JSON.stringify(customJobTypes));  
-  }  
-    
-  function getAllJobTypes() {  
-    return [...defaultJobTypes, ...customJobTypes];  
-  }  
-    
-  function getJobTypeOptions() {  
-    // إرجاع قائمة أسماء الوظائف للعميل  
-    loadJobTypes();  
-    const allTypes = getAllJobTypes();  
-    return allTypes.map(job => job.name);  
-  }  
-    
-  function addJobType() {  
-    const nameEl = document.getElementById('newJobTypeName');  
-    const logoEl = document.getElementById('newJobTypeLogo');  
-    const name = nameEl?.value?.trim();  
-    const logo = logoEl?.value?.trim() || '';  
-      
-    if (!name) {  
-      alert('يرجى إدخال اسم نوع الوظيفة');  
-      return;  
-    }  
-      
-    const id = 'custom_' + Date.now();  
-    customJobTypes.push({ id, name, logo, canDelete: true });  
-    saveJobTypes();  
-    renderJobTypesList();  
-      
-    if (nameEl) nameEl.value = '';  
-    if (logoEl) logoEl.value = '';  
-      
-    alert('تم إضافة نوع الوظيفة: ' + name);  
-  }  
-    
-  function deleteJobType(id) {  
-    if (!confirm('هل أنت متأكد من حذف هذا النوع؟')) return;  
-    customJobTypes = customJobTypes.filter(j => j.id !== id);  
-    saveJobTypes();  
-    renderJobTypesList();  
-  }  
-    
-  function renderJobTypesList() {  
-    const container = document.getElementById('jobTypesList');  
-    if (!container) return;  
-      
-    const allTypes = getAllJobTypes();  
-    container.innerHTML = allTypes.map(job => `  
-      <div style="display:flex; align-items:center; gap:10px; padding:8px; background:rgba(255,255,255,0.5); border-radius:8px; margin-bottom:5px;">  
-        ${job.logo ? `<img src="${escapeHtml(job.logo)}" style="width:24px; height:24px; border-radius:4px;">` : '<span style="width:24px; height:24px; background:#e5e7eb; border-radius:4px; display:flex; align-items:center; justify-content:center;">👤</span>'}  
-        <span style="flex:1; font-size:14px;">${escapeHtml(job.name)}</span>  
-        ${job.canDelete ? `<button onclick="deleteJobType('${job.id}')" style="background:#ef4444; color:#fff; border:none; border-radius:4px; padding:4px 8px; font-size:12px; cursor:pointer;">🗑️ حذف</button>` : '<span style="font-size:11px; color:#6b7280;">أساسي</span>'}  
-      </div>  
-    `).join('');  
-      
-    // تحديث قائمة الوظائف في صفحة تعديل النسب  
-    updateAdminJobTypeSelect();  
-  }  
-    
-  function updateAdminJobTypeSelect() {  
-    const select = document.getElementById('adminJobType');  
-    if (!select) return;  
-      
-    const currentValue = select.value;  
-    const allTypes = getAllJobTypes();  
-      
-    select.innerHTML = '<option value="">الكل</option>' +   
-      allTypes.map(job => `<option value="${escapeHtml(job.name)}">${escapeHtml(job.name)}</option>`).join('');  
-      
-    if (currentValue) select.value = currentValue;  
-  }  
-    
-  // تحميل أنواع الوظائف عند بدء التطبيق  
-  loadJobTypes();  
-    
-  // ====== حساب تاريخ انتهاء التمويل ======  
-  function calculateFinanceEndDate(months) {  
-    const now = new Date();  
-    const endDate = new Date(now.getFullYear(), now.getMonth() + parseInt(months), now.getDate());  
-      
-    // التاريخ الميلادي - بالتقويم الميلادي الصحيح  
-    const gregorianYear = endDate.getFullYear();  
-    const gregorianMonth = endDate.getMonth();  
-    const gregorianDay = endDate.getDate();  
-      
-    const arabicMonths = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];  
-    const gregorianDate = `${gregorianDay} ${arabicMonths[gregorianMonth]} ${gregorianYear}م`;  
-      
-    // التاريخ الهجري  
-    let hijriDate = '';  
-    try {  
-      hijriDate = endDate.toLocaleDateString('ar-SA-u-ca-islamic-umalqura', {  
-        year: 'numeric',  
-        month: 'long',  
-        day: 'numeric'  
-      });  
-    } catch (e) {  
-      // حساب تقريبي للهجري  
-      const hijriYear = Math.round((gregorianYear - 622) * (33/32));  
-      hijriDate = `تقريباً ${hijriYear} هـ`;  
-    }  
-      
-    return {   
-      gregorian: gregorianDate,   
-      hijri: hijriDate,  
-      year: gregorianYear,  
-      hijriYear: hijriDate.match(/\d+/) ? hijriDate.match(/\d+/)[0] : ''  
-    };  
-  }  
-    
-  // ====== PWA - دعم كامل لجميع المتصفحات ======  
-  let deferredPrompt;  
-  let isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;  
-  let isAndroid = /Android/.test(navigator.userAgent);  
-  let isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;  
-    
-  // التحقق من حالة التثبيت  
-  function checkPWAInstallState() {  
-    const banner = document.getElementById('pwaInstallBanner');  
-    if (!banner) return;  
-      
-    // إذا كان التطبيق مثبت بالفعل  
-    if (isStandalone) {  
-      banner.style.display = 'none';  
-      return;  
-    }  
-      
-    // إذا رفض المستخدم التثبيت سابقاً  
-    if (localStorage.getItem('pwaPromptDismissed')) {  
-      banner.style.display = 'none';  
-      return;  
-    }  
-      
-    // عرض البانر مع تعليمات مخصصة حسب الجهاز  
-    if (isIOS) {  
-      showIOSInstallInstructions();  
-    } else {  
-      banner.style.display = 'block';  
-    }  
-  }  
-    
-  // تعليمات تثبيت iOS  
-  function showIOSInstallInstructions() {  
-    const banner = document.getElementById('pwaInstallBanner');  
-    if (!banner) return;  
-      
-    banner.innerHTML = `  
-      <div style="font-size:15px; font-weight:700; margin-bottom:8px;">📱 أضف المنصة لشاشتك الرئيسية</div>  
-      <div style="font-size:13px; opacity:0.95; margin-bottom:10px; line-height:1.6;">  
-        1️⃣ اضغط على زر المشاركة <span style="font-size:18px;">⬆️</span> في الأسفل<br>  
-        2️⃣ اختر "إضافة إلى الشاشة الرئيسية" <span style="font-size:18px;">➕</span><br>  
-        3️⃣ اضغط "إضافة" وسيظهر التطبيق كأيقونة  
-      </div>  
-      <button onclick="dismissInstallPrompt()" style="background:rgba(255,255,255,0.2); color:#fff; border:none; padding:8px 20px; border-radius:20px; font-size:13px; cursor:pointer;">فهمت، لاحقاً</button>  
-    `;  
-    banner.style.display = 'block';  
-  }  
-    
-  // استماع لحدث التثبيت (Android/Chrome)  
-  window.addEventListener('beforeinstallprompt', (e) => {  
-    e.preventDefault();  
-    deferredPrompt = e;  
-    const banner = document.getElementById('pwaInstallBanner');  
-    if (banner && !localStorage.getItem('pwaPromptDismissed') && !isStandalone) {  
-      banner.style.display = 'block';  
-    }  
-  });  
-    
-  // دالة تثبيت PWA  
-  function installPWA() {  
-    if (deferredPrompt) {  
-      // Android/Chrome - استخدام الـ prompt الأصلي  
-      deferredPrompt.prompt();  
-      deferredPrompt.userChoice.then((choiceResult) => {  
-        if (choiceResult.outcome === 'accepted') {  
-          console.log('FINO: تم تثبيت التطبيق');  
-          showNotification('تم تثبيت التطبيق بنجاح! 🎉', 'success');  
-        }  
-        deferredPrompt = null;  
-        document.getElementById('pwaInstallBanner').style.display = 'none';  
-      });  
-    } else if (isIOS) {  
-      // iOS - عرض التعليمات  
-      showIOSInstallInstructions();  
-    } else {  
-      // متصفحات أخرى - عرض تعليمات عامة  
-      showNotification('اضغط على قائمة المتصفح واختر "إضافة إلى الشاشة الرئيسية"', 'info');  
-    }  
-  }  
-    
-  function dismissInstallPrompt() {  
-    document.getElementById('pwaInstallBanner').style.display = 'none';  
-    localStorage.setItem('pwaPromptDismissed', 'true');  
-  }  
-    
-  // استماع لحدث اكتمال التثبيت  
-  window.addEventListener('appinstalled', (evt) => {  
-    console.log('FINO: تم تثبيت التطبيق بنجاح');  
-    document.getElementById('pwaInstallBanner').style.display = 'none';  
-    deferredPrompt = null;  
-  });  
-    
-  // تسجيل Service Worker  
-  if ('serviceWorker' in navigator) {  
-    window.addEventListener('load', () => {  
-      navigator.serviceWorker.register('/sw.js')  
-        .then(reg => {  
-          console.log('FINO SW: تم التسجيل');  
-          reg.addEventListener('updatefound', () => {  
-            const newWorker = reg.installing;  
-            newWorker.addEventListener('statechange', () => {  
-              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {  
-                showNotification('يوجد تحديث جديد! أعد تحميل الصفحة للتحديث.', 'info');  
-              }  
-            });  
-          });  
-        })  
-        .catch(err => console.log('FINO SW: فشل التسجيل', err));  
-      setTimeout(checkPWAInstallState, 1000);  
-    });  
-  }  
-    
-  // ====== نظام الدفع والباقات ======  
-  const PAYMENT_STORAGE_KEY = 'fino_payment_settings';  
-  const USER_USAGE_KEY = 'fino_user_usage';  
-  const PAID_USERS_KEY = 'fino_paid_users';  
-    
-  // الإعدادات الافتراضية  
-  const defaultPaymentSettings = {  
-    enabled: false,  
-    freeTrials: 3,  
-    singlePrice: 10,  
-    packages: [  
-      { name: 'باقة أساسية', uses: 10, price: 50 },  
-      { name: 'باقة متوسطة', uses: 25, price: 100 },  
-      { name: 'باقة متقدمة', uses: 50, price: 150 }  
-    ],  
-    storeEnabled: false,  
-    storeUrl: '',  
-    storeButtonText: '🛒 ادفع عبر المتجر',  
-    bankEnabled: false,  
-    bankDetails: '',  
-    customEnabled: false,  
-    customUrl: '',  
-    customButtonText: '💳 ادفع الآن',  
-    expiredMessage: 'انتهت مراتك المجانية! اختر باقة للمتابعة.',  
-    successMessage: 'شكراً لك! تم تفعيل حسابك بنجاح.'  
-  };  
-    
-  function getPaymentSettings() {  
-    try {  
-      const saved = localStorage.getItem(PAYMENT_STORAGE_KEY);  
-      return saved ? { ...defaultPaymentSettings, ...JSON.parse(saved) } : defaultPaymentSettings;  
-    } catch (e) {  
-      return defaultPaymentSettings;  
-    }  
-  }  
-    
-  function savePaymentSettings() {  
-    const settings = {  
-      enabled: document.getElementById('paymentSystemEnabled')?.checked || false,  
-      freeTrials: parseInt(document.getElementById('paymentFreeTrials')?.value) || 3,  
-      singlePrice: parseFloat(document.getElementById('paymentSinglePrice')?.value) || 10,  
-      packages: getPaymentSettings().packages,  
-      storeEnabled: document.getElementById('paymentStoreEnabled')?.checked || false,  
-      storeUrl: document.getElementById('paymentStoreUrl')?.value || '',  
-      storeButtonText: document.getElementById('paymentStoreButtonText')?.value || '🛒 ادفع عبر المتجر',  
-      bankEnabled: document.getElementById('paymentBankEnabled')?.checked || false,  
-      bankDetails: document.getElementById('paymentBankDetails')?.value || '',  
-      customEnabled: document.getElementById('paymentCustomEnabled')?.checked || false,  
-      customUrl: document.getElementById('paymentCustomUrl')?.value || '',  
-      customButtonText: document.getElementById('paymentCustomButtonText')?.value || '💳 ادفع الآن',  
-      expiredMessage: document.getElementById('paymentExpiredMessage')?.value || defaultPaymentSettings.expiredMessage,  
-      successMessage: document.getElementById('paymentSuccessMessage')?.value || defaultPaymentSettings.successMessage  
-    };  
-    localStorage.setItem(PAYMENT_STORAGE_KEY, JSON.stringify(settings));  
-    updatePaymentUI();  
-    showNotification('تم حفظ إعدادات الدفع', 'success');  
-  }  
-    
-  function loadPaymentSettingsToUI() {  
-    const settings = getPaymentSettings();  
-    const el = (id) => document.getElementById(id);  
-    if (el('paymentSystemEnabled')) el('paymentSystemEnabled').checked = settings.enabled;  
-    if (el('paymentFreeTrials')) el('paymentFreeTrials').value = settings.freeTrials;  
-    if (el('paymentSinglePrice')) el('paymentSinglePrice').value = settings.singlePrice;  
-    if (el('paymentStoreEnabled')) el('paymentStoreEnabled').checked = settings.storeEnabled;  
-    if (el('paymentStoreUrl')) el('paymentStoreUrl').value = settings.storeUrl;  
-    if (el('paymentStoreButtonText')) el('paymentStoreButtonText').value = settings.storeButtonText;  
-    if (el('paymentBankEnabled')) el('paymentBankEnabled').checked = settings.bankEnabled;  
-    if (el('paymentBankDetails')) el('paymentBankDetails').value = settings.bankDetails;  
-    if (el('paymentCustomEnabled')) el('paymentCustomEnabled').checked = settings.customEnabled;  
-    if (el('paymentCustomUrl')) el('paymentCustomUrl').value = settings.customUrl;  
-    if (el('paymentCustomButtonText')) el('paymentCustomButtonText').value = settings.customButtonText;  
-    if (el('paymentExpiredMessage')) el('paymentExpiredMessage').value = settings.expiredMessage;  
-    if (el('paymentSuccessMessage')) el('paymentSuccessMessage').value = settings.successMessage;  
-    renderPaymentPackages();  
-    renderPaidUsers();  
-    updatePaymentUI();  
-  }  
-    
-  function updatePaymentUI() {  
-    const settings = getPaymentSettings();  
-    const container = document.getElementById('paymentSettingsContainer');  
-    if (container) {  
-      container.style.opacity = settings.enabled ? '1' : '0.5';  
-      container.style.pointerEvents = settings.enabled ? 'auto' : 'none';  
-    }  
-  }  
-    
-  function renderPaymentPackages() {  
-    const settings = getPaymentSettings();  
-    const container = document.getElementById('paymentPackagesList');  
-    if (!container) return;  
-      
-    if (!settings.packages || settings.packages.length === 0) {  
-      container.innerHTML = '<div style="color:#6b7280; font-size:13px;">لا توجد باقات مضافة</div>';  
-      return;  
-    }  
-      
-    container.innerHTML = settings.packages.map((pkg, idx) => `  
-      <div style="display:flex; align-items:center; gap:8px; padding:8px; background:#f3f4f6; border-radius:6px; margin-bottom:5px;">  
-        <span style="flex:1; font-weight:600;">${escapeHtml(pkg.name)}</span>  
-        <span style="color:#6b7280;">${pkg.uses} استخدام</span>  
-        <span style="color:#059669; font-weight:700;">${pkg.price} ر.س</span>  
-        <button class="secondary small" onclick="deletePaymentPackage(${idx})" style="padding:4px 8px;">🗑️</button>  
-      </div>  
-    `).join('');  
-  }  
-    
-  function addPaymentPackage() {  
-    const name = document.getElementById('newPackageName')?.value?.trim();  
-    const uses = parseInt(document.getElementById('newPackageUses')?.value);  
-    const price = parseFloat(document.getElementById('newPackagePrice')?.value);  
-      
-    if (!name || !uses || !price) {  
-      showNotification('أدخل جميع بيانات الباقة', 'error');  
-      return;  
-    }  
-      
-    const settings = getPaymentSettings();  
-    settings.packages = settings.packages || [];  
-    settings.packages.push({ name, uses, price });  
-    localStorage.setItem(PAYMENT_STORAGE_KEY, JSON.stringify(settings));  
-      
-    document.getElementById('newPackageName').value = '';  
-    document.getElementById('newPackageUses').value = '';  
-    document.getElementById('newPackagePrice').value = '';  
-      
-    renderPaymentPackages();  
-    showNotification('تم إضافة الباقة', 'success');  
-  }  
-    
-  function deletePaymentPackage(idx) {  
-    const settings = getPaymentSettings();  
-    settings.packages.splice(idx, 1);  
-    localStorage.setItem(PAYMENT_STORAGE_KEY, JSON.stringify(settings));  
-    renderPaymentPackages();  
-    showNotification('تم حذف الباقة', 'success');  
-  }  
-    
-  // إدارة استخدام العميل  
-  function getUserUsage() {  
-    try {  
-      const saved = localStorage.getItem(USER_USAGE_KEY);  
-      return saved ? JSON.parse(saved) : { count: 0, paidUses: 0 };  
-    } catch (e) {  
-      return { count: 0, paidUses: 0 };  
-    }  
-  }  
-    
-  function incrementUserUsage() {  
-    const usage = getUserUsage();  
-    usage.count++;  
-    localStorage.setItem(USER_USAGE_KEY, JSON.stringify(usage));  
-    return usage;  
-  }  
-    
-  function canUserCalculate() {  
-    const settings = getPaymentSettings();  
-    if (!settings.enabled) return true;  
-      
-    const usage = getUserUsage();  
-    const totalAllowed = settings.freeTrials + usage.paidUses;  
-    return usage.count < totalAllowed;  
-  }  
-    
-  function getRemainingUses() {  
-    const settings = getPaymentSettings();  
-    const usage = getUserUsage();  
-    const totalAllowed = settings.freeTrials + usage.paidUses;  
-    return Math.max(0, totalAllowed - usage.count);  
-  }  
-    
-  // إدارة المستخدمين المدفوعين  
-  function getPaidUsers() {  
-    try {  
-      const saved = localStorage.getItem(PAID_USERS_KEY);  
-      return saved ? JSON.parse(saved) : [];  
-    } catch (e) {  
-      return [];  
-    }  
-  }  
-    
-  function activatePaidUser() {  
-    const phone = document.getElementById('activateUserPhone')?.value?.trim();  
-    const uses = parseInt(document.getElementById('activateUserUses')?.value) || 10;  
-      
-    if (!phone) {  
-      showNotification('أدخل رقم الجوال أو المعرف', 'error');  
-      return;  
-    }  
-      
-    const users = getPaidUsers();  
-    const existingIdx = users.findIndex(u => u.phone === phone);  
-      
-    if (existingIdx >= 0) {  
-      users[existingIdx].uses += uses;  
-      users[existingIdx].activatedAt = new Date().toISOString();  
-    } else {  
-      users.push({ phone, uses, activatedAt: new Date().toISOString() });  
-    }  
-      
-    localStorage.setItem(PAID_USERS_KEY, JSON.stringify(users));  
-    document.getElementById('activateUserPhone').value = '';  
-      
-    renderPaidUsers();  
-    showNotification(`تم تفعيل ${uses} استخدام للمستخدم ${phone}`, 'success');  
-  }  
-    
-  function renderPaidUsers() {  
-    const container = document.getElementById('paidUsersList');  
-    if (!container) return;  
-      
-    const users = getPaidUsers();  
-    if (users.length === 0) {  
-      container.innerHTML = '<div style="color:#6b7280; font-size:12px;">لا يوجد مستخدمين مفعلين</div>';  
-      return;  
-    }  
-      
-    container.innerHTML = users.map((user, idx) => `  
-      <div style="display:flex; align-items:center; gap:8px; padding:6px; background:#d1fae5; border-radius:4px; margin-bottom:4px; font-size:12px;">  
-        <span style="flex:1;">${escapeHtml(user.phone)}</span>  
-        <span style="color:#059669;">${user.uses} استخدام</span>  
-        <button onclick="deletePaidUser(${idx})" style="background:none; border:none; cursor:pointer;">❌</button>  
-      </div>  
-    `).join('');  
-  }  
-    
-  function deletePaidUser(idx) {  
-    const users = getPaidUsers();  
-    users.splice(idx, 1);  
-    localStorage.setItem(PAID_USERS_KEY, JSON.stringify(users));  
-    renderPaidUsers();  
-  }  
-    
-  // عرض نافذة الدفع  
-  function showPaymentModal() {  
-    const settings = getPaymentSettings();  
-    const remaining = getRemainingUses();  
-      
-    let paymentOptions = '';  
-      
-    if (settings.storeEnabled && settings.storeUrl) {  
-      paymentOptions += `<a href="${escapeHtml(settings.storeUrl)}" target="_blank" class="primary" style="display:block; text-align:center; padding:12px; margin-bottom:8px; text-decoration:none;">${escapeHtml(settings.storeButtonText)}</a>`;  
-    }  
-      
-    if (settings.bankEnabled && settings.bankDetails) {  
-      paymentOptions += `  
-        <div style="background:#f3f4f6; padding:12px; border-radius:8px; margin-bottom:8px;">  
-          <div style="font-weight:700; margin-bottom:8px;">🏦 التحويل البنكي</div>  
-          <pre style="white-space:pre-wrap; font-size:12px; margin:0;">${escapeHtml(settings.bankDetails)}</pre>  
-          <div style="margin-top:8px; font-size:11px; color:#6b7280;">بعد التحويل، تواصل معنا لتفعيل حسابك</div>  
-        </div>  
-      `;  
-    }  
-      
-    if (settings.customEnabled && settings.customUrl) {  
-      paymentOptions += `<a href="${escapeHtml(settings.customUrl)}" target="_blank" class="secondary" style="display:block; text-align:center; padding:12px; margin-bottom:8px; text-decoration:none;">${escapeHtml(settings.customButtonText)}</a>`;  
-    }  
-      
-    // عرض الباقات  
-    let packagesHtml = '';  
-    if (settings.packages && settings.packages.length > 0) {  
-      packagesHtml = '<div style="margin-top:15px;"><h4 style="margin:0 0 10px;">🎁 الباقات المتاحة</h4>';  
-      packagesHtml += settings.packages.map(pkg => `  
-        <div style="display:flex; justify-content:space-between; align-items:center; padding:10px; background:#fef3c7; border-radius:8px; margin-bottom:6px;">  
-          <div>  
-            <div style="font-weight:700;">${escapeHtml(pkg.name)}</div>  
-            <div style="font-size:12px; color:#6b7280;">${pkg.uses} استخدام</div>  
-          </div>  
-          <div style="font-size:18px; font-weight:700; color:#059669;">${pkg.price} ر.س</div>  
-        </div>  
-      `).join('');  
-      packagesHtml += '</div>';  
-    }  
-      
-    const modalHtml = `  
-      <div id="paymentModal" style="position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:10000; display:flex; align-items:center; justify-content:center; padding:20px;">  
-        <div style="background:#fff; border-radius:16px; max-width:450px; width:100%; padding:20px; max-height:90vh; overflow-y:auto;">  
-          <div style="text-align:center; margin-bottom:15px;">  
-            <div style="font-size:50px;">💳</div>  
-            <h3 style="margin:10px 0 5px;">${escapeHtml(settings.expiredMessage)}</h3>  
-            <p style="color:#6b7280; font-size:14px;">المتبقي: ${remaining} استخدام</p>  
-          </div>  
-          ${paymentOptions}  
-          ${packagesHtml}  
-          <button onclick="closePaymentModal()" class="secondary" style="width:100%; margin-top:15px;">إغلاق</button>  
-        </div>  
-      </div>  
-    `;  
-      
-    document.body.insertAdjacentHTML('beforeend', modalHtml);  
-  }  
-    
-  function closePaymentModal() {  
-    const modal = document.getElementById('paymentModal');  
-    if (modal) modal.remove();  
-  }  
-    
-  // ====== نظام الرقم السري ======  
-  const PIN_SETTINGS_KEY = 'fino_pin_settings';  
-    
-  const defaultPinSettings = {  
-    platformPinEnabled: false,  
-    resultPinEnabled: false,  
-    platformPinCode: '',  
-    resultPinCode: ''  
-  };  
-    
-  function getPinSettings() {  
-    try {  
-      const saved = localStorage.getItem(PIN_SETTINGS_KEY);  
-      return saved ? { ...defaultPinSettings, ...JSON.parse(saved) } : defaultPinSettings;  
-    } catch (e) {  
-      return defaultPinSettings;  
-    }  
-  }  
-    
-  function savePinSettings() {  
-    const settings = {  
-      platformPinEnabled: document.getElementById('platformPinEnabled')?.checked || false,  
-      resultPinEnabled: document.getElementById('resultPinEnabled')?.checked || false,  
-      platformPinCode: document.getElementById('platformPinCode')?.value || '',  
-      resultPinCode: document.getElementById('resultPinCode')?.value || ''  
-    };  
-    localStorage.setItem(PIN_SETTINGS_KEY, JSON.stringify(settings));  
-    showNotification('تم حفظ إعدادات الرقم السري', 'success');  
-  }  
-    
-  function loadPinSettingsToUI() {  
-    const settings = getPinSettings();  
-    const el = (id) => document.getElementById(id);  
-    if (el('platformPinEnabled')) el('platformPinEnabled').checked = settings.platformPinEnabled;  
-    if (el('resultPinEnabled')) el('resultPinEnabled').checked = settings.resultPinEnabled;  
-    if (el('platformPinCode')) el('platformPinCode').value = settings.platformPinCode;  
-    if (el('resultPinCode')) el('resultPinCode').value = settings.resultPinCode;  
-  }  
-    
-  function checkPlatformPin() {  
-    const settings = getPinSettings();  
-    if (!settings.platformPinEnabled || !settings.platformPinCode) return true;  
-    if (sessionStorage.getItem('platformPinVerified')) return true;  
-      
-    showPinModal('platform');  
-    return false;  
-  }  
-    
-  function checkResultPin() {  
-    const settings = getPinSettings();  
-    if (!settings.resultPinEnabled || !settings.resultPinCode) return true;  
-    if (sessionStorage.getItem('resultPinVerified')) return true;  
-      
-    showPinModal('result');  
-    return false;  
-  }  
-    
-  function showPinModal(type) {  
-    const title = type === 'platform' ? '🔐 أدخل الرقم السري للدخول' : '🔐 أدخل الرقم السري لعرض النتيجة';  
-      
-    const modalHtml = `  
-      <div id="pinModal" style="position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:10001; display:flex; align-items:center; justify-content:center; padding:20px;">  
-        <div style="background:#fff; border-radius:16px; max-width:350px; width:100%; padding:25px; text-align:center;">  
-          <div style="font-size:50px; margin-bottom:15px;">🔒</div>  
-          <h3 style="margin:0 0 20px;">${title}</h3>  
-          <input type="password" id="pinInput" placeholder="الرقم السري" style="width:100%; padding:12px; font-size:18px; text-align:center; border:2px solid #e5e7eb; border-radius:8px;" onkeypress="if(event.key==='Enter')verifyPin('${type}')">  
-          <div id="pinError" style="color:#ef4444; font-size:13px; margin-top:8px; display:none;">الرقم السري غير صحيح</div>  
-          <button onclick="verifyPin('${type}')" class="primary" style="width:100%; margin-top:15px;">دخول</button>  
-        </div>  
-      </div>  
-    `;  
-      
-    document.body.insertAdjacentHTML('beforeend', modalHtml);  
-    document.getElementById('pinInput')?.focus();  
-  }  
-    
-  function verifyPin(type) {  
-    const settings = getPinSettings();  
-    const input = document.getElementById('pinInput')?.value;  
-    const correctPin = type === 'platform' ? settings.platformPinCode : settings.resultPinCode;  
-      
-    if (input === correctPin) {  
-      sessionStorage.setItem(type + 'PinVerified', 'true');  
-      document.getElementById('pinModal')?.remove();  
-        
-      if (type === 'result') {  
-        // إعادة عرض النتيجة  
-        showPage('result');  
-      }  
-    } else {  
-      document.getElementById('pinError').style.display = 'block';  
-      document.getElementById('pinInput').value = '';  
-      document.getElementById('pinInput')?.focus();  
-    }  
-  }  
-    
-  // تحميل الإعدادات عند بدء التطبيق  
-  document.addEventListener('DOMContentLoaded', () => {  
-    loadPaymentSettingsToUI();  
-    loadPinSettingsToUI();  
-      
-    // التحقق من الرقم السري للمنصة  
-    setTimeout(() => {  
-      checkPlatformPin();  
-    }, 100);  
-      
-    // تحميل الواجهات المحفوظة بعد تحميل كل الدوال  
-    setTimeout(() => {  
-      if (typeof loadSavedInterfaceImages === 'function') {  
-        loadSavedInterfaceImages();  
-        console.log('Interface images loaded from end of file');  
-      }  
-      // تحميل إعدادات الخطوط والألوان  
-      loadFontSettings();  
-      loadAdvancedColors();  
-    }, 200);  
-  });  
-    
-  // ====== نظام البحث عن العروض ======  
-  function openOffersSearchModal() {  
-    document.getElementById('offersSearchModal').style.display = 'block';  
-    document.getElementById('searchOfferEmployer').value = '';  
-    document.getElementById('offersSearchResults').innerHTML = `  
-      <div style="text-align:center; color:#9ca3af; padding:30px;">  
-        <div style="font-size:40px; margin-bottom:10px;">🔍</div>  
-        <p>اختر جهة عملك لعرض العروض المتاحة</p>  
-      </div>  
-    `;  
-  }  
-    
-  function closeOffersSearchModal() {  
-    document.getElementById('offersSearchModal').style.display = 'none';  
-  }  
-    
-  function searchOffersForEmployer() {  
-    const employer = document.getElementById('searchOfferEmployer').value;  
-    const resultsDiv = document.getElementById('offersSearchResults');  
-      
-    if (!employer) {  
-      resultsDiv.innerHTML = `  
-        <div style="text-align:center; color:#9ca3af; padding:30px;">  
-          <div style="font-size:40px; margin-bottom:10px;">🔍</div>  
-          <p>اختر جهة عملك لعرض العروض المتاحة</p>  
-        </div>  
-      `;  
-      return;  
-    }  
-      
-    // البحث عن العروض المطابقة لجهة العمل  
-    const matchingOffers = getOffersForEmployer(employer);  
-      
-    if (matchingOffers.length === 0) {  
-      resultsDiv.innerHTML = `  
-        <div style="text-align:center; color:#9ca3af; padding:30px;">  
-          <div style="font-size:40px; margin-bottom:10px;">😔</div>  
-          <p>لا توجد عروض حالياً لموظفي <strong>${employer}</strong></p>  
-          <p style="font-size:12px; color:#6b7280;">يمكنك متابعة الحساب بالنسب العادية</p>  
-        </div>  
-      `;  
-      return;  
-    }  
-      
-    let html = `<div style="font-weight:600; color:#059669; margin-bottom:10px;">🎉 وجدنا ${matchingOffers.length} عروض لموظفي ${employer}!</div>`;  
-      
-    matchingOffers.forEach(offer => {  
-      const expiryInfo = getOfferExpiryInfo(offer);  
-      html += `  
-        <div style="background:#fff; border:2px solid ${expiryInfo.urgent ? '#ef4444' : '#10b981'}; border-radius:12px; padding:15px; margin-bottom:10px;">  
-          <div style="display:flex; justify-content:space-between; align-items:flex-start;">  
-            <div style="font-weight:700; color:#111827; font-size:16px;">🎁 ${escapeHtml(offer.title)}</div>  
-            ${offer.specialRate ? `<div style="background:#10b981; color:#fff; padding:4px 10px; border-radius:20px; font-size:12px; font-weight:600;">${offer.specialRate}%</div>` : ''}  
-          </div>  
-          <p style="color:#4b5563; margin:8px 0; font-size:14px;">${escapeHtml(offer.text)}</p>  
-          ${offer.linkedBank ? `<div style="color:#3b82f6; font-size:13px;">🏦 ${offer.linkedBank}</div>` : ''}  
-          ${offer.notes ? `<div style="color:#6b7280; font-size:12px; margin-top:5px;">📝 ${escapeHtml(offer.notes)}</div>` : ''}  
-          ${expiryInfo.text ? `<div style="color:${expiryInfo.urgent ? '#ef4444' : '#f59e0b'}; font-size:12px; margin-top:8px; font-weight:600;">⏰ ${expiryInfo.text}</div>` : ''}  
-          ${offer.link ? `<a href="${offer.link}" target="_blank" style="display:inline-block; margin-top:10px; background:#3b82f6; color:#fff; padding:8px 15px; border-radius:8px; text-decoration:none; font-size:13px;">🔗 تفاصيل العرض</a>` : ''}  
-          <button onclick="selectOffer(${JSON.stringify(offer).replace(/"/g, '&quot;')})" style="display:inline-block; margin-top:10px; margin-right:5px; background:#10b981; color:#fff; padding:8px 15px; border-radius:8px; border:none; cursor:pointer; font-size:13px;">✅ اختيار هذا العرض</button>  
-        </div>  
-      `;  
-    });  
-      
-    resultsDiv.innerHTML = html;  
-  }  
-    
-  function getOffersForEmployer(employer) {  
-    const now = new Date();  
-    return offers.filter(o => {  
-      if (!o.enabled) return false;  
-        
-      // فلترة جهة العمل  
-      const targetEmployer = o.customEmployer || o.targetEmployer;  
-      if (targetEmployer && targetEmployer !== employer && targetEmployer !== '') return false;  
-      if (!targetEmployer && !o.customEmployer) return true; // عرض للجميع  
-        
-      // فلترة التاريخ  
-      if (o.startDate && new Date(o.startDate) > now) return false;  
-      if (o.endDate && new Date(o.endDate) < now) return false;  
-        
-      return true;  
-    });  
-  }  
-    
-  function getOfferExpiryInfo(offer) {  
-    if (!offer.endDate || !offer.showExpiry) return { text: '', urgent: false };  
-      
-    const now = new Date();  
-    const endDate = new Date(offer.endDate);  
-    const daysLeft = Math.ceil((endDate - now) / (1000 * 60 * 60 * 24));  
-      
-    if (daysLeft <= 0) return { text: 'انتهى العرض', urgent: true };  
-    if (daysLeft <= 10) return { text: `باقي ${daysLeft} يوم على انتهاء العرض - ربما لا تمدد الجهة التمويلية هذا العرض`, urgent: true };  
-    return { text: `ساري حتى ${offer.endDate}`, urgent: false };  
-  }  
-    
-  function selectOffer(offer) {  
-    // حفظ العرض المختار  
-    window.selectedOffer = offer;  
-      
-    // إذا كان العرض يحتوي على نسبة خاصة، احفظها  
-    if (offer.specialRate) {  
-      answers.selectedOfferRate = offer.specialRate;  
-      answers.selectedOfferTitle = offer.title;  
-    }  
-      
-    closeOffersSearchModal();  
-    showToast(`تم اختيار عرض: ${offer.title}`, 'success');  
-  }  
-    
-  // دالة تحميل العروض تحت سؤال اختيار النسبة  
-  function loadCalcModeOffers() {  
-    const container = document.getElementById('calcModeOffersList');  
-    if (!container) return;  
-      
-    const clientJobType = answers.jobType || '';  
-    const clientEmployer = answers.employer || '';  
-    const clientFinanceType = answers.financeType || '';  
-      
-    // البحث عن العروض المناسبة  
-    const now = new Date();  
-    const matchingOffers = offers.filter(o => {  
-      if (!o.enabled) return false;  
-        
-      // فلترة نوع الوظيفة  
-      if (o.targetJobType && o.targetJobType !== '' && o.targetJobType !== clientJobType) return false;  
-        
-      // فلترة جهة العمل  
-      const targetEmployer = o.customEmployer || o.targetEmployer;  
-      if (targetEmployer && targetEmployer !== '' && targetEmployer !== clientEmployer) return false;  
-        
-      // فلترة نوع التمويل  
-      if (o.targetFinanceType && o.targetFinanceType !== '' && o.targetFinanceType !== 'الكل' && o.targetFinanceType !== clientFinanceType) return false;  
-        
-      // فلترة التاريخ  
-      if (o.startDate && new Date(o.startDate) > now) return false;  
-      if (o.endDate && new Date(o.endDate) < now) return false;  
-        
-      return true;  
-    });  
-      
-    if (matchingOffers.length === 0) {  
-      // إخفاء قسم العروض بالكامل إذا لم تكن هناك عروض
-      const offersContainer = document.getElementById('calcModeOffersContainer');
-      if (offersContainer) offersContainer.style.display = 'none';
-      return;  
-    }  
-    // إظهار قسم العروض إذا كانت هناك عروض
-    const offersContainerShow = document.getElementById('calcModeOffersContainer');
-    if (offersContainerShow) offersContainerShow.style.display = 'block';  
-      
-    let html = '';  
-    matchingOffers.forEach((offer, index) => {  
-      const expiryInfo = getOfferExpiryInfo(offer);  
-      html += `  
-        <div style="display:flex; align-items:center; padding:10px; margin:8px 0; background:#fff; border-radius:8px; cursor:pointer; border:2px solid transparent; transition:all 0.2s;"   
-             onmouseover="this.style.borderColor='#f59e0b'"   
-             onmouseout="this.style.borderColor='transparent'"  
-             onclick="selectOfferFromCalcMode(${index})">  
-          <div style="flex:1;">  
-            <strong style="color:#92400e; font-size:13px;">${offer.title}</strong>  
-            ${offer.specialRate ? `<span style="background:#10b981; color:#fff; padding:2px 8px; border-radius:10px; font-size:11px; margin-right:8px;">${offer.specialRate}%</span>` : ''}  
-            ${expiryInfo.text ? `<span style="color:${expiryInfo.urgent ? '#ef4444' : '#6b7280'}; font-size:10px; display:block; margin-top:3px;">${expiryInfo.text}</span>` : ''}  
-          </div>  
-          <button style="background:#f59e0b; color:#fff; border:none; padding:6px 12px; border-radius:6px; font-size:11px; cursor:pointer;">✅ اختيار</button>  
-        </div>  
-      `;  
-    });  
-      
-    container.innerHTML = html;  
-  }  
-    
-  // اختيار عرض من سؤال النسبة - الانتقال التلقائي  
-  window.selectOfferFromCalcMode = function(offerIndex) {  
-    const clientJobType = answers.jobType || '';  
-    const clientEmployer = answers.employer || '';  
-    const clientFinanceType = answers.financeType || '';  
-    const now = new Date();  
-      
-    const matchingOffers = offers.filter(o => {  
-      if (!o.enabled) return false;  
-      if (o.targetJobType && o.targetJobType !== '' && o.targetJobType !== clientJobType) return false;  
-      const targetEmployer = o.customEmployer || o.targetEmployer;  
-      if (targetEmployer && targetEmployer !== '' && targetEmployer !== clientEmployer) return false;  
-      if (o.targetFinanceType && o.targetFinanceType !== '' && o.targetFinanceType !== 'الكل' && o.targetFinanceType !== clientFinanceType) return false;  
-      if (o.startDate && new Date(o.startDate) > now) return false;  
-      if (o.endDate && new Date(o.endDate) < now) return false;  
-      return true;  
-    });  
-      
-    const offer = matchingOffers[offerIndex];  
-    if (!offer) return;  
-      
-    // حفظ العرض المختار  
-    window.selectedOffer = offer;  
-    answers.selectedOfferRate = offer.specialRate || '';  
-    answers.selectedOfferTitle = offer.title;  
-    answers.calcMode = 'عرض خاص';  
-      
-    // تعيين النسبة من العرض  
-    if (offer.specialRate) {  
-      answers.profitMargin = offer.specialRate;  
-    }  
-      
-    // تحديد المدة - الحد الأقصى للعميل أو الحد الأقصى للعرض (أيهما أقل)  
-    const maxClientMonths = getMaxAllowedMonths();  
-    const offerMaxMonths = offer.maxMonths || 360;  
-    answers.months = Math.min(maxClientMonths, offerMaxMonths);  
-      
-    // حفظ الحالة للرجوع  
-    saveQuestionState();  
-      
-    // تخطي سؤال النسبة والمدة والانتقال لسؤال الالتزامات  
-    // البحث عن سؤال hasCommitments  
-    for (let i = step; i < generalQuestions.length; i++) {  
-      if (generalQuestions[i].id === 'hasCommitments') {  
-        step = i;  
-        break;  
-      }  
-    }  
-      
-    showToast(`تم اختيار عرض: ${offer.title} - النسبة: ${offer.specialRate || 'حسب البنك'}%`, 'success');  
-    showQuestion();  
-  };  
-    
-  // ====== نظام التصاميم الجاهزة ======  
-  const fullDesigns = {  
-    modern: {  
-      name: 'عصري',  
-      theme: 'default',  
-      font: { main: 'Tajawal', title: 'Tajawal', size: 16, weight: 500 },  
-      colors: {  
-        primary: '#3b82f6', secondary: '#1d4ed8', accent: '#60a5fa',  
-        splash1: '#3b82f6', splash2: '#1d4ed8', splash3: '#60a5fa',  
-        home1: '#eff6ff', home2: '#dbeafe', home3: '#bfdbfe', home4: '#93c5fd',  
-        result1: '#f0f9ff', result2: '#e0f2fe', resultCard: '#ffffff'  
-      }  
-    },  
-    elegant: {  
-      name: 'أنيق',  
-      theme: 'purple',  
-      font: { main: 'Cairo', title: 'Cairo', size: 16, weight: 500 },  
-      colors: {  
-        primary: '#8b5cf6', secondary: '#6d28d9', accent: '#a78bfa',  
-        splash1: '#8b5cf6', splash2: '#6d28d9', splash3: '#a78bfa',  
-        home1: '#f5f3ff', home2: '#ede9fe', home3: '#ddd6fe', home4: '#c4b5fd',  
-        result1: '#faf5ff', result2: '#f3e8ff', resultCard: '#ffffff'  
-      }  
-    },  
-    nature: {  
-      name: 'طبيعي',  
-      theme: 'green',  
-      font: { main: 'Almarai', title: 'Almarai', size: 16, weight: 400 },  
-      colors: {  
-        primary: '#10b981', secondary: '#047857', accent: '#34d399',  
-        splash1: '#10b981', splash2: '#047857', splash3: '#34d399',  
-        home1: '#ecfdf5', home2: '#d1fae5', home3: '#a7f3d0', home4: '#6ee7b7',  
-        result1: '#f0fdf4', result2: '#dcfce7', resultCard: '#ffffff'  
-      }  
-    },  
-    luxury: {  
-      name: 'فاخر',  
-      theme: 'gold',  
-      font: { main: 'Changa', title: 'Changa', size: 16, weight: 500 },  
-      colors: {  
-        primary: '#f59e0b', secondary: '#b45309', accent: '#fbbf24',  
-        splash1: '#f59e0b', splash2: '#b45309', splash3: '#fbbf24',  
-        home1: '#fffbeb', home2: '#fef3c7', home3: '#fde68a', home4: '#fcd34d',  
-        result1: '#fefce8', result2: '#fef9c3', resultCard: '#ffffff'  
-      }  
-    },  
-    dark: {  
-      name: 'داكن',  
-      theme: 'dark',  
-      font: { main: 'El Messiri', title: 'El Messiri', size: 16, weight: 500 },  
-      colors: {  
-        primary: '#64748b', secondary: '#334155', accent: '#94a3b8',  
-        splash1: '#1e293b', splash2: '#0f172a', splash3: '#334155',  
-        home1: '#1e293b', home2: '#0f172a', home3: '#334155', home4: '#475569',  
-        result1: '#1e293b', result2: '#0f172a', resultCard: '#334155',  
-        textDark: '#f8fafc', textMedium: '#e2e8f0', textLight: '#cbd5e1'  
-      }  
-    },  
-    professional: {  
-      name: 'احترافي',  
-      theme: 'default',  
-      font: { main: 'Tajawal', title: 'Tajawal', size: 15, weight: 400 },  
-      colors: {  
-        primary: '#64748b', secondary: '#334155', accent: '#94a3b8',  
-        splash1: '#64748b', splash2: '#334155', splash3: '#94a3b8',  
-        home1: '#f8fafc', home2: '#f1f5f9', home3: '#e2e8f0', home4: '#cbd5e1',  
-        result1: '#f8fafc', result2: '#f1f5f9', resultCard: '#ffffff'  
-      }  
-    },  
-    warm: {  
-      name: 'دافئ',  
-      theme: 'default',  
-      font: { main: 'Cairo', title: 'Cairo', size: 16, weight: 500 },  
-      colors: {  
-        primary: '#ef4444', secondary: '#b91c1c', accent: '#f87171',  
-        splash1: '#ef4444', splash2: '#b91c1c', splash3: '#f87171',  
-        home1: '#fef2f2', home2: '#fee2e2', home3: '#fecaca', home4: '#fca5a5',  
-        result1: '#fff1f2', result2: '#ffe4e6', resultCard: '#ffffff'  
-      }  
-    },  
-    ocean: {  
-      name: 'محيطي',  
-      theme: 'default',  
-      font: { main: 'Almarai', title: 'Almarai', size: 16, weight: 400 },  
-      colors: {  
-        primary: '#06b6d4', secondary: '#0891b2', accent: '#22d3ee',  
-        splash1: '#06b6d4', splash2: '#0891b2', splash3: '#22d3ee',  
-        home1: '#ecfeff', home2: '#cffafe', home3: '#a5f3fc', home4: '#67e8f9',  
-        result1: '#f0fdfa', result2: '#ccfbf1', resultCard: '#ffffff'  
-      }  
-    }  
-  };  
-    
-  function applyFullDesign(designName) {  
-    const design = fullDesigns[designName];  
-    if (!design) return;  
-      
-    // تطبيق الثيم  
-    applyTheme(design.theme);  
-      
-    // تطبيق الخطوط  
-    const fontSettings = design.font;  
-    document.documentElement.style.setProperty('--font-main', `'${fontSettings.main}', sans-serif`);  
-    document.documentElement.style.setProperty('--font-title', `'${fontSettings.title}', sans-serif`);  
-    document.body.style.fontFamily = `'${fontSettings.main}', sans-serif`;  
-    document.body.style.fontSize = fontSettings.size + 'px';  
-    document.body.style.fontWeight = fontSettings.weight;  
-      
-    // حفظ إعدادات الخطوط  
-    localStorage.setItem(FONT_SETTINGS_KEY, JSON.stringify(fontSettings));  
-      
-    // تطبيق الألوان  
-    const colors = design.colors;  
-    document.documentElement.style.setProperty('--primary-color', colors.primary);  
-    document.documentElement.style.setProperty('--secondary-color', colors.secondary);  
-    document.documentElement.style.setProperty('--accent-color', colors.accent);  
-      
-    // ألوان شاشة البداية  
-    document.documentElement.style.setProperty('--splash-color-1', colors.splash1);  
-    document.documentElement.style.setProperty('--splash-color-2', colors.splash2);  
-    document.documentElement.style.setProperty('--splash-color-3', colors.splash3);  
-      
-    // ألوان الصفحة الرئيسية  
-    document.documentElement.style.setProperty('--home-color-1', colors.home1);  
-    document.documentElement.style.setProperty('--home-color-2', colors.home2);  
-    document.documentElement.style.setProperty('--home-color-3', colors.home3);  
-    document.documentElement.style.setProperty('--home-color-4', colors.home4);  
-      
-    // ألوان صفحة النتيجة  
-    document.documentElement.style.setProperty('--result-color-1', colors.result1);  
-    document.documentElement.style.setProperty('--result-color-2', colors.result2);  
-    document.documentElement.style.setProperty('--result-card-bg', colors.resultCard);  
-      
-    // ألوان النصوص (للوضع الداكن)  
-    if (colors.textDark) {  
-      document.documentElement.style.setProperty('--text-dark', colors.textDark);  
-      document.documentElement.style.setProperty('--text-medium', colors.textMedium);  
-      document.documentElement.style.setProperty('--text-light', colors.textLight);  
-    } else {  
-      document.documentElement.style.setProperty('--text-dark', '#111827');  
-      document.documentElement.style.setProperty('--text-medium', '#6b7280');  
-      document.documentElement.style.setProperty('--text-light', '#9ca3af');  
-    }  
-      
-    // حفظ الألوان  
-    localStorage.setItem(ADVANCED_COLORS_KEY, JSON.stringify(colors));  
-    localStorage.setItem('fino_full_design', designName);  
-      
-    showToast(`تم تطبيق التصميم: ${design.name}`, 'success');  
-  }  
-    
-  // ====== نظام إدارة الخطوط ======  
-  const FONT_SETTINGS_KEY = 'fino_font_settings';  
-  const defaultFontSettings = {  
-    main: 'Tajawal',  
-    title: 'Cairo',  
-    size: 18,  
-    weight: 400  
-  };  
-    
-  function updateFont(type, fontName) {  
-    const previewId = type === 'main' ? 'fontMainPreview' : 'fontTitlePreview';  
-    const preview = document.getElementById(previewId);  
-    if (preview) {  
-      preview.style.fontFamily = `'${fontName}', sans-serif`;  
-    }  
-      
-    // تطبيق الخط مباشرة  
-    if (type === 'main') {  
-      document.documentElement.style.setProperty('--font-main', `'${fontName}', sans-serif`);  
-      document.body.style.fontFamily = `'${fontName}', sans-serif`;  
-    } else {  
-      document.documentElement.style.setProperty('--font-title', `'${fontName}', sans-serif`);  
-    }  
-  }  
-    
-  function updateFontSize(size) {  
-    document.getElementById('fontSizeValue').textContent = size + 'px';  
-    document.body.style.fontSize = size + 'px';  
-  }  
-    
-  function updateFontWeight(weight) {  
-    document.body.style.fontWeight = weight;  
-  }  
-    
-  function saveFontSettings() {  
-    const settings = {  
-      main: document.getElementById('fontMain')?.value || 'Tajawal',  
-      title: document.getElementById('fontTitle')?.value || 'Cairo',  
-      size: document.getElementById('fontSizeRange')?.value || 18,  
-      weight: document.getElementById('fontWeight')?.value || 400  
-    };  
-    localStorage.setItem(FONT_SETTINGS_KEY, JSON.stringify(settings));  
-    showToast('تم حفظ إعدادات الخطوط بنجاح', 'success');  
-  }  
-    
-  function loadFontSettings() {  
-    const saved = localStorage.getItem(FONT_SETTINGS_KEY);  
-    const settings = saved ? JSON.parse(saved) : defaultFontSettings;  
-      
-    // تطبيق الإعدادات  
-    document.documentElement.style.setProperty('--font-main', `'${settings.main}', sans-serif`);  
-    document.documentElement.style.setProperty('--font-title', `'${settings.title}', sans-serif`);  
-    document.body.style.fontFamily = `'${settings.main}', sans-serif`;  
-    document.body.style.fontSize = settings.size + 'px';  
-    document.body.style.fontWeight = settings.weight;  
-      
-    // تحديث الواجهة  
-    const fontMain = document.getElementById('fontMain');  
-    const fontTitle = document.getElementById('fontTitle');  
-    const fontSizeRange = document.getElementById('fontSizeRange');  
-    const fontWeight = document.getElementById('fontWeight');  
-    const fontSizeValue = document.getElementById('fontSizeValue');  
-      
-    if (fontMain) fontMain.value = settings.main;  
-    if (fontTitle) fontTitle.value = settings.title;  
-    if (fontSizeRange) fontSizeRange.value = settings.size;  
-    if (fontWeight) fontWeight.value = settings.weight;  
-    if (fontSizeValue) fontSizeValue.textContent = settings.size + 'px';  
-      
-    // تحديث المعاينات  
-    const mainPreview = document.getElementById('fontMainPreview');  
-    const titlePreview = document.getElementById('fontTitlePreview');  
-    if (mainPreview) mainPreview.style.fontFamily = `'${settings.main}', sans-serif`;  
-    if (titlePreview) titlePreview.style.fontFamily = `'${settings.title}', sans-serif`;  
-  }  
-    
-  function resetFontSettings() {  
-    localStorage.removeItem(FONT_SETTINGS_KEY);  
-    loadFontSettings();  
-    showToast('تم إعادة تعيين الخطوط للافتراضي', 'info');  
-  }  
-    
-  // ====== نظام الألوان المتقدم ======  
-  const ADVANCED_COLORS_KEY = 'fino_advanced_colors';  
-  const defaultAdvancedColors = {  
-    primary: '#3b82f6',  
-    secondary: '#f59e0b',  
-    accent: '#10b981',  
-    bgDark: '#0f172a',  
-    bgMedium: '#1e3a8a',  
-    bgLight: '#3b82f6',  
-    splashBg1: '#0f172a',  
-    splashBg2: '#1e3a8a',  
-    splashBg3: '#3b82f6',  
-    landingBg1: '#0f172a',  
-    landingBg2: '#1e3a8a',  
-    landingBg3: '#1e40af',  
-    landingBg4: '#3b82f6',  
-    resultBg1: '#0f172a',  
-    resultBg2: '#1e3a8a',  
-    cardColor: '#ffffff',  
-    textDark: '#111827',  
-    textMedium: '#374151',  
-    textLight: '#6b7280'  
-  };  
-    
-  function applyAdvancedColors() {  
-    const colors = {  
-      primary: document.getElementById('customPrimaryColor')?.value || defaultAdvancedColors.primary,  
-      secondary: document.getElementById('customSecondaryColor')?.value || defaultAdvancedColors.secondary,  
-      accent: document.getElementById('customAccentColor')?.value || defaultAdvancedColors.accent,  
-      bgDark: document.getElementById('customBgDark')?.value || defaultAdvancedColors.bgDark,  
-      bgMedium: document.getElementById('customBgMedium')?.value || defaultAdvancedColors.bgMedium,  
-      bgLight: document.getElementById('customBgLight')?.value || defaultAdvancedColors.bgLight,  
-      splashBg1: document.getElementById('splashBg1')?.value || defaultAdvancedColors.splashBg1,  
-      splashBg2: document.getElementById('splashBg2')?.value || defaultAdvancedColors.splashBg2,  
-      splashBg3: document.getElementById('splashBg3')?.value || defaultAdvancedColors.splashBg3,  
-      landingBg1: document.getElementById('landingBg1')?.value || defaultAdvancedColors.landingBg1,  
-      landingBg2: document.getElementById('landingBg2')?.value || defaultAdvancedColors.landingBg2,  
-      landingBg3: document.getElementById('landingBg3')?.value || defaultAdvancedColors.landingBg3,  
-      landingBg4: document.getElementById('landingBg4')?.value || defaultAdvancedColors.landingBg4,  
-      resultBg1: document.getElementById('resultBg1')?.value || defaultAdvancedColors.resultBg1,  
-      resultBg2: document.getElementById('resultBg2')?.value || defaultAdvancedColors.resultBg2,  
-      cardColor: document.getElementById('customCardColor')?.value || defaultAdvancedColors.cardColor,  
-      textDark: document.getElementById('textDark')?.value || defaultAdvancedColors.textDark,  
-      textMedium: document.getElementById('textMedium')?.value || defaultAdvancedColors.textMedium,  
-      textLight: document.getElementById('textLight')?.value || defaultAdvancedColors.textLight  
-    };  
-      
-    // حفظ الألوان  
-    localStorage.setItem(ADVANCED_COLORS_KEY, JSON.stringify(colors));  
-      
-    // تطبيق الألوان  
-    applyColorsToCSS(colors);  
-      
-    showToast('تم تطبيق الألوان بنجاح', 'success');  
-  }  
-    
-  function applyColorsToCSS(colors) {  
-    const root = document.documentElement;  
-      
-    // الألوان الرئيسية  
-    root.style.setProperty('--color-primary', colors.primary);  
-    root.style.setProperty('--color-secondary', colors.secondary);  
-    root.style.setProperty('--color-accent', colors.accent);  
-    root.style.setProperty('--bg-dark', colors.bgDark);  
-    root.style.setProperty('--bg-medium', colors.bgMedium);  
-    root.style.setProperty('--bg-light', colors.bgLight);  
-      
-    // ألوان شاشة البداية  
-    root.style.setProperty('--splash-bg-1', colors.splashBg1);  
-    root.style.setProperty('--splash-bg-2', colors.splashBg2);  
-    root.style.setProperty('--splash-bg-3', colors.splashBg3);  
-      
-    // ألوان الصفحة الرئيسية  
-    root.style.setProperty('--landing-bg-1', colors.landingBg1);  
-    root.style.setProperty('--landing-bg-2', colors.landingBg2);  
-    root.style.setProperty('--landing-bg-3', colors.landingBg3);  
-    root.style.setProperty('--landing-bg-4', colors.landingBg4);  
-      
-    // ألوان صفحة النتيجة  
-    root.style.setProperty('--result-bg-1', colors.resultBg1);  
-    root.style.setProperty('--result-bg-2', colors.resultBg2);  
-    root.style.setProperty('--bg-card', colors.cardColor);  
-      
-    // ألوان النصوص  
-    root.style.setProperty('--text-dark', colors.textDark);  
-    root.style.setProperty('--text-medium', colors.textMedium);  
-    root.style.setProperty('--text-light', colors.textLight);  
-      
-    // تحديث خلفية الصفحة  
-    document.body.style.background = `linear-gradient(-45deg, ${colors.bgDark}, ${colors.bgMedium}, ${colors.primary}, ${colors.bgLight})`;  
-    document.body.style.backgroundSize = '400% 400%';  
-  }  
-    
-  function loadAdvancedColors() {  
-    const saved = localStorage.getItem(ADVANCED_COLORS_KEY);  
-    const colors = saved ? JSON.parse(saved) : defaultAdvancedColors;  
-      
-    // تطبيق الألوان  
-    applyColorsToCSS(colors);  
-      
-    // تحديث الواجهة  
-    const inputs = {  
-      'customPrimaryColor': colors.primary,  
-      'customSecondaryColor': colors.secondary,  
-      'customAccentColor': colors.accent,  
-      'customBgDark': colors.bgDark,  
-      'customBgMedium': colors.bgMedium,  
-      'customBgLight': colors.bgLight,  
-      'splashBg1': colors.splashBg1,  
-      'splashBg2': colors.splashBg2,  
-      'splashBg3': colors.splashBg3,  
-      'landingBg1': colors.landingBg1,  
-      'landingBg2': colors.landingBg2,  
-      'landingBg3': colors.landingBg3,  
-      'landingBg4': colors.landingBg4,  
-      'resultBg1': colors.resultBg1,  
-      'resultBg2': colors.resultBg2,  
-      'customCardColor': colors.cardColor,  
-      'textDark': colors.textDark,  
-      'textMedium': colors.textMedium,  
-      'textLight': colors.textLight  
-    };  
-      
-    Object.entries(inputs).forEach(([id, value]) => {  
-      const el = document.getElementById(id);  
-      if (el) el.value = value;  
-    });  
-  }  
-    
-  function resetAdvancedColors() {  
-    localStorage.removeItem(ADVANCED_COLORS_KEY);  
-    loadAdvancedColors();  
-    showToast('تم إعادة تعيين الألوان للافتراضي', 'info');  
-  }  
-    
-  // دالة لتحميل شعارات البنوك في الصفحة الرئيسية  
-  function loadBankLogosToLanding() {  
-    const container = document.getElementById('banksLogosContainer');  
-    if (!container) return;  
-      
-    const logos = getBankLogos();  
-    const mainBanks = ['مصرف الراجحي', 'البنك الأهلي السعودي', 'بنك الرياض', 'مصرف الإنماء', 'بنك البلاد'];  
-      
-    // شعارات احتياطية بالنص إذا لم تتوفر الصور  
-    const bankTextLogos = {  
-      'مصرف الراجحي': '🏦 الراجحي',  
-      'البنك الأهلي السعودي': '🏦 SNB',  
-      'بنك الرياض': '🏦 الرياض',  
-      'مصرف الإنماء': '🏦 الإنماء',  
-      'بنك البلاد': '🏦 البلاد'  
-    };  
-      
-    container.innerHTML = '';  
-    mainBanks.forEach(bank => {  
-      const logo = logos[bank];  
-      if (logo && logo.startsWith('http')) {  
-        const img = document.createElement('img');  
-        img.src = logo;  
-        img.alt = bank;  
-        img.title = bank;  
-        img.style.cssText = 'height:30px; width:auto; opacity:0.85; filter:brightness(1.1); transition:all 0.3s; background:rgba(255,255,255,0.9); padding:5px 10px; border-radius:8px;';  
-        img.onmouseover = function() { this.style.opacity = '1'; this.style.transform = 'scale(1.1)'; };  
-        img.onmouseout = function() { this.style.opacity = '0.85'; this.style.transform = 'scale(1)'; };  
-        img.onerror = function() {  
-          // إذا فشل تحميل الصورة، استخدم النص  
-          const span = document.createElement('span');  
-          span.textContent = bankTextLogos[bank] || bank;  
-          span.style.cssText = 'background:rgba(255,255,255,0.9); padding:8px 12px; border-radius:8px; font-size:12px; font-weight:bold; color:#1e3a8a;';  
-          this.replaceWith(span);  
-        };  
-        container.appendChild(img);  
-      } else {  
-        // عرض اسم البنك كنص إذا لم يكن هناك شعار  
-        const span = document.createElement('span');  
-        span.textContent = bankTextLogos[bank] || bank;  
-        span.style.cssText = 'background:rgba(255,255,255,0.9); padding:8px 12px; border-radius:8px; font-size:12px; font-weight:bold; color:#1e3a8a; transition:all 0.3s;';  
-        span.onmouseover = function() { this.style.transform = 'scale(1.05)'; this.style.background = 'rgba(255,255,255,1)'; };  
-        span.onmouseout = function() { this.style.transform = 'scale(1)'; this.style.background = 'rgba(255,255,255,0.9)'; };  
-        container.appendChild(span);  
-      }  
-    });  
-  }  
-    
-  // تحميل شعارات البنوك عند بدء التشغيل  
-  setTimeout(loadBankLogosToLanding, 300);  
-    
-  // ====== نظام إدارة الشعارات ======  
-  // المتغيرات معرفة مسبقاً في بداية السكريبت  
-    
-  // معاينة شعار المنصة  
-  function previewLogo(type) {  
-    const input = document.getElementById(type + 'LogoUpload');  
-    const preview = document.getElementById(type + 'LogoPreview');  
-    if (input.files && input.files[0] && preview) {  
-      const reader = new FileReader();  
-      reader.onload = function(e) {  
-        preview.innerHTML = `<img src="${e.target.result}" style="max-width:100%; max-height:100%; object-fit:contain;">`;  
-      };  
-      reader.readAsDataURL(input.files[0]);  
-    }  
-  }  
-    
-  // رفع شعار بنك  
-  function uploadBankLogo() {  
-    const bankSelect = document.getElementById('bankLogoSelect');  
-    const fileInput = document.getElementById('bankLogoUpload');  
-    const bank = bankSelect?.value;  
-      
-    if (!bank) {  
-      showToast('اختر البنك أولاً', 'error');  
-      return;  
-    }  
-      
-    if (!fileInput.files || !fileInput.files[0]) {  
-      showToast('اختر صورة الشعار', 'error');  
-      return;  
-    }  
-      
-    const reader = new FileReader();  
-    reader.onload = function(e) {  
-      const logos = JSON.parse(localStorage.getItem(CUSTOM_LOGOS_KEY) || '{}');  
-      logos[bank] = e.target.result;  
-      localStorage.setItem(CUSTOM_LOGOS_KEY, JSON.stringify(logos));  
-      showToast(`تم رفع شعار ${bank}`, 'success');  
-      loadBankLogosGrid();  
-      bankSelect.value = '';  
-      fileInput.value = '';  
-    };  
-    reader.readAsDataURL(fileInput.files[0]);  
-  }  
-    
-  // عرض شبكة شعارات البنوك  
-  function loadBankLogosGrid() {  
-    const grid = document.getElementById('bankLogosGrid');  
-    if (!grid) return;  
-      
-    const customLogos = JSON.parse(localStorage.getItem(CUSTOM_LOGOS_KEY) || '{}');  
-    const defaultLogos = getBankLogos();  
-    const allLogos = {...defaultLogos, ...customLogos};  
-      
-    grid.innerHTML = '';  
-    Object.entries(allLogos).forEach(([bank, logo]) => {  
-      if (logo) {  
-        const div = document.createElement('div');  
-        div.style.cssText = 'text-align:center; padding:10px; background:#f8fafc; border-radius:8px;';  
-        div.innerHTML = `  
-          <img src="${logo}" style="height:30px; width:auto; margin-bottom:5px;" alt="${bank}">  
-          <div style="font-size:10px; color:#6b7280; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${bank}</div>  
-          ${customLogos[bank] ? `<button onclick="removeBankLogo('${bank}')" style="margin-top:5px; padding:3px 8px; font-size:10px; background:#ef4444; color:#fff; border:none; border-radius:4px; cursor:pointer;">حذف</button>` : ''}  
-        `;  
-        grid.appendChild(div);  
-      }  
-    });  
-  }  
-    
-  // حذف شعار بنك مخصص  
-  function removeBankLogo(bank) {  
-    const logos = JSON.parse(localStorage.getItem(CUSTOM_LOGOS_KEY) || '{}');  
-    delete logos[bank];  
-    localStorage.setItem(CUSTOM_LOGOS_KEY, JSON.stringify(logos));  
-    loadBankLogosGrid();  
-    showToast(`تم حذف شعار ${bank}`, 'info');  
-  }  
-    
-  // إضافة شعار جهة عمل  
-  function addEmployerLogo() {  
-    const nameInput = document.getElementById('employerNameInput');  
-    const fileInput = document.getElementById('employerLogoUpload');  
-    const name = nameInput?.value?.trim();  
-      
-    if (!name) {  
-      showToast('أدخل اسم جهة العمل', 'error');  
-      return;  
-    }  
-      
-    if (!fileInput.files || !fileInput.files[0]) {  
-      showToast('اختر صورة الشعار', 'error');  
-      return;  
-    }  
-      
-    const reader = new FileReader();  
-    reader.onload = function(e) {  
-      const logos = JSON.parse(localStorage.getItem(EMPLOYER_LOGOS_KEY) || '{}');  
-      logos[name] = e.target.result;  
-      localStorage.setItem(EMPLOYER_LOGOS_KEY, JSON.stringify(logos));  
-      showToast(`تم إضافة جهة العمل: ${name}`, 'success');  
-      loadEmployerLogosGrid();  
-      nameInput.value = '';  
-      fileInput.value = '';  
-    };  
-    reader.readAsDataURL(fileInput.files[0]);  
-  }  
-    
-  // عرض شبكة شعارات جهات العمل  
-  function loadEmployerLogosGrid() {  
-    const grid = document.getElementById('employerLogosGrid');  
-    if (!grid) return;  
-      
-    const logos = JSON.parse(localStorage.getItem(EMPLOYER_LOGOS_KEY) || '{}');  
-      
-    grid.innerHTML = '';  
-    Object.entries(logos).forEach(([name, logo]) => {  
-      const div = document.createElement('div');  
-      div.style.cssText = 'text-align:center; padding:10px; background:#f8fafc; border-radius:8px;';  
-      div.innerHTML = `  
-        <img src="${logo}" style="height:35px; width:auto; margin-bottom:5px;" alt="${name}">  
-        <div style="font-size:10px; color:#6b7280; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${name}</div>  
-        <button onclick="removeEmployerLogo('${name}')" style="margin-top:5px; padding:3px 8px; font-size:10px; background:#ef4444; color:#fff; border:none; border-radius:4px; cursor:pointer;">حذف</button>  
-      `;  
-      grid.appendChild(div);  
-    });  
-  }  
-    
-  // حذف شعار جهة عمل  
-  function removeEmployerLogo(name) {  
-    const logos = JSON.parse(localStorage.getItem(EMPLOYER_LOGOS_KEY) || '{}');  
-    delete logos[name];  
-    localStorage.setItem(EMPLOYER_LOGOS_KEY, JSON.stringify(logos));  
-    loadEmployerLogosGrid();  
-    showToast(`تم حذف جهة العمل: ${name}`, 'info');  
-  }  
-    
-  // رفع شعار منتج  
-  function uploadProductLogo() {  
-    const productSelect = document.getElementById('productLogoSelect');  
-    const fileInput = document.getElementById('productLogoUpload');  
-    const product = productSelect?.value;  
-      
-    if (!product) {  
-      showToast('اختر المنتج أولاً', 'error');  
-      return;  
-    }  
-      
-    if (!fileInput.files || !fileInput.files[0]) {  
-      showToast('اختر صورة الشعار', 'error');  
-      return;  
-    }  
-      
-    const reader = new FileReader();  
-    reader.onload = function(e) {  
-      const logos = JSON.parse(localStorage.getItem(PRODUCT_LOGOS_KEY) || '{}');  
-      logos[product] = e.target.result;  
-      localStorage.setItem(PRODUCT_LOGOS_KEY, JSON.stringify(logos));  
-      showToast(`تم رفع شعار ${product}`, 'success');  
-      loadProductLogosGrid();  
-      productSelect.value = '';  
-      fileInput.value = '';  
-    };  
-    reader.readAsDataURL(fileInput.files[0]);  
-  }  
-    
-  // عرض شبكة شعارات المنتجات  
-  function loadProductLogosGrid() {  
-    const grid = document.getElementById('productLogosGrid');  
-    if (!grid) return;  
-      
-    const logos = JSON.parse(localStorage.getItem(PRODUCT_LOGOS_KEY) || '{}');  
-      
-    grid.innerHTML = '';  
-    Object.entries(logos).forEach(([product, logo]) => {  
-      const div = document.createElement('div');  
-      div.style.cssText = 'text-align:center; padding:10px; background:#f8fafc; border-radius:8px;';  
-      div.innerHTML = `  
-        <img src="${logo}" style="height:35px; width:auto; margin-bottom:5px;" alt="${product}">  
-        <div style="font-size:10px; color:#6b7280; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${product}</div>  
-        <button onclick="removeProductLogo('${product}')" style="margin-top:5px; padding:3px 8px; font-size:10px; background:#ef4444; color:#fff; border:none; border-radius:4px; cursor:pointer;">حذف</button>  
-      `;  
-      grid.appendChild(div);  
-    });  
-  }  
-    
-  // حذف شعار منتج  
-  function removeProductLogo(product) {  
-    const logos = JSON.parse(localStorage.getItem(PRODUCT_LOGOS_KEY) || '{}');  
-    delete logos[product];  
-    localStorage.setItem(PRODUCT_LOGOS_KEY, JSON.stringify(logos));  
-    loadProductLogosGrid();  
-    showToast(`تم حذف شعار ${product}`, 'info');  
-  }  
-    
-  // حفظ جميع الشعارات  
-  function saveAllLogos() {  
-    // حفظ شعار المنصة  
-    const platformInput = document.getElementById('platformLogoUpload');  
-    if (platformInput?.files && platformInput.files[0]) {  
-      const reader = new FileReader();  
-      reader.onload = function(e) {  
-        localStorage.setItem(PLATFORM_LOGO_KEY, e.target.result);  
-      };  
-      reader.readAsDataURL(platformInput.files[0]);  
-    }  
-      
-    showToast('تم حفظ جميع الشعارات بنجاح', 'success');  
-    loadBankLogosToLanding();  
-  }  
-    
-  // إعادة تعيين جميع الشعارات  
-  function resetAllLogos() {  
-    if (confirm('هل أنت متأكد من إعادة تعيين جميع الشعارات؟')) {  
-      localStorage.removeItem(CUSTOM_LOGOS_KEY);  
-      localStorage.removeItem(EMPLOYER_LOGOS_KEY);  
-      localStorage.removeItem(PRODUCT_LOGOS_KEY);  
-      localStorage.removeItem(PLATFORM_LOGO_KEY);  
-      loadBankLogosGrid();  
-      loadEmployerLogosGrid();  
-      loadProductLogosGrid();  
-      loadBankLogosToLanding();  
-      showToast('تم إعادة تعيين جميع الشعارات', 'info');  
-    }  
-  }  
-    
-  // تحميل شبكات الشعارات عند فتح صفحة الثيمات  
-  setTimeout(() => {  
-    loadBankLogosGrid();  
-    loadEmployerLogosGrid();  
-    loadProductLogosGrid();  
-  }, 500);  
-    
-  // ====== نظام تعديلات النسب حسب وضع العميل ======  
-  const RATE_ADJUSTMENTS_KEY = 'fino_rate_adjustments';  
-
-  // تعديلات النسب الافتراضية للبنك الأهلي
-  const defaultRateAdjustments = [
-    {
-      bankName: 'البنك الأهلي السعودي',
-      financeType: 'mortgage',
-      type: 'personalLoan',
-      name: 'التزام شخصي قائم (الأهلي)',
-      value: 0.90,
-      startDate: '',
-      endDate: '',
-      note: '+90 نقطة إذا كان على العميل التزام/قرض شخصي',
-      enabled: true,
-      createdAt: new Date().toISOString()
-    },
-    {
-      bankName: 'البنك الأهلي السعودي',
-      financeType: 'mortgage',
-      type: 'supportAdvance',
-      name: 'الدعم المقدم (الأهلي)',
-      value: 0.90,
-      startDate: '',
-      endDate: '',
-      note: '+90 نقطة إذا كان العميل يبغى الدعم المقدم',
-      enabled: true,
-      createdAt: new Date().toISOString()
-    }
-  ];
-
-  // تهيئة تعديلات النسب الافتراضية
-  (function initDefaultRateAdjustments() {
-    const existingAdjustments = JSON.parse(localStorage.getItem(RATE_ADJUSTMENTS_KEY) || '[]');
-    if (existingAdjustments.length === 0) {
-      localStorage.setItem(RATE_ADJUSTMENTS_KEY, JSON.stringify(defaultRateAdjustments));
-    }
-  })();
-    
-  // أنواع التعديلات  
-  const adjustmentTypes = {  
-    supportAdvance: 'الدعم المقدم',  
-    personalLoan: 'التزام شخصي قائم',  
-    mortgageLoan: 'التزام عقاري قائم',  
-    creditCard: 'بطاقة ائتمانية',  
-    newCustomer: 'عميل جديد',  
-    salaryTransfer: 'تحويل راتب',  
-    noSalaryTransfer: 'بدون تحويل راتب',  
-    custom: 'تعديل مخصص'  
-  };  
-    
-  // تحديث اسم التعديل عند اختيار النوع  
-  function updateAdjustmentOptions() {  
-    const type = document.getElementById('adjType')?.value;  
-    const nameInput = document.getElementById('adjName');  
-    if (type && adjustmentTypes[type] && nameInput) {  
-      nameInput.value = adjustmentTypes[type];  
-    }  
-  }  
-    
-  // حفظ تعديل النسبة  
-  function saveRateAdjustment(e) {  
-    e.preventDefault();  
-      
-    const adj = {  
-      bankName: document.getElementById('adjBankName')?.value || '',  
-      financeType: document.getElementById('adjFinanceType')?.value || 'الكل',  
-      type: document.getElementById('adjType')?.value || '',  
-      name: document.getElementById('adjName')?.value || '',  
-      value: parseFloat(document.getElementById('adjValue')?.value) || 0,  
-      startDate: document.getElementById('adjStartDate')?.value || '',  
-      endDate: document.getElementById('adjEndDate')?.value || '',  
-      note: document.getElementById('adjNote')?.value || '',
-      includeEtezaaz: document.getElementById('adjIncludeEtezaaz')?.checked || false,  
-      enabled: true,  
-      createdAt: new Date().toISOString()  
-    };  
-      
-    if (!adj.bankName || !adj.type || adj.value === 0) {  
-      showToast('يرجى ملء جميع الحقول المطلوبة', 'error');  
-      return;  
-    }  
-      
-    const adjustments = JSON.parse(localStorage.getItem(RATE_ADJUSTMENTS_KEY) || '[]');  
-    const editIndex = document.getElementById('adjEditIndex')?.value;  
-      
-    if (editIndex !== '' && editIndex !== undefined) {  
-      adjustments[parseInt(editIndex)] = adj;  
-    } else {  
-      adjustments.push(adj);  
-    }  
-      
-    localStorage.setItem(RATE_ADJUSTMENTS_KEY, JSON.stringify(adjustments));  
-    showToast('تم حفظ تعديل النسبة بنجاح', 'success');  
-    clearAdjustmentForm();  
-    loadRateAdjustmentsTable();  
-  }  
-    
-  // مسح نموذج التعديل  
-  function clearAdjustmentForm() {  
-    document.getElementById('adjBankName').value = '';  
-    document.getElementById('adjFinanceType').value = 'الكل';  
-    document.getElementById('adjType').value = '';  
-    document.getElementById('adjName').value = '';  
-    document.getElementById('adjValue').value = '';  
-    document.getElementById('adjStartDate').value = '';  
-    document.getElementById('adjEndDate').value = '';  
-    document.getElementById('adjNote').value = '';
-    if (document.getElementById('adjIncludeEtezaaz')) document.getElementById('adjIncludeEtezaaz').checked = false;  
-    document.getElementById('adjEditIndex').value = '';  
-  }  
-    
-  // تحميل جدول تعديلات النسب  
-  function loadRateAdjustmentsTable() {  
-    const tbody = document.getElementById('rateAdjustmentsBody');  
-    if (!tbody) return;  
-      
-    const adjustments = JSON.parse(localStorage.getItem(RATE_ADJUSTMENTS_KEY) || '[]');  
-      
-    if (adjustments.length === 0) {  
-      tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; color:#9ca3af; padding:20px;">لا توجد تعديلات محفوظة</td></tr>';  
-      return;  
-    }  
-      
-    tbody.innerHTML = adjustments.map((adj, i) => {  
-      const financeTypeNames = {  
-        'الكل': 'الكل',  
-        'personal': 'شخصي',  
-        'mortgage': 'عقاري',  
-        'buyoutPersonal': 'شراء مديونية شخصي',  
-        'buyoutMortgage': 'شراء مديونية عقاري'  
-      };  
-      const valueColor = adj.value > 0 ? '#ef4444' : '#10b981';  
-      const valueSign = adj.value > 0 ? '+' : '';  
-      return `  
-        <tr>  
-          <td>${adj.bankName}</td>  
-          <td>${financeTypeNames[adj.financeType] || adj.financeType}</td>  
-          <td>${adjustmentTypes[adj.type] || adj.type}</td>  
-          <td>${adj.name}</td>  
-          <td style="color:${valueColor}; font-weight:700;">${valueSign}${adj.value}%</td>  
-          <td>${adj.startDate || '-'}</td>  
-          <td>${adj.endDate || '-'}</td>  
-          <td style="font-size:11px;">${adj.note || '-'}</td>  
-          <td>  
-            <button onclick="editRateAdjustment(${i})" style="padding:3px 8px; font-size:11px; background:#3b82f6; color:#fff; border:none; border-radius:4px; cursor:pointer; margin-left:4px;">تعديل</button>  
-            <button onclick="deleteRateAdjustment(${i})" style="padding:3px 8px; font-size:11px; background:#ef4444; color:#fff; border:none; border-radius:4px; cursor:pointer;">حذف</button>  
-          </td>  
-        </tr>  
-      `;  
-    }).join('');  
-  }  
-    
-  // تعديل تعديل النسبة  
-  function editRateAdjustment(index) {  
-    const adjustments = JSON.parse(localStorage.getItem(RATE_ADJUSTMENTS_KEY) || '[]');  
-    const adj = adjustments[index];  
-    if (!adj) return;  
-      
-    document.getElementById('adjBankName').value = adj.bankName;  
-    document.getElementById('adjFinanceType').value = adj.financeType;  
-    document.getElementById('adjType').value = adj.type;  
-    document.getElementById('adjName').value = adj.name;  
-    document.getElementById('adjValue').value = adj.value;  
-    document.getElementById('adjStartDate').value = adj.startDate;  
-    document.getElementById('adjEndDate').value = adj.endDate;  
-    document.getElementById('adjNote').value = adj.note;
-    if (document.getElementById('adjIncludeEtezaaz')) document.getElementById('adjIncludeEtezaaz').checked = adj.includeEtezaaz || false;  
-    document.getElementById('adjEditIndex').value = index;  
-  }  
-    
-  // حذف تعديل النسبة  
-  function deleteRateAdjustment(index) {  
-    if (!confirm('هل أنت متأكد من حذف هذا التعديل؟')) return;  
-      
-    const adjustments = JSON.parse(localStorage.getItem(RATE_ADJUSTMENTS_KEY) || '[]');  
-    adjustments.splice(index, 1);  
-    localStorage.setItem(RATE_ADJUSTMENTS_KEY, JSON.stringify(adjustments));  
-    loadRateAdjustmentsTable();  
-    showToast('تم حذف التعديل', 'info');  
-  }  
-    
-  // الحصول على تعديلات النسبة المطبقة على عميل معين  
-  // ملاحظة: نسب اعتزاز لا تُطبق عليها التعديلات التراكمية إلا إذا فعّلها المسؤول بإضافة includeEtezaaz: true
-  function getApplicableRateAdjustments(bankName, financeType, clientConditions, isEtezaazRate = false) {  
-    const adjustments = JSON.parse(localStorage.getItem(RATE_ADJUSTMENTS_KEY) || '[]');  
-    const now = new Date();  
-      
-    return adjustments.filter(adj => {  
-      if (!adj.enabled) return false;  
-        
-      // ✅ إذا كانت النسبة من نوع اعتزاز، لا تطبق التعديلات إلا إذا كان التعديل يشمل اعتزاز
-      if (isEtezaazRate && !adj.includeEtezaaz) return false;
-        
-      // فلترة الجهة  
-      if (adj.bankName !== 'الكل' && adj.bankName !== bankName) return false;  
-        
-      // فلترة نوع التمويل  
-      if (adj.financeType !== 'الكل' && adj.financeType !== financeType) return false;  
-        
-      // فلترة التاريخ  
-      if (adj.startDate && new Date(adj.startDate) > now) return false;  
-      if (adj.endDate && new Date(adj.endDate) < now) return false;  
-        
-      // فلترة حالة العميل  
-      if (clientConditions) {  
-        if (adj.type === 'supportAdvance' && !clientConditions.supportAdvance) return false;  
-        if (adj.type === 'personalLoan' && !clientConditions.hasPersonalLoan) return false;  
-        if (adj.type === 'mortgageLoan' && !clientConditions.hasMortgageLoan) return false;  
-        if (adj.type === 'creditCard' && !clientConditions.hasCreditCard) return false;  
-        if (adj.type === 'newCustomer' && !clientConditions.isNewCustomer) return false;  
-        if (adj.type === 'salaryTransfer' && !clientConditions.salaryTransfer) return false;  
-        if (adj.type === 'noSalaryTransfer' && clientConditions.salaryTransfer) return false;  
-      }  
-        
-      return true;  
-    });  
-  }  
-    
-  // حساب النسبة النهائية بعد التعديلات  
-  // isEtezaazRate: إذا كانت النسبة من نوع اعتزاز، لا تطبق التعديلات التراكمية
-  function calculateAdjustedRate(baseRate, bankName, financeType, clientConditions, isEtezaazRate = false) {  
-    const applicableAdjustments = getApplicableRateAdjustments(bankName, financeType, clientConditions, isEtezaazRate);  
-    let totalAdjustment = 0;  
-    const appliedAdjustments = [];  
-      
-    applicableAdjustments.forEach(adj => {  
-      totalAdjustment += adj.value;  
-      appliedAdjustments.push({  
-        name: adj.name,  
-        value: adj.value,  
-        note: adj.note,  
-        endDate: adj.endDate  
-      });  
-    });  
-      
-    return {  
-      originalRate: baseRate,  
-      adjustedRate: baseRate + totalAdjustment,  
-      totalAdjustment: totalAdjustment,  
-      appliedAdjustments: appliedAdjustments  
-    };  
-  }  
-    
-  // تحديث قائمة البنوك في نموذج التعديلات  
-  function updateAdjustmentBanksList() {  
-    const select = document.getElementById('adjBankName');  
-    if (!select) return;  
-      
-    // الحصول على البنوك من قائمة adminBankName  
-    const adminBankSelect = document.getElementById('adminBankName');  
-    if (adminBankSelect) {  
-      const currentValue = select.value;  
-      select.innerHTML = '<option value="">اختر الجهة...</option><option value="الكل">جميع الجهات</option>';  
-        
-      Array.from(adminBankSelect.options).forEach(opt => {  
-        if (opt.value && opt.value !== '' && opt.value !== 'بنك آخر') {  
-          const option = document.createElement('option');  
-          option.value = opt.text;  
-          option.textContent = opt.text;  
-          select.appendChild(option);  
-        }  
-      });  
-        
-      // إضافة الجهات المضافة من المسؤول  
-      const customBanks = JSON.parse(localStorage.getItem('fino_custom_banks') || '[]');  
-      customBanks.forEach(bank => {  
-        const option = document.createElement('option');  
-        option.value = bank.name;  
-        option.textContent = bank.name;  
-        select.appendChild(option);  
-      });  
-        
-      select.value = currentValue;  
-    }  
-  }  
-    
-  // تحميل جدول التعديلات عند فتح صفحة الإعدادات  
-  setTimeout(() => {  
-    loadRateAdjustmentsTable();  
-    updateAdjustmentBanksList();  
-  }, 600);  
-    
-  // إظهار حقل الجهة الجديدة عند اختيارها  
-  document.addEventListener('DOMContentLoaded', function() {  
-    const entitySelect = document.getElementById('fpFinanceEntity');  
-    const newEntityInput = document.getElementById('fpNewEntityName');  
-      
-    if (entitySelect && newEntityInput) {  
-      entitySelect.addEventListener('change', function() {  
-        if (this.value === 'جهة جديدة') {  
-          newEntityInput.style.display = 'block';  
-          newEntityInput.focus();  
-        } else {  
-          newEntityInput.style.display = 'none';  
-          newEntityInput.value = '';  
-        }  
-      });  
-    }  
-      
-    // تحديث قائمة جهات التمويل بالجهات المخصصة  
-    updateFinanceEntityDropdown();  
-      
-    // إظهار حقل التاريخ المخصص عند اختيار "تاريخ مخصص"  
-    const rateExpirySelect = document.getElementById('adminRateExpiry');  
-    const rateExpiryCustom = document.getElementById('adminRateExpiryCustom');  
-    if (rateExpirySelect && rateExpiryCustom) {  
-      rateExpirySelect.addEventListener('change', function() {  
-        if (this.value === 'custom') {  
-          rateExpiryCustom.style.display = 'block';  
-          rateExpiryCustom.focus();  
-        } else {  
-          rateExpiryCustom.style.display = 'none';  
-          rateExpiryCustom.value = '';  
-        }  
-      });  
-    }  
-  });  
-    
-  // ====== دالة الحصول على جهات التمويل لواجهة العميل ======  
-  // تستخدم الدالة المركزية getMasterFinanceEntitiesList()  
-  function getAllFinanceEntities() {  
-    // استخدام الدالة المركزية للحصول على نفس قائمة المسؤول  
-    const allEntities = getMasterFinanceEntitiesList();  
-    return allEntities.map(e => e.name);  
-  }  
   
-  function updateFinanceEntityDropdown() {  
-    const entitySelect = document.getElementById('fpFinanceEntity');  
-    if (!entitySelect) return;  
-      
-    const allEntities = getAllFinanceEntities();  
-    const lastOption = entitySelect.lastElementChild;  
-      
-    // إزالة الخيارات الحالية باستثناء الأول والأخير (إضافة جهة جديدة)  
-    const firstOption = entitySelect.firstElementChild;  
-    const allOptions = Array.from(entitySelect.options);  
-      
-    // الاحتفاظ بـ "اختر جهة التمويل" و "الكل" و "إضافة جهة جديدة"  
-    entitySelect.innerHTML = '';  
-    entitySelect.appendChild(firstOption);  
-      
-    const allOpt = document.createElement('option');  
-    allOpt.value = 'الكل';  
-    allOpt.textContent = '✅ الكل (جميع جهات التمويل)';  
-    allOpt.style.background = '#dcfce7';  
-    allOpt.style.fontWeight = 'bold';  
-    entitySelect.appendChild(allOpt);  
-      
-    allEntities.forEach(name => {  
-      if (name !== 'الكل') {  
-        const opt = document.createElement('option');  
-        opt.value = name;  
-        opt.textContent = name;  
-        entitySelect.appendChild(opt);  
-      }  
-    });  
-      
-    const newOpt = document.createElement('option');  
-    newOpt.value = 'جهة جديدة';  
-    newOpt.textContent = '➕ إضافة جهة جديدة';  
-    entitySelect.appendChild(newOpt);  
-  }  
-    
-  // دالة تحديث جميع قوائم البنوك وجهات التمويل  
-  function updateAllBankDropdowns() {  
-    // تحديث قائمة جهات التمويل في صفحة المنتجات  
-    updateFinanceEntityDropdown();  
-      
-    // تحديث قائمة البنوك في صفحة النسب  
-    if (typeof updateAdjustmentBanksList === 'function') {  
-      updateAdjustmentBanksList();  
+    input, select, textarea {  
+      width: 100%;  
+      padding: 11px 12px;  
+      margin: 8px 0 2px;  
+      font-size: 18px;  
+      border-radius: 12px;  
+      border: 1px solid #d1d5db;  
+      text-align: right;  
+      background: #ffffff;  
+      color: #1e293b;  
     }  
-      
-    // تحديث قائمة البنوك في صفحة تعديل النسب  
-    const bankSelect = document.getElementById('bankSelect');  
-    if (bankSelect) {  
-      const currentValue = bankSelect.value;  
-      const customBanks = JSON.parse(localStorage.getItem('fino_custom_banks') || '[]');  
-        
-      // إزالة البنوك المخصصة السابقة  
-      const customOptions = bankSelect.querySelectorAll('option[data-custom="true"]');  
-      customOptions.forEach(opt => opt.remove());  
-        
-      // إضافة البنوك المخصصة  
-      customBanks.forEach(bank => {  
-        const opt = document.createElement('option');  
-        opt.value = bank.name;  
-        opt.textContent = bank.name;  
-        opt.dataset.custom = 'true';  
-        bankSelect.appendChild(opt);  
-      });  
-        
-      bankSelect.value = currentValue;  
-    }  
-      
-    console.log('تم تحديث جميع قوائم البنوك وجهات التمويل');  
-  }  
-    
-  // دالة تحديث خلفية البطاقة الرئيسية  
-  function updateCardBackground() {  
-    const color = document.getElementById('settingsCardBgColor')?.value || '#ffffff';  
-    const opacity = parseInt(document.getElementById('settingsCardOpacity')?.value) || 95;  
-    const blur = parseInt(document.getElementById('settingsCardBlur')?.value) || 10;  
-    const transparent = document.getElementById('settingsCardTransparent')?.checked || false;  
-      
-    // تحديث العرض  
-    const opacityValue = document.getElementById('cardOpacityValue');  
-    const blurValue = document.getElementById('cardBlurValue');  
-    if (opacityValue) opacityValue.textContent = opacity + '%';  
-    if (blurValue) blurValue.textContent = blur + 'px';  
-      
-    // تطبيق على البطاقة  
-    const landingCard = document.querySelector('.landing-card');  
-    if (landingCard) {  
-      if (transparent) {  
-        landingCard.style.background = 'transparent';  
-        landingCard.style.backdropFilter = 'none';  
-      } else {  
-        const r = parseInt(color.slice(1,3), 16);  
-        const g = parseInt(color.slice(3,5), 16);  
-        const b = parseInt(color.slice(5,7), 16);  
-        landingCard.style.background = `rgba(${r}, ${g}, ${b}, ${opacity / 100})`;  
-        landingCard.style.backdropFilter = `blur(${blur}px)`;  
-      }  
-    }  
-  }  
-  window.updateCardBackground = updateCardBackground;  
-    
-  // تصدير الدوال الرئيسية إلى window لتكون متاحة للأزرار  
-  window.showPage = showPage;  
-  // window.startClientFlow معرّفة مسبقاً  
-  window.backToLanding = backToLanding;  
-  window.openMiniAdminTools = openMiniAdminTools;  
-  window.resetCalc = resetCalc;  
-  window.showQuestion = showQuestion;  
-  window.nextStep = nextStep;  
-  window.prevStep = prevStep;  
-  window.showResult = showResult;  
-  window.backToFinanceType = backToFinanceType;  
-  window.hideSplashScreen = hideSplashScreen;  
-  window.testSplashScreen = testSplashScreen;  
-    
-  // دالة سرية للوصول للوحة المسؤول (5 ضغطات على الشعار)  
-  window._logoClickCount = 0;  
-  window._logoClickTimer = null;  
-  window.handleLogoClick = function() {  
-    window._logoClickCount++;  
-    clearTimeout(window._logoClickTimer);  
-    window._logoClickTimer = setTimeout(function() { window._logoClickCount = 0; }, 2000);  
-      
-    if (window._logoClickCount >= 5) {  
-      window._logoClickCount = 0;  
-      if (typeof window.openMiniAdminTools === 'function') {  
-        window.openMiniAdminTools();  
-      }  
-    }  
-  };  
-    
-  console.log('[FINO] تم تصدير الدوال الرئيسية إلى window');  
-  
-  // ====== إدارة جهات الوظيفة ======  
-  window.EMPLOYERS_LIST_KEY = 'fino_employers_list';  
-  window.defaultEmployers = [  
-    { name: 'أرامكو', icon: '🛢️' },  
-    { name: 'سابك', icon: '🏭' },  
-    { name: 'ستك', icon: '📞' },  
-    { name: 'الاتصالات السعودية', icon: '📱' },  
-    { name: 'موبايلي', icon: '📲' },  
-    { name: 'زين', icon: '📶' },  
-    { name: 'الكهرباء السعودية', icon: '⚡' },  
-    { name: 'الخطوط السعودية', icon: '✈️' },  
-    { name: 'وزارة الصحة', icon: '🏥' },  
-    { name: 'وزارة التعليم', icon: '🏫' },  
-    { name: 'وزارة الدفاع', icon: '🏛️' },  
-    { name: 'وزارة الداخلية', icon: '🚨' },  
-    { name: 'الحرس الوطني', icon: '🛡️' },  
-    { name: 'الأمن العام', icon: '👮' },  
-    { name: 'الجوازات', icon: '🛂' },  
-    { name: 'الدفاع المدني', icon: '🚒' },  
-    { name: 'الصحة القابضة', icon: '🏥' },  
-    { name: 'وزارة العدل', icon: '⚖️' },  
-    { name: 'وزارة المالية', icon: '💰' },  
-    { name: 'وزارة الإسكان', icon: '🏠' }  
-  ];  
-    
-  window.getEmployersList = function() {  
-    try {  
-      const saved = localStorage.getItem(window.EMPLOYERS_LIST_KEY);  
-      return saved ? JSON.parse(saved) : [...window.defaultEmployers];  
-    } catch (e) {  
-      return [...window.defaultEmployers];  
-    }  
-  }  
-    
-  window.loadEmployersList = function() {  
-    const container = document.getElementById('employersList');  
-    if (!container) return;  
-      
-    const employers = window.getEmployersList();  
-    container.innerHTML = '';  
-      
-    employers.forEach((emp, index) => {  
-      const div = document.createElement('div');  
-      div.style.cssText = 'display:flex; align-items:center; gap:10px; padding:10px; background:#fff; border-radius:8px; border:1px solid #e5e7eb;';  
-      div.innerHTML = `  
-        <span style="font-size:20px;">${emp.icon || '🏢'}</span>  
-        <input type="text" value="${emp.name}" onchange="updateEmployerName(${index}, this.value)" style="flex:1; padding:8px; border:1px solid #d1d5db; border-radius:6px;">  
-        <input type="text" value="${emp.icon || ''}" onchange="updateEmployerIcon(${index}, this.value)" placeholder="🏢" style="width:50px; padding:8px; border:1px solid #d1d5db; border-radius:6px; text-align:center;">  
-        <button onclick="deleteEmployer(${index})" style="background:#ef4444; color:#fff; border:none; padding:8px 12px; border-radius:6px; cursor:pointer;">🗑️</button>  
-      `;  
-      container.appendChild(div);  
-    });  
-  }  
-    
-  window.addNewEmployer = function() {  
-    const nameInput = document.getElementById('newEmployerName');  
-    const iconInput = document.getElementById('newEmployerIcon');  
-    const name = nameInput?.value?.trim();  
-    const icon = iconInput?.value?.trim() || '🏢';  
-      
-    if (!name) {  
-      showToast('أدخل اسم الجهة', 'error');  
-      return;  
-    }  
-      
-    const employers = window.getEmployersList();  
-    if (employers.find(e => e.name === name)) {  
-      showToast('هذه الجهة موجودة بالفعل', 'error');  
-      return;  
-    }  
-      
-    employers.push({ name, icon });  
-    localStorage.setItem(window.EMPLOYERS_LIST_KEY, JSON.stringify(employers));  
-    window.loadEmployersList();  
-    window.updateAllEmployerDropdowns();  
-    nameInput.value = '';  
-    iconInput.value = '';  
-    showToast(`تم إضافة الجهة: ${name}`, 'success');  
-  };  
-    
-  window.updateEmployerName = function(index, newName) {  
-    const employers = window.getEmployersList();  
-    if (employers[index]) {  
-      employers[index].name = newName;  
-      localStorage.setItem(window.EMPLOYERS_LIST_KEY, JSON.stringify(employers));  
-      window.updateAllEmployerDropdowns();  
-    }  
-  };  
-    
-  window.updateEmployerIcon = function(index, newIcon) {  
-    const employers = window.getEmployersList();  
-    if (employers[index]) {  
-      employers[index].icon = newIcon;  
-      localStorage.setItem(window.EMPLOYERS_LIST_KEY, JSON.stringify(employers));  
-      window.loadEmployersList();  
-    }  
-  };  
-    
-  window.deleteEmployer = function(index) {  
-    const employers = window.getEmployersList();  
-    const deleted = employers.splice(index, 1);  
-    localStorage.setItem(window.EMPLOYERS_LIST_KEY, JSON.stringify(employers));  
-    window.loadEmployersList();  
-    window.updateAllEmployerDropdowns();  
-    showToast(`تم حذف الجهة: ${deleted[0]?.name}`, 'info');  
-  };  
-    
-  window.saveEmployersList = function() {  
-    showSaveConfirmation('تم حفظ جهات الوظيفة بنجاح');  
-    window.updateAllEmployerDropdowns();  
-  };  
-    
-  window.resetEmployersList = function() {  
-    if (confirm('هل تريد إعادة تعيين جهات الوظيفة للقيم الافتراضية؟')) {  
-      localStorage.setItem(window.EMPLOYERS_LIST_KEY, JSON.stringify(window.defaultEmployers));  
-      window.loadEmployersList();  
-      window.updateAllEmployerDropdowns();  
-      showToast('تم إعادة تعيين جهات الوظيفة', 'info');  
-    }  
-  };  
-    
-  window.updateAllEmployerDropdowns = function() {  
-    const employers = window.getEmployersList();  
-      
-    // تحديث قائمة العروض  
-    const offerSelect = document.getElementById('offerTargetEmployer');  
-    if (offerSelect) {  
-      const currentValue = offerSelect.value;  
-      offerSelect.innerHTML = '<option value="">الكل</option>';  
-      employers.forEach(emp => {  
-        offerSelect.innerHTML += `<option value="${emp.name}">${emp.icon} ${emp.name}</option>`;  
-      });  
-      offerSelect.value = currentValue;  
-    }  
-      
-    // تحديث قائمة البحث عن العروض  
-    const searchSelect = document.getElementById('searchOfferEmployer');  
-    if (searchSelect) {  
-      const currentValue = searchSelect.value;  
-      searchSelect.innerHTML = '<option value="">اختر جهة العمل...</option>';  
-      employers.forEach(emp => {  
-        searchSelect.innerHTML += `<option value="${emp.name}">${emp.icon} ${emp.name}</option>`;  
-      });  
-      searchSelect.value = currentValue;  
-    }  
-  }  
-    
-  // ====== إدارة جهات التمويل ======  
-  const FINANCE_ENTITIES_KEY = 'fino_finance_entities';  
-    
-  function getFinanceEntitiesList() {  
-    try {  
-      const saved = localStorage.getItem(FINANCE_ENTITIES_KEY);  
-      if (saved) return JSON.parse(saved);  
-      // استخدام القائمة المركزية الموجودة  
-      return getMasterFinanceEntitiesList().map(e => ({  
-        name: e.name,  
-        type: e.category.includes('بنك') ? 'بنك' : e.category.includes('شركة') ? 'شركة تمويل' : 'تقنية مالية',  
-        icon: e.icon  
-      }));  
-    } catch (e) {  
-      return [];  
-    }  
-  }  
-    
-  function loadFinanceEntitiesList() {  
-    const container = document.getElementById('financeEntitiesList');  
-    if (!container) return;  
-      
-    const entities = getFinanceEntitiesList();  
-    container.innerHTML = '';  
-      
-    entities.forEach((entity, index) => {  
-      const div = document.createElement('div');  
-      div.style.cssText = 'display:flex; align-items:center; gap:10px; padding:10px; background:#fff; border-radius:8px; border:1px solid #e5e7eb;';  
-      div.innerHTML = `  
-        <span style="font-size:20px;">${entity.icon || '🏦'}</span>  
-        <input type="text" value="${entity.name}" onchange="updateFinanceEntityName(${index}, this.value)" style="flex:1; padding:8px; border:1px solid #d1d5db; border-radius:6px;">  
-        <select onchange="updateFinanceEntityType(${index}, this.value)" style="padding:8px; border:1px solid #d1d5db; border-radius:6px;">  
-          <option value="بنك" ${entity.type === 'بنك' ? 'selected' : ''}>🏦 بنك</option>  
-          <option value="شركة تمويل" ${entity.type === 'شركة تمويل' ? 'selected' : ''}>🏢 شركة تمويل</option>  
-          <option value="تقنية مالية" ${entity.type === 'تقنية مالية' ? 'selected' : ''}>📱 تقنية مالية</option>  
-        </select>  
-        <input type="text" value="${entity.icon || ''}" onchange="updateFinanceEntityIcon(${index}, this.value)" placeholder="🏦" style="width:50px; padding:8px; border:1px solid #d1d5db; border-radius:6px; text-align:center;">  
-        <button onclick="deleteFinanceEntity(${index})" style="background:#ef4444; color:#fff; border:none; padding:8px 12px; border-radius:6px; cursor:pointer;">🗑️</button>  
-      `;  
-      container.appendChild(div);  
-    });  
-  }  
-    
-  window.addNewFinanceEntity = function() {  
-    const nameInput = document.getElementById('newFinanceEntityName');  
-    const typeSelect = document.getElementById('newFinanceEntityType');  
-    const iconInput = document.getElementById('newFinanceEntityIcon');  
-    const name = nameInput?.value?.trim();  
-    const type = typeSelect?.value || 'بنك';  
-    const icon = iconInput?.value?.trim() || '🏦';  
-      
-    if (!name) {  
-      showToast('أدخل اسم جهة التمويل', 'error');  
-      return;  
-    }  
-      
-    const entities = getFinanceEntitiesList();  
-    if (entities.find(e => e.name === name)) {  
-      showToast('هذه الجهة موجودة بالفعل', 'error');  
-      return;  
-    }  
-      
-    entities.push({ name, type, icon });  
-    localStorage.setItem(FINANCE_ENTITIES_KEY, JSON.stringify(entities));  
-    loadFinanceEntitiesList();  
-    nameInput.value = '';  
-    iconInput.value = '';  
-    showToast(`تم إضافة جهة التمويل: ${name}`, 'success');  
-  };  
-    
-  window.updateFinanceEntityName = function(index, newName) {  
-    const entities = getFinanceEntitiesList();  
-    if (entities[index]) {  
-      entities[index].name = newName;  
-      localStorage.setItem(FINANCE_ENTITIES_KEY, JSON.stringify(entities));  
-    }  
-  };  
-    
-  window.updateFinanceEntityType = function(index, newType) {  
-    const entities = getFinanceEntitiesList();  
-    if (entities[index]) {  
-      entities[index].type = newType;  
-      localStorage.setItem(FINANCE_ENTITIES_KEY, JSON.stringify(entities));  
-    }  
-  };  
-    
-  window.updateFinanceEntityIcon = function(index, newIcon) {  
-    const entities = getFinanceEntitiesList();  
-    if (entities[index]) {  
-      entities[index].icon = newIcon;  
-      localStorage.setItem(FINANCE_ENTITIES_KEY, JSON.stringify(entities));  
-      loadFinanceEntitiesList();  
-    }  
-  };  
-    
-  window.deleteFinanceEntity = function(index) {  
-    const entities = getFinanceEntitiesList();  
-    const deleted = entities.splice(index, 1);  
-    localStorage.setItem(FINANCE_ENTITIES_KEY, JSON.stringify(entities));  
-    loadFinanceEntitiesList();  
-    showToast(`تم حذف جهة التمويل: ${deleted[0]?.name}`, 'info');  
-  };  
-    
-  window.saveFinanceEntitiesList = function() {  
-    showSaveConfirmation('تم حفظ جهات التمويل بنجاح');  
-  };  
-    
-  window.resetFinanceEntitiesList = function() {  
-    if (confirm('هل تريد إعادة تعيين جهات التمويل للقيم الافتراضية؟')) {  
-      localStorage.removeItem(FINANCE_ENTITIES_KEY);  
-      loadFinanceEntitiesList();  
-      showToast('تم إعادة تعيين جهات التمويل', 'info');  
-    }  
-  };  
-    
-  // تحميل القوائم عند فتح الصفحات  
-  const originalShowPage = window.showPage;  
-  window.showPage = function(name) {  
-    originalShowPage(name);  
-    setTimeout(() => {  
-      if (name === 'adminEmployers') {  
-        window.loadEmployersList();  
-      } else if (name === 'adminFinanceEntities') {  
-        window.loadFinanceEntitiesList();  
-      }  
-    }, 100);  
-  };  
-</script>
-
-<!-- زر التنفيذ الثابت لصفحات المسؤول -->
-<button id="adminExecuteBtn" class="admin-execute-btn" onclick="executeAllAdminChanges()">
-  ✅ تنفيذ التغييرات
-</button>
-
-<script>
-// دالة إظهار/إخفاء زر التنفيذ حسب الصفحة الحالية
-function updateExecuteButtonVisibility() {
-  const btn = document.getElementById('adminExecuteBtn');
-  if (!btn) return;
-  
-  // البحث عن أي صفحة مسؤول مفعلة
-  const allPages = document.querySelectorAll('.page');
-  let isAdminPage = false;
-  
-  allPages.forEach(page => {
-    if (page.classList.contains('active') && page.id && page.id.startsWith('admin') && page.id !== 'adminLoginPage' && page.id !== 'adminHubPage') {
-      isAdminPage = true;
+    input::placeholder {
+      color: #9ca3af;
     }
-  });
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+      background: #ffffff;
+    }
+    
+    /* إزالة الإطارات الصفراء المتقطعة من جميع الأزرار */
+    button:focus, a:focus, .landing-start-btn:focus, .secondary-btn:focus {
+      outline: none !important;
+      box-shadow: none !important;
+    }
+    button, a, .landing-start-btn, .secondary-btn {
+      outline: none !important;
+    }  
+    label {  
+      display: block;  
+      text-align: right;  
+      font-size: 17px;  
+      margin-top: 8px;  
+      font-weight: 700;  
+      color: #374151;  
+    }  
+      
+    /* تنسيق خاص لملصقات الأسئلة في الحاسبة - شفاف مع خط أبيض */
+    #question label {
+      background: transparent !important;
+      color: #ffffff !important;
+      font-size: 24px !important;
+      font-weight: 800 !important;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.5) !important;
+      padding: 10px 0 !important;
+      margin-bottom: 15px !important;
+      display: block !important;
+      text-align: center !important;
+      border: none !important;
+      box-shadow: none !important;
+    }
   
-  if (isAdminPage) {
-    btn.classList.add('show');
-  } else {
-    btn.classList.remove('show');
-  }
-}
-
-// دالة تنفيذ جميع التغييرات
-function executeAllAdminChanges() {
-  // حفظ جميع الإعدادات الحالية
-  try {
-    // حفظ إعدادات البنوك
-    if (typeof saveBankConfigs === 'function') saveBankConfigs();
-    
-    // حفظ إعدادات الأسئلة
-    if (typeof saveCustomQuestions === 'function') saveCustomQuestions();
-    
-    // حفظ إعدادات الثيمات
-    if (typeof saveThemeSettings === 'function') saveThemeSettings();
-    
-    // حفظ إعدادات النصوص
-    if (typeof saveCustomTexts === 'function') saveCustomTexts();
-    
-    // حفظ إعدادات النتيجة
-    if (typeof saveResultSettings === 'function') saveResultSettings();
-    
-    // حفظ صيغ النتيجة
-    if (typeof saveResultTexts === 'function') saveResultTexts();
-    
-    // حفظ أنواع الوظائف
-    if (typeof saveJobTypesList === 'function') saveJobTypesList();
-    
-    // حفظ جهات الوظيفة
-    if (typeof saveEmployersList === 'function') saveEmployersList();
-    
-    // حفظ جهات التمويل
-    if (typeof saveFinanceEntitiesList === 'function') saveFinanceEntitiesList();
-    
-    // حفظ إعدادات التسويق
-    if (typeof saveMarketingSettings === 'function') saveMarketingSettings();
-    
-    // حفظ العروض
-    if (typeof saveOffers === 'function') saveOffers();
-    
-    // عرض رسالة نجاح
-    const btn = document.getElementById('adminExecuteBtn');
-    const originalText = btn.innerHTML;
-    btn.innerHTML = '✅ تم التنفيذ بنجاح!';
-    btn.style.background = 'linear-gradient(135deg, #059669 0%, #047857 100%)';
-    
-    setTimeout(() => {
-      btn.innerHTML = originalText;
-      btn.style.background = '';
-      // إعادة تحميل الصفحة لتطبيق التغييرات
-      location.reload();
-    }, 1500);
-    
-  } catch (e) {
-    console.error('خطأ في تنفيذ التغييرات:', e);
-    alert('حدث خطأ أثناء التنفيذ. يرجى المحاولة مرة أخرى.');
-  }
-}
-
-// تحديث ظهور الزر عند تغيير الصفحة
-var _origShowPageForBtn = window.showPage;
-window.showPage = function(pageId) {
-  if (typeof _origShowPageForBtn === 'function') {
-    _origShowPageForBtn(pageId);
-  }
-  setTimeout(updateExecuteButtonVisibility, 100);
-};
-
-// تحديث عند تحميل الصفحة
-document.addEventListener('DOMContentLoaded', function() {
-  setTimeout(updateExecuteButtonVisibility, 500);
-});
-</script>
-
-</body>  
-</html  
+    .fade-in {  
+      animation: fadeInMove .3s ease-out forwards;  
+      opacity: 0;  
+      transform: translateY(10px);  
+    }  
+    @keyframes fadeInMove {  
+      to { opacity: 1; transform: translateY(0); }  
+    }  
+  
+    .page { display: none !important; }  
+    .page.active { display: block !important; }  
+    .page.active.landing-modern { display: flex !important; }  
+  
+    .welcome-title {  
+      font-size: 23px;  
+      margin-bottom: 6px;  
+      color: #111827;  
+    }  
+    .welcome-sub {  
+      font-size: 15px;  
+      color: #6b7280;  
+      margin-bottom: 18px;  
+    }  
+  
+    .steps-badge {  
+      font-size: 14px;  
+      color: #6b7280;  
+      margin-bottom: 6px;  
+      text-align: right;  
+    }  
+  
+    .result-header {  
+      display: flex;  
+      justify-content: space-between;  
+      gap: 8px;  
+      align-items: center;  
+      flex-wrap: wrap;  
+      margin-bottom: 6px;  
+    }  
+    .client-chip {  
+      background: #e0f2fe;  
+      color: #1d4ed8;  
+      border-radius: 999px;  
+      padding: 6px 14px;  
+      font-size: 14px;  
+      border: 1px solid #bfdbfe;  
+    }  
+    .badge-mode {  
+      background: #eff6ff;  
+      color: #1d4ed8;  
+      border-radius: 999px;  
+      padding: 4px 10px;  
+      font-size: 12px;  
+      display: inline-block;  
+    }  
+    .badge-duration {  
+      background: #e0f2fe;  
+      color: #1e3a8a;  
+      border-radius: 999px;  
+      padding: 4px 10px;  
+      font-size: 12px;  
+      display: inline-block;  
+      margin-top: 3px;  
+    }  
+  
+    .bank-card {  
+      display: flex;  
+      align-items: center;  
+      gap: 16px;  
+      padding: 16px 18px;  
+      border-radius: 20px;  
+      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);  
+      border: 2px solid #93c5fd;  
+      margin: 12px 0 16px;  
+      text-align: right;  
+      box-shadow: 0 4px 16px rgba(59, 130, 246, 0.15);  
+    }  
+    .bank-logo {  
+      width: 56px;  
+      height: 56px;  
+      border-radius: 16px;  
+      background: #ffffff;  
+      display: flex;  
+      align-items: center;  
+      justify-content: center;  
+      overflow: hidden;  
+      flex-shrink: 0;  
+      border: 2px solid #bfdbfe;  
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);  
+    }  
+    .bank-logo img {  
+      max-width: 100%;  
+      max-height: 100%;  
+      object-fit: contain;  
+    }  
+    .bank-text-main {  
+      font-size: 18px;  
+      font-weight: 800;  
+      color: #1e40af;  
+      margin-bottom: 4px;  
+    }  
+    .bank-text-sub {  
+      font-size: 14px;  
+      color: #3b82f6;  
+      line-height: 1.6;  
+      font-weight: 500;  
+    }  
+  
+    /* ====== تحسين شكل النتيجة - تصميم عصري ====== */  
+    .result-main-block {  
+      background: linear-gradient(135deg, #f0f9ff 0%, #ffffff 50%, #ecfeff 100%);  
+      border-radius: 24px;  
+      padding: 20px 18px;  
+      margin-top: 8px;  
+      text-align: right;  
+      border: 2px solid #bae6fd;  
+      box-shadow: 0 8px 32px rgba(14, 165, 233, 0.15);  
+    }  
+    .result-main-title {  
+      font-size: 18px;  
+      color: #0369a1;  
+      margin-bottom: 6px;  
+      display:flex;  
+      align-items:center;  
+      gap:10px;  
+      font-weight: 800;  
+      letter-spacing: 0.3px;  
+    }  
+    .result-amount-main {  
+      font-size: 42px;  
+      font-weight: 900;  
+      background: linear-gradient(135deg, #0369a1, #0ea5e9);  
+      -webkit-background-clip: text;  
+      -webkit-text-fill-color: transparent;  
+      background-clip: text;  
+      margin: 8px 0 12px;  
+      letter-spacing: 0.5px;  
+      line-height: 1.1;  
+      text-shadow: 0 2px 4px rgba(0,0,0,0.05);  
+    }  
+    .result-amount-sub {  
+      font-size: 15px;  
+      color: #0284c7;  
+      margin: 4px 0;  
+      line-height: 1.7;  
+      font-weight: 500;  
+    }  
+    .result-amount-small {  
+      font-size: 14px;  
+      color: #334155;  
+      margin-top: 4px;  
+      line-height: 1.7;  
+      font-weight: 500;  
+    }  
+      
+    /* بطاقة الترحيب العصرية */  
+    .result-greeting-card {  
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);  
+      border-radius: 20px;  
+      padding: 16px 20px;  
+      margin-bottom: 16px;  
+      border: 2px solid #fcd34d;  
+      text-align: right;  
+    }  
+    .result-greeting-emoji {  
+      font-size: 32px;  
+      margin-bottom: 8px;  
+    }  
+    .result-greeting-text {  
+      font-size: 20px;  
+      font-weight: 800;  
+      color: #92400e;  
+      line-height: 1.6;  
+    }  
+    .result-greeting-sub {  
+      font-size: 15px;  
+      color: #b45309;  
+      margin-top: 6px;  
+      font-weight: 500;  
+    }  
+      
+    /* بطاقة التقاعد */  
+    .retirement-card {  
+      background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);  
+      border-radius: 20px;  
+      padding: 16px 18px;  
+      margin: 12px 0;  
+      border: 2px solid #6ee7b7;  
+      text-align: right;  
+    }  
+    .retirement-title {  
+      font-size: 16px;  
+      font-weight: 800;  
+      color: #047857;  
+      margin-bottom: 10px;  
+      display: flex;  
+      align-items: center;  
+      gap: 8px;  
+    }  
+    .retirement-row {  
+      display: flex;  
+      justify-content: space-between;  
+      align-items: center;  
+      padding: 8px 0;  
+      border-bottom: 1px dashed #a7f3d0;  
+      font-size: 14px;  
+      color: #065f46;  
+    }  
+    .retirement-row:last-child { border-bottom: none; }  
+    .retirement-value {  
+      font-weight: 800;  
+      color: #047857;  
+      font-size: 16px;  
+    }  
+  
+    .support-panel {  
+      margin-top: 10px;  
+      border-radius: 16px;  
+      padding: 10px 12px;  
+      background: #f8fafc;  
+      border: 1px solid #e5e7eb;  
+    }  
+    .support-title {  
+      font-size: 13px;  
+      font-weight: 900;  
+      color: #0f766e;  
+      display:flex;  
+      align-items:center;  
+      gap:8px;  
+      margin-bottom: 6px;  
+    }  
+    .support-row {  
+      font-size: 13px;  
+      color: #0f172a;  
+      display:flex;  
+      justify-content: space-between;  
+      gap: 10px;  
+      padding: 4px 0;  
+      border-bottom: 1px dashed #e5e7eb;  
+    }  
+    .support-row:last-child{ border-bottom:none; }  
+    .support-badge {  
+      display:inline-flex;  
+      align-items:center;  
+      gap:6px;  
+      padding: 4px 10px;  
+      border-radius: 999px;  
+      font-size: 12px;  
+      background:#ecfeff;  
+      color:#155e75;  
+      border: 1px solid #a5f3fc;  
+      margin-top: 6px;  
+    }  
+  
+    .dual-main-grid {  
+      display: grid;  
+      grid-template-columns: repeat(auto-fit,minmax(180px,1fr));  
+      gap: 8px;  
+      margin-top: 10px;  
+    }  
+    .dual-box {  
+      background: #eff6ff;  
+      border-radius: 14px;  
+      padding: 8px 10px;  
+      font-size: 13px;  
+      text-align: right;  
+      border: 1px solid #dbeafe;  
+    }  
+    .dual-box-title {  
+      font-size: 12px;  
+      color: #1d4ed8;  
+      margin-bottom: 2px;  
+      font-weight: 900;  
+    }  
+    .dual-box-amount {  
+      font-size: 18px;  
+      font-weight: 900;  
+      color: #1e3a8a;  
+    }  
+  
+    .result-section-title {  
+      text-align: right;  
+      font-size: 18px;  
+      font-weight: 800;  
+      margin: 16px 0 10px;  
+      color: #0f172a;  
+      display: flex;  
+      align-items: center;  
+      gap: 8px;  
+    }  
+    .result-section-box {  
+      border-radius: 20px;  
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);  
+      border: 2px solid #e2e8f0;  
+      padding: 14px 16px;  
+      text-align: right;  
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);  
+    }  
+  
+    /* الأقساط بخط أوضح */  
+    .instalment-row {  
+      font-size: 16px;  
+      padding: 10px 0;  
+      border-bottom: 1px dashed #cbd5e1;  
+      text-align: right;  
+      color: #1e293b;  
+      line-height: 1.7;  
+      font-weight: 600;  
+    }  
+    .instalment-row strong { font-weight: 800; color:#0369a1; font-size: 17px; }  
+    .instalment-row:last-child { border-bottom: none; }  
+  
+    .alert-error {  
+      color: #b91c1c;  
+      background: #fef2f2;  
+      border-radius: 12px;  
+      padding: 8px 10px;  
+      font-size: 14px;  
+      margin: 6px 0;  
+      text-align: right;  
+      border: 1px solid #fecaca;  
+      line-height: 1.55;  
+    }  
+  
+    .notice-soft {  
+      color:#9f1239;  
+      background:#fff1f2;  
+      border:1px solid #fecdd3;  
+      border-radius: 14px;  
+      padding: 10px 12px;  
+      font-size: 13px;  
+      text-align:right;  
+      line-height: 1.6;  
+      margin-top: 8px;  
+    }  
+  
+    /* VAT small */  
+    .vat-small {  
+      font-size: 11px;  
+      color: #6b7280;  
+      font-weight: 600;  
+      margin-top: 2px;  
+    }  
+  
+    .admin-grid {  
+      display: grid;  
+      grid-template-columns: repeat(auto-fit,minmax(180px,1fr));  
+      gap: 8px 12px;  
+      margin-top: 6px;  
+      text-align: right;  
+    }  
+    .admin-table {  
+      width: 100%;  
+      border-collapse: collapse;  
+      margin-top: 10px;  
+    }  
+    .admin-table th, .admin-table td {  
+      border: 1px solid #e5e7eb;  
+      padding: 5px 6px;  
+      font-size: 12px;  
+      text-align: center;  
+      vertical-align: top;  
+    }  
+    .admin-table th {  
+      background: #f3f4f6;  
+      color: #374151;  
+    }  
+  
+    footer {  
+      font-size: 13px;  
+      color: rgba(255,255,255,0.8);  
+      margin-top: 10px;  
+      padding: 12px 12px;  
+      position: relative;  
+      background: transparent;  
+      border-top: none;  
+      z-index: 1;  
+    }  
+  
+    .footer-inner {  
+      max-width: 900px;  
+      margin: 0 auto;  
+      display: flex;  
+      align-items: center;  
+      justify-content: space-between;  
+      gap: 8px;  
+      flex-wrap: wrap;  
+    }  
+  
+    #adminIcon {  
+      border-radius: 999px;  
+      background: #e5e7eb;  
+      padding: 6px 12px;  
+      font-size: 14px;  
+      display: inline-flex;  
+      align-items: center;  
+      gap: 6px;  
+      cursor: pointer;  
+      color: #111827;  
+    }  
+    #adminIcon:hover { background: #d1d5db; }  
+  
+    /* أيقونة أدوات المسؤول - أسفل اليمين - بسيطة جداً */  
+    #miniAdminTools {  
+      display:flex;  
+      align-items:center;  
+      justify-content:center;  
+      cursor:pointer;  
+      padding: 2px;  
+      border-radius: 50%;  
+      border: none;  
+      background: transparent;  
+      opacity: 0.03;  
+      transition: all 0.3s ease;  
+      color: rgba(100, 100, 100, 0.1);  
+      font-size: 4px;  
+      user-select:none;  
+      position: fixed;  
+      bottom: 5px;  
+      right: 5px;  
+      left: auto;  
