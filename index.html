@@ -8400,6 +8400,24 @@ function applyAllChanges() {
           // حفظ القيمة والانتقال  
           if(step < generalQuestions.length){  
             answers[q.id] = this.value;  
+            
+            // معالجة خاصة لسؤال hasCommitments عند اختيار "لا"
+            if(q.id === 'hasCommitments' && this.value === 'لا') {
+              console.log('=== المستخدم اختار لا في سؤال الالتزامات (من change event) ===');
+              answers.commitments = []; // تعيين مصفوفة فارغة للالتزامات
+              
+              // فحص إذا كان سؤال التمويل المحدد مفعلاً لهذا المنتج
+              if (isSpecificAmountEnabledForProduct(answers.financeType) && !answers.wantSpecificAmount) {
+                showSpecificAmountQuestion();
+                return;
+              }
+              
+              // إذا لم يكن سؤال التمويل المحدد مفعلاً، انتقل للحساب مباشرة
+              document.getElementById('nextButton').style.display = 'none';
+              calculate();
+              return;
+            }
+            
             step++;  
             showQuestion();  
           } else {  
@@ -10192,17 +10210,42 @@ ${contact}`.trim();
       return;  
     }  
       
-    // حساب القسط الشهري (طريقة القسط الثابت)  
-    const monthlyRate = annualRate / 100 / 12;  
-    const totalProfit = originalAmount * (annualRate / 100) * (totalMonths / 12);  
-    const totalWithProfit = originalAmount + totalProfit;  
-    const monthlyInstallment = totalWithProfit / totalMonths;  
+    // ====== حساب APR الهرمي (Declining Balance Method) ======
+    // هذه الطريقة المعتمدة في السعودية حسب نظام ساما
+    const monthlyRate = annualRate / 100 / 12;
+    
+    // حساب القسط الشهري الثابت باستخدام معادلة الأقساط المتساوية (PMT)
+    // PMT = P * [r(1+r)^n] / [(1+r)^n - 1]
+    const monthlyInstallment = originalAmount * (monthlyRate * Math.pow(1 + monthlyRate, totalMonths)) / (Math.pow(1 + monthlyRate, totalMonths) - 1);
+    
+    // بناء جدول الاستهلاك الهرمي لحساب الرصيد المتبقي الفعلي
+    let balance = originalAmount;
+    let totalPrincipalPaid = 0;
+    let totalInterestPaid = 0;
+    
+    for (let month = 1; month <= paidMonths; month++) {
+      const interestPayment = balance * monthlyRate; // الفائدة على الرصيد المتبقي
+      const principalPayment = monthlyInstallment - interestPayment; // الأصل المسدد
+      balance -= principalPayment;
+      totalPrincipalPaid += principalPayment;
+      totalInterestPaid += interestPayment;
+    }
+    
+    // الرصيد المتبقي الفعلي (الأصل المتبقي)
+    const remainingPrincipal = Math.max(0, balance);
+    const remainingMonths = totalMonths - paidMonths;
+    
+    // حساب إجمالي الأرباح المتبقية لو أكمل العميل السداد
+    let remainingInterest = 0;
+    let tempBalance = remainingPrincipal;
+    for (let month = 1; month <= remainingMonths; month++) {
+      const interestPayment = tempBalance * monthlyRate;
+      const principalPayment = monthlyInstallment - interestPayment;
+      remainingInterest += interestPayment;
+      tempBalance -= principalPayment;
+    }  
       
-    // الرصيد المتبقي من الأصل  
-    const remainingMonths = totalMonths - paidMonths;  
-    const remainingPrincipal = originalAmount * (remainingMonths / totalMonths);  
-      
-    // ====== المعادلة الصحيحة حسب نظام البنك المركزي ======
+    // ====== المعادلة الصحيحة حسب نظام ساما (APR الهرمي) ======
     let earlySettlementAmount = 0;
     let penaltyCost = 0;
     let twoYearsProfitCost = 0;
@@ -10210,64 +10253,62 @@ ${contact}`.trim();
     let formulaDescription = '';
     
     if (financeType === 'mortgage') {
-      // التمويل العقاري: أصل التمويل + أرباح سنتين + أرباح 3 أشهر (رسوم إدارية)
-      twoYearsProfitCost = remainingPrincipal * (annualRate / 100) * 2; // أرباح سنتين
-      threeMonthsProfitCost = remainingPrincipal * (annualRate / 100 / 12) * 3; // أرباح 3 أشهر
-      penaltyCost = twoYearsProfitCost + threeMonthsProfitCost;
-      earlySettlementAmount = remainingPrincipal + penaltyCost;
-      formulaDescription = 'أصل التمويل + أرباح سنتين + أرباح 3 أشهر (رسوم إدارية)';
-    } else {
-      // التمويل الشخصي: أصل المبلغ + أرباح 3 أشهر
-      threeMonthsProfitCost = remainingPrincipal * (annualRate / 100 / 12) * 3;
+      // التمويل العقاري: الرصيد المتبقي + أرباح 3 أشهر على الرصيد المتبقي (حسب نظام ساما)
+      // ملاحظة: بعض البنوك تطلب أرباح سنتين، لكن الحد الأقصى حسب ساما هو 3 أشهر
+      threeMonthsProfitCost = remainingPrincipal * monthlyRate * 3;
       penaltyCost = threeMonthsProfitCost;
       earlySettlementAmount = remainingPrincipal + penaltyCost;
-      formulaDescription = 'أصل المبلغ + أرباح 3 أشهر';
-    }
-      
-    // الأرباح المتبقية لو أكمل  
-    const remainingProfit = totalProfit * (remainingMonths / totalMonths);  
-      
-    // المبلغ الموفر  
-    const savedAmount = remainingProfit - penaltyCost;  
-    const savingPercentage = remainingProfit > 0 ? ((savedAmount / remainingProfit) * 100).toFixed(1) : '0';  
-      
-    // بناء النتيجة حسب نوع التمويل
-    let detailsHtml = '';
-    if (financeType === 'mortgage') {
-      detailsHtml = `
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-          <div style="padding:10px; background:#fff; border-radius:10px;">
-            <div style="font-size:12px; color:#6b7280;">الرصيد المتبقي من الأصل</div>
-            <div style="font-size:18px; font-weight:700; color:#111827;">${remainingPrincipal.toLocaleString('ar-SA')} ريال</div>
-          </div>
-          <div style="padding:10px; background:#fff; border-radius:10px;">
-            <div style="font-size:12px; color:#6b7280;">أرباح سنتين</div>
-            <div style="font-size:18px; font-weight:700; color:#dc2626;">${twoYearsProfitCost.toLocaleString('ar-SA', {maximumFractionDigits:0})} ريال</div>
-          </div>
-          <div style="padding:10px; background:#fff; border-radius:10px;">
-            <div style="font-size:12px; color:#6b7280;">أرباح 3 أشهر (رسوم إدارية)</div>
-            <div style="font-size:18px; font-weight:700; color:#f59e0b;">${threeMonthsProfitCost.toLocaleString('ar-SA', {maximumFractionDigits:0})} ريال</div>
-          </div>
-          <div style="padding:10px; background:#fff; border-radius:10px;">
-            <div style="font-size:12px; color:#6b7280;">إجمالي الرسوم</div>
-            <div style="font-size:18px; font-weight:700; color:#7c3aed;">${penaltyCost.toLocaleString('ar-SA', {maximumFractionDigits:0})} ريال</div>
-          </div>
-        </div>
-      `;
+      formulaDescription = 'الرصيد المتبقي الفعلي + أرباح 3 أشهر (نظام APR الهرمي)';
     } else {
-      detailsHtml = `
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-          <div style="padding:10px; background:#fff; border-radius:10px;">
-            <div style="font-size:12px; color:#6b7280;">الرصيد المتبقي من الأصل</div>
-            <div style="font-size:18px; font-weight:700; color:#111827;">${remainingPrincipal.toLocaleString('ar-SA')} ريال</div>
-          </div>
-          <div style="padding:10px; background:#fff; border-radius:10px;">
-            <div style="font-size:12px; color:#6b7280;">أرباح 3 أشهر</div>
-            <div style="font-size:18px; font-weight:700; color:#f59e0b;">${threeMonthsProfitCost.toLocaleString('ar-SA', {maximumFractionDigits:0})} ريال</div>
-          </div>
-        </div>
-      `;
+      // التمويل الشخصي: الرصيد المتبقي + أرباح 3 أشهر (أو شهر واحد حسب المدة المتبقية)
+      const penaltyMonths = Math.min(3, remainingMonths);
+      threeMonthsProfitCost = remainingPrincipal * monthlyRate * penaltyMonths;
+      penaltyCost = threeMonthsProfitCost;
+      earlySettlementAmount = remainingPrincipal + penaltyCost;
+      formulaDescription = `الرصيد المتبقي الفعلي + أرباح ${penaltyMonths} أشهر (نظام APR الهرمي)`;
     }
+      
+    // المبلغ الموفر = الأرباح المتبقية - رسوم السداد المبكر
+    const savedAmount = remainingInterest - penaltyCost;
+    const savingPercentage = remainingInterest > 0 ? ((savedAmount / remainingInterest) * 100).toFixed(1) : '0';  
+      
+    // بناء النتيجة حسب نوع التمويل مع تفاصيل APR الهرمي
+    let detailsHtml = `
+      <div style="margin-bottom:15px; padding:12px; background:#fef3c7; border-radius:10px; border:1px solid #f59e0b;">
+        <div style="font-size:13px; color:#92400e; font-weight:600;">📐 نظام APR الهرمي (Declining Balance)</div>
+        <div style="font-size:12px; color:#78350f; margin-top:5px;">الأرباح تُحسب على الرصيد المتبقي الفعلي وليس على المبلغ الأصلي</div>
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+        <div style="padding:10px; background:#fff; border-radius:10px;">
+          <div style="font-size:12px; color:#6b7280;">المبلغ الأصلي</div>
+          <div style="font-size:16px; font-weight:700; color:#6b7280;">${originalAmount.toLocaleString('ar-SA')} ريال</div>
+        </div>
+        <div style="padding:10px; background:#fff; border-radius:10px;">
+          <div style="font-size:12px; color:#6b7280;">القسط الشهري</div>
+          <div style="font-size:16px; font-weight:700; color:#3b82f6;">${monthlyInstallment.toLocaleString('ar-SA', {maximumFractionDigits:0})} ريال</div>
+        </div>
+        <div style="padding:10px; background:#e0f2fe; border-radius:10px;">
+          <div style="font-size:12px; color:#0369a1;">الأصل المسدد</div>
+          <div style="font-size:16px; font-weight:700; color:#0284c7;">${totalPrincipalPaid.toLocaleString('ar-SA', {maximumFractionDigits:0})} ريال</div>
+        </div>
+        <div style="padding:10px; background:#fce7f3; border-radius:10px;">
+          <div style="font-size:12px; color:#9d174d;">الأرباح المسددة</div>
+          <div style="font-size:16px; font-weight:700; color:#be185d;">${totalInterestPaid.toLocaleString('ar-SA', {maximumFractionDigits:0})} ريال</div>
+        </div>
+        <div style="padding:10px; background:#dcfce7; border-radius:10px; grid-column: span 2;">
+          <div style="font-size:12px; color:#166534;">الرصيد المتبقي الفعلي (الأصل)</div>
+          <div style="font-size:20px; font-weight:700; color:#15803d;">${remainingPrincipal.toLocaleString('ar-SA', {maximumFractionDigits:0})} ريال</div>
+        </div>
+        <div style="padding:10px; background:#fff; border-radius:10px;">
+          <div style="font-size:12px; color:#6b7280;">الأرباح المتبقية لو أكملت</div>
+          <div style="font-size:16px; font-weight:700; color:#dc2626;">${remainingInterest.toLocaleString('ar-SA', {maximumFractionDigits:0})} ريال</div>
+        </div>
+        <div style="padding:10px; background:#fef2f2; border-radius:10px;">
+          <div style="font-size:12px; color:#991b1b;">رسوم السداد المبكر</div>
+          <div style="font-size:16px; font-weight:700; color:#dc2626;">${penaltyCost.toLocaleString('ar-SA', {maximumFractionDigits:0})} ريال</div>
+        </div>
+      </div>
+    `;
     
     const resultHtml = `  
       <h3 style="margin:0 0 15px; color:#059669;">✅ نتيجة السداد المبكر</h3>
@@ -12269,13 +12310,57 @@ ${contact}`.trim();
   }
   
   // عرض سؤال التمويل المحدد
-  function showSpecificAmountQuestion() {
+  
+  // دالة حساب الحد الأقصى للتمويل للعرض في سؤال التمويل المحدد
+  function calculateMaxFinanceForDisplay() {
+    const salary = parseFloat(answers.salary) || 0;
+    const months = parseInt(answers.months) || 60;
+    const margin = parseFloat(answers.profitMargin) || 5;
+    const financeType = answers.financeType || '';
+    
+    // نسبة الاستقطاع حسب نوع التمويل
+    let dbr = 0.33; // التمويل الشخصي
+    if (financeType.includes('عقاري')) {
+      dbr = 0.55; // التمويل العقاري
+    }
+    
+    // خصم الالتزامات الحالية
+    let totalCommitments = 0;
+    if (answers.commitments && answers.commitments.length > 0) {
+      answers.commitments.forEach(c => {
+        totalCommitments += parseFloat(c.installment) || 0;
+      });
+    }
+    
+    // القسط الشهري المتاح
+    const availableInstallment = (salary * dbr) - totalCommitments;
+    if (availableInstallment <= 0) return 0;
+    
+    // حساب الحد الأقصى باستخدام معادلة APR الهرمي
+    const monthlyRate = margin / 100 / 12;
+    if (monthlyRate === 0) return availableInstallment * months;
+    
+    // PV = PMT * [(1 - (1+r)^-n) / r]
+    const maxFinance = availableInstallment * ((1 - Math.pow(1 + monthlyRate, -months)) / monthlyRate);
+    
+    return Math.max(0, maxFinance);
+  }
+
+function showSpecificAmountQuestion() {
     const div = document.getElementById('question');
     document.getElementById('nextButton').style.display = 'none';
+    
+    // حساب الحد الأقصى للتمويل
+    const maxFinance = calculateMaxFinanceForDisplay();
+    const formattedMax = maxFinance.toLocaleString('ar-SA', {maximumFractionDigits: 0});
     
     div.innerHTML = `
       <div class="question-card fade-in" style="text-align:center;">
         <h3 style="color:#1e293b; margin-bottom:20px;">💵 هل تريد تمويل محدد؟</h3>
+        <div style="background:linear-gradient(135deg, #10b981 0%, #059669 100%); color:#fff; padding:20px; border-radius:16px; margin-bottom:20px; box-shadow:0 4px 15px rgba(16,185,129,0.3);">
+          <p style="font-size:14px; margin-bottom:8px; opacity:0.9;">الحد الأقصى للتمويل المتاح لك</p>
+          <p style="font-size:32px; font-weight:bold; margin:0;">${formattedMax} ريال</p>
+        </div>
         <p style="color:#64748b; font-size:14px; margin-bottom:20px;">يمكنك تحديد مبلغ تمويل أقل من الحد الأقصى الممنوح لك</p>
         <div style="display:flex; gap:15px; justify-content:center; flex-wrap:wrap;">
           <button onclick="handleSpecificAmountAnswer('no')" style="background:#ef4444; color:#fff; border:none; padding:15px 40px; border-radius:12px; font-size:16px; font-weight:bold; cursor:pointer; min-width:120px;">لا</button>
@@ -12287,7 +12372,7 @@ ${contact}`.trim();
   
   // معالجة إجابة سؤال التمويل المحدد
   function handleSpecificAmountAnswer(answer) {
-    if (answer === 'no') {
+    if (answer === 'no' || answer === 'لا') {
       answers.wantSpecificAmount = 'لا';
       document.getElementById('nextButton').style.display = 'none';
       calculate();
@@ -15765,4 +15850,4 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 </body>  
-</html 
+</html  
