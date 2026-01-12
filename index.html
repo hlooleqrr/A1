@@ -8345,116 +8345,10 @@ function applyAllChanges() {
       div.appendChild(specificContainer);
         
     } else if(q.type === 'select'){  
-      // تحويل أسئلة نعم/لا إلى أزرار بدلاً من select لضمان عمل الـ click event
-      const isYesNoQuestion = (q.id === 'hasCommitments' || q.id === 'more');
-      
-      if (isYesNoQuestion) {
-        // إنشاء أزرار نعم/لا بشكل مباشر في HTML
-        const buttonsDiv = document.createElement('div');
-        buttonsDiv.style.cssText = 'display:flex; gap:15px; justify-content:center; flex-wrap:wrap; margin-top:15px;';
-        
-        // حفظ معرف السؤال للاستخدام في الدوال
-        const questionId = q.id;
-        
-        // زر لا
-        const noBtn = document.createElement('button');
-        noBtn.type = 'button';
-        noBtn.innerHTML = 'لا';
-        noBtn.className = 'commitment-no-btn';
-        noBtn.style.cssText = 'background:#ef4444; color:#fff; border:none; padding:15px 40px; border-radius:12px; font-size:16px; font-weight:bold; cursor:pointer; min-width:120px; transition:all 0.3s ease;';
-        noBtn.onmouseover = function() { this.style.background = '#dc2626'; };
-        noBtn.onmouseout = function() { this.style.background = '#ef4444'; };
-        
-        // استخدام addEventListener بدلاً من onclick لضمان العمل
-        noBtn.addEventListener('click', function(e) {
-          e.preventDefault();
-          e.stopPropagation();
-          console.log('=== تم النقر على زر لا للسؤال:', questionId, '===');
-          
-          if (typeof saveQuestionState === 'function') saveQuestionState();
-          
-          if (questionId === 'hasCommitments') {
-            answers.hasCommitments = 'لا';
-            answers.commitments = [];
-            console.log('=== المستخدم اختار لا في سؤال الالتزامات ===');
-            
-            // فحص سؤال التمويل المحدد
-            if (typeof isSpecificAmountEnabledForProduct === 'function' && 
-                isSpecificAmountEnabledForProduct(answers.financeType) && 
-                !answers.wantSpecificAmount) {
-              console.log('=== عرض سؤال التمويل المحدد ===');
-              showSpecificAmountQuestion();
-              return;
-            }
-            
-            document.getElementById('nextButton').style.display = 'none';
-            console.log('=== الانتقال للحساب ===');
-            calculate();
-          } else if (questionId === 'more') {
-            // حفظ الالتزام الحالي
-            if (currentCommitment && Object.keys(currentCommitment).length > 0) {
-              answers.commitments.push({...currentCommitment});
-            }
-            currentCommitment = {};
-            console.log('=== انتهت الالتزامات ===');
-            console.log('الالتزامات النهائية:', answers.commitments);
-            
-            // فحص سؤال التمويل المحدد
-            if (typeof isSpecificAmountEnabledForProduct === 'function' && 
-                isSpecificAmountEnabledForProduct(answers.financeType) && 
-                !answers.wantSpecificAmount) {
-              console.log('=== عرض سؤال التمويل المحدد ===');
-              showSpecificAmountQuestion();
-              return;
-            }
-            
-            document.getElementById('nextButton').style.display = 'none';
-            console.log('=== الانتقال للحساب ===');
-            calculate();
-          }
-        });
-        
-        // زر نعم
-        const yesBtn = document.createElement('button');
-        yesBtn.type = 'button';
-        yesBtn.innerHTML = 'نعم';
-        yesBtn.className = 'commitment-yes-btn';
-        yesBtn.style.cssText = 'background:#22c55e; color:#fff; border:none; padding:15px 40px; border-radius:12px; font-size:16px; font-weight:bold; cursor:pointer; min-width:120px; transition:all 0.3s ease;';
-        yesBtn.onmouseover = function() { this.style.background = '#16a34a'; };
-        yesBtn.onmouseout = function() { this.style.background = '#22c55e'; };
-        
-        yesBtn.addEventListener('click', function(e) {
-          e.preventDefault();
-          e.stopPropagation();
-          console.log('=== تم النقر على زر نعم للسؤال:', questionId, '===');
-          
-          if (typeof saveQuestionState === 'function') saveQuestionState();
-          
-          if (questionId === 'hasCommitments') {
-            answers.hasCommitments = 'نعم';
-            answers.commitments = [];
-            step++;
-            showQuestion();
-          } else if (questionId === 'more') {
-            // حفظ الالتزام الحالي وبدء التزام جديد
-            if (currentCommitment && Object.keys(currentCommitment).length > 0) {
-              answers.commitments.push({...currentCommitment});
-            }
-            currentCommitment = {};
-            commitmentStep = 0;
-            showQuestion();
-          }
-        });
-        
-        buttonsDiv.appendChild(noBtn);
-        buttonsDiv.appendChild(yesBtn);
-        div.appendChild(buttonsDiv);
-        
-      } else {
-        // الأسئلة الأخرى تستخدم select كالمعتاد
-        const sel = document.createElement('select');  
-        sel.id = q.id;  
-        sel.innerHTML = '<option value="">اختر...</option>';  
+      // جميع الأسئلة تستخدم قائمة منسدلة (select)
+      const sel = document.createElement('select');  
+      sel.id = q.id;  
+      sel.innerHTML = '<option value="">اختر...</option>';  
 
       if(q.dynamic && q.id === 'months'){
         const isMainQuestion = (step < generalQuestions.length);  
@@ -8570,21 +8464,13 @@ function applyAllChanges() {
                 calculate();  
               }  
             } else {  
-              // معالجة خاصة لسؤال الأشهر المتبقية - تحويل القيمة إلى رقم
-              if(q.id === 'months') {
-                currentCommitment[q.id] = parseInt(this.value);
-              } else if(q.id === 'amount' || q.id === 'balloonAmount') {
-                currentCommitment[q.id] = parseFloat(this.value);
-              } else {
-                currentCommitment[q.id] = this.value;
-              }
+              currentCommitment[q.id] = this.value;  
               commitmentStep++;  
               showQuestion();  
             }  
           }  
         }  
       });  
-      } // إغلاق else block للأسئلة غير نعم/لا
     } else {  
       div.innerHTML += `<input type="${q.type}" id="${q.id}" ${q.default ? `value="${q.default}"` : ''}>`; 
     }  
@@ -12510,8 +12396,8 @@ function showSpecificAmountQuestion() {
     const maxFinance = calculateMaxFinanceForDisplay();
     const formattedMax = maxFinance.toLocaleString('ar-SA', {maximumFractionDigits: 0});
     
-    // حفظ الحد الأقصى للاستخدام لاحقاً
-    window._currentMaxFinance = maxFinance;
+    // حفظ المبلغ الأقصى لاستخدامه لاحقاً
+    window._maxFinanceForConfirm = maxFinance;
     
     div.innerHTML = `
       <div class="question-card fade-in" style="text-align:center;">
@@ -12522,9 +12408,9 @@ function showSpecificAmountQuestion() {
         </div>
         <p style="color:#64748b; font-size:14px; margin-bottom:20px;">يمكنك تحديد مبلغ تمويل أقل من الحد الأقصى الممنوح لك أو اختيار تأكيد للحصول على المبلغ الأقصى</p>
         <div style="display:flex; gap:15px; justify-content:center; flex-wrap:wrap;">
-          <button type="button" onclick="handleSpecificAmountAnswer('no')" style="background:#ef4444; color:#fff; border:none; padding:15px 40px; border-radius:12px; font-size:16px; font-weight:bold; cursor:pointer; min-width:120px;">لا</button>
-          <button type="button" onclick="handleSpecificAmountAnswer('yes')" style="background:#3b82f6; color:#fff; border:none; padding:15px 40px; border-radius:12px; font-size:16px; font-weight:bold; cursor:pointer; min-width:120px;">نعم (تحديد مبلغ)</button>
-          <button type="button" onclick="handleSpecificAmountAnswer('confirm')" style="background:#22c55e; color:#fff; border:none; padding:15px 40px; border-radius:12px; font-size:16px; font-weight:bold; cursor:pointer; min-width:120px;">✅ تأكيد (المبلغ الأقصى)</button>
+          <button onclick="handleSpecificAmountAnswer('no')" style="background:#6b7280; color:#fff; border:none; padding:15px 30px; border-radius:12px; font-size:16px; font-weight:bold; cursor:pointer; min-width:100px;">لا</button>
+          <button onclick="handleSpecificAmountAnswer('yes')" style="background:#3b82f6; color:#fff; border:none; padding:15px 30px; border-radius:12px; font-size:16px; font-weight:bold; cursor:pointer; min-width:100px;">نعم (تحديد مبلغ)</button>
+          <button onclick="handleSpecificAmountAnswer('confirm')" style="background:#10b981; color:#fff; border:none; padding:15px 30px; border-radius:12px; font-size:16px; font-weight:bold; cursor:pointer; min-width:100px;">✅ تأكيد (المبلغ الأقصى)</button>
         </div>
       </div>
     `;
@@ -12532,23 +12418,17 @@ function showSpecificAmountQuestion() {
   
   // معالجة إجابة سؤال التمويل المحدد
   function handleSpecificAmountAnswer(answer) {
-    console.log('=== handleSpecificAmountAnswer called with:', answer, '===');
-    
     if (answer === 'no' || answer === 'لا') {
       // المستخدم لا يريد تمويل محدد - انتقل للنتيجة
       answers.wantSpecificAmount = 'لا';
-      answers._specificAmountApproved = false;
       document.getElementById('nextButton').style.display = 'none';
-      console.log('=== الانتقال للنتيجة (لا تمويل محدد) ===');
       calculate();
     } else if (answer === 'confirm' || answer === 'تأكيد') {
-      // المستخدم يريد المبلغ الأقصى
-      answers.wantSpecificAmount = 'تأكيد';
-      const maxFinance = window._currentMaxFinance || calculateMaxFinanceForDisplay();
-      answers.specificFinanceAmount = maxFinance;
+      // المستخدم يريد المبلغ الأقصى - استخدم المبلغ الأقصى وانتقل للنتيجة
+      answers.wantSpecificAmount = 'نعم';
+      answers.specificFinanceAmount = window._maxFinanceForConfirm || calculateMaxFinanceForDisplay();
       answers._specificAmountApproved = true;
       document.getElementById('nextButton').style.display = 'none';
-      console.log('=== تأكيد المبلغ الأقصى:', maxFinance, '===');
       calculate();
     } else {
       // المستخدم يريد تحديد مبلغ مخصص
