@@ -6610,6 +6610,11 @@ function applyAllChanges() {
       
     // 5. تحديد حالة اعتزاز (إن وجدت)  
     const isEtizaz = clientAnswers.isEtizaz === 'نعم';  
+    
+    // 6. تحديد تفاصيل المنتج العقاري (وحدة جاهزة / تحت الإنشاء)
+    let mortgageDetail = clientAnswers.mortgageProductType || '';
+    if (mortgageDetail === 'وحدة جاهزة من السوق') mortgageDetail = 'وحدة جاهزة';
+    else if (mortgageDetail === 'وحدة تحت الإنشاء (على الخارطة)') mortgageDetail = 'تحت الإنشاء';
   
     // البحث عن النسبة المناسبة للبنك بناءً على كافة المعايير  
     const matchingConfigs = bankConfigs.filter(cfg => {  
@@ -6632,6 +6637,11 @@ function applyAllChanges() {
         
       // و. مطابقة حالة اعتزاز (إذا كان العرض مخصصاً لمشتركي اعتزاز)  
       if (cfg.isEtizazOnly && !isEtizaz) return false;  
+      
+      // ز. مطابقة تفاصيل المنتج العقاري (وحدة جاهزة / تحت الإنشاء)
+      if (fType === 'mortgage' && mortgageDetail && cfg.productDetail) {
+        if (cfg.productDetail !== 'الكل' && cfg.productDetail !== mortgageDetail) return false;
+      }
         
       return true;  
     });  
@@ -8141,6 +8151,13 @@ function applyAllChanges() {
           saveQuestionState();  
           answers.selectedFinanceEntity = bankName;  
           answers.currentBank = bankName;  
+          
+          // تعيين البنك المختار كـ recommendedBank لضمان عرضه في النتائج
+          answers.recommendedBank = {
+            bankName: bankName,
+            margin: rate || 0,
+            bankNote: ''
+          };
             
           // إذا كانت النسبة مخزنة، استخدمها  
           if (rate) {  
@@ -8328,11 +8345,84 @@ function applyAllChanges() {
       div.appendChild(specificContainer);
         
     } else if(q.type === 'select'){  
-      const sel = document.createElement('select');  
-      sel.id = q.id;  
-      sel.innerHTML = '<option value="">اختر...</option>';  
-  
-      if(q.dynamic && q.id === 'months'){  
+      // تحويل أسئلة نعم/لا إلى أزرار بدلاً من select لضمان عمل الـ click event
+      const isYesNoQuestion = (q.id === 'hasCommitments' || q.id === 'more');
+      
+      if (isYesNoQuestion) {
+        // إنشاء أزرار نعم/لا
+        const buttonsDiv = document.createElement('div');
+        buttonsDiv.style.cssText = 'display:flex; gap:15px; justify-content:center; flex-wrap:wrap; margin-top:15px;';
+        
+        // زر لا
+        const noBtn = document.createElement('button');
+        noBtn.type = 'button';
+        noBtn.innerHTML = 'لا';
+        noBtn.style.cssText = 'background:#ef4444; color:#fff; border:none; padding:15px 40px; border-radius:12px; font-size:16px; font-weight:bold; cursor:pointer; min-width:120px; transition:all 0.3s ease;';
+        noBtn.onmouseover = function() { this.style.background = '#dc2626'; };
+        noBtn.onmouseout = function() { this.style.background = '#ef4444'; };
+        noBtn.onclick = function() {
+          saveQuestionState();
+          
+          if (q.id === 'hasCommitments') {
+            answers.hasCommitments = 'لا';
+            answers.commitments = [];
+            console.log('=== المستخدم اختار لا في سؤال الالتزامات (من زر) ===');
+            
+            if (isSpecificAmountEnabledForProduct(answers.financeType) && !answers.wantSpecificAmount) {
+              showSpecificAmountQuestion();
+              return;
+            }
+            document.getElementById('nextButton').style.display = 'none';
+            calculate();
+          } else if (q.id === 'more') {
+            answers.commitments.push({...currentCommitment});
+            currentCommitment = {};
+            console.log('=== انتهت الالتزامات (من زر لا) ===');
+            
+            if (isSpecificAmountEnabledForProduct(answers.financeType) && !answers.wantSpecificAmount) {
+              showSpecificAmountQuestion();
+              return;
+            }
+            document.getElementById('nextButton').style.display = 'none';
+            console.log('الالتزامات النهائية:', answers.commitments);
+            calculate();
+          }
+        };
+        
+        // زر نعم
+        const yesBtn = document.createElement('button');
+        yesBtn.type = 'button';
+        yesBtn.innerHTML = 'نعم';
+        yesBtn.style.cssText = 'background:#22c55e; color:#fff; border:none; padding:15px 40px; border-radius:12px; font-size:16px; font-weight:bold; cursor:pointer; min-width:120px; transition:all 0.3s ease;';
+        yesBtn.onmouseover = function() { this.style.background = '#16a34a'; };
+        yesBtn.onmouseout = function() { this.style.background = '#22c55e'; };
+        yesBtn.onclick = function() {
+          saveQuestionState();
+          
+          if (q.id === 'hasCommitments') {
+            answers.hasCommitments = 'نعم';
+            answers.commitments = [];
+            step++;
+            showQuestion();
+          } else if (q.id === 'more') {
+            answers.commitments.push({...currentCommitment});
+            currentCommitment = {};
+            commitmentStep = 0;
+            showQuestion();
+          }
+        };
+        
+        buttonsDiv.appendChild(noBtn);
+        buttonsDiv.appendChild(yesBtn);
+        div.appendChild(buttonsDiv);
+        
+      } else {
+        // الأسئلة الأخرى تستخدم select كالمعتاد
+        const sel = document.createElement('select');  
+        sel.id = q.id;  
+        sel.innerHTML = '<option value="">اختر...</option>';  
+
+      if(q.dynamic && q.id === 'months'){
         const isMainQuestion = (step < generalQuestions.length);  
         const isCommitmentMortgage = currentCommitment.type === 'قرض عقاري';  
           
@@ -8453,8 +8543,9 @@ function applyAllChanges() {
           }  
         }  
       });  
+      } // إغلاق else block للأسئلة غير نعم/لا
     } else {  
-      div.innerHTML += `<input type="${q.type}" id="${q.id}" ${q.default ? `value="${q.default}"` : ''}>`;  
+      div.innerHTML += `<input type="${q.type}" id="${q.id}" ${q.default ? `value="${q.default}"` : ''}>`; 
     }  
   
     cont.appendChild(div);  
@@ -8959,9 +9050,10 @@ if (!profitMargin || isNaN(profitMargin) || profitMargin <= 0) {
       const netWithoutFeesFixed = netWithoutFees.toFixed(0);  
   
       const matchingBanks = getMatchingBanksForAnswers();  
-      const recommendedBank = matchingBanks[0] || null;  
-      const altBanks = matchingBanks.slice(1, 4);  
-      answers.recommendedBank = answers.recommendedBank || recommendedBank;  
+      // استخدام البنك المختار من العميل إذا كان موجوداً، وإلا استخدام أفضل بنك من القائمة
+      const recommendedBank = answers.recommendedBank || matchingBanks[0] || null;  
+      const altBanks = matchingBanks.filter(b => b.bankName !== (recommendedBank ? recommendedBank.bankName : '')).slice(0, 3);  
+      answers.recommendedBank = recommendedBank;  
   
       showPage('result');  
       const resultCard = document.getElementById('resultCard');  
@@ -9342,9 +9434,10 @@ if (!profitMargin || isNaN(profitMargin) || profitMargin <= 0) {
     const netAfterBuyout = finalNet - buyoutAmount;  
   
     const matchingBanks = getMatchingBanksForAnswers();  
-    const recommendedBank = matchingBanks[0] || null;  
-    const altBanks = matchingBanks.slice(1, 4);  
-    answers.recommendedBank = answers.recommendedBank || recommendedBank;  
+    // استخدام البنك المختار من العميل إذا كان موجوداً، وإلا استخدام أفضل بنك من القائمة
+    const recommendedBank = answers.recommendedBank || matchingBanks[0] || null;  
+    const altBanks = matchingBanks.filter(b => b.bankName !== (recommendedBank ? recommendedBank.bankName : '')).slice(0, 3);  
+    answers.recommendedBank = recommendedBank;  
   
     // ====== MAIN DISPLAY VALUE حسب طلبك ======  
     let mainShownValue = Number(finalNetFixed);  
@@ -10246,26 +10339,30 @@ ${contact}`.trim();
     }  
       
     // ====== المعادلة الصحيحة حسب نظام ساما (APR الهرمي) ======
+    // حساب كلفة الأجل لـ 3 أشهر التالية (على أساس الرصيد المتناقص)
+    const penaltyMonths = Math.min(3, remainingMonths);
+    let threeMonthsProfitCost = 0;
+    let tempBalanceForPenalty = remainingPrincipal;
+    
+    for (let month = 1; month <= penaltyMonths; month++) {
+      const interestPayment = tempBalanceForPenalty * monthlyRate;
+      threeMonthsProfitCost += interestPayment;
+      const principalPayment = monthlyInstallment - interestPayment;
+      tempBalanceForPenalty -= principalPayment;
+    }
+    
     let earlySettlementAmount = 0;
     let penaltyCost = 0;
-    let twoYearsProfitCost = 0;
-    let threeMonthsProfitCost = 0;
     let formulaDescription = '';
     
+    // مبلغ السداد المبكر = الرصيد المتبقي + كلفة الأجل لـ 3 أشهر (حسب نظام ساما)
+    penaltyCost = threeMonthsProfitCost;
+    earlySettlementAmount = remainingPrincipal + penaltyCost;
+    
     if (financeType === 'mortgage') {
-      // التمويل العقاري: الرصيد المتبقي + أرباح 3 أشهر على الرصيد المتبقي (حسب نظام ساما)
-      // ملاحظة: بعض البنوك تطلب أرباح سنتين، لكن الحد الأقصى حسب ساما هو 3 أشهر
-      threeMonthsProfitCost = remainingPrincipal * monthlyRate * 3;
-      penaltyCost = threeMonthsProfitCost;
-      earlySettlementAmount = remainingPrincipal + penaltyCost;
-      formulaDescription = 'الرصيد المتبقي الفعلي + أرباح 3 أشهر (نظام APR الهرمي)';
+      formulaDescription = `الرصيد المتبقي + كلفة الأجل لـ ${penaltyMonths} أشهر (نظام ساما - الرصيد المتناقص)`;
     } else {
-      // التمويل الشخصي: الرصيد المتبقي + أرباح 3 أشهر (أو شهر واحد حسب المدة المتبقية)
-      const penaltyMonths = Math.min(3, remainingMonths);
-      threeMonthsProfitCost = remainingPrincipal * monthlyRate * penaltyMonths;
-      penaltyCost = threeMonthsProfitCost;
-      earlySettlementAmount = remainingPrincipal + penaltyCost;
-      formulaDescription = `الرصيد المتبقي الفعلي + أرباح ${penaltyMonths} أشهر (نظام APR الهرمي)`;
+      formulaDescription = `الرصيد المتبقي + كلفة الأجل لـ ${penaltyMonths} أشهر (نظام ساما - الرصيد المتناقص)`;
     }
       
     // المبلغ الموفر = الأرباح المتبقية - رسوم السداد المبكر
@@ -12315,8 +12412,26 @@ ${contact}`.trim();
   function calculateMaxFinanceForDisplay() {
     const salary = parseFloat(answers.salary) || 0;
     const months = parseInt(answers.months) || 60;
-    const margin = parseFloat(answers.profitMargin) || 5;
     const financeType = answers.financeType || '';
+    
+    // الحصول على النسبة من البنك المرشح أو المختار
+    let margin = 5; // نسبة افتراضية
+    
+    // إذا كان هناك بنك مرشح مختار، استخدم نسبته
+    if (answers.recommendedBank && answers.recommendedBank.margin) {
+      margin = parseFloat(answers.recommendedBank.margin);
+    } else if (answers.profitMargin) {
+      margin = parseFloat(answers.profitMargin);
+    } else if (answers.calcMode === 'ترشيح بنك مناسب تلقائياً') {
+      // الحصول على أفضل بنك مطابق
+      const matchingBanks = getMatchingBanksForAnswers();
+      if (matchingBanks && matchingBanks.length > 0) {
+        margin = parseFloat(matchingBanks[0].margin);
+        // حفظ البنك المرشح لاستخدامه لاحقاً
+        answers.recommendedBank = matchingBanks[0];
+        answers.profitMargin = margin;
+      }
+    }
     
     // نسبة الاستقطاع حسب نوع التمويل
     let dbr = 0.33; // التمويل الشخصي
@@ -12424,6 +12539,7 @@ function showSpecificAmountQuestion() {
     
     // حفظ المبلغ المحدد
     answers.specificFinanceAmount = amount;
+    answers._specificAmountApproved = true;
     
     // الانتقال للنتيجة فوراً
     document.getElementById('nextButton').style.display = 'none';
@@ -15850,4 +15966,4 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 </body>  
-</html
+</html  
