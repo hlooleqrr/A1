@@ -6672,7 +6672,7 @@ function applyAllChanges() {
     // تحويل تفاصيل المنتج العقاري إلى القيم المستخدمة في قاعدة البيانات
     let mortgageDetail = answers.mortgageProductType || '';
     if (mortgageDetail === 'وحدة جاهزة من السوق') mortgageDetail = 'وحدة جاهزة';
-    else if (mortgageDetail === 'وحدة تحت الإنشاء (على الخارطة)') mortgageDetail = 'على الخارطة';  
+    else if (mortgageDetail === 'وحدة تحت الإنشاء (على الخارطة)') mortgageDetail = 'تحت الإنشاء';  
     const wantsEtezaaz = (answers.financeType === 'تمويل عقاري' && answers.supported === 'مدعوم' && answers.isEtezaaz === 'نعم');  
 
     console.log('=== بدء عملية الترشيح ===');
@@ -15850,4 +15850,4 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 </body>  
-</html  
+</html
