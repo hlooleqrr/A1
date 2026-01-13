@@ -32,7 +32,7 @@
       bottom: 20px !important;
       left: 50% !important;
       transform: translateX(-50%) !important;
-      background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+      background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%) !important;
       color: #ffffff !important;
       border: none !important;
       padding: 15px 40px !important;
@@ -40,13 +40,13 @@
       font-size: 16px !important;
       font-weight: 700 !important;
       cursor: pointer !important;
-      box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4) !important;
+      box-shadow: 0 4px 15px rgba(20, 184, 166, 0.4) !important;
       z-index: 9999 !important;
       display: none !important;
       animation: pulse-execute 2s infinite !important;
     }
     .admin-execute-btn:hover {
-      background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+      background: linear-gradient(135deg, #0d9488 0%, #0a7e71 100%) !important;
       transform: translateX(-50%) scale(1.05) !important;
     }
     .admin-execute-btn.show {
@@ -55,8 +55,8 @@
       gap: 8px !important;
     }
     @keyframes pulse-execute {
-      0%, 100% { box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); }
-      50% { box-shadow: 0 4px 25px rgba(16, 185, 129, 0.6); }
+      0%, 100% { box-shadow: 0 4px 15px rgba(20, 184, 166, 0.4); }
+      50% { box-shadow: 0 4px 25px rgba(20, 184, 166, 0.6); }
     }
     
     /* ========== تنسيق بطاقات الأسئلة في لوحة التحكم ========== */
@@ -210,16 +210,21 @@
       border-color: #60a5fa !important;
     }
     
-    /* زر التالي برتقالي */
+    /* زر التالي بتصميم تسويقي جذاب */
     body.has-global-bg #nextButton {
-      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+      background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%) !important;
       color: #ffffff !important;
       border: none !important;
       border-radius: 30px !important;
-      padding: 14px 50px !important;
-      font-weight: 700 !important;
-      font-size: 16px !important;
-      box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4) !important;
+      padding: 16px 60px !important;
+      font-weight: 800 !important;
+      font-size: 18px !important;
+      box-shadow: 0 10px 15px -3px rgba(244, 63, 94, 0.4) !important;
+      transition: all 0.3s ease !important;
+    }
+    body.has-global-bg #nextButton:hover {
+      transform: translateY(-3px) scale(1.05) !important;
+      box-shadow: 0 20px 25px -5px rgba(244, 63, 94, 0.5) !important;
     }
     
     /* شريط التقدم */
@@ -228,7 +233,7 @@
       border-radius: 10px !important;
     }
     body.has-global-bg .progress-fill {
-      background: linear-gradient(90deg, #f59e0b, #fbbf24) !important;
+      background: linear-gradient(90deg, #ec4899, #f472b6) !important;
       border-radius: 10px !important;
     }  
       
@@ -239,22 +244,22 @@
       --font-title: 'Cairo', sans-serif;  
       --font-accent: 'Readex Pro', sans-serif;  
         
-      /* الألوان الرئيسية */  
-      --color-primary: #3b82f6;  
-      --color-primary-dark: #1e40af;  
-      --color-primary-light: #60a5fa;  
-      --color-secondary: #f59e0b;  
-      --color-secondary-dark: #d97706;  
-      --color-secondary-light: #fbbf24;  
+      /* الألوان الرئيسية - هوية تسويقية فاخرة */  
+      --color-primary: #4f46e5;  
+      --color-primary-dark: #3730a3;  
+      --color-primary-light: #818cf8;  
+      --color-secondary: #f43f5e;  
+      --color-secondary-dark: #e11d48;  
+      --color-secondary-light: #fb7185;  
       --color-accent: #10b981;  
       --color-accent-dark: #059669;  
         
-      /* ألوان الخلفيات */  
-      --bg-dark: #0f172a;  
-      --bg-medium: #1e3a8a;  
-      --bg-light: #3b82f6;  
-      --bg-card: rgba(255, 255, 255, 0.95);  
-      --bg-card-glass: transparent;  
+      /* ألوان الخلفيات - تدرجات عميقة */  
+      --bg-dark: #020617;  
+      --bg-medium: #0f172a;  
+      --bg-light: #1e293b;  
+      --bg-card: rgba(255, 255, 255, 0.96);  
+      --bg-card-glass: rgba(255, 255, 255, 0.05);  
         
       /* ألوان النصوص */  
       --text-dark: #111827;  
@@ -263,20 +268,20 @@
       --text-white: #ffffff;  
         
       /* ألوان الصفحات المخصصة */  
-      --splash-bg-1: #0f172a;  
-      --splash-bg-2: #1e3a8a;  
-      --splash-bg-3: #3b82f6;  
-      --landing-bg-1: #0f172a;  
-      --landing-bg-2: #1e3a8a;  
-      --landing-bg-3: #1e40af;  
-      --landing-bg-4: #3b82f6;  
-      --result-bg-1: #0f172a;  
-      --result-bg-2: #1e3a8a;  
+      --splash-bg-1: #0f0f1e;  
+      --splash-bg-2: #1a1a3e;  
+      --splash-bg-3: #6366f1;  
+      --landing-bg-1: #0f0f1e;  
+      --landing-bg-2: #1a1a3e;  
+      --landing-bg-3: #4f46e5;  
+      --landing-bg-4: #6366f1;  
+      --result-bg-1: #0f0f1e;  
+      --result-bg-2: #1a1a3e;  
         
       /* تأثيرات */  
-      --shadow-soft: 0 10px 40px rgba(0, 0, 0, 0.15);  
-      --shadow-strong: 0 20px 60px rgba(0, 0, 0, 0.3);  
-      --shadow-glow: 0 0 30px rgba(59, 130, 246, 0.4);  
+      --shadow-soft: 0 10px 40px rgba(99, 102, 241, 0.2);  
+      --shadow-strong: 0 20px 60px rgba(99, 102, 241, 0.3);  
+      --shadow-glow: 0 0 30px rgba(99, 102, 241, 0.5);  
       --border-radius-sm: 12px;  
       --border-radius-md: 20px;  
       --border-radius-lg: 30px;  
@@ -301,10 +306,10 @@
       }  
     }  
       
-    /* الخلفية المتحركة */  
+    /* الخلفية المتحركة - مظهر تسويقي جذاب */  
     body {  
       font-family: var(--font-main), system-ui, -apple-system, BlinkMacSystemFont, sans-serif;  
-      background: var(--main-bg, linear-gradient(-45deg, var(--bg-dark), var(--bg-medium), var(--color-primary-dark), var(--color-primary)));  
+      background: var(--main-bg, linear-gradient(-45deg, #020617, #0f172a, #1e1b4b, #312e81));  
       background-size: 400% 400%;  
       animation: gradientBG 15s ease infinite;  
       transition: background 0.5s ease;  
@@ -986,19 +991,24 @@
       padding: 0 10px;  
     }  
     .card {
-      background: rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border-radius: 24px;
-      padding: 24px 20px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-      margin-bottom: 14px;
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 30px;
+      padding: 45px 35px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      margin-bottom: 25px;
       text-align: center;
       width: 100%;
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.7);
       position: relative;  
       z-index: 1;
-      color: #1e293b;
+      color: #0f172a;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 35px 60px -15px rgba(0, 0, 0, 0.3);
     }
     .card h2, .card h3, .card h4, .card p, .card label, .card span {
       color: #1e293b;
@@ -1031,15 +1041,16 @@ body.has-global-bg .card {
       transition: transform .12s ease, box-shadow .12s ease, background .12s ease, opacity .12s ease;  
     }  
     button.primary, .btn.primary {  
-      background: linear-gradient(135deg, #f59e0b, #d97706);  
+      background: linear-gradient(135deg, #f43f5e, #e11d48);  
       color: #ffffff;  
-      box-shadow: 0 8px 20px rgba(245, 158, 11, 0.4);  
-      font-weight: 700;  
+      box-shadow: 0 10px 15px -3px rgba(244, 63, 94, 0.3);  
+      font-weight: 800;  
+      letter-spacing: 0.5px;
     }  
     button.primary:hover, .btn.primary:hover {  
-      transform: translateY(-2px);  
-      box-shadow: 0 12px 28px rgba(245, 158, 11, 0.5);  
-      background: linear-gradient(135deg, #fbbf24, #f59e0b);  
+      transform: translateY(-3px);  
+      box-shadow: 0 20px 25px -5px rgba(244, 63, 94, 0.4);  
+      background: linear-gradient(135deg, #fb7185, #f43f5e);  
     }  
     button.secondary, .btn.secondary {  
       background: #e0f2fe;  
@@ -1175,13 +1186,17 @@ body.has-global-bg .card {
       display: flex;  
       align-items: center;  
       gap: 16px;  
-      padding: 16px 18px;  
-      border-radius: 20px;  
-      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);  
-      border: 2px solid #93c5fd;  
-      margin: 12px 0 16px;  
+      padding: 20px 22px;  
+      border-radius: 25px;  
+      background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);  
+      border: 2px solid #c4b5fd;  
+      margin: 15px 0 20px;  
       text-align: right;  
-      box-shadow: 0 4px 16px rgba(59, 130, 246, 0.15);  
+      box-shadow: 0 10px 25px rgba(99, 102, 241, 0.15);  
+      transition: transform 0.3s ease;
+    }
+    .bank-card:hover {
+      transform: scale(1.02);
     }  
     .bank-logo {  
       width: 56px;  
@@ -8345,116 +8360,10 @@ function applyAllChanges() {
       div.appendChild(specificContainer);
         
     } else if(q.type === 'select'){  
-      // تحويل أسئلة نعم/لا إلى أزرار بدلاً من select لضمان عمل الـ click event
-      const isYesNoQuestion = (q.id === 'hasCommitments' || q.id === 'more');
-      
-      if (isYesNoQuestion) {
-        // إنشاء أزرار نعم/لا بشكل مباشر في HTML
-        const buttonsDiv = document.createElement('div');
-        buttonsDiv.style.cssText = 'display:flex; gap:15px; justify-content:center; flex-wrap:wrap; margin-top:15px;';
-        
-        // حفظ معرف السؤال للاستخدام في الدوال
-        const questionId = q.id;
-        
-        // زر لا
-        const noBtn = document.createElement('button');
-        noBtn.type = 'button';
-        noBtn.innerHTML = 'لا';
-        noBtn.className = 'commitment-no-btn';
-        noBtn.style.cssText = 'background:#ef4444; color:#fff; border:none; padding:15px 40px; border-radius:12px; font-size:16px; font-weight:bold; cursor:pointer; min-width:120px; transition:all 0.3s ease;';
-        noBtn.onmouseover = function() { this.style.background = '#dc2626'; };
-        noBtn.onmouseout = function() { this.style.background = '#ef4444'; };
-        
-        // استخدام addEventListener بدلاً من onclick لضمان العمل
-        noBtn.addEventListener('click', function(e) {
-          e.preventDefault();
-          e.stopPropagation();
-          console.log('=== تم النقر على زر لا للسؤال:', questionId, '===');
-          
-          if (typeof saveQuestionState === 'function') saveQuestionState();
-          
-          if (questionId === 'hasCommitments') {
-            answers.hasCommitments = 'لا';
-            answers.commitments = [];
-            console.log('=== المستخدم اختار لا في سؤال الالتزامات ===');
-            
-            // فحص سؤال التمويل المحدد
-            if (typeof isSpecificAmountEnabledForProduct === 'function' && 
-                isSpecificAmountEnabledForProduct(answers.financeType) && 
-                !answers.wantSpecificAmount) {
-              console.log('=== عرض سؤال التمويل المحدد ===');
-              showSpecificAmountQuestion();
-              return;
-            }
-            
-            document.getElementById('nextButton').style.display = 'none';
-            console.log('=== الانتقال للحساب ===');
-            calculate();
-          } else if (questionId === 'more') {
-            // حفظ الالتزام الحالي
-            if (currentCommitment && Object.keys(currentCommitment).length > 0) {
-              answers.commitments.push({...currentCommitment});
-            }
-            currentCommitment = {};
-            console.log('=== انتهت الالتزامات ===');
-            console.log('الالتزامات النهائية:', answers.commitments);
-            
-            // فحص سؤال التمويل المحدد
-            if (typeof isSpecificAmountEnabledForProduct === 'function' && 
-                isSpecificAmountEnabledForProduct(answers.financeType) && 
-                !answers.wantSpecificAmount) {
-              console.log('=== عرض سؤال التمويل المحدد ===');
-              showSpecificAmountQuestion();
-              return;
-            }
-            
-            document.getElementById('nextButton').style.display = 'none';
-            console.log('=== الانتقال للحساب ===');
-            calculate();
-          }
-        });
-        
-        // زر نعم
-        const yesBtn = document.createElement('button');
-        yesBtn.type = 'button';
-        yesBtn.innerHTML = 'نعم';
-        yesBtn.className = 'commitment-yes-btn';
-        yesBtn.style.cssText = 'background:#22c55e; color:#fff; border:none; padding:15px 40px; border-radius:12px; font-size:16px; font-weight:bold; cursor:pointer; min-width:120px; transition:all 0.3s ease;';
-        yesBtn.onmouseover = function() { this.style.background = '#16a34a'; };
-        yesBtn.onmouseout = function() { this.style.background = '#22c55e'; };
-        
-        yesBtn.addEventListener('click', function(e) {
-          e.preventDefault();
-          e.stopPropagation();
-          console.log('=== تم النقر على زر نعم للسؤال:', questionId, '===');
-          
-          if (typeof saveQuestionState === 'function') saveQuestionState();
-          
-          if (questionId === 'hasCommitments') {
-            answers.hasCommitments = 'نعم';
-            answers.commitments = [];
-            step++;
-            showQuestion();
-          } else if (questionId === 'more') {
-            // حفظ الالتزام الحالي وبدء التزام جديد
-            if (currentCommitment && Object.keys(currentCommitment).length > 0) {
-              answers.commitments.push({...currentCommitment});
-            }
-            currentCommitment = {};
-            commitmentStep = 0;
-            showQuestion();
-          }
-        });
-        
-        buttonsDiv.appendChild(noBtn);
-        buttonsDiv.appendChild(yesBtn);
-        div.appendChild(buttonsDiv);
-        
-      } else {
-        // الأسئلة الأخرى تستخدم select كالمعتاد
-        const sel = document.createElement('select');  
-        sel.id = q.id;  
-        sel.innerHTML = '<option value="">اختر...</option>';  
+      // جميع الأسئلة تستخدم قائمة منسدلة (select)
+      const sel = document.createElement('select');  
+      sel.id = q.id;  
+      sel.innerHTML = '<option value="">اختر...</option>';  
 
       if(q.dynamic && q.id === 'months'){
         const isMainQuestion = (step < generalQuestions.length);  
@@ -8570,21 +8479,13 @@ function applyAllChanges() {
                 calculate();  
               }  
             } else {  
-              // معالجة خاصة لسؤال الأشهر المتبقية - تحويل القيمة إلى رقم
-              if(q.id === 'months') {
-                currentCommitment[q.id] = parseInt(this.value);
-              } else if(q.id === 'amount' || q.id === 'balloonAmount') {
-                currentCommitment[q.id] = parseFloat(this.value);
-              } else {
-                currentCommitment[q.id] = this.value;
-              }
+              currentCommitment[q.id] = this.value;  
               commitmentStep++;  
               showQuestion();  
             }  
           }  
         }  
       });  
-      } // إغلاق else block للأسئلة غير نعم/لا
     } else {  
       div.innerHTML += `<input type="${q.type}" id="${q.id}" ${q.default ? `value="${q.default}"` : ''}>`; 
     }  
@@ -8907,6 +8808,19 @@ function applyAllChanges() {
         answers.profitMargin = 5.0;  
         console.log('لم يتم العثور على بنك مطابق، استخدام نسبة افتراضية: 5.0%');  
       }  
+    } else if (answers.calcMode === 'اختيار جهة تمويل معينة' || answers.calcMode === 'نسبة على جهة تمويل معينة') {
+      // المستخدم اختار جهة تمويل معينة - لا نقوم بالترشيح التلقائي
+      console.log('وضع اختيار جهة تمويل معينة - لا يتم الترشيح التلقائي');
+      const selectedBankName = answers.selectedBank || answers.selectedFinanceEntity || answers.currentBank || '';
+      if (selectedBankName && !answers.recommendedBank) {
+        // إنشاء كائن recommendedBank من البنك المختار
+        answers.recommendedBank = {
+          bankName: selectedBankName,
+          margin: parseFloat(answers.profitMargin) || 5,
+          bankNote: 'تم اختيار هذه الجهة يدوياً'
+        };
+        console.log('تم تعيين البنك المختار:', selectedBankName);
+      }
     }  
   
     // تنظيف ومعالجة النسبة المدخلة  
@@ -9091,12 +9005,16 @@ if (!profitMargin || isNaN(profitMargin) || profitMargin <= 0) {
       const netWithoutFeesFixed = netWithoutFees.toFixed(0);  
   
       const matchingBanks = getMatchingBanksForAnswers();  
-      // استخدام البنك المختار من العميل إذا كان موجوداً، وإلا استخدام أفضل بنك من القائمة
-      const recommendedBank = answers.recommendedBank || matchingBanks[0] || null;  
+      // استخدام البنك المختار من العميل إذا كان موجوداً
+      // إذا كان المستخدم اختار جهة معينة، لا نستبدلها بالبنك الأفضل
+      let recommendedBank = answers.recommendedBank;
+      if (!recommendedBank && answers.calcMode === 'ترشيح بنك مناسب تلقائياً') {
+        recommendedBank = matchingBanks[0] || null;
+      }
       const altBanks = matchingBanks.filter(b => b.bankName !== (recommendedBank ? recommendedBank.bankName : '')).slice(0, 3);  
-      answers.recommendedBank = recommendedBank;  
-  
-      showPage('result');  
+      if (recommendedBank) answers.recommendedBank = recommendedBank;  
+
+      showPage('result');
       const resultCard = document.getElementById('resultCard');  
   
       // أيقونة نوع الوظيفة للتمويل الاستهلاكي  
@@ -9474,13 +9392,17 @@ if (!profitMargin || isNaN(profitMargin) || profitMargin <= 0) {
     const buyoutAmount = isBuyoutPersonal ? parseFloat(answers.buyoutAmount || '0') : 0;  
     const netAfterBuyout = finalNet - buyoutAmount;  
   
-    const matchingBanks = getMatchingBanksForAnswers();  
-    // استخدام البنك المختار من العميل إذا كان موجوداً، وإلا استخدام أفضل بنك من القائمة
-    const recommendedBank = answers.recommendedBank || matchingBanks[0] || null;  
+      const matchingBanks = getMatchingBanksForAnswers();
+    // استخدام البنك المختار من العميل إذا كان موجوداً
+    // إذا كان المستخدم اختار جهة معينة، لا نستبدلها بالبنك الأفضل
+    let recommendedBank = answers.recommendedBank;
+    if (!recommendedBank && answers.calcMode === 'ترشيح بنك مناسب تلقائياً') {
+      recommendedBank = matchingBanks[0] || null;
+    }
     const altBanks = matchingBanks.filter(b => b.bankName !== (recommendedBank ? recommendedBank.bankName : '')).slice(0, 3);  
-    answers.recommendedBank = recommendedBank;  
-  
-    // ====== MAIN DISPLAY VALUE حسب طلبك ======  
+    if (recommendedBank) answers.recommendedBank = recommendedBank;  
+
+    // ====== MAIN DISPLAY VALUEUE حسب طلبك ======  
     let mainShownValue = Number(finalNetFixed);  
     let mainShownLabel = 'التمويل الصافي';  
   
@@ -12510,8 +12432,8 @@ function showSpecificAmountQuestion() {
     const maxFinance = calculateMaxFinanceForDisplay();
     const formattedMax = maxFinance.toLocaleString('ar-SA', {maximumFractionDigits: 0});
     
-    // حفظ الحد الأقصى للاستخدام لاحقاً
-    window._currentMaxFinance = maxFinance;
+    // حفظ المبلغ الأقصى لاستخدامه لاحقاً
+    window._maxFinanceForConfirm = maxFinance;
     
     div.innerHTML = `
       <div class="question-card fade-in" style="text-align:center;">
@@ -12522,9 +12444,9 @@ function showSpecificAmountQuestion() {
         </div>
         <p style="color:#64748b; font-size:14px; margin-bottom:20px;">يمكنك تحديد مبلغ تمويل أقل من الحد الأقصى الممنوح لك أو اختيار تأكيد للحصول على المبلغ الأقصى</p>
         <div style="display:flex; gap:15px; justify-content:center; flex-wrap:wrap;">
-          <button type="button" onclick="handleSpecificAmountAnswer('no')" style="background:#ef4444; color:#fff; border:none; padding:15px 40px; border-radius:12px; font-size:16px; font-weight:bold; cursor:pointer; min-width:120px;">لا</button>
-          <button type="button" onclick="handleSpecificAmountAnswer('yes')" style="background:#3b82f6; color:#fff; border:none; padding:15px 40px; border-radius:12px; font-size:16px; font-weight:bold; cursor:pointer; min-width:120px;">نعم (تحديد مبلغ)</button>
-          <button type="button" onclick="handleSpecificAmountAnswer('confirm')" style="background:#22c55e; color:#fff; border:none; padding:15px 40px; border-radius:12px; font-size:16px; font-weight:bold; cursor:pointer; min-width:120px;">✅ تأكيد (المبلغ الأقصى)</button>
+          <button onclick="handleSpecificAmountAnswer('no')" style="background:#6b7280; color:#fff; border:none; padding:15px 30px; border-radius:12px; font-size:16px; font-weight:bold; cursor:pointer; min-width:100px;">لا</button>
+          <button onclick="handleSpecificAmountAnswer('yes')" style="background:#3b82f6; color:#fff; border:none; padding:15px 30px; border-radius:12px; font-size:16px; font-weight:bold; cursor:pointer; min-width:100px;">نعم (تحديد مبلغ)</button>
+          <button onclick="handleSpecificAmountAnswer('confirm')" style="background:#10b981; color:#fff; border:none; padding:15px 30px; border-radius:12px; font-size:16px; font-weight:bold; cursor:pointer; min-width:100px;">✅ تأكيد (المبلغ الأقصى)</button>
         </div>
       </div>
     `;
@@ -12532,23 +12454,17 @@ function showSpecificAmountQuestion() {
   
   // معالجة إجابة سؤال التمويل المحدد
   function handleSpecificAmountAnswer(answer) {
-    console.log('=== handleSpecificAmountAnswer called with:', answer, '===');
-    
     if (answer === 'no' || answer === 'لا') {
       // المستخدم لا يريد تمويل محدد - انتقل للنتيجة
       answers.wantSpecificAmount = 'لا';
-      answers._specificAmountApproved = false;
       document.getElementById('nextButton').style.display = 'none';
-      console.log('=== الانتقال للنتيجة (لا تمويل محدد) ===');
       calculate();
     } else if (answer === 'confirm' || answer === 'تأكيد') {
-      // المستخدم يريد المبلغ الأقصى
-      answers.wantSpecificAmount = 'تأكيد';
-      const maxFinance = window._currentMaxFinance || calculateMaxFinanceForDisplay();
-      answers.specificFinanceAmount = maxFinance;
+      // المستخدم يريد المبلغ الأقصى - استخدم المبلغ الأقصى وانتقل للنتيجة
+      answers.wantSpecificAmount = 'نعم';
+      answers.specificFinanceAmount = window._maxFinanceForConfirm || calculateMaxFinanceForDisplay();
       answers._specificAmountApproved = true;
       document.getElementById('nextButton').style.display = 'none';
-      console.log('=== تأكيد المبلغ الأقصى:', maxFinance, '===');
       calculate();
     } else {
       // المستخدم يريد تحديد مبلغ مخصص
@@ -16026,4 +15942,4 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 </body>  
-</html  
+</html
