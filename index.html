@@ -153,12 +153,12 @@
     body.has-global-bg #resultCard,
     body.has-global-bg #ratingSection,
     body.has-global-bg .question-card {
-      background: rgba(255, 255, 255, 0.08) !important;
-      backdrop-filter: blur(12px) !important;
-      -webkit-backdrop-filter: blur(12px) !important;
-      border: 1px solid rgba(255, 255, 255, 0.15) !important;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15) !important;
-      border-radius: 20px !important;
+      background: rgba(30, 58, 138, 0.25) !important;
+      backdrop-filter: blur(25px) !important;
+      -webkit-backdrop-filter: blur(25px) !important;
+      border: 1px solid rgba(255, 255, 255, 0.2) !important;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2) !important;
+      border-radius: 35px !important;
     }
     
     /* النصوص بيضاء */
@@ -193,10 +193,10 @@
     body.has-global-bg .option-btn,
     body.has-global-bg button[onclick*="selectOption"],
     body.has-global-bg .choice-btn {
-      background: rgba(255, 255, 255, 0.08) !important;
-      border: 1px solid rgba(255, 255, 255, 0.2) !important;
+      background: rgba(30, 58, 138, 0.4) !important;
+      border: 1.5px solid rgba(255, 255, 255, 0.3) !important;
       color: #ffffff !important;
-      border-radius: 12px !important;
+      border-radius: 20px !important;
       transition: all 0.3s ease !important;
     }
     body.has-global-bg .option-btn:hover,
@@ -210,21 +210,16 @@
       border-color: #60a5fa !important;
     }
     
-    /* زر التالي بتصميم تسويقي جذاب */
+    /* زر التالي برتقالي */
     body.has-global-bg #nextButton {
-      background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%) !important;
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
       color: #ffffff !important;
       border: none !important;
       border-radius: 30px !important;
-      padding: 16px 60px !important;
-      font-weight: 800 !important;
-      font-size: 18px !important;
-      box-shadow: 0 10px 15px -3px rgba(244, 63, 94, 0.4) !important;
-      transition: all 0.3s ease !important;
-    }
-    body.has-global-bg #nextButton:hover {
-      transform: translateY(-3px) scale(1.05) !important;
-      box-shadow: 0 20px 25px -5px rgba(244, 63, 94, 0.5) !important;
+      padding: 14px 50px !important;
+      font-weight: 700 !important;
+      font-size: 16px !important;
+      box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4) !important;
     }
     
     /* شريط التقدم */
@@ -233,7 +228,7 @@
       border-radius: 10px !important;
     }
     body.has-global-bg .progress-fill {
-      background: linear-gradient(90deg, #ec4899, #f472b6) !important;
+      background: linear-gradient(90deg, #f59e0b, #fbbf24) !important;
       border-radius: 10px !important;
     }  
       
@@ -244,22 +239,22 @@
       --font-title: 'Cairo', sans-serif;  
       --font-accent: 'Readex Pro', sans-serif;  
         
-      /* الألوان الرئيسية - هوية تسويقية فاخرة */  
-      --color-primary: #4f46e5;  
-      --color-primary-dark: #3730a3;  
-      --color-primary-light: #818cf8;  
-      --color-secondary: #f43f5e;  
-      --color-secondary-dark: #e11d48;  
-      --color-secondary-light: #fb7185;  
-      --color-accent: #10b981;  
-      --color-accent-dark: #059669;  
+      /* الألوان الرئيسية */  
+      --color-primary: #1e40af;  
+      --color-primary-dark: #1e3a8a;  
+      --color-primary-light: #3b82f6;  
+      --color-secondary: #f59e0b;  
+      --color-secondary-dark: #d97706;  
+      --color-secondary-light: #fbbf24;  
+      --color-accent: #14b8a6;  
+      --color-accent-dark: #0d9488;  
         
-      /* ألوان الخلفيات - تدرجات عميقة */  
-      --bg-dark: #020617;  
-      --bg-medium: #0f172a;  
-      --bg-light: #1e293b;  
-      --bg-card: rgba(255, 255, 255, 0.96);  
-      --bg-card-glass: rgba(255, 255, 255, 0.05);  
+      /* ألوان الخلفيات */  
+      --bg-dark: #1e3a8a;  
+      --bg-medium: #1e40af;  
+      --bg-light: #2563eb;  
+      --bg-card: rgba(255, 255, 255, 0.98);  
+      --bg-card-glass: rgba(255, 255, 255, 0.1);  
         
       /* ألوان النصوص */  
       --text-dark: #111827;  
@@ -306,12 +301,12 @@
       }  
     }  
       
-    /* الخلفية المتحركة - مظهر تسويقي جذاب */  
+    /* الخلفية المتحركة */  
     body {  
       font-family: var(--font-main), system-ui, -apple-system, BlinkMacSystemFont, sans-serif;  
-      background: var(--main-bg, linear-gradient(-45deg, #020617, #0f172a, #1e1b4b, #312e81));  
+      background: var(--main-bg, linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #2563eb 100%));  
       background-size: 400% 400%;  
-      animation: gradientBG 15s ease infinite;  
+      animation: gradientBG 20s ease infinite;  
       transition: background 0.5s ease;  
       margin: 0;  
       text-align: center;  
@@ -991,24 +986,24 @@
       padding: 0 10px;  
     }  
     .card {
-      background: rgba(255, 255, 255, 0.98);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-radius: 30px;
-      padding: 45px 35px;
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-      margin-bottom: 25px;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border-radius: 35px;
+      padding: 40px 30px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      margin-bottom: 20px;
       text-align: center;
       width: 100%;
-      border: 1px solid rgba(255, 255, 255, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.4);
       position: relative;  
       z-index: 1;
-      color: #0f172a;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      color: #1e293b;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
     .card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 35px 60px -15px rgba(0, 0, 0, 0.3);
+      transform: translateY(-5px);
+      box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.3);
     }
     .card h2, .card h3, .card h4, .card p, .card label, .card span {
       color: #1e293b;
@@ -1041,16 +1036,15 @@ body.has-global-bg .card {
       transition: transform .12s ease, box-shadow .12s ease, background .12s ease, opacity .12s ease;  
     }  
     button.primary, .btn.primary {  
-      background: linear-gradient(135deg, #f43f5e, #e11d48);  
+      background: linear-gradient(135deg, #ec4899, #db2777);  
       color: #ffffff;  
-      box-shadow: 0 10px 15px -3px rgba(244, 63, 94, 0.3);  
-      font-weight: 800;  
-      letter-spacing: 0.5px;
+      box-shadow: 0 8px 20px rgba(236, 72, 153, 0.4);  
+      font-weight: 700;  
     }  
     button.primary:hover, .btn.primary:hover {  
-      transform: translateY(-3px);  
-      box-shadow: 0 20px 25px -5px rgba(244, 63, 94, 0.4);  
-      background: linear-gradient(135deg, #fb7185, #f43f5e);  
+      transform: translateY(-2px);  
+      box-shadow: 0 12px 28px rgba(236, 72, 153, 0.5);  
+      background: linear-gradient(135deg, #f472b6, #ec4899);  
     }  
     button.secondary, .btn.secondary {  
       background: #e0f2fe;  
