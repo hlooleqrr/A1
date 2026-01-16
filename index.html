@@ -16799,7 +16799,24 @@ window.showPage = function(pageId) {
 document.addEventListener('DOMContentLoaded', function() {
   setTimeout(updateExecuteButtonVisibility, 500);
 });
+
+// دالة بدء مسار العميل
+function startClientFlow() {
+  answers = {};
+  currentQuestion = 0;
+  const splashScreen = document.getElementById('splashScreen');
+  if (splashScreen) {
+    splashScreen.classList.add('hidden');
+  }
+  showPage('question');
+  showQuestion(0);
+  console.log('تم بدء مسار العميل');
+}
+
+if (typeof window !== 'undefined') {
+  window.startClientFlow = startClientFlow;
+}
 </script>
 
 </body>  
-</html  
+</html>
